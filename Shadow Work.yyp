@@ -51,6 +51,7 @@
     {"id":{"name":"scr_animate_6frame_bob","path":"scripts/scr_animate_6frame_bob/scr_animate_6frame_bob.yy",},},
     {"id":{"name":"scripts","path":"scripts/scripts/scripts.yy",},},
     {"id":{"name":"snd_chest_open","path":"sounds/snd_chest_open/snd_chest_open.yy",},},
+    {"id":{"name":"snd_dash","path":"sounds/snd_dash/snd_dash.yy",},},
     {"id":{"name":"snd_human_walk_stone","path":"sounds/snd_human_walk_stone/snd_human_walk_stone.yy",},},
     {"id":{"name":"sound_shadow_kingdom_theme","path":"sounds/sound_shadow_kingdom_theme/sound_shadow_kingdom_theme.yy",},},
     {"id":{"name":"spr_box_frame","path":"sprites/spr_box_frame/spr_box_frame.yy",},},

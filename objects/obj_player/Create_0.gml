@@ -47,15 +47,32 @@ frame_mapping[? "walk_up_start"] = 22;
 sprite_index = spr_player;
 image_speed = 0;  // IMPORTANT: Disable automatic animation
 
+// In CREATE EVENT add:
+// Double-tap detection
+double_tap_time = 300;  // milliseconds
+last_key_time_w = -999;
+last_key_time_a = -999;
+last_key_time_s = -999;
+last_key_time_d = -999;
+
+// Dash state
+is_dashing = false;
+dash_duration = 8;  // frames
+dash_timer = 0;
+dash_speed = 4;
+
+dash_cooldown = 0;
+dash_cooldown_time = 30;
+
 anim_data = {
     // Existing animations (frames 0-25)
     idle_down: {start: 0, length: 2},
-    idle_left: {start: 2, length: 2},
-    idle_right: {start: 4, length: 2},
+    idle_right: {start: 2, length: 2},
+    idle_left: {start: 4, length: 2},
     idle_up: {start: 6, length: 2},
     walk_down: {start: 8, length: 5},
-    walk_right: {start: 13, length: 5},
-    walk_left: {start: 18, length: 4},
+    walk_right: {start: 12, length: 5},
+    walk_left: {start: 17, length: 4},
     walk_up: {start: 22, length: 4},
     
     // New dash animations (frames 26-41)
@@ -76,3 +93,13 @@ current_anim_length = 2;
 anim_frame = 0;  // Track current frame within animation
 anim_speed_idle = 0.05;  // How fast to animate (adjust as needed)
 anim_speed_walk = 0.15;
+
+
+// Add this function to your scripts or at the bottom of Create Event:
+function start_dash(_direction) {
+    is_dashing = true;
+    dash_timer = dash_duration;
+    facing_dir = _direction;
+    dash_cooldown = dash_cooldown_time;
+    audio_play_sound(snd_dash, 1, false);
+}

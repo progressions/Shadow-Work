@@ -1,55 +1,104 @@
-
-var _hor = keyboard_check(ord("D")) - keyboard_check(ord("A"));
-var _ver = keyboard_check(ord("S")) - keyboard_check(ord("W"));
-move_dir = "idle";
-if (_hor != 0 or _ver != 0) {
-    if (_ver > 0) {
-		move_dir = "down";
-		facing_dir = "down";
-	}
-    else if (_ver < 0) {
-		move_dir = "up";
-		facing_dir = "up";
-	}
-    else if (_hor > 0) {
-		move_dir = "right";
-		facing_dir = "right";
-	}
-    else if (_hor < 0) {
-		move_dir = "left";
-		facing_dir = "left";
-	}
-}
-
-// In obj_player STEP EVENT, after your movement code:
-if (move_dir != "idle") {
-    // Player is walking
-    if (walking_sound == -1 || !audio_is_playing(walking_sound)) {
-		// TODO: find a better walking sound
-        // walking_sound = audio_play_sound(snd_human_walk_stone, 1, true);  // true = loop
+// ============================================
+// CHECK FOR DOUBLE-TAP DASH (simplified)
+// ============================================
+if (!is_dashing && dash_cooldown <= 0) {
+    // W key double-tap
+    if (keyboard_check_pressed(ord("W"))) {
+        if (current_time - last_key_time_w < double_tap_time) {
+            start_dash("up");
+        }
+        last_key_time_w = current_time;
     }
-} else {
-    // Player stopped walking (idle)
-    if (walking_sound != -1 && audio_is_playing(walking_sound)) {
-        audio_stop_sound(walking_sound);
-        walking_sound = -1;
+    
+    // A key double-tap
+    if (keyboard_check_pressed(ord("A"))) {
+        if (current_time - last_key_time_a < double_tap_time) {
+            start_dash("left");
+        }
+        last_key_time_a = current_time;
+    }
+    
+    // S key double-tap
+    if (keyboard_check_pressed(ord("S"))) {
+        if (current_time - last_key_time_s < double_tap_time) {
+            start_dash("down");
+        }
+        last_key_time_s = current_time;
+    }
+    
+    // D key double-tap
+    if (keyboard_check_pressed(ord("D"))) {
+        if (current_time - last_key_time_d < double_tap_time) {
+            start_dash("right");
+        }
+        last_key_time_d = current_time;
     }
 }
 
-// In the player's Step Event
-// Get the tilemap from your path layer
-var tile_layer = layer_get_id("Tiles_Path");
-var tilemap_path = layer_tilemap_get_id(tile_layer);
-// Check if there's a path tile at the player's position
-var tile = tilemap_get_at_pixel(tilemap_path, x, y);
-// If there's no path tile (tile is 0 or empty), player is on grass
-if (tile == 0) {
-    move_speed = 1; // Slower on grass
+// ============================================
+// MOVEMENT
+// ============================================
+if (is_dashing) {
+    // Handle dash movement
+    dash_timer--;
+    if (dash_timer <= 0) {
+        is_dashing = false;
+    }
+    
+    var dash_x = 0;
+    var dash_y = 0;
+    
+    switch(facing_dir) {
+        case "up":    dash_y = -dash_speed; break;
+        case "down":  dash_y = dash_speed; break;
+        case "left":  dash_x = -dash_speed; break;
+        case "right": dash_x = dash_speed; break;
+    }
+    
+    move_and_collide(dash_x, dash_y, tilemap);
+    move_dir = "dash";  // Set this so sound system knows we're dashing
+    
 } else {
-    move_speed = 1.25; // Normal speed on path
+    // Normal movement
+    var _hor = keyboard_check(ord("D")) - keyboard_check(ord("A"));
+    var _ver = keyboard_check(ord("S")) - keyboard_check(ord("W"));
+    move_dir = "idle";
+    if (_hor != 0 or _ver != 0) {
+        if (_ver > 0) {
+            move_dir = "down";
+            facing_dir = "down";
+        }
+        else if (_ver < 0) {
+            move_dir = "up";
+            facing_dir = "up";
+        }
+        else if (_hor > 0) {
+            move_dir = "right";
+            facing_dir = "right";
+        }
+        else if (_hor < 0) {
+            move_dir = "left";
+            facing_dir = "left";
+        }
+    }
+    
+    // Get the tilemap from your path layer
+    var tile_layer = layer_get_id("Tiles_Path");
+    var tilemap_path = layer_tilemap_get_id(tile_layer);
+    // Check if there's a path tile at the player's position
+    var tile = tilemap_get_at_pixel(tilemap_path, x, y);
+    // If there's no path tile (tile is 0 or empty), player is on grass
+    if (tile == 0) {
+        move_speed = 1; // Slower on grass
+    } else {
+        move_speed = 1.25; // Normal speed on path
+    }
+    move_and_collide(_hor * move_speed, _ver * move_speed, tilemap);
 }
-move_and_collide(_hor * move_speed, _ver * move_speed, tilemap);
 
+if (dash_cooldown > 0) {
+    dash_cooldown--;
+}
 
 // ============================================
 // PLAYER STEP EVENT - PICKUP CODE
@@ -80,9 +129,8 @@ if (_instance != noone && _instance.item_def != undefined) {
     // Try to add to inventory
     if (inventory_add_item(_item_def, _count)) {
 		// Play pickup sound
-    audio_play_sound(snd_chest_open, 1, false);  // Replace snd_pickup with your sound asset name
-    
-	
+        audio_play_sound(snd_chest_open, 1, false);  // Replace snd_pickup with your sound asset name
+        
         show_debug_message("Picked up " + string(_count) + " " + _item_def.name);
         
         // Auto-equip logic (optional - remove this section if you don't want auto-equip)
@@ -162,12 +210,15 @@ if (_instance != noone && _instance.item_def != undefined) {
 ds_list_destroy(pickup_list);
 #endregion
 
-// Build animation key and look it up
+// ============================================
+// ANIMATION
+// ============================================
 
+// Build animation key and look it up
 var anim_key;
 if (move_dir == "idle") {
     anim_key = "idle_" + facing_dir;
-} else if (is_dashing) {  // Add a variable to track dashing state
+} else if (is_dashing) {
     anim_key = "dash_" + facing_dir;
 } else {
     anim_key = "walk_" + facing_dir;
@@ -194,7 +245,7 @@ if (move_dir == "idle") {
     // For idle, sync with global timer but keep it in the idle animation range
     anim_frame = global.idle_bob_timer % current_anim_length;
 } else {
-    // Normal walking animation
+    // Normal walking animation (also handles dash)
     anim_frame += anim_speed_walk;
     if (anim_frame >= current_anim_length) {
         anim_frame = anim_frame % current_anim_length;

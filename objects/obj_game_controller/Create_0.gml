@@ -1,3 +1,8 @@
+persistent = true;
+
+audio_group_load(audiogroup_default);
+audio_group_set_gain(audiogroup_default, 1, 0);
+
 // Start background music
 global.music = audio_play_sound(sound_shadow_kingdom_theme, 1, true);
 
