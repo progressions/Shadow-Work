@@ -18,7 +18,7 @@ enum WEAPONTYPES {
 enum SHIELDTYPES {
 	none,
 	shield,
-	great_shield,
+	greatshield,
 }
 
 function get_weapon_sprite(weapon) {
@@ -49,8 +49,8 @@ function get_left_hand_item_sprite(shield) {
 		case SHIELDTYPES.shield:
 			_shield_sprite = spr_wielded_shield;
 			break;
-		case SHIELDTYPES.great_shield:
-			_shield_sprite = spr_great_shield;
+		case SHIELDTYPES.greatshield:
+			_shield_sprite = spr_wielded_greatshield;
 			break;
 	}
 	
@@ -186,8 +186,8 @@ global.item_database = {
         18, "shield", "Shield", ItemType.ARMOR, EquipSlot.LEFT_HAND,
         {defense: 5, block_chance: 0.25}
     ),
-    great_shield: new create_item_definition(
-        19, "great_shield", "Great Shield", ItemType.ARMOR, EquipSlot.LEFT_HAND,
+    greatshield: new create_item_definition(
+        19, "greatshield", "Greatshield", ItemType.ARMOR, EquipSlot.LEFT_HAND,
         {defense: 10, block_chance: 0.35, speed_modifier: 0.85}
     ),
     health_potion: new create_item_definition(
@@ -218,7 +218,7 @@ global.item_database = {
 function spawn_item(_x, _y, _item_key, _count = 1) {
     var _item = instance_create_layer(_x, _y, "Items", obj_item_pickup);
     _item.item_def = global.item_database[$ _item_key];
-    _item.sprite_index = spr_item_greatsword;  // Your items sprite
+    _item.sprite_index = spr_items;  // Your items sprite
     _item.image_index = _item.item_def.world_sprite_frame;
     _item.image_speed = 0;
     
