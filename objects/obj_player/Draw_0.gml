@@ -1,3 +1,4 @@
+
 // ============================================
 // COMPLETE DRAW EVENT WITH TORCH SUPPORT
 // ============================================
@@ -51,6 +52,7 @@ function draw_torch_simple(_item, _facing, _player_x, _player_y) {
     var _tx = _player_x + _pos.x;
     var _ty = _player_y + _pos.y;
     
+	
     // Add bobbing
     if (move_dir == "idle") {
         if (floor(global.idle_bob_timer) % 2 == 1) {
@@ -59,11 +61,14 @@ function draw_torch_simple(_item, _facing, _player_x, _player_y) {
     } else if (!is_dashing) {
         var _bob = (floor(anim_frame) % 2) * 1;
         _ty += _bob;
-    }
     
+	}
+    
+	var _torch_frame = 0;
+	if (!global.game_paused) {
     // Animate the torch flame (cycle through 8 frames)
-    var _torch_frame = floor(current_time / 100) % 8;  // Adjust 100 for speed
-    
+      _torch_frame = floor(current_time / 100) % 8;  // Adjust 100 for speed
+	}
     // Draw torch with flip if needed
     var _xscale = _pos.flip ? -1 : 1;
     draw_sprite_ext(_torch_sprite, _torch_frame, _tx, _ty, _xscale, 1, 0, c_white, 1);
@@ -113,6 +118,7 @@ function draw_weapon_simple(_item, _facing, _player_x, _player_y) {
 
 // FIXED FUNCTION: Selective hand drawing
 function draw_player_hands(_base_frame) {
+
     // Determine which hands to show
     var _holding_torch = (equipped.left_hand != undefined && 
                          equipped.left_hand.definition.item_id == "torch");
@@ -129,7 +135,7 @@ function draw_player_hands(_base_frame) {
         // Both hands covered by item sprites
         return;
     } else if (_has_weapon && !_holding_torch) {
-		show_debug_message("handedness " + string(equipped.right_hand.definition.stats.handedness));
+		
 		// if the weapon is two-handed, no need to draw the hands
 		if (equipped.right_hand.definition.stats.handedness == WeaponHandedness.TWO_HANDED) return;
 		
@@ -194,13 +200,10 @@ draw_sprite_ext(spr_shadow, image_index, x, y + 2, 1, 0.5, 0, c_black, 0.3);
 
 function draw_player_with_equipment() {
     var _base_frame = image_index;
+	if (global.game_paused) _base_frame = paused_frame; 
     
     var _x_offset = 0;
     var _y_offset = 0;
-    
-    if (facing_dir == "left") {
-        // _x_offset = -16;
-    }
     
     var _item_x = x + _x_offset;
     

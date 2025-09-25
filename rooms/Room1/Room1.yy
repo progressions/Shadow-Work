@@ -13,6 +13,10 @@
     {"name":"inst_399F13EC","path":"rooms/Room1/Room1.yy",},
     {"name":"inst_C7C11C1","path":"rooms/Room1/Room1.yy",},
     {"name":"inst_601DE750","path":"rooms/Room1/Room1.yy",},
+    {"name":"inst_2F4A5E11","path":"roomui/RoomUI/RoomUI.yy",},
+    {"name":"inst_2EB4DFBC","path":"roomui/RoomUI/RoomUI.yy",},
+    {"name":"inst_7969ACC6","path":"roomui/RoomUI/RoomUI.yy",},
+    {"name":"inst_3AA71692","path":"rooms/Room1/Room1.yy",},
   ],
   "isDnd":false,
   "layers":[
@@ -25,6 +29,7 @@
         {"$GMRInstance":"v2","%Name":"inst_399F13EC","colour":4294967295,"frozen":false,"hasCreationCode":false,"ignore":false,"imageIndex":0,"imageSpeed":1.0,"inheritCode":false,"inheritedItemId":null,"inheritItemSettings":false,"isDnd":false,"name":"inst_399F13EC","objectId":{"name":"obj_item_greatsword","path":"objects/obj_item_greatsword/obj_item_greatsword.yy",},"properties":[],"resourceType":"GMRInstance","resourceVersion":"2.0","rotation":0.0,"scaleX":1.0,"scaleY":1.0,"x":288.0,"y":128.0,},
         {"$GMRInstance":"v2","%Name":"inst_C7C11C1","colour":4294967295,"frozen":false,"hasCreationCode":false,"ignore":false,"imageIndex":0,"imageSpeed":1.0,"inheritCode":false,"inheritedItemId":null,"inheritItemSettings":false,"isDnd":false,"name":"inst_C7C11C1","objectId":{"name":"obj_item_master_sword","path":"objects/obj_item_master_sword/obj_item_master_sword.yy",},"properties":[],"resourceType":"GMRInstance","resourceVersion":"2.0","rotation":0.0,"scaleX":1.0,"scaleY":1.0,"x":336.0,"y":128.0,},
         {"$GMRInstance":"v2","%Name":"inst_601DE750","colour":4294967295,"frozen":false,"hasCreationCode":false,"ignore":false,"imageIndex":0,"imageSpeed":1.0,"inheritCode":false,"inheritedItemId":null,"inheritItemSettings":false,"isDnd":false,"name":"inst_601DE750","objectId":{"name":"obj_item_torch","path":"objects/obj_item_torch/obj_item_torch.yy",},"properties":[],"resourceType":"GMRInstance","resourceVersion":"2.0","rotation":0.0,"scaleX":1.0,"scaleY":1.0,"x":272.0,"y":32.0,},
+        {"$GMRInstance":"v2","%Name":"inst_3AA71692","colour":4294967295,"frozen":false,"hasCreationCode":false,"ignore":false,"imageIndex":0,"imageSpeed":1.0,"inheritCode":false,"inheritedItemId":null,"inheritItemSettings":false,"isDnd":false,"name":"inst_3AA71692","objectId":{"name":"obj_pause_controller","path":"objects/obj_pause_controller/obj_pause_controller.yy",},"properties":[],"resourceType":"GMRInstance","resourceVersion":"2.0","rotation":0.0,"scaleX":1.0,"scaleY":1.0,"x":16.0,"y":-32.0,},
       ],"layers":[],"name":"Instances","properties":[],"resourceType":"GMRInstanceLayer","resourceVersion":"2.0","userdefinedDepth":false,"visible":true,},
     {"$GMRTileLayer":"","%Name":"Tiles_Col","depth":100,"effectEnabled":true,"effectType":null,"gridX":32,"gridY":32,"hierarchyFrozen":false,"inheritLayerDepth":false,"inheritLayerSettings":false,"inheritSubLayers":true,"inheritVisibility":true,"layers":[],"name":"Tiles_Col","properties":[],"resourceType":"GMRTileLayer","resourceVersion":"2.0","tiles":{"SerialiseHeight":24,"SerialiseWidth":43,"TileCompressedData":[
           -44,49,1,-2147483648,-3,49,-18,-2147483648,-3,0,-3,-2147483648,1,49,-8,-2147483648,-6,49,1,-2147483648,

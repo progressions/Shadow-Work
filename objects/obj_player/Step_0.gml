@@ -1,3 +1,5 @@
+if (global.game_paused) exit;
+
 // ============================================
 // CHECK FOR DOUBLE-TAP DASH (simplified)
 // ============================================

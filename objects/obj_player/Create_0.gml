@@ -30,6 +30,8 @@ interaction_radius = 1;
 // Initialize the global frame tracker
 global_frame = 0;
 
+paused_frame = 0;
+
 // Create the frame mapping (optional - for the first approach)
 frame_mapping = ds_map_create();
 frame_mapping[? "idle_down_start"] = 0;

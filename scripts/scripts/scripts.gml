@@ -1,3 +1,10 @@
+
+enum ButtonType {
+	Resume,
+	Settings,
+	Quit
+}
+
 // Item Database based on your sprite sheet
 // Sprite frames are indexed 0-24 from left to right, top to bottom
 
