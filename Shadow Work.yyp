@@ -38,7 +38,6 @@
     {"id":{"name":"obj_enemy_parent","path":"objects/obj_enemy_parent/obj_enemy_parent.yy",},},
     {"id":{"name":"obj_game_controller","path":"objects/obj_game_controller/obj_game_controller.yy",},},
     {"id":{"name":"obj_greenwood_bandit","path":"objects/obj_greenwood_bandit/obj_greenwood_bandit.yy",},},
-    {"id":{"name":"obj_inventory","path":"objects/obj_inventory/obj_inventory.yy",},},
     {"id":{"name":"obj_item_greatshield","path":"objects/obj_item_greatshield/obj_item_greatshield.yy",},},
     {"id":{"name":"obj_item_greatsword","path":"objects/obj_item_greatsword/obj_item_greatsword.yy",},},
     {"id":{"name":"obj_item_master_sword","path":"objects/obj_item_master_sword/obj_item_master_sword.yy",},},
