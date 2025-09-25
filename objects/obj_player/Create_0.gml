@@ -59,7 +59,7 @@ last_key_time_d = -999;
 is_dashing = false;
 dash_duration = 8;  // frames
 dash_timer = 0;
-dash_speed = 4;
+dash_speed = 6;
 
 dash_cooldown = 0;
 dash_cooldown_time = 30;

@@ -9,7 +9,7 @@ function draw_player_with_equipment() {
 	
     
     if (facing_dir == "left") {
-        _x_offset = -16;
+        // _x_offset = -16;
 		
     }
     
@@ -30,6 +30,11 @@ function draw_player_with_equipment() {
             
             // Player
             draw_sprite_ext(sprite_index, _base_frame, x, y, image_xscale, image_yscale, 0, c_white, 1);
+			    // Draw empty hands if no weapon
+			if (equipped.right_hand == undefined) {
+			    draw_sprite_ext(spr_player_hands, _base_frame, x, y, image_xscale, image_yscale, 0, c_white, 1);
+			}
+
             
             // Armor layers
             draw_armor_layers(_base_frame, _item_x, y);
@@ -49,6 +54,9 @@ function draw_player_with_equipment() {
             
             // Player first
             draw_sprite_ext(sprite_index, _base_frame, x, y, image_xscale, image_yscale, 0, c_white, 1);
+			if (equipped.right_hand == undefined) {
+			    draw_sprite_ext(spr_player_hands, _base_frame, x, y, image_xscale, image_yscale, 0, c_white, 1);
+			}
             
             
             draw_armor_layers(_base_frame, _item_x, y);
@@ -75,6 +83,9 @@ function draw_player_with_equipment() {
             
             // Player
             draw_sprite_ext(sprite_index, _base_frame, x, y, image_xscale, image_yscale, 0, c_white, 1);
+			if (equipped.right_hand == undefined) {
+			    draw_sprite_ext(spr_player_hands, _base_frame, x, y, image_xscale, image_yscale, 0, c_white, 1);
+			}
             
             // Armor and weapon on top
             draw_armor_layers(_base_frame, _item_x, y);
@@ -98,10 +109,6 @@ function draw_player_with_equipment() {
             
     }
     
-    // Draw empty hands if no weapon
-    if (equipped.right_hand == undefined && equipped.left_hand == undefined) {
-        draw_sprite_ext(spr_player_hands, _base_frame, x, y, image_xscale, image_yscale, 0, c_white, 1);
-    }
 }
 
 // Helper function to draw armor layers

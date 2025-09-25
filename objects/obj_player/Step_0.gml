@@ -93,7 +93,14 @@ if (is_dashing) {
     } else {
         move_speed = 1.25; // Normal speed on path
     }
-    move_and_collide(_hor * move_speed, _ver * move_speed, tilemap);
+	
+	// In your movement code:
+var _collided = move_and_collide(_hor * move_speed, _ver * move_speed, tilemap);
+if (array_length(_collided) > 0) {
+    audio_play_sound(snd_bump, 1, false);
+}
+	
+    // move_and_collide(_hor * move_speed, _ver * move_speed, tilemap);
 }
 
 if (dash_cooldown > 0) {
