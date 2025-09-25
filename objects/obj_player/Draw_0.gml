@@ -7,7 +7,7 @@ function get_shield_position(_facing) {
     switch(_facing) {
         case "down":  return {x: 0, y: 0, angle: 0};
         case "up":    return {x: 0, y: 0, angle: 0};
-        case "left":  return {x: 0, y: 0, angle: 0};
+        case "left":  return {x: 10, y: 0, angle: 0};
         case "right": return {x: 0, y: 0, angle: 0};
     }
     return {x: 0, y: 0, angle: 0};
@@ -15,7 +15,7 @@ function get_shield_position(_facing) {
 
 function get_weapon_position(_facing) {
     switch(_facing) {
-        case "down":  return {x: -2, y: -8, angle: 270};
+        case "down":  return {x: 0, y: 0, angle: 0};
         case "up":    return {x: 0, y: 0, angle: 90};
         case "left":  return {x: 0, y: 0, angle: 90};
         case "right": return {x: 0, y: 0, angle: 0};
