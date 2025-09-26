@@ -1,5 +1,42 @@
 if (global.game_paused) exit;
 
+// Find the highest pillar we're currently on
+var highest_pillar = noone;
+var highest_value = -1;
+
+with (obj_rising_pillar) {
+    if (place_meeting(x, y, other)) {
+        // Check if we're already on this pillar
+        if (other.elevation_source == self) {
+            highest_pillar = self;
+            highest_value = height;
+            break; // Keep our current pillar if we're on it
+        }
+        // Otherwise track the highest we're touching
+        if (height > highest_value) {
+            highest_value = height;
+            highest_pillar = self;
+        }
+    }
+}
+
+// Store this for pillars to check
+current_highest_touching = highest_value;
+
+// Make pillars slightly behind player at same position
+depth = -bbox_bottom;
+
+
+// Reset elevation if not touching any pillar
+if (elevation_source != noone && !place_meeting(x, y, obj_rising_pillar)) {
+    elevation_source = noone;
+    y_offset = 0;
+}
+
+// Always update depth based on elevation
+depth = -bbox_bottom - (elevation_source != noone ? 10 : 0);
+
+
 // ============================================
 // CHECK FOR DOUBLE-TAP DASH (simplified)
 // ============================================
@@ -262,3 +299,6 @@ if (move_dir == "idle") {
 }
 
 image_index = current_anim_start + floor(anim_frame);
+
+// Reset the flag for next step
+pillar_processed_this_step = false;

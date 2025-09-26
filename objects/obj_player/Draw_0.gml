@@ -1,6 +1,5 @@
-
 // ============================================
-// COMPLETE DRAW EVENT WITH TORCH SUPPORT
+// COMPLETE DRAW EVENT WITH TORCH SUPPORT AND HEIGHT OFFSET
 // ============================================
 
 // Helper functions first
@@ -146,7 +145,7 @@ function draw_player_hands(_base_frame) {
             0, 0,              // Start from left edge
             _half,             // Width of left half
             _sprite_height,    // Full height
-            x - 8, y - 16, 
+            x - 8, y - 16 + y_offset, 
             image_xscale, image_yscale,
             c_white, 1
         );
@@ -161,7 +160,7 @@ function draw_player_hands(_base_frame) {
                 0, 0,              // Start from left edge
                 _half,             // Width of left half
                 _sprite_height,    // Full height
-                x - 8, y - 16, 
+                x - 8, y - 16 + y_offset, 
                 image_xscale, image_yscale,
                 c_white, 1
             );
@@ -173,7 +172,7 @@ function draw_player_hands(_base_frame) {
                 _half, 0,          // Start from middle of sprite (RIGHT HALF)
                 _half,             // Width of right half (not full width!)
                 _sprite_height,    // Full height
-                x - 8 + _half, y - 16,  // Offset x position by half width
+                x - 8 + _half, y - 16 + y_offset,  // Offset x position by half width
                 image_xscale, image_yscale,
                 c_white, 1
             );
@@ -186,7 +185,7 @@ function draw_player_hands(_base_frame) {
             0, 0,                    // Start from top-left of source sprite
             _sprite_width,           // Full width
             _sprite_height,          // Full height
-            x - 8, y - 16,           // Draw position
+            x - 8, y - 16 + y_offset,           // Draw position
             image_xscale, 
             image_yscale, 
             c_white, 
@@ -196,7 +195,7 @@ function draw_player_hands(_base_frame) {
 }
 
 // Draw shadow first
-draw_sprite_ext(spr_shadow, image_index, x, y + 2, 1, 0.5, 0, c_black, 0.3);
+draw_sprite_ext(spr_shadow, image_index, x, y + 2 + y_offset, 1, 0.5, 0, c_black, 0.3);
 
 function draw_player_with_equipment() {
     var _base_frame = image_index;
@@ -212,62 +211,62 @@ function draw_player_with_equipment() {
         case "up":
             // Shield/torch behind player
             if (equipped.left_hand != undefined && !is_two_handing()) {
-                draw_left_hand_item(equipped.left_hand, facing_dir, x, y);
+                draw_left_hand_item(equipped.left_hand, facing_dir, x, y + y_offset);
             }
             
             // Player
-            draw_sprite_ext(sprite_index, _base_frame, x, y, image_xscale, image_yscale, 0, c_white, 1);
+            draw_sprite_ext(sprite_index, _base_frame, x, y + y_offset, image_xscale, image_yscale, 0, c_white, 1);
             
             // Draw hands conditionally
             draw_player_hands(_base_frame);
             
             // Armor layers
-            draw_armor_layers(_base_frame, _item_x, y);
+            draw_armor_layers(_base_frame, _item_x, y + y_offset);
             
             // Weapon in front
             if (equipped.right_hand != undefined) {
-                draw_weapon_simple(equipped.right_hand, facing_dir, x, y);
+                draw_weapon_simple(equipped.right_hand, facing_dir, x, y + y_offset);
             }
             break;
             
         case "right":
         case "down":
             // Player first
-            draw_sprite_ext(sprite_index, _base_frame, x, y, image_xscale, image_yscale, 0, c_white, 1);
+            draw_sprite_ext(sprite_index, _base_frame, x, y + y_offset, image_xscale, image_yscale, 0, c_white, 1);
             
             // Draw hands conditionally
             draw_player_hands(_base_frame);
             
-            draw_armor_layers(_base_frame, _item_x, y);
+            draw_armor_layers(_base_frame, _item_x, y + y_offset);
             
             // Weapon
             if (equipped.right_hand != undefined) {
-                draw_weapon_simple(equipped.right_hand, facing_dir, x, y);
+                draw_weapon_simple(equipped.right_hand, facing_dir, x, y + y_offset);
             }
             
             // Shield/torch on top
             if (equipped.left_hand != undefined && !is_two_handing()) {
-                draw_left_hand_item(equipped.left_hand, facing_dir, x, y);
+                draw_left_hand_item(equipped.left_hand, facing_dir, x, y + y_offset);
             }
             break;
             
         case "left":
             // Player
-            draw_sprite_ext(sprite_index, _base_frame, x, y, image_xscale, image_yscale, 0, c_white, 1);
+            draw_sprite_ext(sprite_index, _base_frame, x, y + y_offset, image_xscale, image_yscale, 0, c_white, 1);
             
             // Draw hands conditionally
             draw_player_hands(_base_frame);
             
-            draw_armor_layers(_base_frame, _item_x, y);
+            draw_armor_layers(_base_frame, _item_x, y + y_offset);
             
             // Weapon
             if (equipped.right_hand != undefined) {
-                draw_weapon_simple(equipped.right_hand, facing_dir, x, y);
+                draw_weapon_simple(equipped.right_hand, facing_dir, x, y + y_offset);
             }
             
             // Shield/torch in front
             if (equipped.left_hand != undefined && !is_two_handing()) {
-                draw_left_hand_item(equipped.left_hand, facing_dir, x, y);
+                draw_left_hand_item(equipped.left_hand, facing_dir, x, y + y_offset);
             }
             break;
     }
