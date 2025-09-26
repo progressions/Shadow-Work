@@ -2,7 +2,7 @@
 // === DRAW GUI EVENT ===
 if (is_open) {
     // Calculate dimensions
-    var _slot_size = 32;
+    var _slot_size = 64;
     var _padding = 8;
     var _columns = 6;
     var _rows = 2;
@@ -45,9 +45,16 @@ if (is_open) {
         if (i < array_length(_player.inventory) && _player.inventory[i] != undefined) {
             var _item = _player.inventory[i];
             
-            // Draw item sprite centered in slot
-            draw_sprite(spr_items, _item.definition.world_sprite_frame, 
-                       _slot_x + _slot_size/2, _slot_y + _slot_size/2);
+// Scale up the item sprite and center it properly
+            var _scale = 2; // Scale up 2x for better visibility
+			show_debug_message("inventory item " + string(_item));
+			
+			
+            draw_sprite_ext(spr_items, _item.definition.world_sprite_frame, 
+                           _slot_x + _slot_size/2, 
+                           _slot_y + _slot_size,
+                           _scale, _scale, 0, c_white, 1);
+            
             
             // Draw stack count if > 1
             if (_item.count > 1) {

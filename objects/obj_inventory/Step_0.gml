@@ -5,3 +5,4 @@ if (keyboard_check_pressed(ord("I"))) {
     // Create a global pause variable if it doesn't exist
     global.game_paused = is_open;
 }
+
