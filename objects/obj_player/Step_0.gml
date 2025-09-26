@@ -23,6 +23,7 @@ with (obj_rising_pillar) {
 // Store this for pillars to check
 current_highest_touching = highest_value;
 
+
 // Make pillars slightly behind player at same position
 depth = -bbox_bottom;
 
@@ -35,6 +36,14 @@ if (elevation_source != noone && !place_meeting(x, y, obj_rising_pillar)) {
 
 // Always update depth based on elevation
 depth = -bbox_bottom - (elevation_source != noone ? 10 : 0);
+
+// Check for elevation changes
+if (y_offset > previous_y_offset && previous_y_offset < 0) {
+    // We've dropped down - play landing sound
+    audio_play_sound(snd_human_walk_stone, 1, false);  // Replace snd_land with your sound asset
+}
+
+previous_y_offset = y_offset;
 
 
 // ============================================

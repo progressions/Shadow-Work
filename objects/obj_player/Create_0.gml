@@ -98,6 +98,7 @@ anim_speed_walk = 0.15;
 
 elevation_source = noone;
 y_offset = 0;
+previous_y_offset = 0;
 
 // Add this function to your scripts or at the bottom of Create Event:
 function start_dash(_direction) {
