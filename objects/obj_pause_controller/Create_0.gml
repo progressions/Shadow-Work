@@ -4,6 +4,7 @@ layer_name = "PauseLayer";
 update_pause = function() {
 	if (global.game_paused) {
 		layer_set_visible(layer_name, true);
+		obj_inventory.is_open = false;
 		
 		with (obj_player) {
 			paused_frame = image_index;
