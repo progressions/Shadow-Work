@@ -90,6 +90,7 @@ move_dir = "idle";
 current_anim = "idle_down";
 current_anim_start = 0;
 current_anim_length = 2;
+state = PlayerState.idle;
 
 // Animation control
 anim_frame = 0;  // Track current frame within animation
@@ -97,6 +98,7 @@ anim_speed_idle = 0.05;  // How fast to animate (adjust as needed)
 anim_speed_walk = 0.15;
 
 elevation_source = noone;
+current_elevation = -1;
 y_offset = 0;
 previous_y_offset = 0;
 
@@ -108,10 +110,3 @@ function start_dash(_direction) {
     dash_cooldown = dash_cooldown_time;
     audio_play_sound(snd_dash, 1, false);
 }
-
-function apply_elevation(_offset, _source) {
-    y_offset = -_offset;
-    elevation_source = _source;
-}
-
-last_pillar_logged = noone;

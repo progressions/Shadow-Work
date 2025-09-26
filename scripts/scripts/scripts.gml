@@ -1,3 +1,10 @@
+enum PlayerState {
+	idle,
+	walking,
+	dashing,
+	attacking,
+	on_grid,
+}
 
 enum ButtonType {
 	Resume,

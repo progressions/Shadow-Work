@@ -1,159 +1,180 @@
 if (global.game_paused) exit;
 
-// Find the highest pillar we're currently on
-var highest_pillar = noone;
-var highest_value = -1;
-
-with (obj_rising_pillar) {
-    if (place_meeting(x, y, other)) {
-        // Check if we're already on this pillar
-        if (other.elevation_source == self) {
-            highest_pillar = self;
-            highest_value = height;
-            break; // Keep our current pillar if we're on it
-        }
-        // Otherwise track the highest we're touching
-        if (height > highest_value) {
-            highest_value = height;
-            highest_pillar = self;
-        }
-    }
-}
-
-// Store this for pillars to check
-current_highest_touching = highest_value;
-
-
 // Make pillars slightly behind player at same position
 depth = -bbox_bottom;
 
-
-// Reset elevation if not touching any pillar
-if (elevation_source != noone && !place_meeting(x, y, obj_rising_pillar)) {
-    elevation_source = noone;
+// Update elevation and offset
+if (elevation_source != noone) {
+    y_offset = elevation_source.y_offset;
+    current_elevation = elevation_source.height;
+} else {
     y_offset = 0;
+    current_elevation = -1;
 }
 
-// Always update depth based on elevation
-depth = -bbox_bottom - (elevation_source != noone ? 10 : 0);
+#region Movement
 
-// Check for elevation changes
-if (y_offset > previous_y_offset && previous_y_offset < 0) {
-    // We've dropped down - play landing sound
-    audio_play_sound(snd_human_walk_stone, 1, false);  // Replace snd_land with your sound asset
-}
-
-previous_y_offset = y_offset;
-
-
-// ============================================
-// CHECK FOR DOUBLE-TAP DASH (simplified)
-// ============================================
-if (!is_dashing && dash_cooldown <= 0) {
-    // W key double-tap
+if (state == PlayerState.on_grid) {
+	
+    // Grid-based movement - only on key press
     if (keyboard_check_pressed(ord("W"))) {
-        if (current_time - last_key_time_w < double_tap_time) {
-            start_dash("up");
-        }
-        last_key_time_w = current_time;
+        obj_grid_controller.move_up();
+        facing_dir = "up";
+        move_dir = "up";
     }
-    
-    // A key double-tap
-    if (keyboard_check_pressed(ord("A"))) {
-        if (current_time - last_key_time_a < double_tap_time) {
-            start_dash("left");
-        }
-        last_key_time_a = current_time;
+    else if (keyboard_check_pressed(ord("S"))) {
+        obj_grid_controller.move_down();
+        facing_dir = "down";
+        move_dir = "down";
     }
-    
-    // S key double-tap
-    if (keyboard_check_pressed(ord("S"))) {
-        if (current_time - last_key_time_s < double_tap_time) {
-            start_dash("down");
-        }
-        last_key_time_s = current_time;
+    else if (keyboard_check_pressed(ord("A"))) {
+        obj_grid_controller.move_left();
+        facing_dir = "left";
+        move_dir = "left";
     }
-    
-    // D key double-tap
-    if (keyboard_check_pressed(ord("D"))) {
-        if (current_time - last_key_time_d < double_tap_time) {
-            start_dash("right");
-        }
-        last_key_time_d = current_time;
+    else if (keyboard_check_pressed(ord("D"))) {
+        obj_grid_controller.move_right();
+        facing_dir = "right";
+        move_dir = "right";
     }
-}
-
-// ============================================
-// MOVEMENT
-// ============================================
-if (is_dashing) {
-    // Handle dash movement
-    dash_timer--;
-    if (dash_timer <= 0) {
-        is_dashing = false;
+    else {
+        move_dir = "idle";
     }
-    
-    var dash_x = 0;
-    var dash_y = 0;
-    
-    switch(facing_dir) {
-        case "up":    dash_y = -dash_speed; break;
-        case "down":  dash_y = dash_speed; break;
-        case "left":  dash_x = -dash_speed; break;
-        case "right": dash_x = dash_speed; break;
-    }
-    
-    move_and_collide(dash_x, dash_y, tilemap);
-    move_dir = "dash";  // Set this so sound system knows we're dashing
     
 } else {
-    // Normal movement
-    var _hor = keyboard_check(ord("D")) - keyboard_check(ord("A"));
-    var _ver = keyboard_check(ord("S")) - keyboard_check(ord("W"));
-    move_dir = "idle";
-    if (_hor != 0 or _ver != 0) {
-        if (_ver > 0) {
-            move_dir = "down";
-            facing_dir = "down";
+    // ============================================
+    // CHECK FOR DOUBLE-TAP DASH (simplified)
+    // ============================================
+    if (!is_dashing && dash_cooldown <= 0) {
+        // W key double-tap
+        if (keyboard_check_pressed(ord("W"))) {
+            if (current_time - last_key_time_w < double_tap_time) {
+                start_dash("up");
+            }
+            last_key_time_w = current_time;
         }
-        else if (_ver < 0) {
-            move_dir = "up";
-            facing_dir = "up";
+        
+        // A key double-tap
+        if (keyboard_check_pressed(ord("A"))) {
+            if (current_time - last_key_time_a < double_tap_time) {
+                start_dash("left");
+            }
+            last_key_time_a = current_time;
         }
-        else if (_hor > 0) {
-            move_dir = "right";
-            facing_dir = "right";
+        
+        // S key double-tap
+        if (keyboard_check_pressed(ord("S"))) {
+            if (current_time - last_key_time_s < double_tap_time) {
+                start_dash("down");
+            }
+            last_key_time_s = current_time;
         }
-        else if (_hor < 0) {
-            move_dir = "left";
-            facing_dir = "left";
+        
+        // D key double-tap
+        if (keyboard_check_pressed(ord("D"))) {
+            if (current_time - last_key_time_d < double_tap_time) {
+                start_dash("right");
+            }
+            last_key_time_d = current_time;
         }
+    }
+
+    // ============================================
+    // MOVEMENT
+    // ============================================
+    if (is_dashing) {
+        // Handle dash movement
+        dash_timer--;
+        if (dash_timer <= 0) {
+            is_dashing = false;
+        }
+        
+        var dash_x = 0;
+        var dash_y = 0;
+        
+        switch(facing_dir) {
+            case "up":    dash_y = -dash_speed; break;
+            case "down":  dash_y = dash_speed; break;
+            case "left":  dash_x = -dash_speed; break;
+            case "right": dash_x = dash_speed; break;
+        }
+        
+        move_and_collide(dash_x, dash_y, tilemap);
+        move_dir = "dash";
+        
+    } else {
+        // idle movement
+        var _hor = keyboard_check(ord("D")) - keyboard_check(ord("A"));
+        var _ver = keyboard_check(ord("S")) - keyboard_check(ord("W"));
+        move_dir = "idle";
+        if (_hor != 0 or _ver != 0) {
+            if (_ver > 0) {
+                move_dir = "down";
+                facing_dir = "down";
+            }
+            else if (_ver < 0) {
+                move_dir = "up";
+                facing_dir = "up";
+            }
+            else if (_hor > 0) {
+                move_dir = "right";
+                facing_dir = "right";
+            }
+            else if (_hor < 0) {
+                move_dir = "left";
+                facing_dir = "left";
+            }
+        }
+        
+        // Get the tilemap from your path layer
+        var tile_layer = layer_get_id("Tiles_Path");
+        var tilemap_path = layer_tilemap_get_id(tile_layer);
+        // Check if there's a path tile at the player's position
+        var tile = tilemap_get_at_pixel(tilemap_path, x, y);
+        // If there's no path tile (tile is 0 or empty), player is on grass
+        if (tile == 0) {
+            move_speed = 1; // Slower on grass
+        } else {
+            move_speed = 1.25; // idle speed on path
+        }
+        
+        // Movement with collision
+        var _collided = move_and_collide(_hor * move_speed, _ver * move_speed, tilemap);
+        if (array_length(_collided) > 0) {
+            audio_play_sound(snd_bump, 1, false);
+        }
+    }
+
+    if (dash_cooldown > 0) {
+        dash_cooldown--;
     }
     
-    // Get the tilemap from your path layer
-    var tile_layer = layer_get_id("Tiles_Path");
-    var tilemap_path = layer_tilemap_get_id(tile_layer);
-    // Check if there's a path tile at the player's position
-    var tile = tilemap_get_at_pixel(tilemap_path, x, y);
-    // If there's no path tile (tile is 0 or empty), player is on grass
-    if (tile == 0) {
-        move_speed = 1; // Slower on grass
-    } else {
-        move_speed = 1.25; // Normal speed on path
-    }
-	
-	// In your movement code:
-var _collided = move_and_collide(_hor * move_speed, _ver * move_speed, tilemap);
-if (array_length(_collided) > 0) {
-    audio_play_sound(snd_bump, 1, false);
-}
-	
-    // move_and_collide(_hor * move_speed, _ver * move_speed, tilemap);
-}
+    #region Pillar collision checking - AFTER movement
+    var _instance = noone;
+    var pillar_list = ds_list_create();
 
-if (dash_cooldown > 0) {
-    dash_cooldown--;
+    // Find items in pillar radius
+    var pillar_count = collision_circle_list(x + interaction_offset_x, y + interaction_offset_y, 
+                                             interaction_radius, obj_rising_pillar, false, true, 
+                                             pillar_list, true);
+
+    if (pillar_count > 0) { 
+        _instance = pillar_list[| 0];
+        show_debug_message("Found pillar: " + string(_instance));
+        
+        // Call move_onto to handle the transition
+        obj_grid_controller.move_onto(_instance);
+        
+    } else if (state == PlayerState.on_grid) {
+        // Was on grid but now stepping off
+        obj_grid_controller.leave_grid();
+        state = PlayerState.idle;
+    }
+
+    ds_list_destroy(pillar_list);
+    #endregion
 }
+#endregion Movement
 
 // ============================================
 // PLAYER STEP EVENT - PICKUP CODE
@@ -168,27 +189,24 @@ var pickup_count = collision_circle_list(x + interaction_offset_x, y + interacti
                                          interaction_radius, obj_item_parent, false, true, 
                                          pickup_list, true);
 
-
 if (pickup_count > 0) { 
-	show_debug_message("Found something");
+    show_debug_message("Found something");
     _instance = pickup_list[| 0];
-	show_debug_message(_instance);
+    show_debug_message(_instance);
 }
 
 if (_instance != noone && _instance.item_def != undefined) {
     var _item_def = _instance.item_def;
     var _count = _instance.count;
-	
-	// show_debug_message("trying to pick up item " + _item_def);
     
     // Try to add to inventory
     if (inventory_add_item(_item_def, _count)) {
-		// Play pickup sound
-        audio_play_sound(snd_chest_open, 1, false);  // Replace snd_pickup with your sound asset name
+        // Play pickup sound
+        audio_play_sound(snd_chest_open, 1, false);
         
         show_debug_message("Picked up " + string(_count) + " " + _item_def.name);
         
-        // Auto-equip logic (optional - remove this section if you don't want auto-equip)
+        // Auto-equip logic
         if (_item_def.type == ItemType.WEAPON || _item_def.type == ItemType.ARMOR || _item_def.type == ItemType.TOOL) {
             
             // Find the item we just added in inventory
@@ -300,7 +318,7 @@ if (move_dir == "idle") {
     // For idle, sync with global timer but keep it in the idle animation range
     anim_frame = global.idle_bob_timer % current_anim_length;
 } else {
-    // Normal walking animation (also handles dash)
+    // idle walking animation (also handles dash)
     anim_frame += anim_speed_walk;
     if (anim_frame >= current_anim_length) {
         anim_frame = anim_frame % current_anim_length;
@@ -308,6 +326,3 @@ if (move_dir == "idle") {
 }
 
 image_index = current_anim_start + floor(anim_frame);
-
-// Reset the flag for next step
-pillar_processed_this_step = false;
