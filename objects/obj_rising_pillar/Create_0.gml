@@ -19,7 +19,7 @@ switch(height) {
 
 
 image_speed = 0 ;
-depth = -bbox_bottom;depth = -bbox_bottom;
+depth = -bbox_bottom;
 
 
 just_stepped_up = false;

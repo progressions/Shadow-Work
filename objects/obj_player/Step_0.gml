@@ -14,7 +14,7 @@ if (elevation_source != noone) {
 
 #region Movement
 
-if (state == PlayerState.on_grid) {
+if (state == PlayerState.on_grid && !obj_grid_controller.hop.active) {
 	
     // Grid-based movement - only on key press
     if (keyboard_check_pressed(ord("W"))) {
@@ -149,30 +149,27 @@ if (state == PlayerState.on_grid) {
         dash_cooldown--;
     }
     
-    #region Pillar collision checking - AFTER movement
-    var _instance = noone;
-    var pillar_list = ds_list_create();
+    #region Pillar collision checking - ONLY when NOT on grid
+	if (state != PlayerState.on_grid) {
+	    var _instance = noone;
+	    var pillar_list = ds_list_create();
 
-    // Find items in pillar radius
-    var pillar_count = collision_circle_list(x + interaction_offset_x, y + interaction_offset_y, 
-                                             interaction_radius, obj_rising_pillar, false, true, 
-                                             pillar_list, true);
+	    // Find items in pillar radius
+	    var pillar_count = collision_circle_list(x + interaction_offset_x, y + interaction_offset_y, 
+	                                             interaction_radius, obj_rising_pillar, false, true, 
+	                                             pillar_list, true);
 
-    if (pillar_count > 0) { 
-        _instance = pillar_list[| 0];
-        show_debug_message("Found pillar: " + string(_instance));
+	    if (pillar_count > 0) { 
+	        _instance = pillar_list[| 0];
+	        show_debug_message("Found pillar: " + string(_instance));
         
-        // Call move_onto to handle the transition
-        obj_grid_controller.move_onto(_instance);
-        
-    } else if (state == PlayerState.on_grid) {
-        // Was on grid but now stepping off
-        obj_grid_controller.leave_grid();
-        state = PlayerState.idle;
-    }
+	        // Call move_onto to handle the transition
+	        obj_grid_controller.move_onto(_instance);
+	    }
 
-    ds_list_destroy(pillar_list);
-    #endregion
+	    ds_list_destroy(pillar_list);
+	}
+	#endregion
 }
 #endregion Movement
 
