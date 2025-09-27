@@ -1,3 +1,9 @@
+
+if (alarm[1] > 0) {
+	target_x = x + kb_x;
+	target_y = y + kb_y;
+}
+
 /// STEP EVENT — Movement + Directional Animation (idle/walk use global bob; attack local)
 /// Sprite layout (indices):
 /// idle_[down,right,left,up]    : 2 frames each -> offsets 0, 2, 4, 6

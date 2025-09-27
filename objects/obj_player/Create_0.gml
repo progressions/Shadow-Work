@@ -2,6 +2,15 @@ move_speed = 1.25;
 
 tilemap = layer_tilemap_get_id("Tiles_Col");
 
+#region Stats
+
+hp = 10;
+hp_total = hp;
+damage = 1;
+facing_angle = 0;
+
+#endregion Stats
+
 move_dir = "right";
 facing_dir = "down";
 

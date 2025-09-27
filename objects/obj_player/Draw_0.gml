@@ -70,7 +70,7 @@ function draw_torch_simple(_item, _facing, _player_x, _player_y) {
 	}
     // Draw torch with flip if needed
     var _xscale = _pos.flip ? -1 : 1;
-    draw_sprite_ext(_torch_sprite, _torch_frame, _tx, _ty, _xscale, 1, 0, c_white, 1);
+    draw_sprite_ext(_torch_sprite, _torch_frame, _tx, _ty, _xscale, 1, 0, image_blend, 1);
 }
 
 function draw_shield_simple(_item, _facing, _player_x, _player_y) {
@@ -91,7 +91,7 @@ function draw_shield_simple(_item, _facing, _player_x, _player_y) {
         _sy += _bob;
     }
     
-    draw_sprite_ext(_shield_sprite, 0, _sx, _sy, 1, 1, _pos.angle, c_white, 1);
+    draw_sprite_ext(_shield_sprite, 0, _sx, _sy, 1, 1, _pos.angle, image_blend, 1);
 }
 
 function draw_weapon_simple(_item, _facing, _player_x, _player_y) {
@@ -112,7 +112,7 @@ function draw_weapon_simple(_item, _facing, _player_x, _player_y) {
         _wy += _bob;
     }
     
-    draw_sprite_ext(_weapon_sprite, 0, _wx, _wy, 1, 1, _pos.angle, c_white, 1);
+    draw_sprite_ext(_weapon_sprite, 0, _wx, _wy, 1, 1, _pos.angle, image_blend, 1);
 }
 
 // FIXED FUNCTION: Selective hand drawing
@@ -147,7 +147,7 @@ function draw_player_hands(_base_frame) {
             _sprite_height,    // Full height
             x - 8, y - 16 + y_offset, 
             image_xscale, image_yscale,
-            c_white, 1
+            image_blend, 1
         );
     } else if (!_has_weapon && _holding_torch) {
         // Torch covers one hand, but which one depends on facing direction
@@ -162,7 +162,7 @@ function draw_player_hands(_base_frame) {
                 _sprite_height,    // Full height
                 x - 8, y - 16 + y_offset, 
                 image_xscale, image_yscale,
-                c_white, 1
+                image_blend, 1
             );
         } else {
             // For all other directions, torch is on left side, so show right hand
@@ -174,7 +174,7 @@ function draw_player_hands(_base_frame) {
                 _sprite_height,    // Full height
                 x - 8 + _half, y - 16 + y_offset,  // Offset x position by half width
                 image_xscale, image_yscale,
-                c_white, 1
+                image_blend, 1
             );
         }
     } else if (!_has_weapon && !_holding_torch) {
@@ -188,7 +188,7 @@ function draw_player_hands(_base_frame) {
             x - 8, y - 16 + y_offset,           // Draw position
             image_xscale, 
             image_yscale, 
-            c_white, 
+            image_blend, 
             1
         );
     }
@@ -215,7 +215,7 @@ function draw_player_with_equipment() {
             }
             
             // Player
-            draw_sprite_ext(sprite_index, _base_frame, x, y + y_offset, image_xscale, image_yscale, 0, c_white, 1);
+            draw_sprite_ext(sprite_index, _base_frame, x, y + y_offset, image_xscale, image_yscale, 0, image_blend, 1);
             
             // Draw hands conditionally
             draw_player_hands(_base_frame);
@@ -232,7 +232,7 @@ function draw_player_with_equipment() {
         case "right":
         case "down":
             // Player first
-            draw_sprite_ext(sprite_index, _base_frame, x, y + y_offset, image_xscale, image_yscale, 0, c_white, 1);
+            draw_sprite_ext(sprite_index, _base_frame, x, y + y_offset, image_xscale, image_yscale, 0, image_blend, 1);
             
             // Draw hands conditionally
             draw_player_hands(_base_frame);
@@ -252,7 +252,7 @@ function draw_player_with_equipment() {
             
         case "left":
             // Player
-            draw_sprite_ext(sprite_index, _base_frame, x, y + y_offset, image_xscale, image_yscale, 0, c_white, 1);
+            draw_sprite_ext(sprite_index, _base_frame, x, y + y_offset, image_xscale, image_yscale, 0, image_blend, 1);
             
             // Draw hands conditionally
             draw_player_hands(_base_frame);
@@ -276,21 +276,21 @@ function draw_armor_layers(_frame, _x, _y) {
     if (equipped.torso != undefined) {
         var _armor_sprite = get_equipped_sprite(equipped.torso.definition.equipped_sprite_key);
         if (_armor_sprite != -1) {
-            draw_sprite_ext(_armor_sprite, _frame, _x, _y, image_xscale, image_yscale, 0, c_white, 1);
+            draw_sprite_ext(_armor_sprite, _frame, _x, _y, image_xscale, image_yscale, 0, image_blend, 1);
         }
     }
     
     if (equipped.head != undefined) {
         var _helmet_sprite = get_equipped_sprite(equipped.head.definition.equipped_sprite_key);
         if (_helmet_sprite != -1) {
-            draw_sprite_ext(_helmet_sprite, _frame, _x, _y, image_xscale, image_yscale, 0, c_white, 1);
+            draw_sprite_ext(_helmet_sprite, _frame, _x, _y, image_xscale, image_yscale, 0, image_blend, 1);
         }
     }
     
     if (equipped.legs != undefined) {
         var _boots_sprite = get_equipped_sprite(equipped.legs.definition.equipped_sprite_key);
         if (_boots_sprite != -1) {
-            draw_sprite_ext(_boots_sprite, _frame, _x, _y, image_xscale, image_yscale, 0, c_white, 1);
+            draw_sprite_ext(_boots_sprite, _frame, _x, _y, image_xscale, image_yscale, 0, image_blend, 1);
         }
     }
 }

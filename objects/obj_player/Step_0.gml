@@ -5,6 +5,9 @@ if (global.game_paused) exit;
 // Make pillars slightly behind player at same position
 depth = -bbox_bottom;
 
+var _hor = 0;
+var _ver = 0;
+
 // Update elevation and offset
 if (elevation_source != noone) {
     y_offset = elevation_source.y_offset;
@@ -112,8 +115,9 @@ if (state == PlayerState.on_grid && !obj_grid_controller.hop.active) {
         
     } else {
         // idle movement
-        var _hor = keyboard_check(ord("D")) - keyboard_check(ord("A"));
-        var _ver = keyboard_check(ord("S")) - keyboard_check(ord("W"));
+        _hor = keyboard_check(ord("D")) - keyboard_check(ord("A"));
+        _ver = keyboard_check(ord("S")) - keyboard_check(ord("W"));
+		 
         move_dir = "idle";
         if (_hor != 0 or _ver != 0) {
             if (_ver > 0) {
@@ -151,6 +155,7 @@ if (state == PlayerState.on_grid && !obj_grid_controller.hop.active) {
         if (array_length(_collided) > 0) {
             audio_play_sound(snd_bump, 1, false);
         }
+		
     }
 
     if (dash_cooldown > 0) {
@@ -339,3 +344,29 @@ if (move_dir == "idle") {
 }
 
 image_index = current_anim_start + floor(anim_frame);
+
+
+if (keyboard_check_pressed(ord("J"))) {
+	 var _inst = instance_create_depth(x, y, depth, obj_attack);
+	 switch (facing_dir) {
+	    case "down":
+	        _inst.image_angle = 270;
+	        break;
+	    case "right":
+	        _inst.image_angle = 0;
+			_inst.y = y - 8;
+			_inst.x = x + 8;
+	        break;
+	    case "left":
+	        _inst.image_angle = 180;
+			_inst.y = y - 8;
+			_inst.x = x - 8;
+	        break;
+	    case "up":
+	        _inst.image_angle = 90;
+			_inst.y = y - 16;
+	        break;
+	}
+
+	 _inst.damage = damage;
+}
