@@ -345,7 +345,18 @@ if (move_dir == "idle") {
 
 image_index = current_anim_start + floor(anim_frame);
 
+#region Attack
 
+if (keyboard_check_pressed(ord("J"))) {
+	state = PlayerState.attacking;
+	
+	var attack = instance_create_layer(x, y, "Instances", obj_attack);
+	attack.creator = id;
+}
+
+#endregion Attack
+
+/*
 if (keyboard_check_pressed(ord("J"))) {
 	 var _inst = instance_create_depth(x, y, depth, obj_attack);
 	 switch (facing_dir) {
@@ -370,3 +381,4 @@ if (keyboard_check_pressed(ord("J"))) {
 
 	 _inst.damage = damage;
 }
+*/

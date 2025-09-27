@@ -95,6 +95,8 @@ function draw_shield_simple(_item, _facing, _player_x, _player_y) {
 }
 
 function draw_weapon_simple(_item, _facing, _player_x, _player_y) {
+	if (state == PlayerState.attacking) return;
+	
     var _weapon_sprite = get_equipped_sprite(_item.definition.equipped_sprite_key);
     if (_weapon_sprite == -1) return;
     
@@ -117,6 +119,7 @@ function draw_weapon_simple(_item, _facing, _player_x, _player_y) {
 
 // FIXED FUNCTION: Selective hand drawing
 function draw_player_hands(_base_frame) {
+	if (state == PlayerState.attacking) return;
 
     // Determine which hands to show
     var _holding_torch = (equipped.left_hand != undefined && 
@@ -134,7 +137,7 @@ function draw_player_hands(_base_frame) {
         // Both hands covered by item sprites
         return;
     } else if (_has_weapon && !_holding_torch) {
-		
+				
 		// if the weapon is two-handed, no need to draw the hands
 		if (equipped.right_hand.definition.stats.handedness == WeaponHandedness.TWO_HANDED) return;
 		
