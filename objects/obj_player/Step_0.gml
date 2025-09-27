@@ -1,3 +1,5 @@
+/// obj_player : Step
+
 if (global.game_paused) exit;
 
 // Make pillars slightly behind player at same position
@@ -10,6 +12,12 @@ if (elevation_source != noone) {
 } else {
     y_offset = 0;
     current_elevation = -1;
+}
+
+// Read grid visual offset (fallback if controller not present)
+var GRID_Y_OFFSET = -8;
+if (instance_exists(obj_grid_controller)) {
+    GRID_Y_OFFSET = obj_grid_controller.GRID_Y_OFFSET;
 }
 
 #region Movement
@@ -94,9 +102,9 @@ if (state == PlayerState.on_grid && !obj_grid_controller.hop.active) {
         
         switch(facing_dir) {
             case "up":    dash_y = -dash_speed; break;
-            case "down":  dash_y = dash_speed; break;
+            case "down":  dash_y =  dash_speed; break;
             case "left":  dash_x = -dash_speed; break;
-            case "right": dash_x = dash_speed; break;
+            case "right": dash_x =  dash_speed; break;
         }
         
         move_and_collide(dash_x, dash_y, tilemap);
@@ -150,14 +158,22 @@ if (state == PlayerState.on_grid && !obj_grid_controller.hop.active) {
     }
     
     #region Pillar collision checking - ONLY when NOT on grid
-	if (state != PlayerState.on_grid) {
+    // Use un-offset probe Y so entering from LEFT/RIGHT registers correctly.
+	if (state != PlayerState.on_grid && (!instance_exists(obj_grid_controller) || !obj_grid_controller.hop.active)) {
 	    var _instance = noone;
 	    var pillar_list = ds_list_create();
 
-	    // Find items in pillar radius
-	    var pillar_count = collision_circle_list(x + interaction_offset_x, y + interaction_offset_y, 
-	                                             interaction_radius, obj_rising_pillar, false, true, 
-	                                             pillar_list, true);
+	    // Find items in pillar radius — PROBE at (y - GRID_Y_OFFSET)
+	    var probe_cx = x + interaction_offset_x;
+	    var probe_cy = (y - GRID_Y_OFFSET) + interaction_offset_y;
+
+	    var pillar_count = collision_circle_list(
+	        probe_cx, probe_cy,
+	        interaction_radius,
+	        obj_rising_pillar,
+	        false, true, 
+	        pillar_list, true
+	    );
 
 	    if (pillar_count > 0) { 
 	        _instance = pillar_list[| 0];

@@ -1,7 +1,12 @@
+// =====================
 // Grid configuration
-grid_width = 4;
+// =====================
+grid_width  = 4;
 grid_height = 4;
-tile_size = 16; // Adjust based on your pillar spacing
+tile_size   = 16; // Adjust based on your pillar spacing
+
+// Center the player on the tile visually (negative moves the player up)
+GRID_Y_OFFSET = -8;
 
 // Create empty grid array
 pillars = array_create(grid_width);
@@ -12,12 +17,9 @@ for (var i = 0; i < grid_width; i++) {
 // This will run after all pillars are created
 alarm[0] = 1;
 
-// Grid configuration
-grid_width = 4;
-grid_height = 4;
-tile_size = 16;
+// State
 previous_pillar = noone;
-current_pillar = noone;
+current_pillar  = noone;
 
 // Hopping animation
 hop = {
@@ -31,26 +33,25 @@ hop = {
     height: 4    // Peak height of hop arc
 };
 
-// Create empty grid array
+// Create empty grid array (dup-safe)
 pillars = array_create(grid_width);
-for (var i = 0; i < grid_width; i++) {
-    pillars[i] = array_create(grid_height);
+for (var ii = 0; ii < grid_width; ii++) {
+    pillars[ii] = array_create(grid_height);
 }
 
 alarm[0] = 1;
 
-
-
-
-#region functions
+// =====================
+// functions
+// =====================
 
 function update_depths() {
-    for (var i = 0; i < grid_width; i++) {
-        for (var j = 0; j < grid_height; j++) {
-            var pillar = pillars[i][j];
+    for (var gx = 0; gx < grid_width; gx++) {
+        for (var gy = 0; gy < grid_height; gy++) {
+            var pillar = pillars[gx][gy];
             if (pillar != 0 && pillar != undefined) {
                 // Larger j (row further down) gets a LOWER depth → draws in front
-                pillar.depth = -j * 10;
+                pillar.depth = -gy * 10;
             }
         }
     }
@@ -61,10 +62,10 @@ function update_depths() {
     }
 }
 
-
 function move_onto(_instance) { 
-	   if (hop.active) return;
-	update_depths();
+    if (hop.active) return;
+    update_depths();
+
     with (obj_player) {
         show_debug_message("current_elevation " + string(current_elevation));
         show_debug_message("_instance.height " + string(_instance.height));
@@ -78,14 +79,22 @@ function move_onto(_instance) {
             // Set new pillar to grey
             _instance.image_blend = c_grey;
             other.previous_pillar = _instance;
-            other.current_pillar = _instance;
+            other.current_pillar  = _instance;
+
+            // Toggle the target of the newly current pillar (if it's a rising pillar)
+            if (_instance.object_index == obj_rising_pillar) {
+                with (_instance) {
+                    toggle_target();
+                }
+            }
             
-            // Snap player to grid position
+            // Snap player to grid position (use central offset)
             x = _instance.x;
-            y = _instance.y;
+            y = _instance.y + other.GRID_Y_OFFSET;
             
-            elevation_source = _instance;
-            state = PlayerState.on_grid;  // Set flag that player is on grid
+            elevation_source   = _instance;
+            current_elevation  = _instance.height; // keep elevation in sync
+            state              = PlayerState.on_grid;
         } else {
             x = xprevious;
             y = yprevious;
@@ -106,16 +115,14 @@ function leave_grid() {
     current_pillar  = noone;
 
     // Explicitly mark player off-grid
-    obj_player.elevation_source = noone;
-    obj_player.state            = PlayerState.idle;
+    obj_player.elevation_source  = noone;
+    obj_player.current_elevation = -1;      // ground, to keep height logic consistent
+    obj_player.state             = PlayerState.idle;
 }
-
-
 
 /// 1) PLAN: figure out what we’re trying to step to
 function plan_grid_step(direction_x, direction_y) {
     var plan = {
-        // filled below
         off_grid: false,
         next_grid_x: 0,
         next_grid_y: 0,
@@ -144,11 +151,11 @@ function plan_grid_step(direction_x, direction_y) {
     );
 
     if (plan.off_grid) {
-        // Land using your existing origin math
+        // Land using grid origin; apply offset so hop looks consistent
         var origin_x = pillars[0][0].x;
         var origin_y = pillars[0][0].y;
         plan.target_world_x = origin_x + plan.next_grid_x * tile_size;
-        plan.target_world_y = origin_y + plan.next_grid_y * tile_size;
+        plan.target_world_y = origin_y + plan.next_grid_y * tile_size + GRID_Y_OFFSET;
     } else {
         // On-grid target pillar
         var p = pillars[plan.next_grid_x][plan.next_grid_y];
@@ -205,13 +212,20 @@ function apply_grid_step(plan) {
     // Update pillar refs (keeps your original pattern where both point to target)
     previous_pillar = target;
     current_pillar  = target;
+	
+    // Trigger the target toggle on the newly current pillar (if rising pillar)
+    if (current_pillar.object_index == obj_rising_pillar) {
+        with (current_pillar) {
+            toggle_target();
+        }
+    }
 
-    // Start hop to pillar
+    // Start hop to pillar (apply consistent visual offset on landing)
     hop.active   = true;
     hop.start_x  = obj_player.x;
     hop.start_y  = obj_player.y;
     hop.target_x = target.x;
-    hop.target_y = target.y - 8;
+    hop.target_y = target.y + GRID_Y_OFFSET;
     hop.progress = 0;
 
     // Elevation
@@ -229,9 +243,35 @@ function try_grid_move(direction_x, direction_y) {
     return apply_grid_step(plan);
 }
 
+function move_down()  { return try_grid_move(0,  1); }
+function move_up()    { return try_grid_move(0, -1); }
+function move_left()  { return try_grid_move(-1, 0); }
+function move_right() { return try_grid_move(1,  0); }
 
-function move_down() { return try_grid_move(0, 1); }
-function move_up() { return try_grid_move(0, -1); }
-function move_left() { return try_grid_move(-1, 0); }
-function move_right() { return try_grid_move(1, 0); }
+/// obj_grid_controller
+function reset_all_pillars_to_original() {
+    with (obj_rising_pillar) {
+        var changed = (height != original_height);
 
+        // Reset height (touch any fields your pillar logic uses)
+        height         = original_height;
+        target_height  = original_height;
+        display_height = original_height;
+        current_height = original_height;
+
+        // Reset state
+        is_toggled      = false;
+        highlight_timer = 0;
+        emphasis_timer  = 0;
+        image_blend     = c_white;
+
+        // Emphasize if this pillar changed
+        if (changed) {
+            emphasize_pillar_feedback();
+        }
+    }
+
+    // Clear highlights tracked by the controller
+    if (previous_pillar != noone && instance_exists(previous_pillar)) previous_pillar.image_blend = c_white;
+    if (current_pillar  != noone && instance_exists(current_pillar))  current_pillar.image_blend  = c_white;
+}

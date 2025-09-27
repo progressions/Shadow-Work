@@ -1,12 +1,12 @@
 {
   "$GMObject":"",
-  "%Name":"obj_rising_pillar",
+  "%Name":"obj_reset_pad",
   "eventList":[
     {"$GMEvent":"v1","%Name":"","collisionObjectId":null,"eventNum":0,"eventType":0,"isDnD":false,"name":"","resourceType":"GMEvent","resourceVersion":"2.0",},
     {"$GMEvent":"v1","%Name":"","collisionObjectId":null,"eventNum":0,"eventType":3,"isDnD":false,"name":"","resourceType":"GMEvent","resourceVersion":"2.0",},
   ],
   "managed":true,
-  "name":"obj_rising_pillar",
+  "name":"obj_reset_pad",
   "overriddenProperties":[],
   "parent":{
     "name":"Objects",
@@ -26,17 +26,13 @@
   "physicsShape":1,
   "physicsShapePoints":[],
   "physicsStartAwake":true,
-  "properties":[
-    {"$GMObjectProperty":"v1","%Name":"pillar_id","filters":[],"listItems":[],"multiselect":false,"name":"pillar_id","rangeEnabled":false,"rangeMax":10.0,"rangeMin":0.0,"resourceType":"GMObjectProperty","resourceVersion":"2.0","value":"0","varType":0,},
-    {"$GMObjectProperty":"v1","%Name":"height","filters":[],"listItems":[],"multiselect":false,"name":"height","rangeEnabled":false,"rangeMax":10.0,"rangeMin":0.0,"resourceType":"GMObjectProperty","resourceVersion":"2.0","value":"0","varType":0,},
-    {"$GMObjectProperty":"v1","%Name":"target_pillar_id","filters":[],"listItems":[],"multiselect":false,"name":"target_pillar_id","rangeEnabled":false,"rangeMax":10.0,"rangeMin":0.0,"resourceType":"GMObjectProperty","resourceVersion":"2.0","value":"0","varType":0,},
-  ],
+  "properties":[],
   "resourceType":"GMObject",
   "resourceVersion":"2.0",
   "solid":false,
   "spriteId":{
-    "name":"spr_rising_pillar",
-    "path":"sprites/spr_rising_pillar/spr_rising_pillar.yy",
+    "name":"spr_button_reset",
+    "path":"sprites/spr_button_reset/spr_button_reset.yy",
   },
   "spriteMaskId":null,
   "visible":true,
