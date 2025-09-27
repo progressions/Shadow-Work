@@ -6,6 +6,13 @@ enum PlayerState {
 	on_grid,
 }
 
+enum Direction {
+	down,
+	right,
+	left,
+	up
+}
+
 enum ButtonType {
 	Resume,
 	Settings,
