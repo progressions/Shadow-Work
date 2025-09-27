@@ -35,5 +35,5 @@
     "path":"sprites/spr_button_reset/spr_button_reset.yy",
   },
   "spriteMaskId":null,
-  "visible":true,
+  "visible":false,
 }
