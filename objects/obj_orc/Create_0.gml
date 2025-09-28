@@ -5,5 +5,6 @@ event_inherited();
 attack_damage = 3;
 attack_speed = 0.6;
 attack_range = 25;
-hp = 6;
+hp = 18;
+hp_total = hp;
 move_speed = 0.8;
