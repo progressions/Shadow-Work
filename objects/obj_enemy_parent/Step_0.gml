@@ -84,11 +84,18 @@ var frame_offset;
 if (state == PlayerState.idle || state == PlayerState.walking) {
     // Sync idle + walking to the shared global bob timer
     frame_offset = global.idle_bob_timer % frames_in_seq;
-} else { 
+} else {
     // Attacking uses local timing (can also be switched to global if desired)
     var speed_mult = 1.25; // faster feel for attacks
     anim_timer += anim_speed * speed_mult;
     frame_offset = floor(anim_timer) mod frames_in_seq;
+
+    // Check if attack animation has completed
+    if (state == PlayerState.attacking && anim_timer >= frames_in_seq) {
+        // Attack animation finished, return to movement behavior
+        state = PlayerState.walking;
+        anim_timer = 0; // Reset for next attack
+    }
 }
 
 /// ---------- Final image index
