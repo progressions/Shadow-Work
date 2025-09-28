@@ -377,11 +377,6 @@ function is_two_handing() {
     if (equipped.right_hand != undefined) {
         var _handedness = equipped.right_hand.definition.handedness;
         if (_handedness == WeaponHandedness.two_handed) return true;
-        
-        // Versatile weapons are two-handed when left hand is empty
-        if (_handedness == WeaponHandedness.versatile && equipped.left_hand == undefined) {
-            return true;
-        }
     }
     return false;
 }

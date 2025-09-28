@@ -137,21 +137,36 @@ function draw_player_hands(_base_frame) {
         // Both hands covered by item sprites
         return;
     } else if (_has_weapon && !_holding_torch) {
-				
+
 		// if the weapon is two-handed, no need to draw the hands
 		if (equipped.right_hand.definition.stats.handedness == WeaponHandedness.two_handed) return;
-		
-        // Right hand covered by weapon, need to show left hand only
-        draw_sprite_part_ext(
-            _hands_sprite,
-            _base_frame,
-            0, 0,              // Start from left edge
-            _half,             // Width of left half
-            _sprite_height,    // Full height
-            x - 8, y - 16 + y_offset, 
-            image_xscale, image_yscale,
-            image_blend, 1
-        );
+
+        // Right hand covered by weapon, left hand visibility depends on facing direction
+        if (facing_dir == "left") {
+            // When facing left, weapon sprite includes left hand, so show right hand only
+            draw_sprite_part_ext(
+                _hands_sprite,
+                _base_frame,
+                _half, 0,          // Start from middle of sprite (RIGHT HALF)
+                _half,             // Width of right half
+                _sprite_height,    // Full height
+                x - 8 + _half, y - 16 + y_offset,  // Offset x position by half width
+                image_xscale, image_yscale,
+                image_blend, 1
+            );
+        } else {
+            // For other directions, show left hand only
+            draw_sprite_part_ext(
+                _hands_sprite,
+                _base_frame,
+                0, 0,              // Start from left edge
+                _half,             // Width of left half
+                _sprite_height,    // Full height
+                x - 8, y - 16 + y_offset,
+                image_xscale, image_yscale,
+                image_blend, 1
+            );
+        }
     } else if (!_has_weapon && _holding_torch) {
         // Torch covers one hand, but which one depends on facing direction
         
