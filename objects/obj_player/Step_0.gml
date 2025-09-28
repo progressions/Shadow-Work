@@ -351,34 +351,9 @@ if (keyboard_check_pressed(ord("J"))) {
 	state = PlayerState.attacking;
 	
 	var attack = instance_create_layer(x, y, "Instances", obj_attack);
-	attack.creator = id;
+	attack.creator = self;
+	
+
 }
 
 #endregion Attack
-
-/*
-if (keyboard_check_pressed(ord("J"))) {
-	 var _inst = instance_create_depth(x, y, depth, obj_attack);
-	 switch (facing_dir) {
-	    case "down":
-	        _inst.image_angle = 270;
-	        break;
-	    case "right":
-	        _inst.image_angle = 0;
-			_inst.y = y - 8;
-			_inst.x = x + 8;
-	        break;
-	    case "left":
-	        _inst.image_angle = 180;
-			_inst.y = y - 8;
-			_inst.x = x - 8;
-	        break;
-	    case "up":
-	        _inst.image_angle = 90;
-			_inst.y = y - 16;
-	        break;
-	}
-
-	 _inst.damage = damage;
-}
-*/

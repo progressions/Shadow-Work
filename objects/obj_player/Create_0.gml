@@ -34,7 +34,6 @@ interaction_offset_x = 0;
 interaction_offset_y = -8;
 interaction_radius = 1;
 
-// instance_create_depth(x, y, depth - 1, obj_player_hands);
 
 // Initialize the global frame tracker
 global_frame = 0;
