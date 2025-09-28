@@ -1,4 +1,4 @@
-if (alarm[0] < 0 && other.state != PlayerState.dead) {
+if (alarm[0] < 0 && other.state != EnemyState.dead) {
 	
 	hp -= other.damage;
 	

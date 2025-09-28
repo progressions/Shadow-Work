@@ -3,7 +3,7 @@ if (alarm[1] > 0) {
 	target_x = x + kb_x;
 	target_y = y + kb_y;
 }
-if (state == PlayerState.dead) {
+if (state == EnemyState.dead) {
 	// Play dying animation once, then stay on final frame
 	if (!variable_instance_exists(self, "death_anim_complete")) {
 		death_anim_complete = false;
@@ -28,7 +28,7 @@ if (state == PlayerState.dead) {
 	}
 	return; // Skip the rest of the animation logic
 }
-if (state != PlayerState.dead) {
+if (state != EnemyState.dead) {
 /// STEP EVENT — Movement + Directional Animation (using structured anim data)
 /// Animation frames are defined in global.enemy_anim_data
 
@@ -45,8 +45,8 @@ var _ver = clamp(target_y - y, -1, 1);
 var _is_moving = (abs(_hor) > 0.1) || (abs(_ver) > 0.1);
 
 /// ---------- State control
-if (state != PlayerState.attacking) {
-    state = _is_moving ? PlayerState.walking : PlayerState.idle;
+if (state != EnemyState.attacking) {
+    state = _is_moving ? EnemyState.idle : EnemyState.idle;
 }
 
 /// ---------- Apply movement
@@ -74,14 +74,14 @@ var frames_in_seq = anim_info.length;
 if (prev_start_index != start_index) {
     // idle/walk use global timer so no need to reset anything there
     // attack uses local timer; reset it for crisp starts
-    if (state == PlayerState.attacking) anim_timer = 0;
+    if (state == EnemyState.attacking) anim_timer = 0;
     prev_start_index = start_index;
 }
 
 /// ---------- Choose frame
 var frame_offset;
 
-if (state == PlayerState.idle || state == PlayerState.walking) {
+if (state == EnemyState.idle) {
     // Sync idle + walking to the shared global bob timer
     frame_offset = global.idle_bob_timer % frames_in_seq;
 } else {
@@ -91,9 +91,9 @@ if (state == PlayerState.idle || state == PlayerState.walking) {
     frame_offset = floor(anim_timer) mod frames_in_seq;
 
     // Check if attack animation has completed
-    if (state == PlayerState.attacking && anim_timer >= frames_in_seq) {
+    if (state == EnemyState.attacking && anim_timer >= frames_in_seq) {
         // Attack animation finished, return to movement behavior
-        state = PlayerState.walking;
+        state = EnemyState.idle;
         anim_timer = 0; // Reset for next attack
     }
 }
@@ -117,13 +117,13 @@ if (attack_cooldown > 0) {
 }
 
 // Check if player is in attack range and we can attack
-if (can_attack && state != PlayerState.attacking) {
+if (can_attack && state != EnemyState.attacking) {
     var _player = instance_nearest(x, y, obj_player);
     if (_player != noone) {
         var _dist = point_distance(x, y, _player.x, _player.y);
         if (_dist <= attack_range) {
             // Start attack
-            state = PlayerState.attacking;
+            state = EnemyState.attacking;
             attack_cooldown = round(90 / attack_speed); // Enemy attacks are slower
             can_attack = false;
 

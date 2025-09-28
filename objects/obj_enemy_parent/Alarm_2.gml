@@ -1,5 +1,5 @@
 // Enemy attack execution
-if (state == PlayerState.attacking) {
+if (state == EnemyState.attacking) {
     // Create visual attack effect
     var _attack = instance_create_layer(x, y, "Instances", obj_enemy_attack);
     _attack.creator = self;

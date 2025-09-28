@@ -21,7 +21,7 @@ move_dir_y = 0;
 current_base_frame = 0;
 frame_counter = 0;
 
-state = PlayerState.idle;
+state = EnemyState.idle;
 
 kb_x = 0;
 kb_y = 0;

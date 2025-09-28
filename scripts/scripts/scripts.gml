@@ -7,6 +7,12 @@ enum PlayerState {
 	dead,
 }
 
+enum EnemyState {
+	idle,
+	attacking,
+	dead,
+}
+
 enum Direction {
 	down,
 	right,
@@ -419,10 +425,9 @@ function get_enemy_anim(state, dir_index) {
     var state_name = "";
 
     switch(state) {
-        case PlayerState.idle: state_name = "idle"; break;
-        case PlayerState.walking: state_name = "walk"; break;
-        case PlayerState.attacking: state_name = "attack"; break;
-        case PlayerState.dead: state_name = "dying"; break;
+        case EnemyState.idle: state_name = "idle"; break;
+        case EnemyState.attacking: state_name = "attack"; break;
+        case EnemyState.dead: state_name = "dying"; break;
         default: state_name = "idle"; break;
     }
 
