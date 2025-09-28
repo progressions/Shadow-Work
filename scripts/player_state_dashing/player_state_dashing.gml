@@ -28,4 +28,7 @@ function player_state_dashing() {
     if (dash_cooldown > 0) {
         dash_cooldown--;
     }
+
+    // Handle knockback
+    player_handle_knockback();
 }

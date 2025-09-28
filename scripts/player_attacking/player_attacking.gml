@@ -7,6 +7,9 @@ function player_attacking(){
 function player_state_attacking() {
     // In attack state - wait for animation to complete
     // The animation system will reset state to idle when attack animation finishes
+
+    // Handle knockback
+    player_handle_knockback();
 }
 
 function player_handle_attack_input() {

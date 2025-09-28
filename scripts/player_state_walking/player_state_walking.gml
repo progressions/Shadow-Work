@@ -53,4 +53,7 @@ function player_state_walking() {
 
     // Check for pillar interaction while walking
     player_move_onto_pillar();
+
+    // Handle knockback
+    player_handle_knockback();
 }

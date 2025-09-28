@@ -15,4 +15,7 @@ function player_state_idle() {
 
     // Stay in idle
     move_dir = "idle";
+
+    // Handle knockback
+    player_handle_knockback();
 }

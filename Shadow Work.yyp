@@ -68,6 +68,7 @@
     {"id":{"name":"player_handle_animation","path":"scripts/player_handle_animation/player_handle_animation.yy",},},
     {"id":{"name":"player_handle_dash_cooldown","path":"scripts/player_handle_dash_cooldown/player_handle_dash_cooldown.yy",},},
     {"id":{"name":"player_handle_dash_input","path":"scripts/player_handle_dash_input/player_handle_dash_input.yy",},},
+    {"id":{"name":"player_handle_knockback","path":"scripts/player_handle_knockback/player_handle_knockback.yy",},},
     {"id":{"name":"player_handle_pickup","path":"scripts/player_handle_pickup/player_handle_pickup.yy",},},
     {"id":{"name":"player_idle","path":"scripts/player_idle/player_idle.yy",},},
     {"id":{"name":"player_move_onto_pillar","path":"scripts/player_move_onto_pillar/player_move_onto_pillar.yy",},},
