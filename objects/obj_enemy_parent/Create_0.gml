@@ -2,6 +2,8 @@
 // Get the tilemap for collisions
 tilemap = layer_tilemap_get_id("Tiles_Col");
 
+hp_total = hp;
+
 // Initialize animation variables - IMPORTANT!
 anim_timer = 0;  // Make sure this is here
 image_speed = 0;
