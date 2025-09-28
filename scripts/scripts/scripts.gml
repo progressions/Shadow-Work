@@ -125,8 +125,8 @@ global.item_database = {
     ),
     
     // Row 3 - Chain armor set (frames 12-14) and Leather armor set (frames 15-17)
-    chain_helmet: new create_item_definition(
-        12, "chain_helmet", "Chain Helmet", ItemType.armor, EquipSlot.helmet,
+    iron_helmet: new create_item_definition(
+        12, "iron_helmet", "Iron Helmet", ItemType.armor, EquipSlot.helmet,
         {defense: 4}
     ),
     chain_armor: new create_item_definition(
@@ -371,9 +371,9 @@ function get_slot_name(_slot) {
     switch(_slot) {
         case EquipSlot.right_hand: return "right_hand";
         case EquipSlot.left_hand: return "left_hand";
-        case EquipSlot.helmet: return "helmet";
-        case EquipSlot.armor: return "armor";
-        case EquipSlot.boots: return "boots";
+        case EquipSlot.helmet: return "head";
+        case EquipSlot.armor: return "torso";
+        case EquipSlot.boots: return "legs";
         default: return "none";
     }
 }
@@ -482,7 +482,7 @@ function get_attack_range() {
 
 function get_total_defense() {
     var _total_defense = 0;
-    var _slots = ["helmet", "armor", "boots", "left_hand", "right_hand"];
+    var _slots = ["head", "torso", "legs", "left_hand", "right_hand"];
     
     for (var i = 0; i < array_length(_slots); i++) {
         if (equipped[$ _slots[i]] != undefined) {
@@ -507,7 +507,7 @@ function get_block_chance() {
 
 function get_speed_modifier() {
     var _speed = 1.0;
-    var _slots = ["helmet", "armor", "boots", "left_hand", "right_hand"];
+    var _slots = ["head", "torso", "legs", "left_hand", "right_hand"];
     
     for (var i = 0; i < array_length(_slots); i++) {
         if (equipped[$ _slots[i]] != undefined) {

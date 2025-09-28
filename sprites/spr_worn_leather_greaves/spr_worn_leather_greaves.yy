@@ -1,6 +1,6 @@
 {
   "$GMSprite":"",
-  "%Name":"spr_worn_leather_boots",
+  "%Name":"spr_worn_leather_greaves",
   "bboxMode":0,
   "bbox_bottom":15,
   "bbox_left":3,
@@ -81,7 +81,7 @@
   "layers":[
     {"$GMImageLayer":"","%Name":"86737c41-2a6f-4cd9-867f-fae2081b1d7b","blendMode":0,"displayName":"default","isLocked":false,"name":"86737c41-2a6f-4cd9-867f-fae2081b1d7b","opacity":100.0,"resourceType":"GMImageLayer","resourceVersion":"2.0","visible":true,},
   ],
-  "name":"spr_worn_leather_boots",
+  "name":"spr_worn_leather_greaves",
   "nineSlice":null,
   "origin":7,
   "parent":{
@@ -93,7 +93,7 @@
   "resourceVersion":"2.0",
   "sequence":{
     "$GMSequence":"v1",
-    "%Name":"spr_worn_leather_boots",
+    "%Name":"spr_worn_leather_greaves",
     "autoRecord":true,
     "backdropHeight":768,
     "backdropImageOpacity":0.5,
@@ -117,7 +117,7 @@
       "resourceType":"KeyframeStore<MomentsEventKeyframe>",
       "resourceVersion":"2.0",
     },
-    "name":"spr_worn_leather_boots",
+    "name":"spr_worn_leather_greaves",
     "playback":1,
     "playbackSpeed":30.0,
     "playbackSpeedType":0,
@@ -131,187 +131,187 @@
     "tracks":[
       {"$GMSpriteFramesTrack":"","builtinName":0,"events":[],"inheritsTrackColour":true,"interpolation":1,"isCreationTrack":false,"keyframes":{"$KeyframeStore<SpriteFrameKeyframe>":"","Keyframes":[
             {"$Keyframe<SpriteFrameKeyframe>":"","Channels":{
-                "0":{"$SpriteFrameKeyframe":"","Id":{"name":"243264c0-e0d2-49d1-8840-8d91ea95a7b2","path":"sprites/spr_worn_leather_boots/spr_worn_leather_boots.yy",},"resourceType":"SpriteFrameKeyframe","resourceVersion":"2.0",},
+                "0":{"$SpriteFrameKeyframe":"","Id":{"name":"243264c0-e0d2-49d1-8840-8d91ea95a7b2","path":"sprites/spr_worn_leather_greaves/spr_worn_leather_greaves.yy",},"resourceType":"SpriteFrameKeyframe","resourceVersion":"2.0",},
               },"Disabled":false,"id":"9e1afabd-f2d3-444c-a06d-f395f3f40ef6","IsCreationKey":false,"Key":0.0,"Length":1.0,"resourceType":"Keyframe<SpriteFrameKeyframe>","resourceVersion":"2.0","Stretch":false,},
             {"$Keyframe<SpriteFrameKeyframe>":"","Channels":{
-                "0":{"$SpriteFrameKeyframe":"","Id":{"name":"620c2c5e-1e38-4b14-9949-0671419b6287","path":"sprites/spr_worn_leather_boots/spr_worn_leather_boots.yy",},"resourceType":"SpriteFrameKeyframe","resourceVersion":"2.0",},
+                "0":{"$SpriteFrameKeyframe":"","Id":{"name":"620c2c5e-1e38-4b14-9949-0671419b6287","path":"sprites/spr_worn_leather_greaves/spr_worn_leather_greaves.yy",},"resourceType":"SpriteFrameKeyframe","resourceVersion":"2.0",},
               },"Disabled":false,"id":"2b8dc111-b1eb-4e16-a241-251065a88743","IsCreationKey":false,"Key":1.0,"Length":1.0,"resourceType":"Keyframe<SpriteFrameKeyframe>","resourceVersion":"2.0","Stretch":false,},
             {"$Keyframe<SpriteFrameKeyframe>":"","Channels":{
-                "0":{"$SpriteFrameKeyframe":"","Id":{"name":"142e31e9-5202-4f60-9e4e-fad6f936713f","path":"sprites/spr_worn_leather_boots/spr_worn_leather_boots.yy",},"resourceType":"SpriteFrameKeyframe","resourceVersion":"2.0",},
+                "0":{"$SpriteFrameKeyframe":"","Id":{"name":"142e31e9-5202-4f60-9e4e-fad6f936713f","path":"sprites/spr_worn_leather_greaves/spr_worn_leather_greaves.yy",},"resourceType":"SpriteFrameKeyframe","resourceVersion":"2.0",},
               },"Disabled":false,"id":"9734a641-f3d1-4484-9f8f-0dcaf196edcf","IsCreationKey":false,"Key":2.0,"Length":1.0,"resourceType":"Keyframe<SpriteFrameKeyframe>","resourceVersion":"2.0","Stretch":false,},
             {"$Keyframe<SpriteFrameKeyframe>":"","Channels":{
-                "0":{"$SpriteFrameKeyframe":"","Id":{"name":"9cd6248b-cfc8-4757-ab4d-8f1c545424fe","path":"sprites/spr_worn_leather_boots/spr_worn_leather_boots.yy",},"resourceType":"SpriteFrameKeyframe","resourceVersion":"2.0",},
+                "0":{"$SpriteFrameKeyframe":"","Id":{"name":"9cd6248b-cfc8-4757-ab4d-8f1c545424fe","path":"sprites/spr_worn_leather_greaves/spr_worn_leather_greaves.yy",},"resourceType":"SpriteFrameKeyframe","resourceVersion":"2.0",},
               },"Disabled":false,"id":"fe3c0ef1-c85a-4b36-8f66-073a9189e8c1","IsCreationKey":false,"Key":3.0,"Length":1.0,"resourceType":"Keyframe<SpriteFrameKeyframe>","resourceVersion":"2.0","Stretch":false,},
             {"$Keyframe<SpriteFrameKeyframe>":"","Channels":{
-                "0":{"$SpriteFrameKeyframe":"","Id":{"name":"64f1979e-b0c5-4512-a6fc-5339a605654b","path":"sprites/spr_worn_leather_boots/spr_worn_leather_boots.yy",},"resourceType":"SpriteFrameKeyframe","resourceVersion":"2.0",},
+                "0":{"$SpriteFrameKeyframe":"","Id":{"name":"64f1979e-b0c5-4512-a6fc-5339a605654b","path":"sprites/spr_worn_leather_greaves/spr_worn_leather_greaves.yy",},"resourceType":"SpriteFrameKeyframe","resourceVersion":"2.0",},
               },"Disabled":false,"id":"a5568d47-1c60-4166-a873-4b5d70dde6dc","IsCreationKey":false,"Key":4.0,"Length":1.0,"resourceType":"Keyframe<SpriteFrameKeyframe>","resourceVersion":"2.0","Stretch":false,},
             {"$Keyframe<SpriteFrameKeyframe>":"","Channels":{
-                "0":{"$SpriteFrameKeyframe":"","Id":{"name":"ccd0f24a-c05b-4668-b535-5f85716198a6","path":"sprites/spr_worn_leather_boots/spr_worn_leather_boots.yy",},"resourceType":"SpriteFrameKeyframe","resourceVersion":"2.0",},
+                "0":{"$SpriteFrameKeyframe":"","Id":{"name":"ccd0f24a-c05b-4668-b535-5f85716198a6","path":"sprites/spr_worn_leather_greaves/spr_worn_leather_greaves.yy",},"resourceType":"SpriteFrameKeyframe","resourceVersion":"2.0",},
               },"Disabled":false,"id":"61b05fdf-9321-4662-9958-1f29c490c066","IsCreationKey":false,"Key":5.0,"Length":1.0,"resourceType":"Keyframe<SpriteFrameKeyframe>","resourceVersion":"2.0","Stretch":false,},
             {"$Keyframe<SpriteFrameKeyframe>":"","Channels":{
-                "0":{"$SpriteFrameKeyframe":"","Id":{"name":"b19f5300-14e0-4a9c-adbd-14a3ec50e722","path":"sprites/spr_worn_leather_boots/spr_worn_leather_boots.yy",},"resourceType":"SpriteFrameKeyframe","resourceVersion":"2.0",},
+                "0":{"$SpriteFrameKeyframe":"","Id":{"name":"b19f5300-14e0-4a9c-adbd-14a3ec50e722","path":"sprites/spr_worn_leather_greaves/spr_worn_leather_greaves.yy",},"resourceType":"SpriteFrameKeyframe","resourceVersion":"2.0",},
               },"Disabled":false,"id":"44ee33fe-4f56-472c-8f9c-a76b6555dc8e","IsCreationKey":false,"Key":6.0,"Length":1.0,"resourceType":"Keyframe<SpriteFrameKeyframe>","resourceVersion":"2.0","Stretch":false,},
             {"$Keyframe<SpriteFrameKeyframe>":"","Channels":{
-                "0":{"$SpriteFrameKeyframe":"","Id":{"name":"e0b2036f-854e-4aeb-b234-5b4465c863ec","path":"sprites/spr_worn_leather_boots/spr_worn_leather_boots.yy",},"resourceType":"SpriteFrameKeyframe","resourceVersion":"2.0",},
+                "0":{"$SpriteFrameKeyframe":"","Id":{"name":"e0b2036f-854e-4aeb-b234-5b4465c863ec","path":"sprites/spr_worn_leather_greaves/spr_worn_leather_greaves.yy",},"resourceType":"SpriteFrameKeyframe","resourceVersion":"2.0",},
               },"Disabled":false,"id":"a47b81c2-e84c-41f6-8a51-d68dcfd41503","IsCreationKey":false,"Key":7.0,"Length":1.0,"resourceType":"Keyframe<SpriteFrameKeyframe>","resourceVersion":"2.0","Stretch":false,},
             {"$Keyframe<SpriteFrameKeyframe>":"","Channels":{
-                "0":{"$SpriteFrameKeyframe":"","Id":{"name":"5154929b-e668-4ffc-9740-411dd357641e","path":"sprites/spr_worn_leather_boots/spr_worn_leather_boots.yy",},"resourceType":"SpriteFrameKeyframe","resourceVersion":"2.0",},
+                "0":{"$SpriteFrameKeyframe":"","Id":{"name":"5154929b-e668-4ffc-9740-411dd357641e","path":"sprites/spr_worn_leather_greaves/spr_worn_leather_greaves.yy",},"resourceType":"SpriteFrameKeyframe","resourceVersion":"2.0",},
               },"Disabled":false,"id":"8e1df541-cb2d-4968-aeca-7bb0c5ec48ab","IsCreationKey":false,"Key":8.0,"Length":1.0,"resourceType":"Keyframe<SpriteFrameKeyframe>","resourceVersion":"2.0","Stretch":false,},
             {"$Keyframe<SpriteFrameKeyframe>":"","Channels":{
-                "0":{"$SpriteFrameKeyframe":"","Id":{"name":"7b2a405b-7d95-410e-b56d-ba8b836cd717","path":"sprites/spr_worn_leather_boots/spr_worn_leather_boots.yy",},"resourceType":"SpriteFrameKeyframe","resourceVersion":"2.0",},
+                "0":{"$SpriteFrameKeyframe":"","Id":{"name":"7b2a405b-7d95-410e-b56d-ba8b836cd717","path":"sprites/spr_worn_leather_greaves/spr_worn_leather_greaves.yy",},"resourceType":"SpriteFrameKeyframe","resourceVersion":"2.0",},
               },"Disabled":false,"id":"4c267a47-b761-44b6-aaa6-8a9bd35007d4","IsCreationKey":false,"Key":9.0,"Length":1.0,"resourceType":"Keyframe<SpriteFrameKeyframe>","resourceVersion":"2.0","Stretch":false,},
             {"$Keyframe<SpriteFrameKeyframe>":"","Channels":{
-                "0":{"$SpriteFrameKeyframe":"","Id":{"name":"55dd21d8-0b94-4a44-8612-5fb17037b5ef","path":"sprites/spr_worn_leather_boots/spr_worn_leather_boots.yy",},"resourceType":"SpriteFrameKeyframe","resourceVersion":"2.0",},
+                "0":{"$SpriteFrameKeyframe":"","Id":{"name":"55dd21d8-0b94-4a44-8612-5fb17037b5ef","path":"sprites/spr_worn_leather_greaves/spr_worn_leather_greaves.yy",},"resourceType":"SpriteFrameKeyframe","resourceVersion":"2.0",},
               },"Disabled":false,"id":"5747869e-e990-4b02-89f3-f0f30ae25587","IsCreationKey":false,"Key":10.0,"Length":1.0,"resourceType":"Keyframe<SpriteFrameKeyframe>","resourceVersion":"2.0","Stretch":false,},
             {"$Keyframe<SpriteFrameKeyframe>":"","Channels":{
-                "0":{"$SpriteFrameKeyframe":"","Id":{"name":"00fb323a-6266-47fb-b88c-2593ee5c17d4","path":"sprites/spr_worn_leather_boots/spr_worn_leather_boots.yy",},"resourceType":"SpriteFrameKeyframe","resourceVersion":"2.0",},
+                "0":{"$SpriteFrameKeyframe":"","Id":{"name":"00fb323a-6266-47fb-b88c-2593ee5c17d4","path":"sprites/spr_worn_leather_greaves/spr_worn_leather_greaves.yy",},"resourceType":"SpriteFrameKeyframe","resourceVersion":"2.0",},
               },"Disabled":false,"id":"de4d0812-da84-4d56-b4c3-a0f4f046c977","IsCreationKey":false,"Key":11.0,"Length":1.0,"resourceType":"Keyframe<SpriteFrameKeyframe>","resourceVersion":"2.0","Stretch":false,},
             {"$Keyframe<SpriteFrameKeyframe>":"","Channels":{
-                "0":{"$SpriteFrameKeyframe":"","Id":{"name":"83f4b477-25c7-4c59-9b03-e7065f0d7fa0","path":"sprites/spr_worn_leather_boots/spr_worn_leather_boots.yy",},"resourceType":"SpriteFrameKeyframe","resourceVersion":"2.0",},
+                "0":{"$SpriteFrameKeyframe":"","Id":{"name":"83f4b477-25c7-4c59-9b03-e7065f0d7fa0","path":"sprites/spr_worn_leather_greaves/spr_worn_leather_greaves.yy",},"resourceType":"SpriteFrameKeyframe","resourceVersion":"2.0",},
               },"Disabled":false,"id":"7237217e-7af1-44e9-96ec-e618283c2758","IsCreationKey":false,"Key":12.0,"Length":1.0,"resourceType":"Keyframe<SpriteFrameKeyframe>","resourceVersion":"2.0","Stretch":false,},
             {"$Keyframe<SpriteFrameKeyframe>":"","Channels":{
-                "0":{"$SpriteFrameKeyframe":"","Id":{"name":"50cdf308-6bd8-4a64-8375-106201d19b34","path":"sprites/spr_worn_leather_boots/spr_worn_leather_boots.yy",},"resourceType":"SpriteFrameKeyframe","resourceVersion":"2.0",},
+                "0":{"$SpriteFrameKeyframe":"","Id":{"name":"50cdf308-6bd8-4a64-8375-106201d19b34","path":"sprites/spr_worn_leather_greaves/spr_worn_leather_greaves.yy",},"resourceType":"SpriteFrameKeyframe","resourceVersion":"2.0",},
               },"Disabled":false,"id":"a0745dfe-f98f-484b-a770-83eec56927c9","IsCreationKey":false,"Key":13.0,"Length":1.0,"resourceType":"Keyframe<SpriteFrameKeyframe>","resourceVersion":"2.0","Stretch":false,},
             {"$Keyframe<SpriteFrameKeyframe>":"","Channels":{
-                "0":{"$SpriteFrameKeyframe":"","Id":{"name":"3d30ffa6-710b-410b-ae5f-a3f11cb1d6ed","path":"sprites/spr_worn_leather_boots/spr_worn_leather_boots.yy",},"resourceType":"SpriteFrameKeyframe","resourceVersion":"2.0",},
+                "0":{"$SpriteFrameKeyframe":"","Id":{"name":"3d30ffa6-710b-410b-ae5f-a3f11cb1d6ed","path":"sprites/spr_worn_leather_greaves/spr_worn_leather_greaves.yy",},"resourceType":"SpriteFrameKeyframe","resourceVersion":"2.0",},
               },"Disabled":false,"id":"53d0acd4-b3ef-4cb8-9365-25b83ae2711a","IsCreationKey":false,"Key":14.0,"Length":1.0,"resourceType":"Keyframe<SpriteFrameKeyframe>","resourceVersion":"2.0","Stretch":false,},
             {"$Keyframe<SpriteFrameKeyframe>":"","Channels":{
-                "0":{"$SpriteFrameKeyframe":"","Id":{"name":"894f8b0c-f762-4365-8bb7-e625d98e5ad0","path":"sprites/spr_worn_leather_boots/spr_worn_leather_boots.yy",},"resourceType":"SpriteFrameKeyframe","resourceVersion":"2.0",},
+                "0":{"$SpriteFrameKeyframe":"","Id":{"name":"894f8b0c-f762-4365-8bb7-e625d98e5ad0","path":"sprites/spr_worn_leather_greaves/spr_worn_leather_greaves.yy",},"resourceType":"SpriteFrameKeyframe","resourceVersion":"2.0",},
               },"Disabled":false,"id":"3e3b44e6-5473-406e-8ca7-540d61e6d9d9","IsCreationKey":false,"Key":15.0,"Length":1.0,"resourceType":"Keyframe<SpriteFrameKeyframe>","resourceVersion":"2.0","Stretch":false,},
             {"$Keyframe<SpriteFrameKeyframe>":"","Channels":{
-                "0":{"$SpriteFrameKeyframe":"","Id":{"name":"6bde55c2-02c6-45bf-b92d-bf74a5416da4","path":"sprites/spr_worn_leather_boots/spr_worn_leather_boots.yy",},"resourceType":"SpriteFrameKeyframe","resourceVersion":"2.0",},
+                "0":{"$SpriteFrameKeyframe":"","Id":{"name":"6bde55c2-02c6-45bf-b92d-bf74a5416da4","path":"sprites/spr_worn_leather_greaves/spr_worn_leather_greaves.yy",},"resourceType":"SpriteFrameKeyframe","resourceVersion":"2.0",},
               },"Disabled":false,"id":"a3dd54ea-9f06-49d4-a653-7c81d332e1df","IsCreationKey":false,"Key":16.0,"Length":1.0,"resourceType":"Keyframe<SpriteFrameKeyframe>","resourceVersion":"2.0","Stretch":false,},
             {"$Keyframe<SpriteFrameKeyframe>":"","Channels":{
-                "0":{"$SpriteFrameKeyframe":"","Id":{"name":"fe37083e-0d1a-45aa-ac02-1cd9e52d3887","path":"sprites/spr_worn_leather_boots/spr_worn_leather_boots.yy",},"resourceType":"SpriteFrameKeyframe","resourceVersion":"2.0",},
+                "0":{"$SpriteFrameKeyframe":"","Id":{"name":"fe37083e-0d1a-45aa-ac02-1cd9e52d3887","path":"sprites/spr_worn_leather_greaves/spr_worn_leather_greaves.yy",},"resourceType":"SpriteFrameKeyframe","resourceVersion":"2.0",},
               },"Disabled":false,"id":"a720ce04-9704-4532-8bdb-dbf9151955c6","IsCreationKey":false,"Key":17.0,"Length":1.0,"resourceType":"Keyframe<SpriteFrameKeyframe>","resourceVersion":"2.0","Stretch":false,},
             {"$Keyframe<SpriteFrameKeyframe>":"","Channels":{
-                "0":{"$SpriteFrameKeyframe":"","Id":{"name":"bd4173be-3938-47cf-98e4-89c89cdb909d","path":"sprites/spr_worn_leather_boots/spr_worn_leather_boots.yy",},"resourceType":"SpriteFrameKeyframe","resourceVersion":"2.0",},
+                "0":{"$SpriteFrameKeyframe":"","Id":{"name":"bd4173be-3938-47cf-98e4-89c89cdb909d","path":"sprites/spr_worn_leather_greaves/spr_worn_leather_greaves.yy",},"resourceType":"SpriteFrameKeyframe","resourceVersion":"2.0",},
               },"Disabled":false,"id":"f8af663e-245e-4559-bb21-4ab8b617f32b","IsCreationKey":false,"Key":18.0,"Length":1.0,"resourceType":"Keyframe<SpriteFrameKeyframe>","resourceVersion":"2.0","Stretch":false,},
             {"$Keyframe<SpriteFrameKeyframe>":"","Channels":{
-                "0":{"$SpriteFrameKeyframe":"","Id":{"name":"aaddb52b-f0c1-47e4-83c6-296d8abaaade","path":"sprites/spr_worn_leather_boots/spr_worn_leather_boots.yy",},"resourceType":"SpriteFrameKeyframe","resourceVersion":"2.0",},
+                "0":{"$SpriteFrameKeyframe":"","Id":{"name":"aaddb52b-f0c1-47e4-83c6-296d8abaaade","path":"sprites/spr_worn_leather_greaves/spr_worn_leather_greaves.yy",},"resourceType":"SpriteFrameKeyframe","resourceVersion":"2.0",},
               },"Disabled":false,"id":"5a51acf3-60ab-4e0e-8ee8-1d3c913b3dc2","IsCreationKey":false,"Key":19.0,"Length":1.0,"resourceType":"Keyframe<SpriteFrameKeyframe>","resourceVersion":"2.0","Stretch":false,},
             {"$Keyframe<SpriteFrameKeyframe>":"","Channels":{
-                "0":{"$SpriteFrameKeyframe":"","Id":{"name":"3cfca2af-99d3-4fbb-86bd-9e8979f51b2e","path":"sprites/spr_worn_leather_boots/spr_worn_leather_boots.yy",},"resourceType":"SpriteFrameKeyframe","resourceVersion":"2.0",},
+                "0":{"$SpriteFrameKeyframe":"","Id":{"name":"3cfca2af-99d3-4fbb-86bd-9e8979f51b2e","path":"sprites/spr_worn_leather_greaves/spr_worn_leather_greaves.yy",},"resourceType":"SpriteFrameKeyframe","resourceVersion":"2.0",},
               },"Disabled":false,"id":"5c9367ba-c5f4-4ac4-89bc-2df22964de5a","IsCreationKey":false,"Key":20.0,"Length":1.0,"resourceType":"Keyframe<SpriteFrameKeyframe>","resourceVersion":"2.0","Stretch":false,},
             {"$Keyframe<SpriteFrameKeyframe>":"","Channels":{
-                "0":{"$SpriteFrameKeyframe":"","Id":{"name":"f3fe87da-ba0c-4777-9c8d-02e81dde7f85","path":"sprites/spr_worn_leather_boots/spr_worn_leather_boots.yy",},"resourceType":"SpriteFrameKeyframe","resourceVersion":"2.0",},
+                "0":{"$SpriteFrameKeyframe":"","Id":{"name":"f3fe87da-ba0c-4777-9c8d-02e81dde7f85","path":"sprites/spr_worn_leather_greaves/spr_worn_leather_greaves.yy",},"resourceType":"SpriteFrameKeyframe","resourceVersion":"2.0",},
               },"Disabled":false,"id":"bc420ef2-d751-4ccf-9ed8-2231a24c7ae5","IsCreationKey":false,"Key":21.0,"Length":1.0,"resourceType":"Keyframe<SpriteFrameKeyframe>","resourceVersion":"2.0","Stretch":false,},
             {"$Keyframe<SpriteFrameKeyframe>":"","Channels":{
-                "0":{"$SpriteFrameKeyframe":"","Id":{"name":"4163b342-3ddb-4140-99e5-dccd48f9979e","path":"sprites/spr_worn_leather_boots/spr_worn_leather_boots.yy",},"resourceType":"SpriteFrameKeyframe","resourceVersion":"2.0",},
+                "0":{"$SpriteFrameKeyframe":"","Id":{"name":"4163b342-3ddb-4140-99e5-dccd48f9979e","path":"sprites/spr_worn_leather_greaves/spr_worn_leather_greaves.yy",},"resourceType":"SpriteFrameKeyframe","resourceVersion":"2.0",},
               },"Disabled":false,"id":"b893c9bc-3f11-4151-bcd1-3e0baf3390ce","IsCreationKey":false,"Key":22.0,"Length":1.0,"resourceType":"Keyframe<SpriteFrameKeyframe>","resourceVersion":"2.0","Stretch":false,},
             {"$Keyframe<SpriteFrameKeyframe>":"","Channels":{
-                "0":{"$SpriteFrameKeyframe":"","Id":{"name":"45797651-60ed-4007-89e0-5435c07a63a7","path":"sprites/spr_worn_leather_boots/spr_worn_leather_boots.yy",},"resourceType":"SpriteFrameKeyframe","resourceVersion":"2.0",},
+                "0":{"$SpriteFrameKeyframe":"","Id":{"name":"45797651-60ed-4007-89e0-5435c07a63a7","path":"sprites/spr_worn_leather_greaves/spr_worn_leather_greaves.yy",},"resourceType":"SpriteFrameKeyframe","resourceVersion":"2.0",},
               },"Disabled":false,"id":"8b49df66-12d3-41dd-9305-a1ecb88578f2","IsCreationKey":false,"Key":23.0,"Length":1.0,"resourceType":"Keyframe<SpriteFrameKeyframe>","resourceVersion":"2.0","Stretch":false,},
             {"$Keyframe<SpriteFrameKeyframe>":"","Channels":{
-                "0":{"$SpriteFrameKeyframe":"","Id":{"name":"2eadc2ff-a018-43cb-8638-28bf4124319f","path":"sprites/spr_worn_leather_boots/spr_worn_leather_boots.yy",},"resourceType":"SpriteFrameKeyframe","resourceVersion":"2.0",},
+                "0":{"$SpriteFrameKeyframe":"","Id":{"name":"2eadc2ff-a018-43cb-8638-28bf4124319f","path":"sprites/spr_worn_leather_greaves/spr_worn_leather_greaves.yy",},"resourceType":"SpriteFrameKeyframe","resourceVersion":"2.0",},
               },"Disabled":false,"id":"d2c2544b-6c25-4454-a871-c2ee089209e0","IsCreationKey":false,"Key":24.0,"Length":1.0,"resourceType":"Keyframe<SpriteFrameKeyframe>","resourceVersion":"2.0","Stretch":false,},
             {"$Keyframe<SpriteFrameKeyframe>":"","Channels":{
-                "0":{"$SpriteFrameKeyframe":"","Id":{"name":"7e35e7a3-a9bf-486d-906a-073c86045e5d","path":"sprites/spr_worn_leather_boots/spr_worn_leather_boots.yy",},"resourceType":"SpriteFrameKeyframe","resourceVersion":"2.0",},
+                "0":{"$SpriteFrameKeyframe":"","Id":{"name":"7e35e7a3-a9bf-486d-906a-073c86045e5d","path":"sprites/spr_worn_leather_greaves/spr_worn_leather_greaves.yy",},"resourceType":"SpriteFrameKeyframe","resourceVersion":"2.0",},
               },"Disabled":false,"id":"47f157e1-1f49-4b59-b324-9adfa6083fa2","IsCreationKey":false,"Key":25.0,"Length":1.0,"resourceType":"Keyframe<SpriteFrameKeyframe>","resourceVersion":"2.0","Stretch":false,},
             {"$Keyframe<SpriteFrameKeyframe>":"","Channels":{
-                "0":{"$SpriteFrameKeyframe":"","Id":{"name":"9709c47a-f92b-4f62-8455-744c96202b86","path":"sprites/spr_worn_leather_boots/spr_worn_leather_boots.yy",},"resourceType":"SpriteFrameKeyframe","resourceVersion":"2.0",},
+                "0":{"$SpriteFrameKeyframe":"","Id":{"name":"9709c47a-f92b-4f62-8455-744c96202b86","path":"sprites/spr_worn_leather_greaves/spr_worn_leather_greaves.yy",},"resourceType":"SpriteFrameKeyframe","resourceVersion":"2.0",},
               },"Disabled":false,"id":"3a901cb1-c312-47fb-9e1e-7bcc4a7983c2","IsCreationKey":false,"Key":26.0,"Length":1.0,"resourceType":"Keyframe<SpriteFrameKeyframe>","resourceVersion":"2.0","Stretch":false,},
             {"$Keyframe<SpriteFrameKeyframe>":"","Channels":{
-                "0":{"$SpriteFrameKeyframe":"","Id":{"name":"53253ff0-e354-4b06-bc89-64d1fbe1ee98","path":"sprites/spr_worn_leather_boots/spr_worn_leather_boots.yy",},"resourceType":"SpriteFrameKeyframe","resourceVersion":"2.0",},
+                "0":{"$SpriteFrameKeyframe":"","Id":{"name":"53253ff0-e354-4b06-bc89-64d1fbe1ee98","path":"sprites/spr_worn_leather_greaves/spr_worn_leather_greaves.yy",},"resourceType":"SpriteFrameKeyframe","resourceVersion":"2.0",},
               },"Disabled":false,"id":"14add0d3-27b6-4876-9d20-6e07af23c193","IsCreationKey":false,"Key":27.0,"Length":1.0,"resourceType":"Keyframe<SpriteFrameKeyframe>","resourceVersion":"2.0","Stretch":false,},
             {"$Keyframe<SpriteFrameKeyframe>":"","Channels":{
-                "0":{"$SpriteFrameKeyframe":"","Id":{"name":"be169359-f2e8-42eb-9e2b-4bb53d364a4c","path":"sprites/spr_worn_leather_boots/spr_worn_leather_boots.yy",},"resourceType":"SpriteFrameKeyframe","resourceVersion":"2.0",},
+                "0":{"$SpriteFrameKeyframe":"","Id":{"name":"be169359-f2e8-42eb-9e2b-4bb53d364a4c","path":"sprites/spr_worn_leather_greaves/spr_worn_leather_greaves.yy",},"resourceType":"SpriteFrameKeyframe","resourceVersion":"2.0",},
               },"Disabled":false,"id":"edf56638-fc87-430e-9785-3d52dd6431cd","IsCreationKey":false,"Key":28.0,"Length":1.0,"resourceType":"Keyframe<SpriteFrameKeyframe>","resourceVersion":"2.0","Stretch":false,},
             {"$Keyframe<SpriteFrameKeyframe>":"","Channels":{
-                "0":{"$SpriteFrameKeyframe":"","Id":{"name":"9e8de751-69f9-4aa9-8efd-504224668390","path":"sprites/spr_worn_leather_boots/spr_worn_leather_boots.yy",},"resourceType":"SpriteFrameKeyframe","resourceVersion":"2.0",},
+                "0":{"$SpriteFrameKeyframe":"","Id":{"name":"9e8de751-69f9-4aa9-8efd-504224668390","path":"sprites/spr_worn_leather_greaves/spr_worn_leather_greaves.yy",},"resourceType":"SpriteFrameKeyframe","resourceVersion":"2.0",},
               },"Disabled":false,"id":"6147a066-c93c-4c86-8b59-5f14cf78498f","IsCreationKey":false,"Key":29.0,"Length":1.0,"resourceType":"Keyframe<SpriteFrameKeyframe>","resourceVersion":"2.0","Stretch":false,},
             {"$Keyframe<SpriteFrameKeyframe>":"","Channels":{
-                "0":{"$SpriteFrameKeyframe":"","Id":{"name":"b124f38d-3556-4f0a-bcf0-8252f2564a11","path":"sprites/spr_worn_leather_boots/spr_worn_leather_boots.yy",},"resourceType":"SpriteFrameKeyframe","resourceVersion":"2.0",},
+                "0":{"$SpriteFrameKeyframe":"","Id":{"name":"b124f38d-3556-4f0a-bcf0-8252f2564a11","path":"sprites/spr_worn_leather_greaves/spr_worn_leather_greaves.yy",},"resourceType":"SpriteFrameKeyframe","resourceVersion":"2.0",},
               },"Disabled":false,"id":"2121e157-ba88-4e15-bfc7-a861f109e3f4","IsCreationKey":false,"Key":30.0,"Length":1.0,"resourceType":"Keyframe<SpriteFrameKeyframe>","resourceVersion":"2.0","Stretch":false,},
             {"$Keyframe<SpriteFrameKeyframe>":"","Channels":{
-                "0":{"$SpriteFrameKeyframe":"","Id":{"name":"6fb9614e-65b4-4579-96e7-79ab5f0d7646","path":"sprites/spr_worn_leather_boots/spr_worn_leather_boots.yy",},"resourceType":"SpriteFrameKeyframe","resourceVersion":"2.0",},
+                "0":{"$SpriteFrameKeyframe":"","Id":{"name":"6fb9614e-65b4-4579-96e7-79ab5f0d7646","path":"sprites/spr_worn_leather_greaves/spr_worn_leather_greaves.yy",},"resourceType":"SpriteFrameKeyframe","resourceVersion":"2.0",},
               },"Disabled":false,"id":"64e49f22-80b2-4748-ade0-2d1122df91f6","IsCreationKey":false,"Key":31.0,"Length":1.0,"resourceType":"Keyframe<SpriteFrameKeyframe>","resourceVersion":"2.0","Stretch":false,},
             {"$Keyframe<SpriteFrameKeyframe>":"","Channels":{
-                "0":{"$SpriteFrameKeyframe":"","Id":{"name":"5ac7bdb7-9875-4b40-bb34-b5bce62b4ea3","path":"sprites/spr_worn_leather_boots/spr_worn_leather_boots.yy",},"resourceType":"SpriteFrameKeyframe","resourceVersion":"2.0",},
+                "0":{"$SpriteFrameKeyframe":"","Id":{"name":"5ac7bdb7-9875-4b40-bb34-b5bce62b4ea3","path":"sprites/spr_worn_leather_greaves/spr_worn_leather_greaves.yy",},"resourceType":"SpriteFrameKeyframe","resourceVersion":"2.0",},
               },"Disabled":false,"id":"619df8e0-94de-46fa-8825-102ca61ff763","IsCreationKey":false,"Key":32.0,"Length":1.0,"resourceType":"Keyframe<SpriteFrameKeyframe>","resourceVersion":"2.0","Stretch":false,},
             {"$Keyframe<SpriteFrameKeyframe>":"","Channels":{
-                "0":{"$SpriteFrameKeyframe":"","Id":{"name":"66392a3d-62ea-46de-aedb-13bf98f72f21","path":"sprites/spr_worn_leather_boots/spr_worn_leather_boots.yy",},"resourceType":"SpriteFrameKeyframe","resourceVersion":"2.0",},
+                "0":{"$SpriteFrameKeyframe":"","Id":{"name":"66392a3d-62ea-46de-aedb-13bf98f72f21","path":"sprites/spr_worn_leather_greaves/spr_worn_leather_greaves.yy",},"resourceType":"SpriteFrameKeyframe","resourceVersion":"2.0",},
               },"Disabled":false,"id":"bcb64c94-3506-4fd0-8f6d-0597bc3ae8ac","IsCreationKey":false,"Key":33.0,"Length":1.0,"resourceType":"Keyframe<SpriteFrameKeyframe>","resourceVersion":"2.0","Stretch":false,},
             {"$Keyframe<SpriteFrameKeyframe>":"","Channels":{
-                "0":{"$SpriteFrameKeyframe":"","Id":{"name":"1c899ca0-16d5-4aa0-8b49-5afff79307fa","path":"sprites/spr_worn_leather_boots/spr_worn_leather_boots.yy",},"resourceType":"SpriteFrameKeyframe","resourceVersion":"2.0",},
+                "0":{"$SpriteFrameKeyframe":"","Id":{"name":"1c899ca0-16d5-4aa0-8b49-5afff79307fa","path":"sprites/spr_worn_leather_greaves/spr_worn_leather_greaves.yy",},"resourceType":"SpriteFrameKeyframe","resourceVersion":"2.0",},
               },"Disabled":false,"id":"5beea557-2322-43db-87b1-fbe2bf920b72","IsCreationKey":false,"Key":34.0,"Length":1.0,"resourceType":"Keyframe<SpriteFrameKeyframe>","resourceVersion":"2.0","Stretch":false,},
             {"$Keyframe<SpriteFrameKeyframe>":"","Channels":{
-                "0":{"$SpriteFrameKeyframe":"","Id":{"name":"8dde2424-8099-492f-9105-0bd188737f5a","path":"sprites/spr_worn_leather_boots/spr_worn_leather_boots.yy",},"resourceType":"SpriteFrameKeyframe","resourceVersion":"2.0",},
+                "0":{"$SpriteFrameKeyframe":"","Id":{"name":"8dde2424-8099-492f-9105-0bd188737f5a","path":"sprites/spr_worn_leather_greaves/spr_worn_leather_greaves.yy",},"resourceType":"SpriteFrameKeyframe","resourceVersion":"2.0",},
               },"Disabled":false,"id":"cf55e70e-9ee5-4e12-b4d3-2d7dfeed2efd","IsCreationKey":false,"Key":35.0,"Length":1.0,"resourceType":"Keyframe<SpriteFrameKeyframe>","resourceVersion":"2.0","Stretch":false,},
             {"$Keyframe<SpriteFrameKeyframe>":"","Channels":{
-                "0":{"$SpriteFrameKeyframe":"","Id":{"name":"699cd32a-bcf0-4bc1-af11-f13768563d2c","path":"sprites/spr_worn_leather_boots/spr_worn_leather_boots.yy",},"resourceType":"SpriteFrameKeyframe","resourceVersion":"2.0",},
+                "0":{"$SpriteFrameKeyframe":"","Id":{"name":"699cd32a-bcf0-4bc1-af11-f13768563d2c","path":"sprites/spr_worn_leather_greaves/spr_worn_leather_greaves.yy",},"resourceType":"SpriteFrameKeyframe","resourceVersion":"2.0",},
               },"Disabled":false,"id":"ecd20856-7ab5-4f70-a2ad-387d091fc793","IsCreationKey":false,"Key":36.0,"Length":1.0,"resourceType":"Keyframe<SpriteFrameKeyframe>","resourceVersion":"2.0","Stretch":false,},
             {"$Keyframe<SpriteFrameKeyframe>":"","Channels":{
-                "0":{"$SpriteFrameKeyframe":"","Id":{"name":"dca756c6-7362-4fae-9178-974c701a9631","path":"sprites/spr_worn_leather_boots/spr_worn_leather_boots.yy",},"resourceType":"SpriteFrameKeyframe","resourceVersion":"2.0",},
+                "0":{"$SpriteFrameKeyframe":"","Id":{"name":"dca756c6-7362-4fae-9178-974c701a9631","path":"sprites/spr_worn_leather_greaves/spr_worn_leather_greaves.yy",},"resourceType":"SpriteFrameKeyframe","resourceVersion":"2.0",},
               },"Disabled":false,"id":"886f6bfc-9aa5-4b4e-b124-f04170664ae6","IsCreationKey":false,"Key":37.0,"Length":1.0,"resourceType":"Keyframe<SpriteFrameKeyframe>","resourceVersion":"2.0","Stretch":false,},
             {"$Keyframe<SpriteFrameKeyframe>":"","Channels":{
-                "0":{"$SpriteFrameKeyframe":"","Id":{"name":"e9534e03-facb-4b6f-85be-12bde7a9b11d","path":"sprites/spr_worn_leather_boots/spr_worn_leather_boots.yy",},"resourceType":"SpriteFrameKeyframe","resourceVersion":"2.0",},
+                "0":{"$SpriteFrameKeyframe":"","Id":{"name":"e9534e03-facb-4b6f-85be-12bde7a9b11d","path":"sprites/spr_worn_leather_greaves/spr_worn_leather_greaves.yy",},"resourceType":"SpriteFrameKeyframe","resourceVersion":"2.0",},
               },"Disabled":false,"id":"a98fe962-b9cd-4050-b0e7-be41739eaebc","IsCreationKey":false,"Key":38.0,"Length":1.0,"resourceType":"Keyframe<SpriteFrameKeyframe>","resourceVersion":"2.0","Stretch":false,},
             {"$Keyframe<SpriteFrameKeyframe>":"","Channels":{
-                "0":{"$SpriteFrameKeyframe":"","Id":{"name":"743fa160-88b1-4eb7-8783-3c20f3ad785b","path":"sprites/spr_worn_leather_boots/spr_worn_leather_boots.yy",},"resourceType":"SpriteFrameKeyframe","resourceVersion":"2.0",},
+                "0":{"$SpriteFrameKeyframe":"","Id":{"name":"743fa160-88b1-4eb7-8783-3c20f3ad785b","path":"sprites/spr_worn_leather_greaves/spr_worn_leather_greaves.yy",},"resourceType":"SpriteFrameKeyframe","resourceVersion":"2.0",},
               },"Disabled":false,"id":"b450894e-3e37-42bb-ad44-df9d1dd583ef","IsCreationKey":false,"Key":39.0,"Length":1.0,"resourceType":"Keyframe<SpriteFrameKeyframe>","resourceVersion":"2.0","Stretch":false,},
             {"$Keyframe<SpriteFrameKeyframe>":"","Channels":{
-                "0":{"$SpriteFrameKeyframe":"","Id":{"name":"701605c4-5ec4-4b7c-930f-4030f0b2433d","path":"sprites/spr_worn_leather_boots/spr_worn_leather_boots.yy",},"resourceType":"SpriteFrameKeyframe","resourceVersion":"2.0",},
+                "0":{"$SpriteFrameKeyframe":"","Id":{"name":"701605c4-5ec4-4b7c-930f-4030f0b2433d","path":"sprites/spr_worn_leather_greaves/spr_worn_leather_greaves.yy",},"resourceType":"SpriteFrameKeyframe","resourceVersion":"2.0",},
               },"Disabled":false,"id":"5a3ef248-e025-4a88-8c73-96099821928f","IsCreationKey":false,"Key":40.0,"Length":1.0,"resourceType":"Keyframe<SpriteFrameKeyframe>","resourceVersion":"2.0","Stretch":false,},
             {"$Keyframe<SpriteFrameKeyframe>":"","Channels":{
-                "0":{"$SpriteFrameKeyframe":"","Id":{"name":"b0d342f5-f01a-4510-ae1c-8584cd3597cb","path":"sprites/spr_worn_leather_boots/spr_worn_leather_boots.yy",},"resourceType":"SpriteFrameKeyframe","resourceVersion":"2.0",},
+                "0":{"$SpriteFrameKeyframe":"","Id":{"name":"b0d342f5-f01a-4510-ae1c-8584cd3597cb","path":"sprites/spr_worn_leather_greaves/spr_worn_leather_greaves.yy",},"resourceType":"SpriteFrameKeyframe","resourceVersion":"2.0",},
               },"Disabled":false,"id":"28cd8fe1-3138-40b5-b494-4cb2ed7fb3e8","IsCreationKey":false,"Key":41.0,"Length":1.0,"resourceType":"Keyframe<SpriteFrameKeyframe>","resourceVersion":"2.0","Stretch":false,},
             {"$Keyframe<SpriteFrameKeyframe>":"","Channels":{
-                "0":{"$SpriteFrameKeyframe":"","Id":{"name":"1476624c-8c88-4a3d-8c97-050aaca75557","path":"sprites/spr_worn_leather_boots/spr_worn_leather_boots.yy",},"resourceType":"SpriteFrameKeyframe","resourceVersion":"2.0",},
+                "0":{"$SpriteFrameKeyframe":"","Id":{"name":"1476624c-8c88-4a3d-8c97-050aaca75557","path":"sprites/spr_worn_leather_greaves/spr_worn_leather_greaves.yy",},"resourceType":"SpriteFrameKeyframe","resourceVersion":"2.0",},
               },"Disabled":false,"id":"3811a913-4be5-43cc-b3e6-39d9f177497f","IsCreationKey":false,"Key":42.0,"Length":1.0,"resourceType":"Keyframe<SpriteFrameKeyframe>","resourceVersion":"2.0","Stretch":false,},
             {"$Keyframe<SpriteFrameKeyframe>":"","Channels":{
-                "0":{"$SpriteFrameKeyframe":"","Id":{"name":"c72d365b-ddf5-4e48-88a5-c21ef9c70207","path":"sprites/spr_worn_leather_boots/spr_worn_leather_boots.yy",},"resourceType":"SpriteFrameKeyframe","resourceVersion":"2.0",},
+                "0":{"$SpriteFrameKeyframe":"","Id":{"name":"c72d365b-ddf5-4e48-88a5-c21ef9c70207","path":"sprites/spr_worn_leather_greaves/spr_worn_leather_greaves.yy",},"resourceType":"SpriteFrameKeyframe","resourceVersion":"2.0",},
               },"Disabled":false,"id":"ceb1f446-ddcd-477a-8847-d29d2485764e","IsCreationKey":false,"Key":43.0,"Length":1.0,"resourceType":"Keyframe<SpriteFrameKeyframe>","resourceVersion":"2.0","Stretch":false,},
             {"$Keyframe<SpriteFrameKeyframe>":"","Channels":{
-                "0":{"$SpriteFrameKeyframe":"","Id":{"name":"2857eda1-151c-4aac-b335-489ff16629a3","path":"sprites/spr_worn_leather_boots/spr_worn_leather_boots.yy",},"resourceType":"SpriteFrameKeyframe","resourceVersion":"2.0",},
+                "0":{"$SpriteFrameKeyframe":"","Id":{"name":"2857eda1-151c-4aac-b335-489ff16629a3","path":"sprites/spr_worn_leather_greaves/spr_worn_leather_greaves.yy",},"resourceType":"SpriteFrameKeyframe","resourceVersion":"2.0",},
               },"Disabled":false,"id":"e7388386-f861-4d86-9610-31a0d67d3129","IsCreationKey":false,"Key":44.0,"Length":1.0,"resourceType":"Keyframe<SpriteFrameKeyframe>","resourceVersion":"2.0","Stretch":false,},
             {"$Keyframe<SpriteFrameKeyframe>":"","Channels":{
-                "0":{"$SpriteFrameKeyframe":"","Id":{"name":"2f172bf1-c67f-4e9f-8cde-14d82e46299d","path":"sprites/spr_worn_leather_boots/spr_worn_leather_boots.yy",},"resourceType":"SpriteFrameKeyframe","resourceVersion":"2.0",},
+                "0":{"$SpriteFrameKeyframe":"","Id":{"name":"2f172bf1-c67f-4e9f-8cde-14d82e46299d","path":"sprites/spr_worn_leather_greaves/spr_worn_leather_greaves.yy",},"resourceType":"SpriteFrameKeyframe","resourceVersion":"2.0",},
               },"Disabled":false,"id":"dd25202a-16f3-425c-bd6c-f054c4ec98b6","IsCreationKey":false,"Key":45.0,"Length":1.0,"resourceType":"Keyframe<SpriteFrameKeyframe>","resourceVersion":"2.0","Stretch":false,},
             {"$Keyframe<SpriteFrameKeyframe>":"","Channels":{
-                "0":{"$SpriteFrameKeyframe":"","Id":{"name":"de76063b-683f-40bc-bedd-4a00365ac475","path":"sprites/spr_worn_leather_boots/spr_worn_leather_boots.yy",},"resourceType":"SpriteFrameKeyframe","resourceVersion":"2.0",},
+                "0":{"$SpriteFrameKeyframe":"","Id":{"name":"de76063b-683f-40bc-bedd-4a00365ac475","path":"sprites/spr_worn_leather_greaves/spr_worn_leather_greaves.yy",},"resourceType":"SpriteFrameKeyframe","resourceVersion":"2.0",},
               },"Disabled":false,"id":"08f892d4-e2c3-472f-92c7-0f3a6d59eeb4","IsCreationKey":false,"Key":46.0,"Length":1.0,"resourceType":"Keyframe<SpriteFrameKeyframe>","resourceVersion":"2.0","Stretch":false,},
             {"$Keyframe<SpriteFrameKeyframe>":"","Channels":{
-                "0":{"$SpriteFrameKeyframe":"","Id":{"name":"521a6d44-59e5-4c1c-ae79-d1e1f2cfb0bc","path":"sprites/spr_worn_leather_boots/spr_worn_leather_boots.yy",},"resourceType":"SpriteFrameKeyframe","resourceVersion":"2.0",},
+                "0":{"$SpriteFrameKeyframe":"","Id":{"name":"521a6d44-59e5-4c1c-ae79-d1e1f2cfb0bc","path":"sprites/spr_worn_leather_greaves/spr_worn_leather_greaves.yy",},"resourceType":"SpriteFrameKeyframe","resourceVersion":"2.0",},
               },"Disabled":false,"id":"769a3e1c-6585-4b95-b7a3-d6622e16090b","IsCreationKey":false,"Key":47.0,"Length":1.0,"resourceType":"Keyframe<SpriteFrameKeyframe>","resourceVersion":"2.0","Stretch":false,},
             {"$Keyframe<SpriteFrameKeyframe>":"","Channels":{
-                "0":{"$SpriteFrameKeyframe":"","Id":{"name":"5029580a-933a-4c13-b0c3-84652f62e223","path":"sprites/spr_worn_leather_boots/spr_worn_leather_boots.yy",},"resourceType":"SpriteFrameKeyframe","resourceVersion":"2.0",},
+                "0":{"$SpriteFrameKeyframe":"","Id":{"name":"5029580a-933a-4c13-b0c3-84652f62e223","path":"sprites/spr_worn_leather_greaves/spr_worn_leather_greaves.yy",},"resourceType":"SpriteFrameKeyframe","resourceVersion":"2.0",},
               },"Disabled":false,"id":"18554bee-105d-4790-b992-f4feb2fa6331","IsCreationKey":false,"Key":48.0,"Length":1.0,"resourceType":"Keyframe<SpriteFrameKeyframe>","resourceVersion":"2.0","Stretch":false,},
             {"$Keyframe<SpriteFrameKeyframe>":"","Channels":{
-                "0":{"$SpriteFrameKeyframe":"","Id":{"name":"fe4db696-73e9-4191-819c-3b43ec48c6bc","path":"sprites/spr_worn_leather_boots/spr_worn_leather_boots.yy",},"resourceType":"SpriteFrameKeyframe","resourceVersion":"2.0",},
+                "0":{"$SpriteFrameKeyframe":"","Id":{"name":"fe4db696-73e9-4191-819c-3b43ec48c6bc","path":"sprites/spr_worn_leather_greaves/spr_worn_leather_greaves.yy",},"resourceType":"SpriteFrameKeyframe","resourceVersion":"2.0",},
               },"Disabled":false,"id":"53b77b55-e387-43c3-b066-411512ee50c3","IsCreationKey":false,"Key":49.0,"Length":1.0,"resourceType":"Keyframe<SpriteFrameKeyframe>","resourceVersion":"2.0","Stretch":false,},
             {"$Keyframe<SpriteFrameKeyframe>":"","Channels":{
-                "0":{"$SpriteFrameKeyframe":"","Id":{"name":"88cb546b-fa17-4506-ba35-21f6dfd58972","path":"sprites/spr_worn_leather_boots/spr_worn_leather_boots.yy",},"resourceType":"SpriteFrameKeyframe","resourceVersion":"2.0",},
+                "0":{"$SpriteFrameKeyframe":"","Id":{"name":"88cb546b-fa17-4506-ba35-21f6dfd58972","path":"sprites/spr_worn_leather_greaves/spr_worn_leather_greaves.yy",},"resourceType":"SpriteFrameKeyframe","resourceVersion":"2.0",},
               },"Disabled":false,"id":"66e70061-6c65-4cd1-a767-2e2721b14b87","IsCreationKey":false,"Key":50.0,"Length":1.0,"resourceType":"Keyframe<SpriteFrameKeyframe>","resourceVersion":"2.0","Stretch":false,},
             {"$Keyframe<SpriteFrameKeyframe>":"","Channels":{
-                "0":{"$SpriteFrameKeyframe":"","Id":{"name":"597247ba-510a-4883-a8b7-348d87d2c0ff","path":"sprites/spr_worn_leather_boots/spr_worn_leather_boots.yy",},"resourceType":"SpriteFrameKeyframe","resourceVersion":"2.0",},
+                "0":{"$SpriteFrameKeyframe":"","Id":{"name":"597247ba-510a-4883-a8b7-348d87d2c0ff","path":"sprites/spr_worn_leather_greaves/spr_worn_leather_greaves.yy",},"resourceType":"SpriteFrameKeyframe","resourceVersion":"2.0",},
               },"Disabled":false,"id":"c8c120eb-1363-48d4-bd86-53c932e7bc1a","IsCreationKey":false,"Key":51.0,"Length":1.0,"resourceType":"Keyframe<SpriteFrameKeyframe>","resourceVersion":"2.0","Stretch":false,},
             {"$Keyframe<SpriteFrameKeyframe>":"","Channels":{
-                "0":{"$SpriteFrameKeyframe":"","Id":{"name":"f653b82b-5d20-43f6-b736-4ccb9191f7a3","path":"sprites/spr_worn_leather_boots/spr_worn_leather_boots.yy",},"resourceType":"SpriteFrameKeyframe","resourceVersion":"2.0",},
+                "0":{"$SpriteFrameKeyframe":"","Id":{"name":"f653b82b-5d20-43f6-b736-4ccb9191f7a3","path":"sprites/spr_worn_leather_greaves/spr_worn_leather_greaves.yy",},"resourceType":"SpriteFrameKeyframe","resourceVersion":"2.0",},
               },"Disabled":false,"id":"33a1c8b1-b363-427e-80ca-ed1d3696ed12","IsCreationKey":false,"Key":52.0,"Length":1.0,"resourceType":"Keyframe<SpriteFrameKeyframe>","resourceVersion":"2.0","Stretch":false,},
             {"$Keyframe<SpriteFrameKeyframe>":"","Channels":{
-                "0":{"$SpriteFrameKeyframe":"","Id":{"name":"0cf3afb2-6b3d-437e-a6f9-733d837e03b7","path":"sprites/spr_worn_leather_boots/spr_worn_leather_boots.yy",},"resourceType":"SpriteFrameKeyframe","resourceVersion":"2.0",},
+                "0":{"$SpriteFrameKeyframe":"","Id":{"name":"0cf3afb2-6b3d-437e-a6f9-733d837e03b7","path":"sprites/spr_worn_leather_greaves/spr_worn_leather_greaves.yy",},"resourceType":"SpriteFrameKeyframe","resourceVersion":"2.0",},
               },"Disabled":false,"id":"afa1f5c0-3752-40a3-9d6f-d31de6b32b4f","IsCreationKey":false,"Key":53.0,"Length":1.0,"resourceType":"Keyframe<SpriteFrameKeyframe>","resourceVersion":"2.0","Stretch":false,},
             {"$Keyframe<SpriteFrameKeyframe>":"","Channels":{
-                "0":{"$SpriteFrameKeyframe":"","Id":{"name":"5d912040-8b2b-4e89-a351-04d86cafd6b7","path":"sprites/spr_worn_leather_boots/spr_worn_leather_boots.yy",},"resourceType":"SpriteFrameKeyframe","resourceVersion":"2.0",},
+                "0":{"$SpriteFrameKeyframe":"","Id":{"name":"5d912040-8b2b-4e89-a351-04d86cafd6b7","path":"sprites/spr_worn_leather_greaves/spr_worn_leather_greaves.yy",},"resourceType":"SpriteFrameKeyframe","resourceVersion":"2.0",},
               },"Disabled":false,"id":"5996bcbe-3fa5-4939-ac8c-05f8ed5921b6","IsCreationKey":false,"Key":54.0,"Length":1.0,"resourceType":"Keyframe<SpriteFrameKeyframe>","resourceVersion":"2.0","Stretch":false,},
             {"$Keyframe<SpriteFrameKeyframe>":"","Channels":{
-                "0":{"$SpriteFrameKeyframe":"","Id":{"name":"dae7bfd5-f156-4995-829a-2177f64f137f","path":"sprites/spr_worn_leather_boots/spr_worn_leather_boots.yy",},"resourceType":"SpriteFrameKeyframe","resourceVersion":"2.0",},
+                "0":{"$SpriteFrameKeyframe":"","Id":{"name":"dae7bfd5-f156-4995-829a-2177f64f137f","path":"sprites/spr_worn_leather_greaves/spr_worn_leather_greaves.yy",},"resourceType":"SpriteFrameKeyframe","resourceVersion":"2.0",},
               },"Disabled":false,"id":"2f0596f2-ec29-49d4-9e30-4fe82a94d180","IsCreationKey":false,"Key":55.0,"Length":1.0,"resourceType":"Keyframe<SpriteFrameKeyframe>","resourceVersion":"2.0","Stretch":false,},
             {"$Keyframe<SpriteFrameKeyframe>":"","Channels":{
-                "0":{"$SpriteFrameKeyframe":"","Id":{"name":"af1d246c-4d1a-43be-b8d2-27c761604515","path":"sprites/spr_worn_leather_boots/spr_worn_leather_boots.yy",},"resourceType":"SpriteFrameKeyframe","resourceVersion":"2.0",},
+                "0":{"$SpriteFrameKeyframe":"","Id":{"name":"af1d246c-4d1a-43be-b8d2-27c761604515","path":"sprites/spr_worn_leather_greaves/spr_worn_leather_greaves.yy",},"resourceType":"SpriteFrameKeyframe","resourceVersion":"2.0",},
               },"Disabled":false,"id":"e9715aeb-13d1-4b9a-8c68-63d3d377f5e6","IsCreationKey":false,"Key":56.0,"Length":1.0,"resourceType":"Keyframe<SpriteFrameKeyframe>","resourceVersion":"2.0","Stretch":false,},
             {"$Keyframe<SpriteFrameKeyframe>":"","Channels":{
-                "0":{"$SpriteFrameKeyframe":"","Id":{"name":"d58a88a4-1473-45a7-9dca-ba6a45d6aa20","path":"sprites/spr_worn_leather_boots/spr_worn_leather_boots.yy",},"resourceType":"SpriteFrameKeyframe","resourceVersion":"2.0",},
+                "0":{"$SpriteFrameKeyframe":"","Id":{"name":"d58a88a4-1473-45a7-9dca-ba6a45d6aa20","path":"sprites/spr_worn_leather_greaves/spr_worn_leather_greaves.yy",},"resourceType":"SpriteFrameKeyframe","resourceVersion":"2.0",},
               },"Disabled":false,"id":"f5fa4b4b-847c-4031-856f-ef17138d70fa","IsCreationKey":false,"Key":57.0,"Length":1.0,"resourceType":"Keyframe<SpriteFrameKeyframe>","resourceVersion":"2.0","Stretch":false,},
             {"$Keyframe<SpriteFrameKeyframe>":"","Channels":{
-                "0":{"$SpriteFrameKeyframe":"","Id":{"name":"8ee0d804-9664-438a-94ab-a772045da750","path":"sprites/spr_worn_leather_boots/spr_worn_leather_boots.yy",},"resourceType":"SpriteFrameKeyframe","resourceVersion":"2.0",},
+                "0":{"$SpriteFrameKeyframe":"","Id":{"name":"8ee0d804-9664-438a-94ab-a772045da750","path":"sprites/spr_worn_leather_greaves/spr_worn_leather_greaves.yy",},"resourceType":"SpriteFrameKeyframe","resourceVersion":"2.0",},
               },"Disabled":false,"id":"3fc767d1-be60-4ca9-80da-25e2a30ff809","IsCreationKey":false,"Key":58.0,"Length":1.0,"resourceType":"Keyframe<SpriteFrameKeyframe>","resourceVersion":"2.0","Stretch":false,},
             {"$Keyframe<SpriteFrameKeyframe>":"","Channels":{
-                "0":{"$SpriteFrameKeyframe":"","Id":{"name":"a7184d0d-ccdf-4e99-b570-8e907435cb91","path":"sprites/spr_worn_leather_boots/spr_worn_leather_boots.yy",},"resourceType":"SpriteFrameKeyframe","resourceVersion":"2.0",},
+                "0":{"$SpriteFrameKeyframe":"","Id":{"name":"a7184d0d-ccdf-4e99-b570-8e907435cb91","path":"sprites/spr_worn_leather_greaves/spr_worn_leather_greaves.yy",},"resourceType":"SpriteFrameKeyframe","resourceVersion":"2.0",},
               },"Disabled":false,"id":"6c344757-4f49-44a9-8fba-67196cc1fd62","IsCreationKey":false,"Key":59.0,"Length":1.0,"resourceType":"Keyframe<SpriteFrameKeyframe>","resourceVersion":"2.0","Stretch":false,},
             {"$Keyframe<SpriteFrameKeyframe>":"","Channels":{
-                "0":{"$SpriteFrameKeyframe":"","Id":{"name":"188d034c-11a6-47f3-a743-8cbe10c45ce2","path":"sprites/spr_worn_leather_boots/spr_worn_leather_boots.yy",},"resourceType":"SpriteFrameKeyframe","resourceVersion":"2.0",},
+                "0":{"$SpriteFrameKeyframe":"","Id":{"name":"188d034c-11a6-47f3-a743-8cbe10c45ce2","path":"sprites/spr_worn_leather_greaves/spr_worn_leather_greaves.yy",},"resourceType":"SpriteFrameKeyframe","resourceVersion":"2.0",},
               },"Disabled":false,"id":"f2311ee4-244f-47f0-b8de-f752a4d2a60a","IsCreationKey":false,"Key":60.0,"Length":1.0,"resourceType":"Keyframe<SpriteFrameKeyframe>","resourceVersion":"2.0","Stretch":false,},
           ],"resourceType":"KeyframeStore<SpriteFrameKeyframe>","resourceVersion":"2.0",},"modifiers":[],"name":"frames","resourceType":"GMSpriteFramesTrack","resourceVersion":"2.0","spriteId":null,"trackColour":0,"tracks":[],"traits":0,},
     ],

@@ -69,15 +69,15 @@ function player_handle_pickup() {
                             break;
 
                         case EquipSlot.helmet:
-                            _should_equip = (equipped.helmet == undefined);
+                            _should_equip = (equipped.head == undefined);
                             break;
 
                         case EquipSlot.armor:
-                            _should_equip = (equipped.armor == undefined);
+                            _should_equip = (equipped.torso == undefined);
                             break;
 
                         case EquipSlot.boots:
-                            _should_equip = (equipped.boots == undefined);
+                            _should_equip = (equipped.legs == undefined);
                             break;
                     }
 
