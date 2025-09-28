@@ -139,7 +139,7 @@ function draw_player_hands(_base_frame) {
     } else if (_has_weapon && !_holding_torch) {
 				
 		// if the weapon is two-handed, no need to draw the hands
-		if (equipped.right_hand.definition.stats.handedness == WeaponHandedness.TWO_HANDED) return;
+		if (equipped.right_hand.definition.stats.handedness == WeaponHandedness.two_handed) return;
 		
         // Right hand covered by weapon, need to show left hand only
         draw_sprite_part_ext(

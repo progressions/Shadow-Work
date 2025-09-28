@@ -3,7 +3,9 @@ if (alarm[1] > 0) {
 	target_x = x + kb_x;
 	target_y = y + kb_y;
 }
-
+if (state == PlayerState.dead) {
+	image_index = 34;
+}
 if (state != PlayerState.dead) {
 /// STEP EVENT — Movement + Directional Animation (idle/walk use global bob; attack local)
 /// Sprite layout (indices):

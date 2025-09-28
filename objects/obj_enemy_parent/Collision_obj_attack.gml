@@ -1,3 +1,4 @@
+if (state != PlayerState.dead) {
 if (alarm[1] < 0) {
 	 hp -= other.damage;
 	 image_blend = c_red;
@@ -8,4 +9,5 @@ if (alarm[1] < 0) {
 	 alarm[1] = 20;
 	 
 	 audio_play_sound(snd_attack_sword, 1, false);
+}
 }

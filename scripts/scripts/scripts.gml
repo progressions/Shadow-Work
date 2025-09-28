@@ -15,36 +15,36 @@ enum Direction {
 }
 
 enum ButtonType {
-	Resume,
-	Settings,
-	Quit
+	resume,
+	settings,
+	quit
 }
 
 // Item Database based on your sprite sheet
 // Sprite frames are indexed 0-24 from left to right, top to bottom
 
 enum ItemType {
-    WEAPON,
-    ARMOR,
-    CONSUMABLE,
-    TOOL,
-    AMMO
+    weapon,
+    armor,
+    consumable,
+    tool,
+    ammo
 }
 
 enum EquipSlot {
-    NONE = -1,
-    RIGHT_HAND,
-    LEFT_HAND,
-    HELMET,
-    ARMOR,
-    BOOTS,
-    EITHER_HAND
+    none = -1,
+    right_hand,
+    left_hand,
+    helmet,
+    armor,
+    boots,
+    either_hand
 }
 
 enum WeaponHandedness {
-    ONE_HANDED,
-    TWO_HANDED,
-    VERSATILE
+    one_handed,
+    two_handed,
+    versatile
 }
 
 // Item definition constructor
@@ -57,7 +57,7 @@ function create_item_definition(_frame, _id, _name, _type, _slot, _stats) constr
     world_sprite_frame = _frame;
     
     // Determine handedness from stats
-    handedness = _stats[$ "handedness"] ?? WeaponHandedness.ONE_HANDED;
+    handedness = _stats[$ "handedness"] ?? WeaponHandedness.one_handed;
     
     // Sprite key for equipped version (used for save/load compatibility)
     equipped_sprite_key = _stats[$ "equipped_key"] ?? string_lower(string_replace(_name, " ", "_"));
@@ -68,111 +68,111 @@ function create_item_definition(_frame, _id, _name, _type, _slot, _stats) constr
 global.item_database = {
     // Row 1 - Bladed weapons (frames 0-5)
     rusty_dagger: new create_item_definition(
-        0, "rusty_dagger", "Rusty Dagger", ItemType.WEAPON, EquipSlot.EITHER_HAND,
-        {damage: 2, attack_speed: 1.5, range: 20, handedness: WeaponHandedness.ONE_HANDED}
+        0, "rusty_dagger", "Rusty Dagger", ItemType.weapon, EquipSlot.either_hand,
+        {damage: 2, attack_speed: 1.5, range: 20, handedness: WeaponHandedness.one_handed}
     ),
     short_sword: new create_item_definition(
-        1, "short_sword", "Short Sword", ItemType.WEAPON, EquipSlot.EITHER_HAND,
-        {damage: 3, attack_speed: 1.2, range: 28, handedness: WeaponHandedness.ONE_HANDED}
+        1, "short_sword", "Short Sword", ItemType.weapon, EquipSlot.either_hand,
+        {damage: 3, attack_speed: 1.2, range: 28, handedness: WeaponHandedness.one_handed}
     ),
     long_sword: new create_item_definition(
-        2, "long_sword", "Long Sword", ItemType.WEAPON, EquipSlot.EITHER_HAND,
-        {damage: 4, attack_speed: 1.0, range: 36, handedness: WeaponHandedness.VERSATILE, two_handed_damage: 5, two_handed_range: 40}
+        2, "long_sword", "Long Sword", ItemType.weapon, EquipSlot.either_hand,
+        {damage: 4, attack_speed: 1.0, range: 36, handedness: WeaponHandedness.versatile, two_handed_damage: 5, two_handed_range: 40}
     ),
     master_sword: new create_item_definition(
-        3, "master_sword", "Master Sword", ItemType.WEAPON, EquipSlot.EITHER_HAND,
-        {damage: 6, attack_speed: 1.1, range: 38, handedness: WeaponHandedness.VERSATILE, two_handed_damage: 7, two_handed_range: 42, magic_power: 5}
+        3, "master_sword", "Master Sword", ItemType.weapon, EquipSlot.either_hand,
+        {damage: 6, attack_speed: 1.1, range: 38, handedness: WeaponHandedness.versatile, two_handed_damage: 7, two_handed_range: 42, magic_power: 5}
     ),
     greatsword: new create_item_definition(
-        4, "greatsword", "Greatsword", ItemType.WEAPON, EquipSlot.RIGHT_HAND,
-        {damage: 8, attack_speed: 0.7, range: 45, handedness: WeaponHandedness.TWO_HANDED}
+        4, "greatsword", "Greatsword", ItemType.weapon, EquipSlot.right_hand,
+        {damage: 8, attack_speed: 0.7, range: 45, handedness: WeaponHandedness.two_handed}
     ),
     spear: new create_item_definition(
-        5, "spear", "Spear", ItemType.WEAPON, EquipSlot.RIGHT_HAND,
-        {damage: 4, attack_speed: 1.1, range: 50, handedness: WeaponHandedness.VERSATILE, two_handed_damage: 5, two_handed_range: 55}
+        5, "spear", "Spear", ItemType.weapon, EquipSlot.right_hand,
+        {damage: 4, attack_speed: 1.1, range: 50, handedness: WeaponHandedness.versatile, two_handed_damage: 5, two_handed_range: 55}
     ),
     
     // Row 2 - Axe and bows (frames 6-11)
     axe: new create_item_definition(
-        6, "axe", "Axe", ItemType.WEAPON, EquipSlot.EITHER_HAND,
-        {damage: 5, attack_speed: 0.8, range: 30, handedness: WeaponHandedness.VERSATILE, two_handed_damage: 6}
+        6, "axe", "Axe", ItemType.weapon, EquipSlot.either_hand,
+        {damage: 5, attack_speed: 0.8, range: 30, handedness: WeaponHandedness.versatile, two_handed_damage: 6}
     ),
     wooden_bow: new create_item_definition(
-        7, "wooden_bow", "Wooden Bow", ItemType.WEAPON, EquipSlot.RIGHT_HAND,
-        {damage: 2, attack_speed: 1.2, range: 120, handedness: WeaponHandedness.TWO_HANDED, requires_ammo: "arrows"}
+        7, "wooden_bow", "Wooden Bow", ItemType.weapon, EquipSlot.right_hand,
+        {damage: 2, attack_speed: 1.2, range: 120, handedness: WeaponHandedness.two_handed, requires_ammo: "arrows"}
     ),
     longbow: new create_item_definition(
-        8, "longbow", "Longbow", ItemType.WEAPON, EquipSlot.RIGHT_HAND,
-        {damage: 5, attack_speed: 1.0, range: 150, handedness: WeaponHandedness.TWO_HANDED, requires_ammo: "arrows"}
+        8, "longbow", "Longbow", ItemType.weapon, EquipSlot.right_hand,
+        {damage: 5, attack_speed: 1.0, range: 150, handedness: WeaponHandedness.two_handed, requires_ammo: "arrows"}
     ),
     crossbow: new create_item_definition(
-        9, "crossbow", "Crossbow", ItemType.WEAPON, EquipSlot.RIGHT_HAND,
-        {damage: 3, attack_speed: 0.6, range: 140, handedness: WeaponHandedness.TWO_HANDED, requires_ammo: "arrows"}
+        9, "crossbow", "Crossbow", ItemType.weapon, EquipSlot.right_hand,
+        {damage: 3, attack_speed: 0.6, range: 140, handedness: WeaponHandedness.two_handed, requires_ammo: "arrows"}
     ),
     heavy_crossbow: new create_item_definition(
-        10, "heavy_crossbow", "Heavy Crossbow", ItemType.WEAPON, EquipSlot.RIGHT_HAND,
-        {damage: 6, attack_speed: 0.4, range: 160, armor_penetration: 0.3, handedness: WeaponHandedness.TWO_HANDED, requires_ammo: "arrows"}
+        10, "heavy_crossbow", "Heavy Crossbow", ItemType.weapon, EquipSlot.right_hand,
+        {damage: 6, attack_speed: 0.4, range: 160, armor_penetration: 0.3, handedness: WeaponHandedness.two_handed, requires_ammo: "arrows"}
     ),
     torch: new create_item_definition(
-        11, "torch", "Torch", ItemType.TOOL, EquipSlot.LEFT_HAND,
-        {light_radius: 100, handedness: WeaponHandedness.ONE_HANDED}
+        11, "torch", "Torch", ItemType.tool, EquipSlot.left_hand,
+        {light_radius: 100, handedness: WeaponHandedness.one_handed}
     ),
     
     // Row 3 - Chain armor set (frames 12-14) and Leather armor set (frames 15-17)
     chain_helmet: new create_item_definition(
-        12, "chain_helmet", "Chain Helmet", ItemType.ARMOR, EquipSlot.HELMET,
+        12, "chain_helmet", "Chain Helmet", ItemType.armor, EquipSlot.helmet,
         {defense: 4}
     ),
     chain_armor: new create_item_definition(
-        13, "chain_armor", "Chain Armor", ItemType.ARMOR, EquipSlot.ARMOR,
+        13, "chain_armor", "Chain Armor", ItemType.armor, EquipSlot.armor,
         {defense: 10, speed_modifier: 0.9}
     ),
     chain_greaves: new create_item_definition(
-        14, "chain_greaves", "Chain Greaves", ItemType.ARMOR, EquipSlot.BOOTS,
+        14, "chain_greaves", "Chain Greaves", ItemType.armor, EquipSlot.boots,
         {defense: 3, speed_modifier: 0.95}
     ),
     leather_helmet: new create_item_definition(
-        15, "leather_helmet", "Leather Helmet", ItemType.ARMOR, EquipSlot.HELMET,
+        15, "leather_helmet", "Leather Helmet", ItemType.armor, EquipSlot.helmet,
         {defense: 2}
     ),
     leather_armor: new create_item_definition(
-        16, "leather_armor", "Leather Armor", ItemType.ARMOR, EquipSlot.ARMOR,
+        16, "leather_armor", "Leather Armor", ItemType.armor, EquipSlot.armor,
         {defense: 5}
     ),
     leather_greaves: new create_item_definition(
-        17, "leather_greaves", "Leather Greaves", ItemType.ARMOR, EquipSlot.BOOTS,
+        17, "leather_greaves", "Leather Greaves", ItemType.armor, EquipSlot.boots,
         {defense: 2, speed_modifier: 1.05}
     ),
     
     // Row 4 - Shields and consumables (frames 18-23)
     shield: new create_item_definition(
-        18, "shield", "Shield", ItemType.ARMOR, EquipSlot.LEFT_HAND,
+        18, "shield", "Shield", ItemType.armor, EquipSlot.left_hand,
         {defense: 5, block_chance: 0.25}
     ),
     greatshield: new create_item_definition(
-        19, "greatshield", "Greatshield", ItemType.ARMOR, EquipSlot.LEFT_HAND,
+        19, "greatshield", "Greatshield", ItemType.armor, EquipSlot.left_hand,
         {defense: 10, block_chance: 0.35, speed_modifier: 0.85}
     ),
     health_potion: new create_item_definition(
-        20, "health_potion", "Health Potion", ItemType.CONSUMABLE, EquipSlot.NONE,
+        20, "health_potion", "Health Potion", ItemType.consumable, EquipSlot.none,
         {heal_amount: 50, stack_size: 10}
     ),
     water: new create_item_definition(
-        21, "water", "Water", ItemType.CONSUMABLE, EquipSlot.NONE,
+        21, "water", "Water", ItemType.consumable, EquipSlot.none,
         {stamina_restore: 30, stack_size: 10}
     ),
     purple_potion: new create_item_definition(
-        22, "purple_potion", "Purple Potion", ItemType.CONSUMABLE, EquipSlot.NONE,
+        22, "purple_potion", "Purple Potion", ItemType.consumable, EquipSlot.none,
         {mana_restore: 40, stack_size: 10}
     ),
     red_potion: new create_item_definition(
-        23, "red_potion", "Red Potion", ItemType.CONSUMABLE, EquipSlot.NONE,
+        23, "red_potion", "Red Potion", ItemType.consumable, EquipSlot.none,
         {damage_buff: 5, duration: 600, stack_size: 5}  // Strength/damage boost potion
     ),
     
     // Additional item (frame 24)
     arrows: new create_item_definition(
-        24, "arrows", "Arrows", ItemType.AMMO, EquipSlot.NONE,
+        24, "arrows", "Arrows", ItemType.ammo, EquipSlot.none,
         {stack_size: 99}
     )
 };
@@ -265,21 +265,21 @@ function equip_item(_inventory_index, _target_hand = undefined) {
     var _item = inventory[_inventory_index];
     var _def = _item.definition;
     
-    if (_def.equip_slot == EquipSlot.NONE) return false;
+    if (_def.equip_slot == EquipSlot.none) return false;
     
     var _slot_name = "";
     
     // Handle hand slots
-    if (_def.equip_slot == EquipSlot.RIGHT_HAND || 
-        _def.equip_slot == EquipSlot.LEFT_HAND || 
-        _def.equip_slot == EquipSlot.EITHER_HAND) {
+    if (_def.equip_slot == EquipSlot.right_hand ||
+        _def.equip_slot == EquipSlot.left_hand ||
+        _def.equip_slot == EquipSlot.either_hand) {
         
         // Determine which hand to equip to
-        if (_def.equip_slot == EquipSlot.RIGHT_HAND) {
+        if (_def.equip_slot == EquipSlot.right_hand) {
             _slot_name = "right_hand";
-        } else if (_def.equip_slot == EquipSlot.LEFT_HAND) {
+        } else if (_def.equip_slot == EquipSlot.left_hand) {
             _slot_name = "left_hand";
-        } else if (_def.equip_slot == EquipSlot.EITHER_HAND) {
+        } else if (_def.equip_slot == EquipSlot.either_hand) {
             // Player can choose, or auto-select empty hand
             if (_target_hand != undefined) {
                 _slot_name = _target_hand;
@@ -296,7 +296,7 @@ function equip_item(_inventory_index, _target_hand = undefined) {
         }
         
         // Check for two-handed weapon restrictions
-        if (_def.handedness == WeaponHandedness.TWO_HANDED) {
+        if (_def.handedness == WeaponHandedness.two_handed) {
             // Clear both hands for two-handed weapons
             if (equipped.right_hand != undefined) {
                 inventory_add_item(equipped.right_hand.definition, equipped.right_hand.count);
@@ -311,7 +311,7 @@ function equip_item(_inventory_index, _target_hand = undefined) {
             // Check if currently holding a two-handed weapon
             var _current_right = equipped.right_hand;
             if (_current_right != undefined && 
-                _current_right.definition.handedness == WeaponHandedness.TWO_HANDED) {
+                _current_right.definition.handedness == WeaponHandedness.two_handed) {
                 // Can't equip anything else while holding two-handed weapon
                 show_message("Cannot equip " + _def.name + " while wielding a two-handed weapon!");
                 return false;
@@ -363,11 +363,11 @@ function unequip_item(_slot_name) {
 // Helper function to get slot name
 function get_slot_name(_slot) {
     switch(_slot) {
-        case EquipSlot.RIGHT_HAND: return "right_hand";
-        case EquipSlot.LEFT_HAND: return "left_hand";
-        case EquipSlot.HELMET: return "helmet";
-        case EquipSlot.ARMOR: return "armor";
-        case EquipSlot.BOOTS: return "boots";
+        case EquipSlot.right_hand: return "right_hand";
+        case EquipSlot.left_hand: return "left_hand";
+        case EquipSlot.helmet: return "helmet";
+        case EquipSlot.armor: return "armor";
+        case EquipSlot.boots: return "boots";
         default: return "none";
     }
 }
@@ -376,10 +376,10 @@ function get_slot_name(_slot) {
 function is_two_handing() {
     if (equipped.right_hand != undefined) {
         var _handedness = equipped.right_hand.definition.handedness;
-        if (_handedness == WeaponHandedness.TWO_HANDED) return true;
+        if (_handedness == WeaponHandedness.two_handed) return true;
         
         // Versatile weapons are two-handed when left hand is empty
-        if (_handedness == WeaponHandedness.VERSATILE && equipped.left_hand == undefined) {
+        if (_handedness == WeaponHandedness.versatile && equipped.left_hand == undefined) {
             return true;
         }
     }
@@ -390,8 +390,8 @@ function is_two_handing() {
 function is_dual_wielding() {
     return (equipped.right_hand != undefined && 
             equipped.left_hand != undefined &&
-            equipped.right_hand.definition.type == ItemType.WEAPON &&
-            equipped.left_hand.definition.type == ItemType.WEAPON);
+            equipped.right_hand.definition.type == ItemType.weapon &&
+            equipped.left_hand.definition.type == ItemType.weapon);
 }
 
 // ============================================
@@ -402,11 +402,11 @@ function get_total_damage() {
     var _base_damage = 1; // Base unarmed damage
 
     // Right hand weapon
-    if (equipped.right_hand != undefined && equipped.right_hand.definition.type == ItemType.WEAPON) {
+    if (equipped.right_hand != undefined && equipped.right_hand.definition.type == ItemType.weapon) {
         var _weapon_stats = equipped.right_hand.definition.stats;
 
         // Check if using versatile weapon two-handed
-        if (is_two_handing() && equipped.right_hand.definition.handedness == WeaponHandedness.VERSATILE) {
+        if (is_two_handing() && equipped.right_hand.definition.handedness == WeaponHandedness.versatile) {
             _base_damage = _weapon_stats[$ "two_handed_damage"] ?? _weapon_stats.damage;
         } else {
             _base_damage = _weapon_stats.damage;
@@ -425,11 +425,11 @@ function get_total_damage() {
 function get_attack_range() {
     var _base_range = 16; // Base punch range
     
-    if (equipped.right_hand != undefined && equipped.right_hand.definition.type == ItemType.WEAPON) {
+    if (equipped.right_hand != undefined && equipped.right_hand.definition.type == ItemType.weapon) {
         var _weapon_stats = equipped.right_hand.definition.stats;
         
         // Check if using versatile weapon two-handed
-        if (is_two_handing() && equipped.right_hand.definition.handedness == WeaponHandedness.VERSATILE) {
+        if (is_two_handing() && equipped.right_hand.definition.handedness == WeaponHandedness.versatile) {
             return _weapon_stats[$ "two_handed_range"] ?? _weapon_stats.range;
         } else {
             return _weapon_stats.range;

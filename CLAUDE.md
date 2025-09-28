@@ -40,6 +40,16 @@ This is a GameMaker Studio 2 project for a top-down action RPG called "Shadow Wo
 
 ## GML Code Conventions
 
+### Code Style
+- **Ruby-like conventions**: The codebase follows Ruby-style naming conventions
+- **Functions**: snake_case (e.g., `get_total_damage()`, `inventory_add_item()`, `is_two_handing()`)
+- **Variables**: snake_case (e.g., `move_speed`, `hp_total`, `dash_timer`)
+- **Local variables**: prefixed with underscore (e.g., `_item_def`, `_base_damage`, `_slot_name`)
+- **Enums**: PascalCase (e.g., `PlayerState`, `ItemType`, `WeaponHandedness`)
+- **Enum values**: snake_case (e.g., `PlayerState.attacking`, `ItemType.weapon`, `EquipSlot.right_hand`)
+- **Struct properties**: snake_case (e.g., `equipped.right_hand`, `anim_data.idle_down`)
+- **Global variables**: snake_case with `global.` prefix (e.g., `global.item_database`)
+
 ### Object Event Scripts
 - Located in: `/objects/[object_name]/[Event].gml`
 - Common events: Create_0, Step_0, Draw_0, Collision_[object]
@@ -47,11 +57,6 @@ This is a GameMaker Studio 2 project for a top-down action RPG called "Shadow Wo
 ### Animation Handling
 - Player uses custom frame-based animation with `anim_data` struct
 - Enemies use `animate_6frame_bob()` function for simple movement animation
-
-### Variable Naming
-- Snake_case for variables: `move_speed`, `hp_total`
-- PascalCase for enums: `PlayerState`, `ItemType`
-- Struct properties use snake_case: `equipped.right_hand`
 
 ## Development Commands
 

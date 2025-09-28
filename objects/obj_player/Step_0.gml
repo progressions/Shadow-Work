@@ -225,7 +225,7 @@ if (_instance != noone && _instance.item_def != undefined) {
         show_debug_message("Picked up " + string(_count) + " " + _item_def.name);
         
         // Auto-equip logic
-        if (_item_def.type == ItemType.WEAPON || _item_def.type == ItemType.ARMOR || _item_def.type == ItemType.TOOL) {
+        if (_item_def.type == ItemType.weapon || _item_def.type == ItemType.armor || _item_def.type == ItemType.tool) {
             
             // Find the item we just added in inventory
             var _inventory_index = -1;
@@ -242,41 +242,41 @@ if (_instance != noone && _instance.item_def != undefined) {
                 
                 // Determine if we should auto-equip based on slot
                 switch(_item_def.equip_slot) {
-                    case EquipSlot.RIGHT_HAND:
+                    case EquipSlot.right_hand:
                         _should_equip = (equipped.right_hand == undefined);
                         break;
                         
-                    case EquipSlot.LEFT_HAND:
+                    case EquipSlot.left_hand:
                         // Only auto-equip if not holding two-handed weapon
                         if (equipped.right_hand == undefined || 
-                            equipped.right_hand.definition.handedness != WeaponHandedness.TWO_HANDED) {
+                            equipped.right_hand.definition.handedness != WeaponHandedness.two_handed) {
                             _should_equip = (equipped.left_hand == undefined);
                         }
                         break;
                         
-                    case EquipSlot.EITHER_HAND:
+                    case EquipSlot.either_hand:
                         // Prefer right hand, then left hand
                         if (equipped.right_hand == undefined) {
                             _should_equip = true;
                             _target_hand = "right_hand";
                         } else if (equipped.left_hand == undefined) {
                             // Check if right hand has two-handed weapon
-                            if (equipped.right_hand.definition.handedness != WeaponHandedness.TWO_HANDED) {
+                            if (equipped.right_hand.definition.handedness != WeaponHandedness.two_handed) {
                                 _should_equip = true;
                                 _target_hand = "left_hand";
                             }
                         }
                         break;
                         
-                    case EquipSlot.HELMET:
+                    case EquipSlot.helmet:
                         _should_equip = (equipped.helmet == undefined);
                         break;
                         
-                    case EquipSlot.ARMOR:
+                    case EquipSlot.armor:
                         _should_equip = (equipped.armor == undefined);
                         break;
                         
-                    case EquipSlot.BOOTS:
+                    case EquipSlot.boots:
                         _should_equip = (equipped.boots == undefined);
                         break;
                 }

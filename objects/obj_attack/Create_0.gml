@@ -1,4 +1,4 @@
-damage = 1;
+damage = 5;
 creator = obj_player;
 
 // Set sword sprite

@@ -1,11 +1,11 @@
 switch(button_id) {
-	case ButtonType.Resume:
+	case ButtonType.resume:
 		global.game_paused = false;
 		obj_pause_controller.update_pause();
 		break;
-	case ButtonType.Settings:
+	case ButtonType.settings:
 		break;
-	case ButtonType.Quit:
+	case ButtonType.quit:
 		game_end();
 		break;
 }
