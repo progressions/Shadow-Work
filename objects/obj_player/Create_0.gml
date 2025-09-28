@@ -74,22 +74,31 @@ dash_speed = 6;
 dash_cooldown = 0;
 dash_cooldown_time = 30;
 
+// Player animation data based on sprite frame tags
 anim_data = {
-    // Existing animations (frames 0-25)
+    // Idle animations (2 frames each)
     idle_down: {start: 0, length: 2},
     idle_right: {start: 2, length: 2},
     idle_left: {start: 4, length: 2},
     idle_up: {start: 6, length: 2},
-    walk_down: {start: 8, length: 5},
+
+    // Walk animations (4-5 frames each)
+    walk_down: {start: 8, length: 4},
     walk_right: {start: 12, length: 5},
-    walk_left: {start: 17, length: 4},
+    walk_left: {start: 17, length: 5},
     walk_up: {start: 22, length: 4},
-    
-    // New dash animations (frames 26-41)
+
+    // Dash animations (4 frames each)
     dash_down: {start: 26, length: 4},
     dash_right: {start: 30, length: 4},
     dash_left: {start: 34, length: 4},
-    dash_up: {start: 38, length: 4}
+    dash_up: {start: 38, length: 4},
+
+    // Attack animations (4 frames each)
+    attack_down: {start: 42, length: 4},
+    attack_right: {start: 46, length: 4},
+    attack_left: {start: 50, length: 4},
+    attack_up: {start: 54, length: 4}
 };
 
 // State tracking
