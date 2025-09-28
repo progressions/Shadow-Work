@@ -98,4 +98,30 @@ if (idx > max_index) idx = max_index;
 if (idx < 0)         idx = 0;
 
 image_index = idx;
+
+/// ---------- Attack System
+// Update attack cooldown
+if (attack_cooldown > 0) {
+    attack_cooldown--;
+    can_attack = false;
+} else {
+    can_attack = true;
+}
+
+// Check if player is in attack range and we can attack
+if (can_attack && state != PlayerState.attacking) {
+    var _player = instance_nearest(x, y, obj_player);
+    if (_player != noone) {
+        var _dist = point_distance(x, y, _player.x, _player.y);
+        if (_dist <= attack_range) {
+            // Start attack
+            state = PlayerState.attacking;
+            attack_cooldown = round(90 / attack_speed); // Enemy attacks are slower
+            can_attack = false;
+
+            // Create attack after a short delay (so animation plays first)
+            alarm[2] = 15; // Attack hits after 15 frames
+        }
+    }
+}
 }

@@ -23,3 +23,10 @@ state = PlayerState.idle;
 
 kb_x = 0;
 kb_y = 0;
+
+// Attack system stats
+attack_damage = 2; // Base enemy damage
+attack_speed = 0.8; // Slower than default player
+attack_range = 20; // Melee range
+attack_cooldown = 0;
+can_attack = true;

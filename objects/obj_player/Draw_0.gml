@@ -200,6 +200,13 @@ function draw_player_hands(_base_frame) {
 // Draw shadow first
 draw_sprite_ext(spr_shadow, image_index, x, y + 2 + y_offset, 1, 0.5, 0, c_black, 0.3);
 
+// Attack ready indicator
+if (can_attack && equipped.right_hand != undefined) {
+    // Draw a small glow around weapon when ready to attack
+    var _alpha = 0.3 + sin(current_time * 0.01) * 0.2; // Pulsing effect
+    draw_sprite_ext(sprite_index, image_index, x, y + y_offset, image_xscale, image_yscale, 0, c_yellow, _alpha);
+}
+
 function draw_player_with_equipment() {
     var _base_frame = image_index;
 	if (global.game_paused) _base_frame = paused_frame; 
@@ -317,3 +324,24 @@ function get_equipped_sprite(_sprite_key) {
 }
 
 draw_player_with_equipment();
+
+// Debug display for attack system (remove this later)
+if (debug) {
+    draw_set_color(c_white);
+    draw_set_font(-1);
+    var _debug_y = y - 40;
+
+    if (equipped.right_hand != undefined) {
+        var _weapon = equipped.right_hand.definition;
+        draw_text(x - 50, _debug_y, "Weapon: " + _weapon.name);
+        draw_text(x - 50, _debug_y - 15, "Speed: " + string(_weapon.stats.attack_speed));
+        draw_text(x - 50, _debug_y - 30, "Damage: " + string(get_total_damage()));
+    } else {
+        draw_text(x - 50, _debug_y, "Unarmed");
+        draw_text(x - 50, _debug_y - 15, "Speed: 1.0");
+        draw_text(x - 50, _debug_y - 30, "Damage: 1");
+    }
+
+    draw_text(x - 50, _debug_y - 45, "Cooldown: " + string(attack_cooldown));
+    draw_text(x - 50, _debug_y - 60, "Can Attack: " + (can_attack ? "YES" : "NO"));
+}

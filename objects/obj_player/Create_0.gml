@@ -110,6 +110,14 @@ current_elevation = -1;
 y_offset = 0;
 previous_y_offset = 0;
 
+// Attack system
+attack_cooldown = 0;
+can_attack = true;
+
+// Knockback system
+kb_x = 0;
+kb_y = 0;
+
 // Add this function to your scripts or at the bottom of Create Event:
 function start_dash(_direction) {
     is_dashing = true;

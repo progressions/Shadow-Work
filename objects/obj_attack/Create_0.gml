@@ -1,5 +1,9 @@
-damage = 5;
 creator = obj_player;
+
+// Set damage based on weapon or default
+with (creator) {
+    other.damage = get_total_damage();
+}
 
 // Set sword sprite
 if (creator.equipped.right_hand != undefined) {
@@ -14,8 +18,13 @@ if (creator.equipped.right_hand != undefined) {
     sprite_index = spr_slash;
 }
 
-// Animation settings
-swing_speed = 10; // How fast to swing
+// Animation settings based on weapon attack speed
+var _attack_speed = 1.0; // Default unarmed speed
+if (creator.equipped.right_hand != undefined && creator.equipped.right_hand.definition.type == ItemType.weapon) {
+    _attack_speed = creator.equipped.right_hand.definition.stats.attack_speed;
+}
+
+swing_speed = 10 * _attack_speed; // Faster weapons swing quicker
 swing_range = 90; // Total degrees to swing
 swing_progress = 0;
 

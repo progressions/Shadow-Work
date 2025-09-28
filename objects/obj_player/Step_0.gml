@@ -161,6 +161,22 @@ if (state == PlayerState.on_grid && !obj_grid_controller.hop.active) {
     if (dash_cooldown > 0) {
         dash_cooldown--;
     }
+
+    // ============================================
+    // KNOCKBACK SYSTEM
+    // ============================================
+    if (kb_x != 0 || kb_y != 0) {
+        // Apply knockback movement
+        move_and_collide(kb_x, kb_y, tilemap);
+
+        // Reduce knockback over time
+        kb_x *= 0.8;
+        kb_y *= 0.8;
+
+        // Stop knockback when it's very small
+        if (abs(kb_x) < 0.1) kb_x = 0;
+        if (abs(kb_y) < 0.1) kb_y = 0;
+    }
     
     #region Pillar collision checking - ONLY when NOT on grid
     // Use un-offset probe Y so entering from LEFT/RIGHT registers correctly.
@@ -345,15 +361,48 @@ if (move_dir == "idle") {
 
 image_index = current_anim_start + floor(anim_frame);
 
-#region Attack
+#region Attack System
 
-if (keyboard_check_pressed(ord("J"))) {
-	state = PlayerState.attacking;
-	
-	var attack = instance_create_layer(x, y, "Instances", obj_attack);
-	attack.creator = self;
-	
-
+// Update attack cooldown
+if (attack_cooldown > 0) {
+    attack_cooldown--;
+    can_attack = false;
+} else {
+    can_attack = true;
 }
 
-#endregion Attack
+// Handle attack input
+if (keyboard_check_pressed(ord("J")) && can_attack) {
+    state = PlayerState.attacking;
+
+    var attack = instance_create_layer(x, y, "Instances", obj_attack);
+    attack.creator = self;
+
+    // Calculate cooldown based on weapon attack speed
+    var _attack_speed = 1.0; // Default unarmed speed
+    if (equipped.right_hand != undefined && equipped.right_hand.definition.type == ItemType.weapon) {
+        _attack_speed = equipped.right_hand.definition.stats.attack_speed;
+    }
+
+    // Set cooldown: slower weapons have longer recovery
+    attack_cooldown = max(15, round(60 / _attack_speed));
+    can_attack = false;
+
+    // Play attack sound based on weapon type
+    if (equipped.right_hand != undefined) {
+        // Different sounds for different weapon types
+        switch(equipped.right_hand.definition.handedness) {
+            case WeaponHandedness.two_handed:
+                audio_play_sound(snd_attack_sword, 1, false);
+                break;
+            default:
+                audio_play_sound(snd_attack_sword, 1, false);
+                break;
+        }
+    } else {
+        // Unarmed attack sound (could be a different sound)
+        audio_play_sound(snd_attack_sword, 1, false);
+    }
+}
+
+#endregion Attack System

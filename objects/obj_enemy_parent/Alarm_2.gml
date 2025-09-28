@@ -1,0 +1,34 @@
+// Enemy attack execution
+if (state == PlayerState.attacking) {
+    // Create visual attack effect
+    var _attack = instance_create_layer(x, y, "Instances", obj_enemy_attack);
+    _attack.creator = self;
+
+    var _player = instance_nearest(x, y, obj_player);
+    if (_player != noone) {
+        var _dist = point_distance(x, y, _player.x, _player.y);
+        if (_dist <= attack_range) {
+            // Deal damage to player
+            _player.hp -= attack_damage;
+
+            // Add knockback to player
+            var _angle = point_direction(x, y, _player.x, _player.y);
+            _player.kb_x = lengthdir_x(3, _angle);
+            _player.kb_y = lengthdir_y(3, _angle);
+
+            // Visual feedback
+            _player.image_blend = c_red;
+            _player.alarm[0] = 10; // Flash red briefly
+
+            // Play attack sound
+            audio_play_sound(snd_attack_hit, 1, false);
+
+            show_debug_message("Enemy dealt " + string(attack_damage) + " damage to player");
+        } else {
+            // Player moved out of range, attack missed
+            audio_play_sound(snd_attack_miss, 1, false);
+        }
+    }
+
+    // Note: state will be reset to idle by obj_enemy_attack when it completes
+}
