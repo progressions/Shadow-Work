@@ -4,15 +4,33 @@ if (alarm[1] > 0) {
 	target_y = y + kb_y;
 }
 if (state == PlayerState.dead) {
-	image_index = 34;
+	// Play dying animation once, then stay on final frame
+	if (!variable_instance_exists(self, "death_anim_complete")) {
+		death_anim_complete = false;
+		death_anim_timer = 0;
+	}
+
+	if (!death_anim_complete) {
+		// Play dying animation (frames 32-34)
+		var dying_anim = global.enemy_anim_data.dying;
+		death_anim_timer += anim_speed;
+		var frame_offset = floor(death_anim_timer) % dying_anim.length;
+		image_index = dying_anim.start + frame_offset;
+
+		// Check if we've completed the dying animation
+		if (death_anim_timer >= dying_anim.length) {
+			death_anim_complete = true;
+			image_index = dying_anim.start + dying_anim.length - 1; // Final frame (34)
+		}
+	} else {
+		// Stay on final dead frame
+		image_index = 34;
+	}
+	return; // Skip the rest of the animation logic
 }
 if (state != PlayerState.dead) {
-/// STEP EVENT — Movement + Directional Animation (idle/walk use global bob; attack local)
-/// Sprite layout (indices):
-/// idle_[down,right,left,up]    : 2 frames each -> offsets 0, 2, 4, 6
-/// walking_[down,right,left,up] : 3 frames each -> offsets 8, 11, 14, 17
-/// attack_[down,right,left,up]  : 3 frames each -> offsets 20, 23, 26, 29
-/// (Total frames indexed 0..31)
+/// STEP EVENT — Movement + Directional Animation (using structured anim data)
+/// Animation frames are defined in global.enemy_anim_data
 
 /// ---------- Safe one-time inits
 if (!variable_instance_exists(self, "last_dir_index"))   last_dir_index   = 0;   // 0=down,1=right,2=left,3=up
@@ -47,27 +65,10 @@ if (_is_moving) {
 /// ---------- Animation block + direction offsets
 image_speed = 0;
 
-var start_index = 0;
-var frames_in_seq = 1;
-
-switch (state) {
-    case PlayerState.idle:
-        frames_in_seq = 2;
-        start_index   = 0 + (dir_index * 2);
-        break;
-    case PlayerState.walking:
-        frames_in_seq = 3;
-        start_index   = 8 + (dir_index * 3);
-        break;
-    case PlayerState.attacking:
-        frames_in_seq = 3;
-        start_index   = 20 + (dir_index * 3);
-        break;
-    default:
-        frames_in_seq = 2;
-        start_index   = 0;
-        break;
-}
+// Get animation data using the new structured system
+var anim_info = get_enemy_anim(state, dir_index);
+var start_index = anim_info.start;
+var frames_in_seq = anim_info.length;
 
 /// ---------- Reset timers when the sequence (block/dir) changes
 if (prev_start_index != start_index) {
