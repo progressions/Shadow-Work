@@ -26,141 +26,10 @@ if (instance_exists(obj_grid_controller)) {
 #region Movement
 
 if (state == PlayerState.on_grid && !obj_grid_controller.hop.active) {
-	
-    // Grid-based movement - only on key press
-    if (keyboard_check_pressed(ord("W"))) {
-        obj_grid_controller.move_up();
-        facing_dir = "up";
-        move_dir = "up";
-    }
-    else if (keyboard_check_pressed(ord("S"))) {
-        obj_grid_controller.move_down();
-        facing_dir = "down";
-        move_dir = "down";
-    }
-    else if (keyboard_check_pressed(ord("A"))) {
-        obj_grid_controller.move_left();
-        facing_dir = "left";
-        move_dir = "left";
-    }
-    else if (keyboard_check_pressed(ord("D"))) {
-        obj_grid_controller.move_right();
-        facing_dir = "right";
-        move_dir = "right";
-    }
-    else {
-        move_dir = "idle";
-    }
+	player_on_grid();
     
 } else {
-    // ============================================
-    // CHECK FOR DOUBLE-TAP DASH (simplified)
-    // ============================================
-    if (!is_dashing && dash_cooldown <= 0) {
-        // W key double-tap
-        if (keyboard_check_pressed(ord("W"))) {
-            if (current_time - last_key_time_w < double_tap_time) {
-                start_dash("up");
-            }
-            last_key_time_w = current_time;
-        }
-        
-        // A key double-tap
-        if (keyboard_check_pressed(ord("A"))) {
-            if (current_time - last_key_time_a < double_tap_time) {
-                start_dash("left");
-            }
-            last_key_time_a = current_time;
-        }
-        
-        // S key double-tap
-        if (keyboard_check_pressed(ord("S"))) {
-            if (current_time - last_key_time_s < double_tap_time) {
-                start_dash("down");
-            }
-            last_key_time_s = current_time;
-        }
-        
-        // D key double-tap
-        if (keyboard_check_pressed(ord("D"))) {
-            if (current_time - last_key_time_d < double_tap_time) {
-                start_dash("right");
-            }
-            last_key_time_d = current_time;
-        }
-    }
-
-    // ============================================
-    // MOVEMENT
-    // ============================================
-    if (is_dashing) {
-        // Handle dash movement
-        dash_timer--;
-        if (dash_timer <= 0) {
-            is_dashing = false;
-        }
-        
-        var dash_x = 0;
-        var dash_y = 0;
-        
-        switch(facing_dir) {
-            case "up":    dash_y = -dash_speed; break;
-            case "down":  dash_y =  dash_speed; break;
-            case "left":  dash_x = -dash_speed; break;
-            case "right": dash_x =  dash_speed; break;
-        }
-        
-        move_and_collide(dash_x, dash_y, tilemap);
-        move_dir = "dash";
-        
-    } else {
-        // idle movement
-        _hor = keyboard_check(ord("D")) - keyboard_check(ord("A"));
-        _ver = keyboard_check(ord("S")) - keyboard_check(ord("W"));
-		 
-        move_dir = "idle";
-        if (_hor != 0 or _ver != 0) {
-            if (_ver > 0) {
-                move_dir = "down";
-                facing_dir = "down";
-            }
-            else if (_ver < 0) {
-                move_dir = "up";
-                facing_dir = "up";
-            }
-            else if (_hor > 0) {
-                move_dir = "right";
-                facing_dir = "right";
-            }
-            else if (_hor < 0) {
-                move_dir = "left";
-                facing_dir = "left";
-            }
-        }
-        
-        // Get the tilemap from your path layer
-        var tile_layer = layer_get_id("Tiles_Path");
-        var tilemap_path = layer_tilemap_get_id(tile_layer);
-        // Check if there's a path tile at the player's position
-        var tile = tilemap_get_at_pixel(tilemap_path, x, y);
-        // If there's no path tile (tile is 0 or empty), player is on grass
-        if (tile == 0) {
-            move_speed = 1; // Slower on grass
-        } else {
-            move_speed = 1.25; // idle speed on path
-        }
-        
-        // Movement with collision
-        var _collided = move_and_collide(_hor * move_speed, _ver * move_speed, tilemap);
-        if (array_length(_collided) > 0) {
-            audio_play_sound(snd_bump, 1, false);
-        }
-		
-    }
-
-    if (dash_cooldown > 0) {
-        dash_cooldown--;
-    }
+    player_dashing();
 
     // ============================================
     // KNOCKBACK SYSTEM
@@ -180,7 +49,7 @@ if (state == PlayerState.on_grid && !obj_grid_controller.hop.active) {
     
     #region Pillar collision checking - ONLY when NOT on grid
     // Use un-offset probe Y so entering from LEFT/RIGHT registers correctly.
-	if (state != PlayerState.on_grid && (!instance_exists(obj_grid_controller) || !obj_grid_controller.hop.active)) {
+	if (state != PlayerState.on_grid && !obj_grid_controller.hop.active) {
 	    var _instance = noone;
 	    var pillar_list = ds_list_create();
 
@@ -198,7 +67,6 @@ if (state == PlayerState.on_grid && !obj_grid_controller.hop.active) {
 
 	    if (pillar_count > 0) { 
 	        _instance = pillar_list[| 0];
-	        show_debug_message("Found pillar: " + string(_instance));
         
 	        // Call move_onto to handle the transition
 	        obj_grid_controller.move_onto(_instance);
@@ -317,6 +185,8 @@ if (_instance != noone && _instance.item_def != undefined) {
 ds_list_destroy(pickup_list);
 #endregion
 
+
+#region Animation
 // ============================================
 // ANIMATION
 // ============================================
@@ -371,48 +241,10 @@ if (state == PlayerState.attacking) {
 
 image_index = current_anim_start + floor(anim_frame);
 
+#endregion Animation
+
 #region Attack System
 
-// Update attack cooldown
-if (attack_cooldown > 0) {
-    attack_cooldown--;
-    can_attack = false;
-} else {
-    can_attack = true;
-}
-
-// Handle attack input
-if (keyboard_check_pressed(ord("J")) && can_attack) {
-    state = PlayerState.attacking;
-
-    var attack = instance_create_layer(x, y, "Instances", obj_attack);
-    attack.creator = self;
-
-    // Calculate cooldown based on weapon attack speed
-    var _attack_speed = 1.0; // Default unarmed speed
-    if (equipped.right_hand != undefined && equipped.right_hand.definition.type == ItemType.weapon) {
-        _attack_speed = equipped.right_hand.definition.stats.attack_speed;
-    }
-
-    // Set cooldown: slower weapons have longer recovery
-    attack_cooldown = max(15, round(60 / _attack_speed));
-    can_attack = false;
-
-    // Play attack sound based on weapon type
-    if (equipped.right_hand != undefined) {
-        // Different sounds for different weapon types
-        switch(equipped.right_hand.definition.handedness) {
-            case WeaponHandedness.two_handed:
-                audio_play_sound(snd_attack_sword, 1, false);
-                break;
-            default:
-                audio_play_sound(snd_attack_sword, 1, false);
-                break;
-        }
-    } else {
-        // Unarmed attack sound (could be a different sound)
-        audio_play_sound(snd_attack_sword, 1, false);
-    }
-}
+player_attacking();
 
 #endregion Attack System
