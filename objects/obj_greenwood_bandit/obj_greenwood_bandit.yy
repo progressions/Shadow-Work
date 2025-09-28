@@ -6,8 +6,8 @@
   "name":"obj_greenwood_bandit",
   "overriddenProperties":[],
   "parent":{
-    "name":"Objects",
-    "path":"folders/Objects.yy",
+    "name":"mobs",
+    "path":"folders/Objects/mobs.yy",
   },
   "parentObjectId":{
     "name":"obj_enemy_parent",

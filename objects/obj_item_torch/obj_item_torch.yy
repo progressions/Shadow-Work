@@ -8,8 +8,8 @@
   "name":"obj_item_torch",
   "overriddenProperties":[],
   "parent":{
-    "name":"Objects",
-    "path":"folders/Objects.yy",
+    "name":"items",
+    "path":"folders/Objects/items.yy",
   },
   "parentObjectId":{
     "name":"obj_shield_parent",

@@ -8,8 +8,8 @@
   "name":"obj_item_greatsword",
   "overriddenProperties":[],
   "parent":{
-    "name":"Objects",
-    "path":"folders/Objects.yy",
+    "name":"items",
+    "path":"folders/Objects/items.yy",
   },
   "parentObjectId":{
     "name":"obj_weapon_parent",

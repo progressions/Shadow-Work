@@ -9,8 +9,8 @@
   "name":"obj_reset_pad",
   "overriddenProperties":[],
   "parent":{
-    "name":"Objects",
-    "path":"folders/Objects.yy",
+    "name":"environment",
+    "path":"folders/Objects/environment.yy",
   },
   "parentObjectId":null,
   "persistent":false,

@@ -59,8 +59,8 @@
   "nineSlice":null,
   "origin":7,
   "parent":{
-    "name":"Sprites",
-    "path":"folders/Sprites.yy",
+    "name":"mobs",
+    "path":"folders/Sprites/mobs.yy",
   },
   "preMultiplyAlpha":false,
   "resourceType":"GMSprite",

@@ -5,8 +5,8 @@
   "isDnD":false,
   "name":"player_on_grid",
   "parent":{
-    "name":"Scripts",
-    "path":"folders/Scripts.yy",
+    "name":"player",
+    "path":"folders/Scripts/player.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

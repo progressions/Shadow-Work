@@ -8,8 +8,8 @@
   "name":"obj_orc",
   "overriddenProperties":[],
   "parent":{
-    "name":"Objects",
-    "path":"folders/Objects.yy",
+    "name":"mobs",
+    "path":"folders/Objects/mobs.yy",
   },
   "parentObjectId":{
     "name":"obj_enemy_parent",
