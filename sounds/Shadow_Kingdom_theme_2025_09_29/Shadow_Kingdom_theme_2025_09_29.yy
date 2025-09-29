@@ -2,14 +2,14 @@
   "$GMSound":"",
   "%Name":"Shadow_Kingdom_theme_2025_09_29",
   "audioGroupId":{
-    "name":"audiogroup_music",
-    "path":"audiogroups/audiogroup_music",
+    "name":"audiogroup_default",
+    "path":"audiogroups/audiogroup_default",
   },
   "bitDepth":1,
   "bitRate":128,
   "compression":0,
   "conversionMode":0,
-  "duration":69.81821,
+  "duration":264.0,
   "name":"Shadow_Kingdom_theme_2025_09_29",
   "parent":{
     "name":"Sounds",

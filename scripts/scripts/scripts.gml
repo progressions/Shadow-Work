@@ -88,13 +88,9 @@ if (!variable_global_exists("audio_config")) {
 
 // Audio wrapper functions
 function play_music(_sound, _priority = 1, _loops = true) {
-    show_debug_message("play_music called - enabled: " + string(global.audio_config.music_enabled));
     if (global.audio_config.music_enabled) {
-        var _sound_id = audio_play_sound(_sound, _priority, _loops);
-        show_debug_message("audio_play_sound returned: " + string(_sound_id));
-        return _sound_id;
+        return audio_play_sound(_sound, _priority, _loops);
     }
-    show_debug_message("Music disabled, returning -1");
     return -1; // Return invalid sound ID when disabled
 }
 
