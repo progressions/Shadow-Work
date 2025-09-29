@@ -50,8 +50,8 @@
   "nineSlice":null,
   "origin":7,
   "parent":{
-    "name":"wielded",
-    "path":"folders/Sprites/wielded.yy",
+    "name":"armors",
+    "path":"folders/Sprites/wielded/armors.yy",
   },
   "preMultiplyAlpha":false,
   "resourceType":"GMSprite",

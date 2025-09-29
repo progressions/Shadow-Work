@@ -125,16 +125,16 @@ global.item_database = {
     ),
     
     // Row 3 - Chain armor set (frames 12-14) and Leather armor set (frames 15-17)
-    iron_helmet: new create_item_definition(
-        12, "iron_helmet", "Iron Helmet", ItemType.armor, EquipSlot.helmet,
+    chain_coif: new create_item_definition(
+        12, "chain_coif", "Chain Coif", ItemType.armor, EquipSlot.helmet,
         {defense: 4}
     ),
     chain_armor: new create_item_definition(
         13, "chain_armor", "Chain Armor", ItemType.armor, EquipSlot.armor,
         {defense: 10, speed_modifier: 0.9}
     ),
-    chain_greaves: new create_item_definition(
-        14, "chain_greaves", "Chain Greaves", ItemType.armor, EquipSlot.boots,
+    chain_leggings: new create_item_definition(
+        14, "chain_leggings", "Chain Leggings", ItemType.armor, EquipSlot.boots,
         {defense: 3, speed_modifier: 0.95}
     ),
     leather_helmet: new create_item_definition(
@@ -180,6 +180,20 @@ global.item_database = {
     arrows: new create_item_definition(
         24, "arrows", "Arrows", ItemType.ammo, EquipSlot.none,
         {stack_size: 99}
+    ),
+
+    // Plate armor set (frames 25-27) - Heavy tier
+    plate_helmet: new create_item_definition(
+        25, "plate_helmet", "Plate Helmet", ItemType.armor, EquipSlot.helmet,
+        {defense: 6, speed_modifier: 0.9}
+    ),
+    plate_armor: new create_item_definition(
+        26, "plate_armor", "Plate Armor", ItemType.armor, EquipSlot.armor,
+        {defense: 15, speed_modifier: 0.8}
+    ),
+    plate_sabatons: new create_item_definition(
+        27, "plate_sabatons", "Plate Sabatons", ItemType.armor, EquipSlot.boots,
+        {defense: 4, speed_modifier: 0.9}
     )
 };
 
