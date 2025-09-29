@@ -139,5 +139,5 @@ function start_dash(_direction) {
     dash_timer = dash_duration;
     facing_dir = _direction;
     dash_cooldown = dash_cooldown_time;
-    audio_play_sound(snd_dash, 1, false);
+    play_sfx(snd_dash, 1, false);
 }

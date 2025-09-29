@@ -52,7 +52,7 @@ function player_state_walking() {
     // Movement with collision
     var _collided = move_and_collide(_hor * final_move_speed, _ver * final_move_speed, tilemap);
     if (array_length(_collided) > 0) {
-        audio_play_sound(snd_bump, 1, false);
+        play_sfx(snd_bump, 1, false);
     }
 
     // Check for pillar interaction while walking

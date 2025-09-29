@@ -5,7 +5,7 @@ if (alarm[0] < 0 && other.state != EnemyState.dead && state != PlayerState.dead)
 	alarm[0] = 60;
 	image_blend = c_red;
 	show_debug_message("You got hit");
-	audio_play_sound(snd_attack_sword, 1, false);
+	play_sfx(snd_attack_sword, 1, false);
 	
 	if (hp <= 0) {
 		state = PlayerState.dead;

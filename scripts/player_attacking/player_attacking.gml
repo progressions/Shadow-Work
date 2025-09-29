@@ -43,15 +43,15 @@ function player_handle_attack_input() {
             // Different sounds for different weapon types
             switch(equipped.right_hand.definition.handedness) {
                 case WeaponHandedness.two_handed:
-                    audio_play_sound(snd_attack_sword, 1, false);
+                    play_sfx(snd_attack_sword, 1, false);
                     break;
                 default:
-                    audio_play_sound(snd_attack_sword, 1, false);
+                    play_sfx(snd_attack_sword, 1, false);
                     break;
             }
         } else {
             // Unarmed attack sound (could be a different sound)
-            audio_play_sound(snd_attack_sword, 1, false);
+            play_sfx(snd_attack_sword, 1, false);
         }
     }
 }

@@ -101,5 +101,5 @@ function emphasize_pillar_feedback() {
     highlight_timer = highlight_length;
 
     // Play a sound if you want feedback
-    audio_play_sound(snd_chest_open, 1, false);
+    play_sfx(snd_chest_open, 1, false);
 }

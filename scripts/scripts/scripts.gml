@@ -78,6 +78,65 @@ function create_item_definition(_frame, _id, _name, _type, _slot, _stats) constr
     equipped_sprite_key = _stats[$ "equipped_key"] ?? string_lower(string_replace(_name, " ", "_"));
 }
 
+// Audio configuration (only set if not already initialized)
+if (!variable_global_exists("audio_config")) {
+    global.audio_config = {
+        music_enabled: true,
+        sfx_enabled: true
+    };
+}
+
+// Audio wrapper functions
+function play_music(_sound, _priority = 1, _loops = true) {
+    show_debug_message("play_music called - enabled: " + string(global.audio_config.music_enabled));
+    if (global.audio_config.music_enabled) {
+        var _sound_id = audio_play_sound(_sound, _priority, _loops);
+        show_debug_message("audio_play_sound returned: " + string(_sound_id));
+        return _sound_id;
+    }
+    show_debug_message("Music disabled, returning -1");
+    return -1; // Return invalid sound ID when disabled
+}
+
+function play_sfx(_sound, _priority = 1, _loops = false) {
+    if (global.audio_config.sfx_enabled) {
+        return audio_play_sound(_sound, _priority, _loops);
+    }
+    return -1; // Return invalid sound ID when disabled
+}
+
+function stop_music(_sound_id) {
+    if (audio_is_playing(_sound_id)) {
+        audio_stop_sound(_sound_id);
+    }
+}
+
+function set_music_enabled(_enabled) {
+    global.audio_config.music_enabled = _enabled;
+    if (!_enabled && variable_global_exists("music") && audio_is_playing(global.music)) {
+        stop_music(global.music);
+        global.music = -1;
+    } else if (_enabled && (!variable_global_exists("music") || global.music == -1 || !audio_is_playing(global.music))) {
+        // Restart background music when re-enabled
+        if (audio_group_is_loaded(audiogroup_music)) {
+            global.music = audio_play_sound(Shadow_Kingdom_theme_2025_09_29, 1, true);
+            audio_sound_gain(global.music, 0.7, 0);
+        }
+    }
+}
+
+function set_sfx_enabled(_enabled) {
+    global.audio_config.sfx_enabled = _enabled;
+}
+
+function is_music_enabled() {
+    return global.audio_config.music_enabled;
+}
+
+function is_sfx_enabled() {
+    return global.audio_config.sfx_enabled;
+}
+
 
 // Create the global item database
 global.item_database = {

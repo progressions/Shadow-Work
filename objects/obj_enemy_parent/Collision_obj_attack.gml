@@ -71,6 +71,6 @@ if (alarm[1] < 0) {
 
 	 alarm[1] = 20;
 
-	 audio_play_sound(snd_attack_sword, 1, false);
+	 play_sfx(snd_attack_sword, 1, false);
 }
 }

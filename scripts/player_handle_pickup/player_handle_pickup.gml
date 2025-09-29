@@ -20,7 +20,7 @@ function player_handle_pickup() {
         // Try to add to inventory
         if (inventory_add_item(_item_def, _count)) {
             // Play pickup sound
-            audio_play_sound(snd_chest_open, 1, false);
+            play_sfx(snd_chest_open, 1, false);
 
             show_debug_message("Picked up " + string(_count) + " " + _item_def.name);
 

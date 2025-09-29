@@ -180,16 +180,16 @@ function allow_grid_step(plan) {
     if (plan.off_grid) {
         switch (plan.edge) {
             case "left":
-                if (!ALLOW_EXIT_LEFT)  { audio_play_sound(snd_bump, 1, false); return false; }
+                if (!ALLOW_EXIT_LEFT)  { play_sfx(snd_bump, 1, false); return false; }
                 break;
             case "right":
-                if (!ALLOW_EXIT_RIGHT) { audio_play_sound(snd_bump, 1, false); return false; }
+                if (!ALLOW_EXIT_RIGHT) { play_sfx(snd_bump, 1, false); return false; }
                 break;
             case "up":
-                if (!ALLOW_EXIT_UP)    { audio_play_sound(snd_bump, 1, false); return false; }
+                if (!ALLOW_EXIT_UP)    { play_sfx(snd_bump, 1, false); return false; }
                 break;
             case "down":
-                if (!ALLOW_EXIT_DOWN)  { audio_play_sound(snd_bump, 1, false); return false; }
+                if (!ALLOW_EXIT_DOWN)  { play_sfx(snd_bump, 1, false); return false; }
                 break;
         }
         // If allowed by policy, we’ll let apply_grid_step handle the off-grid hop.
@@ -207,7 +207,7 @@ function allow_grid_step(plan) {
     var target_height  = plan.target_pillar.height;
 
     if (target_height - current_height > 1) {
-        audio_play_sound(snd_bump, 1, false);
+        play_sfx(snd_bump, 1, false);
         show_debug_message("Move blocked: too high (" + string(current_height) + " -> " + string(target_height) + ")");
         return false;
     }

@@ -31,12 +31,12 @@ if (state == EnemyState.attacking) {
             _player.alarm[0] = 10; // Flash red briefly
 
             // Play attack sound
-            audio_play_sound(snd_attack_hit, 1, false);
+            play_sfx(snd_attack_hit, 1, false);
 
             show_debug_message("Enemy dealt " + string(final_damage) + " damage to player");
         } else {
             // Player moved out of range, attack missed
-            audio_play_sound(snd_attack_miss, 1, false);
+            play_sfx(snd_attack_miss, 1, false);
         }
     }
 
