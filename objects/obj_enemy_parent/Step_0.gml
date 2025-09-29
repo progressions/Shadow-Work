@@ -1,4 +1,6 @@
 
+if (global.game_paused) exit;
+
 // Tick status effects (runs even when dead)
 tick_status_effects();
 
