@@ -730,6 +730,16 @@ function apply_status_effect(_effect_type, _duration_override = -1) {
     var effect_data = get_status_effect_data(_effect_type);
     if (effect_data == undefined) return false;
 
+    // Check trait immunities
+    if (_effect_type == StatusEffectType.burning && has_trait_immunity("burn_immunity")) {
+        show_debug_message("Entity is immune to burning (trait immunity)");
+        return false;
+    }
+    if (_effect_type == StatusEffectType.wet && has_trait_immunity("freeze_immunity")) {
+        show_debug_message("Entity is immune to wet/freeze (trait immunity)");
+        return false;
+    }
+
     // Check for opposing effect
     var opposing_type = effect_data.opposing;
     if (has_status_effect(opposing_type)) {
@@ -791,7 +801,12 @@ function tick_status_effects() {
         if (effect.type == StatusEffectType.burning) {
             effect.tick_timer++;
             if (effect.tick_timer >= effect.data.tick_rate) {
-                hp -= effect.data.damage;
+                // Apply trait modifiers to burning damage
+                var _base_damage = effect.data.damage;
+                var _fire_modifier = get_all_trait_modifiers("fire_damage_modifier");
+                var _final_damage = _base_damage * _fire_modifier;
+
+                hp -= _final_damage;
 
                 // Check if entity died from burning
                 if (hp <= 0) {
