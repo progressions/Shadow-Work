@@ -35,3 +35,7 @@ can_attack = true;
 
 // Status effects system
 init_status_effects();
+
+// Trait system
+// Child enemies can override this with traits = ["fireborne", "aquatic"], etc.
+traits = [];

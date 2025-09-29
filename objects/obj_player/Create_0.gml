@@ -133,6 +133,9 @@ kb_y = 0;
 // Status effects system
 init_status_effects();
 
+// Trait system
+traits = [];
+
 // Add this function to your scripts or at the bottom of Create Event:
 function start_dash(_direction) {
     is_dashing = true;
