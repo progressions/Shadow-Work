@@ -1,7 +1,42 @@
+show_debug_message("COLLISION DETECTED: enemy hit by attack!");
+
 if (state != EnemyState.dead) {
+show_debug_message("Enemy state check passed, alarm[1] = " + string(alarm[1]));
 if (alarm[1] < 0) {
+	 var old_hp = hp;
 	 hp -= other.damage;
 	 image_blend = c_red;
+
+	 show_debug_message("Enemy hit! HP: " + string(old_hp) + " -> " + string(hp));
+
+	 // Check if enemy died and award XP
+	 if (hp <= 0) {
+	     var attacker = other.creator;
+	     show_debug_message("Enemy died! Attacker: " + (attacker != noone ? object_get_name(attacker.object_index) : "none"));
+	     show_debug_message("Checking if attacker == obj_player: attacker=" + string(attacker) + ", obj_player=" + string(obj_player));
+	     show_debug_message("Attacker is instance? " + string(instance_exists(attacker)));
+
+	     if (attacker != noone && attacker.object_index == obj_player) {
+	         // Base XP reward (can be customized per enemy type)
+	         var xp_reward = 5;
+
+	         show_debug_message("Awarding " + string(xp_reward) + " XP to player");
+	         show_debug_message("About to call gain_xp with attacker: " + object_get_name(attacker.object_index));
+
+	         // Award XP to player
+	         with (attacker) {
+	             show_debug_message("Inside with block, calling gain_xp(" + string(xp_reward) + ")");
+	             gain_xp(xp_reward);
+	             show_debug_message("gain_xp call completed");
+	         }
+
+	         show_debug_message("Enemy killed! Player gained " + string(xp_reward) + " XP");
+	     }
+
+	     // Set enemy death state immediately
+	     state = EnemyState.dead;
+	     show_debug_message("Enemy state set to dead");
+	 }
 
 	 // Apply weapon status effects
 	 var attacker = other.creator;

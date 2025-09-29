@@ -53,7 +53,6 @@
     {"name":"inst_27D6462D","path":"rooms/Room1/Room1.yy",},
     {"name":"inst_2F49FA34","path":"rooms/Room1/Room1.yy",},
     {"name":"inst_298A64E","path":"rooms/Room1/Room1.yy",},
-    {"name":"inst_3BD62879","path":"rooms/Room1/Room1.yy",},
     {"name":"inst_5343D9CF","path":"roomui/RoomUI/RoomUI.yy",},
   ],
   "isDnd":false,
@@ -169,7 +168,6 @@
         {"$GMRInstance":"v2","%Name":"inst_27D6462D","colour":4294967295,"frozen":false,"hasCreationCode":false,"ignore":false,"imageIndex":0,"imageSpeed":1.0,"inheritCode":false,"inheritedItemId":null,"inheritItemSettings":false,"isDnd":false,"name":"inst_27D6462D","objectId":{"name":"obj_item_plate_armor","path":"objects/obj_item_plate_armor/obj_item_plate_armor.yy",},"properties":[],"resourceType":"GMRInstance","resourceVersion":"2.0","rotation":0.0,"scaleX":1.0,"scaleY":1.0,"x":496.0,"y":208.0,},
         {"$GMRInstance":"v2","%Name":"inst_2F49FA34","colour":4294967295,"frozen":false,"hasCreationCode":false,"ignore":false,"imageIndex":0,"imageSpeed":1.0,"inheritCode":false,"inheritedItemId":null,"inheritItemSettings":false,"isDnd":false,"name":"inst_2F49FA34","objectId":{"name":"obj_item_plate_helmet","path":"objects/obj_item_plate_helmet/obj_item_plate_helmet.yy",},"properties":[],"resourceType":"GMRInstance","resourceVersion":"2.0","rotation":0.0,"scaleX":1.0,"scaleY":1.0,"x":512.0,"y":208.0,},
         {"$GMRInstance":"v2","%Name":"inst_298A64E","colour":4294967295,"frozen":false,"hasCreationCode":false,"ignore":false,"imageIndex":0,"imageSpeed":1.0,"inheritCode":false,"inheritedItemId":null,"inheritItemSettings":false,"isDnd":false,"name":"inst_298A64E","objectId":{"name":"obj_item_plate_sabatons","path":"objects/obj_item_plate_sabatons/obj_item_plate_sabatons.yy",},"properties":[],"resourceType":"GMRInstance","resourceVersion":"2.0","rotation":0.0,"scaleX":1.0,"scaleY":1.0,"x":528.0,"y":208.0,},
-        {"$GMRInstance":"v2","%Name":"inst_3BD62879","colour":4294967295,"frozen":false,"hasCreationCode":false,"ignore":false,"imageIndex":0,"imageSpeed":1.0,"inheritCode":false,"inheritedItemId":null,"inheritItemSettings":false,"isDnd":false,"name":"inst_3BD62879","objectId":{"name":"obj_ui_overlay","path":"objects/obj_ui_overlay/obj_ui_overlay.yy",},"properties":[],"resourceType":"GMRInstance","resourceVersion":"2.0","rotation":0.0,"scaleX":1.0,"scaleY":1.0,"x":64.0,"y":-32.0,},
       ],"layers":[],"name":"Instances","properties":[],"resourceType":"GMRInstanceLayer","resourceVersion":"2.0","userdefinedDepth":false,"visible":true,},
     {"$GMRTileLayer":"","%Name":"Tiles_Col","depth":200,"effectEnabled":true,"effectType":null,"gridX":32,"gridY":32,"hierarchyFrozen":false,"inheritLayerDepth":false,"inheritLayerSettings":false,"inheritSubLayers":true,"inheritVisibility":true,"layers":[],"name":"Tiles_Col","properties":[],"resourceType":"GMRTileLayer","resourceVersion":"2.0","tiles":{"SerialiseHeight":24,"SerialiseWidth":43,"TileCompressedData":[
           -44,49,1,-2147483648,-3,49,-18,-2147483648,-3,0,-3,-2147483648,1,49,-8,-2147483648,-6,49,1,-2147483648,

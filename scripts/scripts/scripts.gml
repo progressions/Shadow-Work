@@ -507,6 +507,34 @@ function get_attack_range() {
     return _base_range;
 }
 
+function gain_xp(_amount) {
+    if (_amount <= 0) return; // No negative or zero XP
+
+    xp += _amount;
+    show_debug_message("Gained " + string(_amount) + " XP");
+
+    // Check for level ups
+    while (xp >= xp_to_next) {
+        xp -= xp_to_next;
+        level++;
+
+        // Increase XP requirement for next level (25% increase per level)
+        xp_to_next = ceil(xp_to_next * 1.25);
+
+        // Level up bonuses
+        var old_hp_total = hp_total;
+        hp_total += 2; // Gain 2 max HP per level
+        hp += 2; // Also heal 2 HP when leveling up
+
+        show_debug_message("LEVEL UP! Now level " + string(level));
+        show_debug_message("Max HP increased from " + string(old_hp_total) + " to " + string(hp_total));
+        show_debug_message("Next level requires " + string(xp_to_next) + " XP");
+
+        // TODO: Add level up sound effect
+        // audio_play_sound(snd_level_up, 1, false);
+    }
+}
+
 function get_total_defense() {
     var _total_defense = 0;
     var _slots = ["head", "torso", "legs", "left_hand", "right_hand"];
@@ -718,6 +746,15 @@ function tick_status_effects() {
                     } else if (object_is_ancestor(object_index, obj_enemy_parent)) {
                         state = EnemyState.dead;
                         show_debug_message("Enemy died from burning");
+
+                        // Award XP to player for burning kill
+                        if (instance_exists(obj_player)) {
+                            var xp_reward = 5;
+                            with (obj_player) {
+                                gain_xp(xp_reward);
+                            }
+                            show_debug_message("Enemy burned to death! Player gained " + string(xp_reward) + " XP");
+                        }
                     }
                 }
 

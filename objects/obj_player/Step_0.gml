@@ -124,3 +124,9 @@ if (keyboard_check_pressed(ord("7"))) {
         show_debug_message("Applied burning to enemy");
     }
 }
+
+// Debug key for testing XP gain
+if (keyboard_check_pressed(ord("8"))) {
+    gain_xp(10);
+    show_debug_message("Gained 10 XP via debug key");
+}
