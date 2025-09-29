@@ -11,11 +11,15 @@ function player_state_dashing() {
     var dash_x = 0;
     var dash_y = 0;
 
+    // Apply status effect speed modifiers to dash
+    var speed_modifier = get_status_effect_modifier("speed");
+    var final_dash_speed = dash_speed * speed_modifier;
+
     switch(facing_dir) {
-        case "up":    dash_y = -dash_speed; break;
-        case "down":  dash_y =  dash_speed; break;
-        case "left":  dash_x = -dash_speed; break;
-        case "right": dash_x =  dash_speed; break;
+        case "up":    dash_y = -final_dash_speed; break;
+        case "down":  dash_y =  final_dash_speed; break;
+        case "left":  dash_x = -final_dash_speed; break;
+        case "right": dash_x =  final_dash_speed; break;
     }
 
     move_and_collide(dash_x, dash_y, tilemap);

@@ -8,8 +8,12 @@ if (state == EnemyState.attacking) {
     if (_player != noone) {
         var _dist = point_distance(x, y, _player.x, _player.y);
         if (_dist <= attack_range && _player.state != PlayerState.dead) {
+            // Apply status effect damage modifiers
+            var damage_modifier = get_status_effect_modifier("damage");
+            var final_damage = attack_damage * damage_modifier;
+
             // Deal damage to player
-            _player.hp -= attack_damage;
+            _player.hp -= final_damage;
 
             // Check if player died
             if (_player.hp <= 0) {
@@ -29,7 +33,7 @@ if (state == EnemyState.attacking) {
             // Play attack sound
             audio_play_sound(snd_attack_hit, 1, false);
 
-            show_debug_message("Enemy dealt " + string(attack_damage) + " damage to player");
+            show_debug_message("Enemy dealt " + string(final_damage) + " damage to player");
         } else {
             // Player moved out of range, attack missed
             audio_play_sound(snd_attack_miss, 1, false);

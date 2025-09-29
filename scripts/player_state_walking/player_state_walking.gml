@@ -45,8 +45,12 @@ function player_state_walking() {
         move_speed = 1.25; // normal speed on path
     }
 
+    // Apply status effect speed modifiers
+    var speed_modifier = get_status_effect_modifier("speed");
+    var final_move_speed = move_speed * speed_modifier;
+
     // Movement with collision
-    var _collided = move_and_collide(_hor * move_speed, _ver * move_speed, tilemap);
+    var _collided = move_and_collide(_hor * final_move_speed, _ver * final_move_speed, tilemap);
     if (array_length(_collided) > 0) {
         audio_play_sound(snd_bump, 1, false);
     }

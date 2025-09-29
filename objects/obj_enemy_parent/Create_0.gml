@@ -32,3 +32,6 @@ attack_speed = 0.8; // Slower than default player
 attack_range = 20; // Melee range
 attack_cooldown = 0;
 can_attack = true;
+
+// Status effects system
+init_status_effects();

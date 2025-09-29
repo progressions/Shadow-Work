@@ -13,6 +13,15 @@ enum EnemyState {
 	dead,
 }
 
+enum StatusEffectType {
+	burning,
+	wet,
+	empowered,
+	weakened,
+	swift,
+	slowed,
+}
+
 enum Direction {
 	down,
 	right,
@@ -87,7 +96,7 @@ global.item_database = {
     ),
     master_sword: new create_item_definition(
         3, "master_sword", "Master Sword", ItemType.weapon, EquipSlot.either_hand,
-        {damage: 6, attack_speed: 1.1, range: 38, handedness: WeaponHandedness.versatile, two_handed_damage: 7, two_handed_range: 42, magic_power: 5}
+        {damage: 6, attack_speed: 1.1, range: 38, handedness: WeaponHandedness.versatile, two_handed_damage: 7, two_handed_range: 42, magic_power: 5, status_effect: StatusEffectType.empowered, status_chance: 0.3}
     ),
     greatsword: new create_item_definition(
         4, "greatsword", "Greatsword", ItemType.weapon, EquipSlot.right_hand,
@@ -121,7 +130,7 @@ global.item_database = {
     ),
     torch: new create_item_definition(
         11, "torch", "Torch", ItemType.tool, EquipSlot.left_hand,
-        {light_radius: 100, handedness: WeaponHandedness.one_handed}
+        {light_radius: 100, handedness: WeaponHandedness.one_handed, status_effect: StatusEffectType.burning, status_chance: 0.2}
     ),
     
     // Row 3 - Chain armor set (frames 12-14) and Leather armor set (frames 15-17)
@@ -474,6 +483,10 @@ function get_total_damage() {
         _base_damage += _left_damage * 0.5; // Off-hand does 50% damage
     }
 
+    // Apply status effect damage modifiers
+    var damage_modifier = get_status_effect_modifier("damage");
+    _base_damage *= damage_modifier;
+
     return _base_damage;
 }
 
@@ -573,4 +586,255 @@ function consume_ammo() {
     }
 }
 
+// ============================================
+// STATUS EFFECTS SYSTEM
+// ============================================
 
+// Status effect definitions
+global.status_effect_data = {
+    burning: {
+        duration: 180,     // 3 seconds at 60fps
+        tick_rate: 30,     // Damage every 0.5 seconds
+        damage: 1,
+        opposing: StatusEffectType.wet
+    },
+    wet: {
+        duration: 300,     // 5 seconds at 60fps
+        speed_modifier: 0.9, // 10% speed reduction
+        opposing: StatusEffectType.burning
+    },
+    empowered: {
+        duration: 600,     // 10 seconds at 60fps
+        damage_modifier: 1.5, // 50% damage increase
+        opposing: StatusEffectType.weakened
+    },
+    weakened: {
+        duration: 600,     // 10 seconds at 60fps
+        damage_modifier: 0.7, // 30% damage reduction
+        opposing: StatusEffectType.empowered
+    },
+    swift: {
+        duration: 480,     // 8 seconds at 60fps
+        speed_modifier: 1.3, // 30% speed increase
+        opposing: StatusEffectType.slowed
+    },
+    slowed: {
+        duration: 300,     // 5 seconds at 60fps
+        speed_modifier: 0.6, // 40% speed reduction
+        opposing: StatusEffectType.swift
+    }
+};
+
+// Helper function to get status effect data
+function get_status_effect_data(_effect_type) {
+    switch(_effect_type) {
+        case StatusEffectType.burning: return global.status_effect_data.burning;
+        case StatusEffectType.wet: return global.status_effect_data.wet;
+        case StatusEffectType.empowered: return global.status_effect_data.empowered;
+        case StatusEffectType.weakened: return global.status_effect_data.weakened;
+        case StatusEffectType.swift: return global.status_effect_data.swift;
+        case StatusEffectType.slowed: return global.status_effect_data.slowed;
+        default: return undefined;
+    }
+}
+
+// Core status effects management functions
+function init_status_effects() {
+    status_effects = [];
+}
+
+function apply_status_effect(_effect_type, _duration_override = -1) {
+    var effect_data = get_status_effect_data(_effect_type);
+    if (effect_data == undefined) return false;
+
+    // Check for opposing effect
+    var opposing_type = effect_data.opposing;
+    if (has_status_effect(opposing_type)) {
+        // Remove opposing effect instead of applying new one
+        remove_status_effect(opposing_type);
+        return true;
+    }
+
+    // Check if effect already exists
+    var existing_index = find_status_effect(_effect_type);
+    if (existing_index != -1) {
+        // Refresh duration
+        var duration = (_duration_override != -1) ? _duration_override : effect_data.duration;
+        status_effects[existing_index].remaining_duration = duration;
+        status_effects[existing_index].tick_timer = 0;
+        return true;
+    }
+
+    // Add new effect
+    var duration = (_duration_override != -1) ? _duration_override : effect_data.duration;
+    var new_effect = {
+        type: _effect_type,
+        remaining_duration: duration,
+        tick_timer: 0,
+        data: effect_data
+    };
+
+    array_push(status_effects, new_effect);
+    return true;
+}
+
+function remove_status_effect(_effect_type) {
+    var index = find_status_effect(_effect_type);
+    if (index != -1) {
+        array_delete(status_effects, index, 1);
+        return true;
+    }
+    return false;
+}
+
+function has_status_effect(_effect_type) {
+    return find_status_effect(_effect_type) != -1;
+}
+
+function find_status_effect(_effect_type) {
+    for (var i = 0; i < array_length(status_effects); i++) {
+        if (status_effects[i].type == _effect_type) {
+            return i;
+        }
+    }
+    return -1;
+}
+
+function tick_status_effects() {
+    for (var i = array_length(status_effects) - 1; i >= 0; i--) {
+        var effect = status_effects[i];
+
+        // Handle damage over time effects
+        if (effect.type == StatusEffectType.burning) {
+            effect.tick_timer++;
+            if (effect.tick_timer >= effect.data.tick_rate) {
+                hp -= effect.data.damage;
+
+                // Check if entity died from burning
+                if (hp <= 0) {
+                    if (object_index == obj_player) {
+                        state = PlayerState.dead;
+                        show_debug_message("Player died from burning");
+                    } else if (object_is_ancestor(object_index, obj_enemy_parent)) {
+                        state = EnemyState.dead;
+                        show_debug_message("Enemy died from burning");
+                    }
+                }
+
+                effect.tick_timer = 0;
+            }
+        }
+
+        // Reduce duration
+        effect.remaining_duration--;
+
+        // Remove expired effects
+        if (effect.remaining_duration <= 0) {
+            array_delete(status_effects, i, 1);
+        }
+    }
+}
+
+function get_status_effect_modifier(_modifier_type) {
+    var modifier = 1.0;
+
+    for (var i = 0; i < array_length(status_effects); i++) {
+        var effect = status_effects[i];
+
+        switch(_modifier_type) {
+            case "speed":
+                if (variable_struct_exists(effect.data, "speed_modifier")) {
+                    modifier *= effect.data.speed_modifier;
+                }
+                break;
+
+            case "damage":
+                if (variable_struct_exists(effect.data, "damage_modifier")) {
+                    modifier *= effect.data.damage_modifier;
+                }
+                break;
+        }
+    }
+
+    return modifier;
+}
+
+// ============================================
+// UI HELPERS
+// ============================================
+
+function ui_draw_bar(_x, _y, _w, _h, _value, _value_max, _fill_color, _back_color, _border_color) {
+    var _max_value = max(1, _value_max);
+    var _pct = clamp(_value / _max_value, 0, 1);
+
+    draw_set_color(_back_color);
+    draw_rectangle(_x, _y, _x + _w, _y + _h, false);
+
+    draw_set_color(_fill_color);
+    draw_rectangle(_x + 1, _y + 1, _x + 1 + (_w - 2) * _pct, _y + _h - 1, false);
+
+    draw_set_color(_border_color);
+    draw_rectangle(_x, _y, _x + _w, _y + _h, true);
+}
+
+function ui_draw_health_bar(_player, _x, _y, _w, _h) {
+    ui_draw_bar(_x, _y, _w, _h, _player.hp, _player.hp_total, c_red, make_color_rgb(24, 16, 16), c_black);
+}
+
+function ui_draw_xp_bar(_player, _x, _y, _w, _h, _label_x = undefined, _label_y = undefined) {
+    ui_draw_bar(_x, _y, _w, _h, _player.xp, _player.xp_to_next, c_aqua, make_color_rgb(12, 20, 32), c_black);
+
+    draw_set_color(c_white);
+    var _text_x = is_undefined(_label_x) ? _x + _w + 6 : _label_x;
+    var _text_y = is_undefined(_label_y) ? _y - 2 : _label_y;
+    draw_text(_text_x, _text_y, "Lv " + string(_player.level));
+}
+
+function ui_get_status_effect_color(_effect_type) {
+    switch(_effect_type) {
+        case StatusEffectType.burning: return c_red;
+        case StatusEffectType.wet: return c_blue;
+        case StatusEffectType.empowered: return c_yellow;
+        case StatusEffectType.weakened: return c_gray;
+        case StatusEffectType.swift: return c_green;
+        case StatusEffectType.slowed: return c_purple;
+        default: return c_white;
+    }
+}
+
+function ui_draw_status_effects(_player, _x, _y, _icon_size, _spacing) {
+    if (!variable_instance_exists(_player, "status_effects")) return;
+
+    var _effects = _player.status_effects;
+    if (array_length(_effects) == 0) return;
+
+    for (var i = 0; i < array_length(_effects); i++) {
+        var _effect = _effects[i];
+        var _icon_x = _x + (i * (_icon_size + _spacing));
+        var _icon_y = _y;
+        var _icon_sprite = -1;
+
+        if (is_struct(_effect.data) && variable_struct_exists(_effect.data, "icon_sprite")) {
+            _icon_sprite = _effect.data.icon_sprite;
+        }
+
+        if (_icon_sprite != -1 && sprite_exists(_icon_sprite)) {
+            draw_sprite(_icon_sprite, 0, _icon_x, _icon_y);
+        } else {
+            draw_set_color(ui_get_status_effect_color(_effect.type));
+            draw_rectangle(_icon_x, _icon_y, _icon_x + _icon_size, _icon_y + _icon_size, false);
+        }
+
+        var _duration_pct = 0;
+        if (is_struct(_effect) && variable_struct_exists(_effect, "remaining_duration") && variable_struct_exists(_effect.data, "duration")) {
+            _duration_pct = clamp(_effect.remaining_duration / max(1, _effect.data.duration), 0, 1);
+        }
+
+        draw_set_color(c_black);
+        draw_rectangle(_icon_x, _icon_y + _icon_size + 1, _icon_x + _icon_size, _icon_y + _icon_size + 3, false);
+        draw_set_color(ui_get_status_effect_color(_effect.type));
+        draw_rectangle(_icon_x, _icon_y + _icon_size + 1, _icon_x + (_icon_size * _duration_pct), _icon_y + _icon_size + 3, false);
+    }
+
+    draw_set_color(c_white);
+}

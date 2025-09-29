@@ -8,6 +8,9 @@ hp = 10;
 hp_total = hp;
 damage = 1;
 facing_angle = 0;
+level = 1;
+xp = 0;
+xp_to_next = 25;
 
 #endregion Stats
 
@@ -126,6 +129,9 @@ can_attack = true;
 // Knockback system
 kb_x = 0;
 kb_y = 0;
+
+// Status effects system
+init_status_effects();
 
 // Add this function to your scripts or at the bottom of Create Event:
 function start_dash(_direction) {

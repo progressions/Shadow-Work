@@ -1,4 +1,7 @@
 
+// Tick status effects (runs even when dead)
+tick_status_effects();
+
 if (alarm[1] > 0) {
 	target_x = x + kb_x;
 	target_y = y + kb_y;
@@ -49,8 +52,10 @@ if (state != EnemyState.attacking) {
     state = _is_moving ? EnemyState.idle : EnemyState.idle;
 }
 
-/// ---------- Apply movement
-move_and_collide(_hor * move_speed, _ver * move_speed, [tilemap, obj_enemy_parent, obj_rising_pillar]);
+/// ---------- Apply movement with status effect speed modifiers
+var speed_modifier = get_status_effect_modifier("speed");
+var final_move_speed = move_speed * speed_modifier;
+move_and_collide(_hor * final_move_speed, _ver * final_move_speed, [tilemap, obj_enemy_parent, obj_rising_pillar]);
 
 /// ---------- Determine facing (0=down,1=right,2=left,3=up)
 var dir_index;
