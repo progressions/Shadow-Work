@@ -100,6 +100,55 @@ function has_trait_immunity(_immunity_name) {
     return false;
 }
 
+/// @function get_terrain_at_position(x, y)
+/// @description Get terrain type at position by checking all tile layers
+/// @param {real} x X position
+/// @param {real} y Y position
+/// @return {string} Terrain type (grass, path, water, dirt, stone, etc.)
+function get_terrain_at_position(_x, _y) {
+    // Safety check: ensure terrain map exists
+    if (!variable_global_exists("terrain_tile_map")) {
+        return "grass"; // Default fallback
+    }
+
+    // Check each layer in priority order (water > path > forest)
+    var _layers_to_check = ["Tiles_Water_Moving", "Tiles_Water", "Tiles_Path", "Tiles_Forest"];
+
+    for (var i = 0; i < array_length(_layers_to_check); i++) {
+        var _layer_name = _layers_to_check[i];
+        var _layer_id = layer_get_id(_layer_name);
+
+        if (_layer_id == -1) continue; // Layer doesn't exist, skip
+
+        var _tilemap = layer_tilemap_get_id(_layer_id);
+        if (_tilemap == -1) continue; // No tilemap on layer, skip
+
+        var _tile_data = tilemap_get_at_pixel(_tilemap, _x, _y);
+        var _tile_index = tile_get_index(_tile_data);
+
+        if (_tile_index == 0) continue; // No tile here, check next layer
+
+        // Look up terrain type from range mapping
+        if (variable_struct_exists(global.terrain_tile_map, _layer_name)) {
+            var _ranges = global.terrain_tile_map[$ _layer_name];
+
+            // Check each range: [start, end, "name"]
+            for (var j = 0; j < array_length(_ranges); j++) {
+                var _range = _ranges[j];
+                var _start = _range[0];
+                var _end = _range[1];
+                var _terrain_name = _range[2];
+
+                if (_tile_index >= _start && _tile_index <= _end) {
+                    return _terrain_name;
+                }
+            }
+        }
+    }
+
+    return "grass"; // Default if no terrain found
+}
+
 /// @function get_damage_type(attacker)
 /// @description Determine damage type from attacker's weapon or status effects
 /// @param {instance} attacker The attacking character instance

@@ -6,6 +6,33 @@ global.audio_config = {
     sfx_enabled: true
 };
 
+// Initialize terrain tile mapping using ranges
+// Define terrain ranges per layer: [start_index, end_index, "terrain_name"]
+// NOTE: Tiles_Forest is mostly empty (grass background). Only define special tiles.
+global.terrain_tile_map = {};
+
+// Only define non-grass tiles on Tiles_Forest (if any exist)
+// If you have special forest tiles like rocks, trees, etc., add them here
+// Example: [10, 15, "forest_floor"] if you have those tiles
+global.terrain_tile_map[$ "Tiles_Forest"] = [
+    // Add special tiles here if you have any on this layer
+    // Otherwise leave empty - index 0 (empty) will default to "grass"
+];
+
+// Any non-zero tile on path layer = path
+global.terrain_tile_map[$ "Tiles_Path"] = [
+    [1, 999, "path"], // Any path tile = path terrain
+];
+
+// Any non-zero tile on water layers = water
+global.terrain_tile_map[$ "Tiles_Water"] = [
+    [1, 999, "water"],
+];
+
+global.terrain_tile_map[$ "Tiles_Water_Moving"] = [
+    [1, 999, "water"],
+];
+
 // Initialize trait database
 global.trait_database = {
     fireborne: {

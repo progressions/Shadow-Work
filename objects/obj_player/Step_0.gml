@@ -169,3 +169,59 @@ if (keyboard_check_pressed(ord("O"))) {
         }
     }
 }
+
+// Debug key for terrain/tile detection
+if (keyboard_check_pressed(ord("P"))) {
+    show_debug_message("=== TILE DEBUG ===");
+    show_debug_message("Position: (" + string(x) + ", " + string(y) + ")");
+
+    // Check Tiles_Forest layer
+    var _forest_layer = layer_get_id("Tiles_Forest");
+    if (_forest_layer != -1) {
+        var _tilemap_forest = layer_tilemap_get_id(_forest_layer);
+        if (_tilemap_forest != -1) {
+            var _tile_data = tilemap_get_at_pixel(_tilemap_forest, x, y);
+            var _tile_index = tile_get_index(_tile_data);
+            show_debug_message("Tiles_Forest index: " + string(_tile_index));
+        }
+    }
+
+    // Check Tiles_Path layer
+    var _path_layer = layer_get_id("Tiles_Path");
+    if (_path_layer != -1) {
+        var _tilemap_path = layer_tilemap_get_id(_path_layer);
+        if (_tilemap_path != -1) {
+            var _path_tile = tilemap_get_at_pixel(_tilemap_path, x, y);
+            var _path_index = tile_get_index(_path_tile);
+            show_debug_message("Tiles_Path index: " + string(_path_index) + " (0=no path)");
+        }
+    }
+
+    // Check Tiles_Water layer
+    var _water_layer = layer_get_id("Tiles_Water");
+    if (_water_layer != -1) {
+        var _tilemap_water = layer_tilemap_get_id(_water_layer);
+        if (_tilemap_water != -1) {
+            var _water_tile = tilemap_get_at_pixel(_tilemap_water, x, y);
+            var _water_index = tile_get_index(_water_tile);
+            show_debug_message("Tiles_Water index: " + string(_water_index) + " (0=no water)");
+        }
+    }
+
+    // Check Tiles_Water_Moving layer
+    var _water_moving_layer = layer_get_id("Tiles_Water_Moving");
+    if (_water_moving_layer != -1) {
+        var _tilemap_water_moving = layer_tilemap_get_id(_water_moving_layer);
+        if (_tilemap_water_moving != -1) {
+            var _water_moving_tile = tilemap_get_at_pixel(_tilemap_water_moving, x, y);
+            var _water_moving_index = tile_get_index(_water_moving_tile);
+            show_debug_message("Tiles_Water_Moving index: " + string(_water_moving_index));
+        }
+    }
+
+    show_debug_message("==================");
+
+    // Show current terrain type
+    var _current_terrain = get_terrain_at_position(x, y);
+    show_debug_message(">>> Current terrain: " + _current_terrain);
+}
