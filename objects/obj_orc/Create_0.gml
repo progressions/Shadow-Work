@@ -8,3 +8,6 @@ attack_range = 25;
 hp = 18;
 hp_total = hp;
 move_speed = 0.8;
+
+// Orc traits - fire-born warrior, resistant to fire
+traits = ["fireborne"];

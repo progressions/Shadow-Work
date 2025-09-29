@@ -4,8 +4,21 @@ if (state != EnemyState.dead) {
 show_debug_message("Enemy state check passed, alarm[1] = " + string(alarm[1]));
 if (alarm[1] < 0) {
 	 var old_hp = hp;
-	 hp -= other.damage;
+
+	 // Apply trait-based damage modifiers
+	 var _base_damage = other.damage;
+	 var _damage_type = get_damage_type(other.creator);
+	 var _modifier_key = _damage_type + "_damage_modifier";
+	 var _damage_modifier = get_all_trait_modifiers(_modifier_key);
+	 var _final_damage = _base_damage * _damage_modifier;
+
+	 hp -= _final_damage;
 	 image_blend = c_red;
+
+	 show_debug_message("Damage calculation: base=" + string(_base_damage) +
+	                    " type=" + _damage_type +
+	                    " modifier=" + string(_damage_modifier) +
+	                    " final=" + string(_final_damage));
 
 	 show_debug_message("Enemy hit! HP: " + string(old_hp) + " -> " + string(hp));
 

@@ -112,6 +112,7 @@
     {"id":{"name":"scr_animate_6frame_bob","path":"scripts/scr_animate_6frame_bob/scr_animate_6frame_bob.yy",},},
     {"id":{"name":"scr_music_functions","path":"scripts/scr_music_functions/scr_music_functions.yy",},},
     {"id":{"name":"scripts","path":"scripts/scripts/scripts.yy",},},
+    {"id":{"name":"trait_system","path":"scripts/trait_system/trait_system.yy",},},
     {"id":{"name":"Heart_of_Gold_2025_09_29","path":"sounds/Heart_of_Gold_2025_09_29/Heart_of_Gold_2025_09_29.yy",},},
     {"id":{"name":"Shadow_Kingdom_theme_2025_09_29","path":"sounds/Shadow_Kingdom_theme_2025_09_29/Shadow_Kingdom_theme_2025_09_29.yy",},},
     {"id":{"name":"snd_attack_hit","path":"sounds/snd_attack_hit/snd_attack_hit.yy",},},

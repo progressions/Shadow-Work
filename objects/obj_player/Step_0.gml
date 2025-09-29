@@ -130,3 +130,42 @@ if (keyboard_check_pressed(ord("8"))) {
     gain_xp(10);
     show_debug_message("Gained 10 XP via debug key");
 }
+
+// Debug keys for testing trait system
+if (keyboard_check_pressed(ord("T"))) {
+    add_trait("fireborne");
+    show_debug_message("Added fireborne trait to player. Current traits: " + json_stringify(traits));
+}
+
+if (keyboard_check_pressed(ord("Y"))) {
+    var nearest_enemy = instance_nearest(x, y, obj_enemy_parent);
+    if (nearest_enemy != noone && point_distance(x, y, nearest_enemy.x, nearest_enemy.y) < 200) {
+        with (nearest_enemy) {
+            add_trait("arboreal");
+            show_debug_message("Added arboreal trait to enemy. Current traits: " + json_stringify(traits));
+        }
+    } else {
+        show_debug_message("No enemy nearby to add trait");
+    }
+}
+
+if (keyboard_check_pressed(ord("U"))) {
+    traits = [];
+    show_debug_message("Removed all traits from player");
+}
+
+if (keyboard_check_pressed(ord("O"))) {
+    show_debug_message("=== PLAYER TRAITS ===");
+    show_debug_message("Traits: " + json_stringify(traits));
+    show_debug_message("Count: " + string(array_length(traits)));
+
+    // Show nearest enemy traits too
+    var nearest_enemy = instance_nearest(x, y, obj_enemy_parent);
+    if (nearest_enemy != noone && point_distance(x, y, nearest_enemy.x, nearest_enemy.y) < 200) {
+        with (nearest_enemy) {
+            show_debug_message("=== NEAREST ENEMY TRAITS ===");
+            show_debug_message("Traits: " + json_stringify(traits));
+            show_debug_message("Count: " + string(array_length(traits)));
+        }
+    }
+}
