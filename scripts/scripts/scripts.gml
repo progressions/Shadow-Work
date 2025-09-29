@@ -777,8 +777,68 @@ function ui_draw_bar(_x, _y, _w, _h, _value, _value_max, _fill_color, _back_colo
     draw_rectangle(_x, _y, _x + _w, _y + _h, true);
 }
 
-function ui_draw_health_bar(_player, _x, _y, _w, _h) {
-    ui_draw_bar(_x, _y, _w, _h, _player.hp, _player.hp_total, c_red, make_color_rgb(24, 16, 16), c_black);
+function ui_draw_health_bar(_player, _x, _y, _w, _h, _animation_data = undefined) {
+    // If no animation data provided, fall back to simple bar
+    if (_animation_data == undefined) {
+        ui_draw_bar(_x, _y, _w, _h, _player.hp, _player.hp_total, c_red, make_color_rgb(24, 16, 16), c_black);
+        return;
+    }
+
+    var _current_hp = _player.hp;
+    var _max_hp = _player.hp_total;
+
+    // Initialize animation data if needed
+    if (!variable_struct_exists(_animation_data, "previous_hp")) {
+        _animation_data.previous_hp = _current_hp;
+        _animation_data.displayed_previous_hp = _current_hp;
+        _animation_data.damage_delay_timer = 0;
+        _animation_data.damage_delay_duration = 30; // 0.5 seconds at 60fps
+        _animation_data.animation_speed = 0.01; // How fast the grey bar slides down
+    }
+
+    // Check if player took damage
+    if (_current_hp < _animation_data.previous_hp) {
+        // Player took damage - reset the animation
+        _animation_data.displayed_previous_hp = _animation_data.previous_hp;
+        _animation_data.damage_delay_timer = _animation_data.damage_delay_duration;
+    }
+
+    // Update the damage delay timer
+    if (_animation_data.damage_delay_timer > 0) {
+        _animation_data.damage_delay_timer--;
+    } else {
+        // Animate the grey bar sliding down
+        if (_animation_data.displayed_previous_hp > _current_hp) {
+            _animation_data.displayed_previous_hp = max(_current_hp, _animation_data.displayed_previous_hp - (_max_hp * _animation_data.animation_speed));
+        }
+    }
+
+    // Update previous_hp for next frame
+    _animation_data.previous_hp = _current_hp;
+
+    // Calculate widths
+    var _current_percentage = _current_hp / _max_hp;
+    var _current_width = _w * _current_percentage;
+
+    var _previous_percentage = _animation_data.displayed_previous_hp / _max_hp;
+    var _previous_width = _w * _previous_percentage;
+
+    // Determine health bar color frame
+    var _healthbar_frame = 0;
+    if (_current_percentage < 0.33) { _healthbar_frame = 2; }
+    else if (_current_percentage < 0.66) { _healthbar_frame = 1; }
+
+    // Draw black background
+    draw_sprite_stretched(spr_ui_healthbar_filler, 3, _x, _y, _w, _h);
+
+    // Draw grey "previous health" bar (frame 4)
+    draw_sprite_stretched(spr_ui_healthbar_filler, 4, _x, _y, _previous_width, _h);
+
+    // Draw current health bar on top
+    draw_sprite_stretched(spr_ui_healthbar_filler, _healthbar_frame, _x, _y, _current_width, _h);
+
+    // Draw border
+    draw_sprite(spr_ui_healthbar, 0, _x + 1, _y + 1);
 }
 
 function ui_draw_xp_bar(_player, _x, _y, _w, _h, _label_x = undefined, _label_y = undefined) {
