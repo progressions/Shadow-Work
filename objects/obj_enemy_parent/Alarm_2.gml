@@ -7,9 +7,15 @@ if (state == EnemyState.attacking) {
     var _player = instance_nearest(x, y, obj_player);
     if (_player != noone) {
         var _dist = point_distance(x, y, _player.x, _player.y);
-        if (_dist <= attack_range) {
+        if (_dist <= attack_range && _player.state != PlayerState.dead) {
             // Deal damage to player
             _player.hp -= attack_damage;
+
+            // Check if player died
+            if (_player.hp <= 0) {
+                _player.state = PlayerState.dead;
+                show_debug_message("Player died");
+            }
 
             // Add knockback to player
             var _angle = point_direction(x, y, _player.x, _player.y);

@@ -1,4 +1,4 @@
-if (alarm[0] < 0 && other.state != EnemyState.dead) {
+if (alarm[0] < 0 && other.state != EnemyState.dead && state != PlayerState.dead) {
 	
 	hp -= other.damage;
 	
@@ -8,7 +8,7 @@ if (alarm[0] < 0 && other.state != EnemyState.dead) {
 	audio_play_sound(snd_attack_sword, 1, false);
 	
 	if (hp <= 0) {
-		show_message("You died");
-		game_end();
+		state = PlayerState.dead;
+		show_debug_message("Player died");
 	}
 }

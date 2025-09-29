@@ -46,6 +46,10 @@ switch (state) {
         }
         break;
 
+    case PlayerState.dead:
+        player_state_dead();
+        break;
+
     default:
         // Fallback to idle for any unexpected state
         state = PlayerState.idle;
@@ -55,25 +59,28 @@ switch (state) {
 
 #endregion Movement
 
-// ============================================
-// PLAYER STEP EVENT - PICKUP CODE
-// ============================================
+// Don't run other systems when dead
+if (state != PlayerState.dead) {
+    // ============================================
+    // PLAYER STEP EVENT - PICKUP CODE
+    // ============================================
 
-#region Pickup items
-player_handle_pickup();
-#endregion
+    #region Pickup items
+    player_handle_pickup();
+    #endregion
 
 
-#region Animation
-player_handle_animation();
-#endregion Animation
+    #region Animation
+    player_handle_animation();
+    #endregion Animation
 
-#region Attack System
+    #region Attack System
 
-// Handle attack input and cooldown (applies to all states)
-player_handle_attack_input();
+    // Handle attack input and cooldown (applies to all states)
+    player_handle_attack_input();
 
-// Handle dash cooldown
-player_handle_dash_cooldown();
+    // Handle dash cooldown
+    player_handle_dash_cooldown();
 
-#endregion Attack System
+    #endregion Attack System
+}
