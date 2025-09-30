@@ -366,9 +366,9 @@ if (hp < hp_total) { // Only show when damaged
     var bar_x1 = x - 10;
     var bar_y1 = bbox_top - 10;
     var bar_x2 = x + 10;
-    var bar_y2 = bbox_top - 6;
+    var bar_y2 = bbox_top - 8;
 
-    draw_healthbar(bar_x1, bar_y1, bar_x2, bar_y2, (hp / hp_total) * 100, c_black, c_red, c_lime, 0, true, true);
+    draw_healthbar(bar_x1, bar_y1, bar_x2, bar_y2, (hp / hp_total) * 100, c_black, c_red, c_lime, 0, true, false);
 }
 
 // Status effect duration bars above player (no icons)

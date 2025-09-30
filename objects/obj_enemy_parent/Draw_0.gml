@@ -9,9 +9,9 @@ if (hp < hp_total && state != EnemyState.dead) { // Only show when damaged and a
     var bar_x1 = x - 8;
     var bar_y1 = bbox_top - 8;
     var bar_x2 = x + 8;
-    var bar_y2 = bbox_top - 4;
+    var bar_y2 = bbox_top - 6;
 
-    draw_healthbar(bar_x1, bar_y1, bar_x2, bar_y2, (hp / hp_total) * 100, c_black, c_red, c_lime, 0, true, true);
+    draw_healthbar(bar_x1, bar_y1, bar_x2, bar_y2, (hp / hp_total) * 100, c_black, c_red, c_lime, 0, true, false);
 }
 
 // Status effect duration bars above enemy (no icons)
