@@ -1,4 +1,7 @@
 function player_state_dashing() {
+    // Stop all footstep sounds when dashing
+    stop_all_footstep_sounds();
+
     // Handle dash movement
     dash_timer--;
     if (dash_timer <= 0) {

@@ -36,6 +36,15 @@ global.terrain_tile_map[$ "Tiles_Water_Moving"] = [
     [1, 999, "water"],
 ];
 
+// Initialize terrain footstep sound mapping
+global.terrain_footstep_sounds = {
+    grass: snd_footsteps_grass,
+    path: snd_footsteps_path,
+    // Add more terrain sounds as needed:
+    // water: snd_footsteps_water,
+    // stone: snd_footsteps_stone,
+};
+
 // Initialize trait database
 global.trait_database = {
     fireborne: {

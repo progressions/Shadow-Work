@@ -5,6 +5,9 @@ function player_attacking(){
 }
 
 function player_state_attacking() {
+    // Stop all footstep sounds when attacking
+    stop_all_footstep_sounds();
+
     // In attack state - wait for animation to complete
     // The animation system will reset state to idle when attack animation finishes
 

@@ -1,4 +1,6 @@
 function player_on_grid(){
+    // Stop all footstep sounds when on grid
+    stop_all_footstep_sounds();
 
     // Grid-based movement - only on key press
     if (keyboard_check_pressed(ord("W"))) {

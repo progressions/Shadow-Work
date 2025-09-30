@@ -12,7 +12,7 @@ for (i = 0; i < array_length(sounds_to_play); i++) {
 	
 	if (sound_data.loop == false) {
 		var _sound_instance = audio_play_sound(sound_data.sound, sound_data.priority, sound_data.loop);
-		audio_sound_gain(_sound_instance, _final_volume, 0);
+		audio_sound_gain(_sound_instance, sound_data.volume * _final_volume, 0);
 
 		array_delete(sounds_to_play, i, 1);
 		i--;
@@ -21,8 +21,8 @@ for (i = 0; i < array_length(sounds_to_play); i++) {
 		var _found = false;
 		for (var j = 0; j < array_length(sounds_playing); j++) {
 			if (sounds_playing[j].sound == sound_data.sound) {
-				// Re-trigger: set target volume back to 1
-				sounds_playing[j].target_volume = 1;
+				// Re-trigger: set target volume to requested volume
+				sounds_playing[j].target_volume = sound_data.volume;
 				_found = true;
 				break;
 			}
@@ -35,7 +35,7 @@ for (i = 0; i < array_length(sounds_to_play); i++) {
 				sound: sound_data.sound,
 				instance: _sound_instance,
 				current_volume: 0,
-				target_volume: 1,
+				target_volume: sound_data.volume,
 				fade_in_speed: sound_data.fade_in_speed,
 				fade_out_speed: sound_data.fade_out_speed,
 				priority: sound_data.priority
@@ -68,13 +68,23 @@ for (var i = 0; i < array_length(sounds_playing); i++) {
 
 	// Update volume toward target
 	if (_loop_data.current_volume < _loop_data.target_volume) {
-		_loop_data.current_volume += _loop_data.fade_in_speed;
-		if (_loop_data.current_volume > _loop_data.target_volume) {
+		if (_loop_data.fade_in_speed > 0) {
+			_loop_data.current_volume += _loop_data.fade_in_speed;
+			if (_loop_data.current_volume > _loop_data.target_volume) {
+				_loop_data.current_volume = _loop_data.target_volume;
+			}
+		} else {
+			// Instant fade in
 			_loop_data.current_volume = _loop_data.target_volume;
 		}
 	} else if (_loop_data.current_volume > _loop_data.target_volume) {
-		_loop_data.current_volume -= _loop_data.fade_out_speed;
-		if (_loop_data.current_volume < _loop_data.target_volume) {
+		if (_loop_data.fade_out_speed > 0) {
+			_loop_data.current_volume -= _loop_data.fade_out_speed;
+			if (_loop_data.current_volume < _loop_data.target_volume) {
+				_loop_data.current_volume = _loop_data.target_volume;
+			}
+		} else {
+			// Instant fade out
 			_loop_data.current_volume = _loop_data.target_volume;
 		}
 	}

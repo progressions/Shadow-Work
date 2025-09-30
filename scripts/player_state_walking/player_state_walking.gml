@@ -33,16 +33,14 @@ function player_state_walking() {
         facing_dir = "left";
     }
 
-    // Get the tilemap from your path layer
-    var tile_layer = layer_get_id("Tiles_Path");
-    var tilemap_path = layer_tilemap_get_id(tile_layer);
-    // Check if there's a path tile at the player's position
-    var tile = tilemap_get_at_pixel(tilemap_path, x, y);
-    // If there's no path tile (tile is 0 or empty), player is on grass
-    if (tile == 0) {
-        move_speed = 1; // Slower on grass
+    // Detect terrain at player position
+    var _terrain = get_terrain_at_position(x, y);
+
+    // Set movement speed based on terrain
+    if (_terrain == "path") {
+        move_speed = 1.25; // Faster on path
     } else {
-        move_speed = 1.25; // normal speed on path
+        move_speed = 1; // Normal speed on grass/other terrain
     }
 
     // Apply status effect speed modifiers
@@ -52,7 +50,27 @@ function player_state_walking() {
     // Movement with collision
     var _collided = move_and_collide(_hor * final_move_speed, _ver * final_move_speed, tilemap);
     if (array_length(_collided) > 0) {
-        play_sfx(snd_bump, 1, false);
+        // play_sfx(snd_bump, 1, false);
+    }
+
+    // Get footstep sound for current terrain
+    var _footstep_sound = global.terrain_footstep_sounds[$ _terrain];
+
+    // Fallback to grass sound if terrain has no defined sound
+    if (_footstep_sound == undefined) {
+        _footstep_sound = snd_footsteps_grass;
+    }
+
+    // Play appropriate footstep sound
+    play_sfx(_footstep_sound, 0.3, 4, true);
+
+    // Stop all other terrain footstep sounds
+    var _terrain_names = variable_struct_get_names(global.terrain_footstep_sounds);
+    for (var i = 0; i < array_length(_terrain_names); i++) {
+        var _other_sound = global.terrain_footstep_sounds[$ _terrain_names[i]];
+        if (_other_sound != _footstep_sound) {
+            stop_looped_sfx(_other_sound);
+        }
     }
 
     // Check for pillar interaction while walking

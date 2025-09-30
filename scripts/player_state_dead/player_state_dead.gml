@@ -1,4 +1,7 @@
 function player_state_dead(){
+    // Stop all footstep sounds when dead
+    stop_all_footstep_sounds();
+
     // Play death animation once, then stay on final frame
     if (!variable_instance_exists(self, "death_anim_complete")) {
         death_anim_complete = false;

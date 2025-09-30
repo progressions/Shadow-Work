@@ -1,4 +1,7 @@
 function player_state_idle() {
+    // Stop all footstep sounds when entering idle
+    stop_all_footstep_sounds();
+
     // Check for dash input first
     if (player_handle_dash_input()) {
         return; // Dash was triggered, state changed
