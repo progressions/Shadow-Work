@@ -3,7 +3,10 @@ persistent = true;
 // Initialize audio configuration
 global.audio_config = {
     music_enabled: true,
-    sfx_enabled: true
+    sfx_enabled: true,
+	music_volume: 1,
+	sfx_volume: 1,
+	master_volume: 1
 };
 
 // Initialize terrain tile mapping using ranges

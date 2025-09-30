@@ -12,8 +12,8 @@
   "duration":158.64409,
   "name":"Heart_of_Gold_2025_09_29",
   "parent":{
-    "name":"Sounds",
-    "path":"folders/Sounds.yy",
+    "name":"music",
+    "path":"folders/Sounds/music.yy",
   },
   "preload":false,
   "resourceType":"GMSound",

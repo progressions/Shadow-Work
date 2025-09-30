@@ -12,8 +12,8 @@
   "duration":264.0,
   "name":"Shadow_Kingdom_theme_2025_09_29",
   "parent":{
-    "name":"Sounds",
-    "path":"folders/Sounds.yy",
+    "name":"music",
+    "path":"folders/Sounds/music.yy",
   },
   "preload":false,
   "resourceType":"GMSound",

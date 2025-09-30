@@ -40,6 +40,8 @@ function player_dashing(){
     // MOVEMENT
     // ============================================
     if (is_dashing) {
+		obj_sfx_controller.play_sfx("dash", snd_dash)
+		
         // Handle dash movement
         dash_timer--;
         if (dash_timer <= 0) {
@@ -99,7 +101,7 @@ function player_dashing(){
         // Movement with collision
         var _collided = move_and_collide(_hor * move_speed, _ver * move_speed, tilemap);
         if (array_length(_collided) > 0) {
-            play_sfx(snd_bump, 1, false);
+            // play_sfx(snd_bump, 1, false);
         }
 		
     }

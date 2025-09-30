@@ -1,5 +1,8 @@
 
-var _final_volume = global.music_volume * global.master_volume;
+// Calculate final volume, considering enabled state
+var _final_volume = global.audio_config.music_enabled
+	? global.audio_config.music_volume * global.audio_config.master_volume
+	: 0;
 
 
 if (song_asset != target_song_asset) {

@@ -78,62 +78,6 @@ function create_item_definition(_frame, _id, _name, _type, _slot, _stats) constr
     equipped_sprite_key = _stats[$ "equipped_key"] ?? string_lower(string_replace(_name, " ", "_"));
 }
 
-// Audio configuration (only set if not already initialized)
-if (!variable_global_exists("audio_config")) {
-    global.audio_config = {
-        music_enabled: true,
-        sfx_enabled: true
-    };
-}
-
-// Audio wrapper functions
-function play_music(_sound, _priority = 1, _loops = true) {
-    if (global.audio_config.music_enabled) {
-        return audio_play_sound(_sound, _priority, _loops);
-    }
-    return -1; // Return invalid sound ID when disabled
-}
-
-function play_sfx(_sound, _priority = 1, _loops = false) {
-    if (global.audio_config.sfx_enabled) {
-        return audio_play_sound(_sound, _priority, _loops);
-    }
-    return -1; // Return invalid sound ID when disabled
-}
-
-function stop_music(_sound_id) {
-    if (audio_is_playing(_sound_id)) {
-        audio_stop_sound(_sound_id);
-    }
-}
-
-function set_music_enabled(_enabled) {
-    global.audio_config.music_enabled = _enabled;
-    if (!_enabled && variable_global_exists("music") && audio_is_playing(global.music)) {
-        stop_music(global.music);
-        global.music = -1;
-    } else if (_enabled && (!variable_global_exists("music") || global.music == -1 || !audio_is_playing(global.music))) {
-        // Restart background music when re-enabled
-        if (audio_group_is_loaded(audiogroup_music)) {
-            global.music = audio_play_sound(Shadow_Kingdom_theme_2025_09_29, 1, true);
-            audio_sound_gain(global.music, 0.7, 0);
-        }
-    }
-}
-
-function set_sfx_enabled(_enabled) {
-    global.audio_config.sfx_enabled = _enabled;
-}
-
-function is_music_enabled() {
-    return global.audio_config.music_enabled;
-}
-
-function is_sfx_enabled() {
-    return global.audio_config.sfx_enabled;
-}
-
-
 // Create the global item database
 global.item_database = {
     // Row 1 - Bladed weapons (frames 0-5)
@@ -730,16 +674,6 @@ function apply_status_effect(_effect_type, _duration_override = -1) {
     var effect_data = get_status_effect_data(_effect_type);
     if (effect_data == undefined) return false;
 
-    // Check trait immunities
-    if (_effect_type == StatusEffectType.burning && has_trait_immunity("burn_immunity")) {
-        show_debug_message("Entity is immune to burning (trait immunity)");
-        return false;
-    }
-    if (_effect_type == StatusEffectType.wet && has_trait_immunity("freeze_immunity")) {
-        show_debug_message("Entity is immune to wet/freeze (trait immunity)");
-        return false;
-    }
-
     // Check for opposing effect
     var opposing_type = effect_data.opposing;
     if (has_status_effect(opposing_type)) {
@@ -801,12 +735,7 @@ function tick_status_effects() {
         if (effect.type == StatusEffectType.burning) {
             effect.tick_timer++;
             if (effect.tick_timer >= effect.data.tick_rate) {
-                // Apply trait modifiers to burning damage
-                var _base_damage = effect.data.damage;
-                var _fire_modifier = get_all_trait_modifiers("fire_damage_modifier");
-                var _final_damage = _base_damage * _fire_modifier;
-
-                hp -= _final_damage;
+                hp -= effect.data.damage;
 
                 // Check if entity died from burning
                 if (hp <= 0) {
