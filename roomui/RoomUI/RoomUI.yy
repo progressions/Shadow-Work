@@ -44,7 +44,7 @@
         {"$GMRFlexPanel":"","%Name":"FlexPanel_4","alignItems":1,"children":[
             {"$GMRInstance":"v2","%Name":"inst_5343D9CF","colour":4294967295,"flexProperties":{"$InstanceFlexProps":"v1","anchor":0,"resourceType":"InstanceFlexProps",},"frozen":false,"hasCreationCode":false,"ignore":false,"imageIndex":0,"imageSpeed":1.0,"inheritCode":false,"inheritedItemId":null,"inheritItemSettings":false,"isDnd":false,"name":"inst_5343D9CF","objectId":{"name":"obj_ui_hud","path":"objects/obj_ui_hud/obj_ui_hud.yy",},"properties":[],"resourceType":"GMRInstance","resourceVersion":"2.0","rotation":0.0,"scaleX":1.0,"scaleY":1.0,"x":0.0,"y":0.0,},
           ],"flexDirection":0,"height":{"unit":1,"value":100.0,},"justifyContent":0,"name":"FlexPanel_4","nodeColour":4294068417,"positionType":0,"resourceType":"GMRFlexPanel","resourceVersion":"2.0","width":{"unit":1,"value":100.0,},},
-      ],"flexDirection":0,"gridX":32,"gridY":32,"justifyContent":0,"name":"GameUI","nodeColour":4282970865,"paddingLeft":{"unit":1,"value":16.0,},"paddingTop":{"unit":1,"value":16.0,},"resourceType":"GMRUILayer","resourceVersion":"2.0",},
+      ],"flexDirection":0,"gridX":32,"gridY":32,"justifyContent":0,"name":"GameUI","nodeColour":4282970865,"paddingLeft":{"unit":1,"value":16.0,},"paddingTop":{"unit":1,"value":16.0,},"resourceType":"GMRUILayer","resourceVersion":"2.0","visible":false,},
   ],
   "locked":false,
   "name":"RoomUI",
