@@ -39,3 +39,14 @@ init_status_effects();
 // Trait system
 // Child enemies can override this with traits = ["fireborne", "aquatic"], etc.
 traits = [];
+
+// Enemy sound configuration
+// Child enemies can override specific sounds: enemy_sounds.on_attack = snd_orc_roar;
+enemy_sounds = {
+    on_attack: undefined,      // Default: snd_enemy_attack_generic
+    on_hit: undefined,         // Default: snd_enemy_hit_generic
+    on_death: undefined,       // Default: snd_enemy_death
+    on_aggro: undefined,       // Default: undefined (no sound)
+    on_footstep: undefined,    // Default: undefined (no sound)
+    on_status_effect: undefined // Default: snd_status_effect_generic
+};

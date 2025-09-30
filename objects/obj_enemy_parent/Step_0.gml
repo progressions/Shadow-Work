@@ -129,6 +129,15 @@ if (can_attack && state != EnemyState.attacking) {
     if (_player != noone) {
         var _dist = point_distance(x, y, _player.x, _player.y);
         if (_dist <= attack_range) {
+            // Play aggro sound on first detection (only if we haven't played it recently)
+            if (!variable_instance_exists(self, "last_aggro_time")) {
+                last_aggro_time = 0;
+            }
+            if (current_time - last_aggro_time > 3000) { // Cooldown: only play every 3 seconds
+                play_enemy_sfx("on_aggro");
+                last_aggro_time = current_time;
+            }
+
             // Start attack
             state = EnemyState.attacking;
             attack_cooldown = round(90 / attack_speed); // Enemy attacks are slower

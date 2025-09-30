@@ -1,5 +1,8 @@
 // Enemy attack execution
 if (state == EnemyState.attacking) {
+    // Play enemy attack sound
+    play_enemy_sfx("on_attack");
+
     // Create visual attack effect
     var _attack = instance_create_layer(x, y, "Instances", obj_enemy_attack);
     _attack.creator = self;
@@ -30,7 +33,7 @@ if (state == EnemyState.attacking) {
             _player.image_blend = c_red;
             _player.alarm[0] = 10; // Flash red briefly
 
-            // Play attack sound
+            // Play hit confirmation sound (player got hit)
             play_sfx(snd_attack_hit, 1, false);
 
             show_debug_message("Enemy dealt " + string(final_damage) + " damage to player");

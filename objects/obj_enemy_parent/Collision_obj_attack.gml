@@ -15,6 +15,9 @@ if (alarm[1] < 0) {
 	 hp -= _final_damage;
 	 image_blend = c_red;
 
+	 // Play enemy hit sound
+	 play_enemy_sfx("on_hit");
+
 	 show_debug_message("Damage calculation: base=" + string(_base_damage) +
 	                    " type=" + _damage_type +
 	                    " modifier=" + string(_damage_modifier) +
@@ -48,6 +51,10 @@ if (alarm[1] < 0) {
 
 	     // Set enemy death state immediately
 	     state = EnemyState.dead;
+
+	     // Play enemy death sound
+	     play_enemy_sfx("on_death");
+
 	     show_debug_message("Enemy state set to dead");
 	 }
 
@@ -89,7 +96,5 @@ if (alarm[1] < 0) {
 	 kb_y = sign(y - other.y);
 
 	 alarm[1] = 20;
-
-	 play_sfx(snd_attack_sword, 1, false);
 }
 }
