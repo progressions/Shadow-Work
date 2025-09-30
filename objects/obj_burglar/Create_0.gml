@@ -10,3 +10,7 @@ move_speed = 1.3;
 
 // Burglar traits - forest dweller, vulnerable to fire
 traits = ["arboreal"];
+
+enemy_sounds.on_attack = snd_burglar_attack;
+enemy_sounds.on_hit = snd_burglar_hit;
+enemy_sounds.on_death = snd_burglar_death;
