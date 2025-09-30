@@ -26,9 +26,15 @@ if (state == EnemyState.dead) {
 		if (death_anim_timer >= dying_anim.length) {
 			death_anim_complete = true;
 			image_index = dying_anim.start + dying_anim.length - 1; // Final frame (34)
+
+			// Create corpse and destroy this enemy instance
+			var _corpse = instance_create_layer(x, y, "Instances", obj_enemy_corpse);
+			_corpse.sprite_index = sprite_index;
+			_corpse.image_index = image_index;
+			instance_destroy();
 		}
 	} else {
-		// Stay on final dead frame
+		// Stay on final dead frame (shouldn't reach here since instance is destroyed)
 		image_index = 34;
 	}
 	return; // Skip the rest of the animation logic

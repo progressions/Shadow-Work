@@ -59,6 +59,7 @@
     {"id":{"name":"obj_burglar","path":"objects/obj_burglar/obj_burglar.yy",},},
     {"id":{"name":"obj_button","path":"objects/obj_button/obj_button.yy",},},
     {"id":{"name":"obj_column_marble","path":"objects/obj_column_marble/obj_column_marble.yy",},},
+    {"id":{"name":"obj_enemy_corpse","path":"objects/obj_enemy_corpse/obj_enemy_corpse.yy",},},
     {"id":{"name":"obj_enemy_parent","path":"objects/obj_enemy_parent/obj_enemy_parent.yy",},},
     {"id":{"name":"obj_fire_imp","path":"objects/obj_fire_imp/obj_fire_imp.yy",},},
     {"id":{"name":"obj_floating_text","path":"objects/obj_floating_text/obj_floating_text.yy",},},
