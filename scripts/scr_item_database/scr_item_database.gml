@@ -23,27 +23,27 @@ global.item_database = {
     // Row 1 - Bladed weapons (frames 0-5)
     rusty_dagger: new create_item_definition(
         0, "rusty_dagger", "Rusty Dagger", ItemType.weapon, EquipSlot.either_hand,
-        {damage: 2, attack_speed: 1.5, range: 20, handedness: WeaponHandedness.one_handed}
+        {damage: 2, attack_speed: 1.5, range: 30, handedness: WeaponHandedness.one_handed}
     ),
     short_sword: new create_item_definition(
         1, "short_sword", "Short Sword", ItemType.weapon, EquipSlot.either_hand,
-        {damage: 3, attack_speed: 1.2, range: 28, handedness: WeaponHandedness.one_handed}
+        {damage: 3, attack_speed: 1.2, range: 38, handedness: WeaponHandedness.one_handed}
     ),
     long_sword: new create_item_definition(
         2, "long_sword", "Long Sword", ItemType.weapon, EquipSlot.either_hand,
-        {damage: 4, attack_speed: 1.0, range: 36, handedness: WeaponHandedness.versatile, two_handed_damage: 5, two_handed_range: 40}
+        {damage: 4, attack_speed: 1.0, range: 46, handedness: WeaponHandedness.versatile, two_handed_damage: 5, two_handed_range: 40}
     ),
     master_sword: new create_item_definition(
         3, "master_sword", "Master Sword", ItemType.weapon, EquipSlot.either_hand,
-        {damage: 6, attack_speed: 1.1, range: 38, handedness: WeaponHandedness.versatile, two_handed_damage: 7, two_handed_range: 42, magic_power: 5, wielder_effects: [{effect: StatusEffectType.empowered}]}
+        {damage: 6, attack_speed: 1.1, range: 48, handedness: WeaponHandedness.versatile, two_handed_damage: 7, two_handed_range: 42, magic_power: 5, wielder_effects: [{effect: StatusEffectType.empowered}]}
     ),
     greatsword: new create_item_definition(
         4, "greatsword", "Greatsword", ItemType.weapon, EquipSlot.right_hand,
-        {damage: 8, attack_speed: 0.7, range: 45, handedness: WeaponHandedness.two_handed}
+        {damage: 8, attack_speed: 0.7, range: 55, handedness: WeaponHandedness.two_handed}
     ),
     spear: new create_item_definition(
         5, "spear", "Spear", ItemType.weapon, EquipSlot.right_hand,
-        {damage: 4, attack_speed: 1.1, range: 50, handedness: WeaponHandedness.versatile, two_handed_damage: 5, two_handed_range: 55}
+        {damage: 4, attack_speed: 1.1, range: 60, handedness: WeaponHandedness.versatile, two_handed_damage: 5, two_handed_range: 55}
     ),
 
     // Row 2 - Axe and bows (frames 6-11)

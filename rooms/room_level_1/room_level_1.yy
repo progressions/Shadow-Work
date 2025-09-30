@@ -50,6 +50,7 @@
     {"name":"inst_107F59A1","path":"rooms/room_level_1/room_level_1.yy",},
     {"name":"inst_7DBA79A","path":"rooms/room_level_1/room_level_1.yy",},
     {"name":"inst_7F6F2D0E","path":"rooms/room_level_1/room_level_1.yy",},
+    {"name":"inst_7A4A003A","path":"rooms/room_level_1/room_level_1.yy",},
   ],
   "isDnd":false,
   "layers":[
@@ -162,6 +163,7 @@
         {"$GMRInstance":"v2","%Name":"inst_107F59A1","colour":4294967295,"frozen":false,"hasCreationCode":false,"ignore":false,"imageIndex":0,"imageSpeed":1.0,"inheritCode":false,"inheritedItemId":null,"inheritItemSettings":false,"isDnd":false,"name":"inst_107F59A1","objectId":{"name":"obj_greenwood_bandit","path":"objects/obj_greenwood_bandit/obj_greenwood_bandit.yy",},"properties":[],"resourceType":"GMRInstance","resourceVersion":"2.0","rotation":0.0,"scaleX":1.0,"scaleY":1.0,"x":432.0,"y":256.0,},
         {"$GMRInstance":"v2","%Name":"inst_7DBA79A","colour":4294967295,"frozen":false,"hasCreationCode":false,"ignore":false,"imageIndex":0,"imageSpeed":1.0,"inheritCode":false,"inheritedItemId":null,"inheritItemSettings":false,"isDnd":false,"name":"inst_7DBA79A","objectId":{"name":"obj_burglar","path":"objects/obj_burglar/obj_burglar.yy",},"properties":[],"resourceType":"GMRInstance","resourceVersion":"2.0","rotation":0.0,"scaleX":1.0,"scaleY":1.0,"x":512.0,"y":96.0,},
         {"$GMRInstance":"v2","%Name":"inst_7F6F2D0E","colour":4294967295,"frozen":false,"hasCreationCode":false,"ignore":false,"imageIndex":0,"imageSpeed":1.0,"inheritCode":false,"inheritedItemId":null,"inheritItemSettings":false,"isDnd":false,"name":"inst_7F6F2D0E","objectId":{"name":"obj_burglar","path":"objects/obj_burglar/obj_burglar.yy",},"properties":[],"resourceType":"GMRInstance","resourceVersion":"2.0","rotation":0.0,"scaleX":1.0,"scaleY":1.0,"x":480.0,"y":96.0,},
+        {"$GMRInstance":"v2","%Name":"inst_7A4A003A","colour":4294967295,"frozen":false,"hasCreationCode":false,"ignore":false,"imageIndex":0,"imageSpeed":1.0,"inheritCode":false,"inheritedItemId":null,"inheritItemSettings":false,"isDnd":false,"name":"inst_7A4A003A","objectId":{"name":"obj_fire_imp","path":"objects/obj_fire_imp/obj_fire_imp.yy",},"properties":[],"resourceType":"GMRInstance","resourceVersion":"2.0","rotation":0.0,"scaleX":1.0,"scaleY":1.0,"x":256.0,"y":128.0,},
       ],"layers":[],"name":"Instances","properties":[],"resourceType":"GMRInstanceLayer","resourceVersion":"2.0","userdefinedDepth":false,"visible":true,},
     {"$GMRTileLayer":"","%Name":"Tiles_Col","depth":100,"effectEnabled":true,"effectType":null,"gridX":32,"gridY":32,"hierarchyFrozen":false,"inheritLayerDepth":false,"inheritLayerSettings":false,"inheritSubLayers":true,"inheritVisibility":true,"layers":[],"name":"Tiles_Col","properties":[],"resourceType":"GMRTileLayer","resourceVersion":"2.0","tiles":{"SerialiseHeight":23,"SerialiseWidth":40,"TileCompressedData":[
           -41,49,1,-2147483648,-3,49,-18,-2147483648,-3,0,-3,-2147483648,1,49,-8,-2147483648,-3,49,1,-2147483648,
@@ -179,7 +181,7 @@
           -3,39,-8,-2147483648,-4,49,-2,-2147483648,-6,49,4,-2147483648,49,-2147483648,-2147483648,-3,49,-6,-2147483648,
           -3,49,3,-2147483648,39,39,-9,-2147483648,-4,49,-2,-2147483648,-6,49,1,-2147483648,-6,49,-6,-2147483648,
           -3,49,-25,-2147483648,
-        ],"TileDataFormat":1,},"tilesetId":{"name":"tiles_forest","path":"tilesets/tiles_forest/tiles_forest.yy",},"userdefinedDepth":false,"visible":true,"x":0,"y":0,},
+        ],"TileDataFormat":1,},"tilesetId":{"name":"tiles_forest","path":"tilesets/tiles_forest/tiles_forest.yy",},"userdefinedDepth":false,"visible":false,"x":0,"y":0,},
     {"$GMRTileLayer":"","%Name":"Tiles_Forest","depth":200,"effectEnabled":true,"effectType":null,"gridX":32,"gridY":32,"hierarchyFrozen":false,"inheritLayerDepth":false,"inheritLayerSettings":false,"inheritSubLayers":true,"inheritVisibility":true,"layers":[],"name":"Tiles_Forest","properties":[],"resourceType":"GMRTileLayer","resourceVersion":"2.0","tiles":{"SerialiseHeight":23,"SerialiseWidth":40,"TileCompressedData":[
           -34,1,11,2,3,2,3,2,3,1,-2147483648,4,5,6,-18,-2147483648,-3,0,-3,-2147483648,1,49,-8,-2147483648,10,
           50,51,1,-2147483648,7,8,9,-2147483648,-2147483648,49,-10,-2147483648,1,49,-4,-2147483648,3,7,8,9,-11,

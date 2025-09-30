@@ -1,3 +1,4 @@
+return;
 if (alarm[0] < 0 && other.state != EnemyState.dead && state != PlayerState.dead) {
 
 	// Apply trait-based damage modifiers
