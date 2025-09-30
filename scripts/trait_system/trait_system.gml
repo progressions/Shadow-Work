@@ -157,7 +157,7 @@ function get_damage_type(_attacker) {
     // Default damage type
     var _damage_type = "physical";
 
-    // Check if attacker has a weapon equipped with a damage type
+    // Check if attacker has a RIGHT HAND weapon equipped
     if (_attacker.equipped.right_hand != undefined) {
         var _weapon_stats = _attacker.equipped.right_hand.definition.stats;
 
@@ -166,7 +166,7 @@ function get_damage_type(_attacker) {
             return _weapon_stats.damage_type;
         }
 
-        // Infer damage type from status effect
+        // Infer damage type from status effect on right hand weapon
         if (variable_struct_exists(_weapon_stats, "status_effect")) {
             switch (_weapon_stats.status_effect) {
                 case StatusEffectType.burning:
@@ -176,9 +176,13 @@ function get_damage_type(_attacker) {
                 // Add more status effect -> damage type mappings as needed
             }
         }
+
+        // If right hand weapon exists but has no special damage type, it's physical
+        // Do NOT check left hand when right hand weapon exists
+        return "physical";
     }
 
-    // Check left hand as well (e.g., torch)
+    // ONLY check left hand if NO right hand weapon is equipped
     if (_attacker.equipped.left_hand != undefined) {
         var _left_stats = _attacker.equipped.left_hand.definition.stats;
 

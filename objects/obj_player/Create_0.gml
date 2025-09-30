@@ -4,7 +4,7 @@ tilemap = layer_tilemap_get_id("Tiles_Col");
 
 #region Stats
 
-hp = 10;
+hp = 20;
 hp_total = hp;
 damage = 1;
 facing_angle = 0;
