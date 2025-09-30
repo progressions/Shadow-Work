@@ -20,6 +20,6 @@ draw_sprite(spr_ui_xp_bar_frame, 0, x + 8, y + 33);
 
 if (obj_player.equipped.right_hand != undefined) {
 	var _frame = obj_player.equipped.right_hand.definition.world_sprite_frame;
-	draw_sprite_stretched(spr_items, _frame, x + 8, y + 70,64, 64);
+	draw_sprite_stretched(spr_items, _frame, x - 12, y + 50, 72, 72);
 }
 

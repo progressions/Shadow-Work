@@ -21,5 +21,5 @@
   "sampleRate":44100,
   "soundFile":"Heart_of_Gold_2025_09_29.ogg",
   "type":0,
-  "volume":1.0,
+  "volume":0.63,
 }

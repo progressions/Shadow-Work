@@ -166,9 +166,11 @@ function get_damage_type(_attacker) {
             return _weapon_stats.damage_type;
         }
 
-        // Infer damage type from status effect on right hand weapon
-        if (variable_struct_exists(_weapon_stats, "status_effect")) {
-            switch (_weapon_stats.status_effect) {
+        // Infer damage type from status effects on right hand weapon
+        var _status_effects = get_weapon_status_effects(_weapon_stats);
+        if (array_length(_status_effects) > 0) {
+            // Use first status effect to determine damage type
+            switch (_status_effects[0].effect) {
                 case StatusEffectType.burning:
                     return "fire";
                 case StatusEffectType.wet:
@@ -190,8 +192,10 @@ function get_damage_type(_attacker) {
             return _left_stats.damage_type;
         }
 
-        if (variable_struct_exists(_left_stats, "status_effect")) {
-            switch (_left_stats.status_effect) {
+        // Infer from left hand status effects
+        var _left_status_effects = get_weapon_status_effects(_left_stats);
+        if (array_length(_left_status_effects) > 0) {
+            switch (_left_status_effects[0].effect) {
                 case StatusEffectType.burning:
                     return "fire";
                 case StatusEffectType.wet:

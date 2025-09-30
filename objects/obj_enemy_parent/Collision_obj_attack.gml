@@ -57,11 +57,14 @@ if (alarm[1] < 0) {
 	     // Check right hand weapon
 	     if (attacker.equipped.right_hand != undefined) {
 	         var weapon_stats = attacker.equipped.right_hand.definition.stats;
-	         if (variable_struct_exists(weapon_stats, "status_effect") &&
-	             variable_struct_exists(weapon_stats, "status_chance")) {
-	             if (random(1) < weapon_stats.status_chance) {
-	                 apply_status_effect(weapon_stats.status_effect);
-	                 show_debug_message("Weapon applied status effect");
+	         var status_effects_array = get_weapon_status_effects(weapon_stats);
+
+	         // Apply each status effect with its own chance
+	         for (var i = 0; i < array_length(status_effects_array); i++) {
+	             var effect_data = status_effects_array[i];
+	             if (random(1) < effect_data.chance) {
+	                 apply_status_effect(effect_data.effect);
+	                 show_debug_message("Right hand weapon applied status effect: " + string(effect_data.effect));
 	             }
 	         }
 	     }
@@ -69,11 +72,14 @@ if (alarm[1] < 0) {
 	     // Check left hand weapon/tool (like torch)
 	     if (attacker.equipped.left_hand != undefined) {
 	         var left_item_stats = attacker.equipped.left_hand.definition.stats;
-	         if (variable_struct_exists(left_item_stats, "status_effect") &&
-	             variable_struct_exists(left_item_stats, "status_chance")) {
-	             if (random(1) < left_item_stats.status_chance) {
-	                 apply_status_effect(left_item_stats.status_effect);
-	                 show_debug_message("Off-hand item applied status effect");
+	         var left_status_effects = get_weapon_status_effects(left_item_stats);
+
+	         // Apply each status effect with its own chance
+	         for (var i = 0; i < array_length(left_status_effects); i++) {
+	             var effect_data = left_status_effects[i];
+	             if (random(1) < effect_data.chance) {
+	                 apply_status_effect(effect_data.effect);
+	                 show_debug_message("Left hand item applied status effect: " + string(effect_data.effect));
 	             }
 	         }
 	     }

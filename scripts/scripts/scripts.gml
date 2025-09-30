@@ -95,7 +95,7 @@ global.item_database = {
     ),
     master_sword: new create_item_definition(
         3, "master_sword", "Master Sword", ItemType.weapon, EquipSlot.either_hand,
-        {damage: 6, attack_speed: 1.1, range: 38, handedness: WeaponHandedness.versatile, two_handed_damage: 7, two_handed_range: 42, magic_power: 5, status_effect: StatusEffectType.empowered, status_chance: 0.3}
+        {damage: 6, attack_speed: 1.1, range: 38, handedness: WeaponHandedness.versatile, two_handed_damage: 7, two_handed_range: 42, magic_power: 5, status_effects: [{effect: StatusEffectType.empowered, chance: 0.3}]}
     ),
     greatsword: new create_item_definition(
         4, "greatsword", "Greatsword", ItemType.weapon, EquipSlot.right_hand,
@@ -129,7 +129,7 @@ global.item_database = {
     ),
     torch: new create_item_definition(
         11, "torch", "Torch", ItemType.tool, EquipSlot.left_hand,
-        {light_radius: 100, handedness: WeaponHandedness.one_handed, status_effect: StatusEffectType.burning, status_chance: 0.2}
+        {light_radius: 100, handedness: WeaponHandedness.one_handed, status_effects: [{effect: StatusEffectType.burning, chance: 0.2}]}
     ),
     
     // Row 3 - Chain armor set (frames 12-14) and Leather armor set (frames 15-17)
@@ -616,6 +616,24 @@ function consume_ammo() {
 // ============================================
 // STATUS EFFECTS SYSTEM
 // ============================================
+
+// Helper function to get status effects from weapon/item (backward compatible)
+function get_weapon_status_effects(_item_stats) {
+    // New format: array of effects
+    if (variable_struct_exists(_item_stats, "status_effects")) {
+        return _item_stats.status_effects;
+    }
+
+    // Old format: single effect - convert to array
+    if (variable_struct_exists(_item_stats, "status_effect")) {
+        return [{
+            effect: _item_stats.status_effect,
+            chance: _item_stats[$ "status_chance"] ?? 1.0
+        }];
+    }
+
+    return []; // No effects
+}
 
 // Status effect definitions
 global.status_effect_data = {
