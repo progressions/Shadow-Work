@@ -93,7 +93,7 @@
     {"id":{"name":"obj_sfx_trigger","path":"objects/obj_sfx_trigger/obj_sfx_trigger.yy",},},
     {"id":{"name":"obj_shield_parent","path":"objects/obj_shield_parent/obj_shield_parent.yy",},},
     {"id":{"name":"obj_song_trigger","path":"objects/obj_song_trigger/obj_song_trigger.yy",},},
-    {"id":{"name":"obj_ui_hud","path":"objects/obj_ui_hud/obj_ui_hud.yy",},},
+    {"id":{"name":"obj_ui_hud_controller","path":"objects/obj_ui_hud_controller/obj_ui_hud_controller.yy",},},
     {"id":{"name":"obj_video","path":"objects/obj_video/obj_video.yy",},},
     {"id":{"name":"obj_wall_parent","path":"objects/obj_wall_parent/obj_wall_parent.yy",},},
     {"id":{"name":"obj_weapon_parent","path":"objects/obj_weapon_parent/obj_weapon_parent.yy",},},

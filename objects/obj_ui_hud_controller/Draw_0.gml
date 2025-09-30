@@ -17,3 +17,9 @@ draw_sprite_stretched(spr_ui_xp_bar, 0, x + 9, y + 34, _xp_bar_width, 5);
 
 // Draw XP bar frame
 draw_sprite(spr_ui_xp_bar_frame, 0, x + 8, y + 33);
+
+if (obj_player.equipped.right_hand != undefined) {
+	var _frame = obj_player.equipped.right_hand.definition.world_sprite_frame;
+	draw_sprite_stretched(spr_items, _frame, x + 8, y + 70,64, 64);
+}
+

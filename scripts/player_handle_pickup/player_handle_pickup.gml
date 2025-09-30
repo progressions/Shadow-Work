@@ -94,7 +94,7 @@ function player_handle_pickup() {
             instance_destroy(_instance);
         } else {
             // Inventory full
-            show_message("Inventory full!");
+            show_debug_message("Inventory full!");
         }
     }
 

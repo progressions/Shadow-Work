@@ -2,16 +2,6 @@ sounds_to_play = array_create(0);
 sounds_playing = array_create(0);
 
 
-array_push(sounds_to_play, 
-{
-	sound: snd_dash,
-	volume: 1,
-	fade_in_speed: 0,
-	fade_out_speed: 0,
-	loop: false,
-	priority: 8
-});
-
 function play_sfx(_sound, _volume=1, _priority=8, _loop=false, _fade_in_speed=0, _fade_out_speed=0) {
 	array_push(obj_sfx_controller.sounds_to_play, { sound: _sound, volume: _volume, loop: _loop, priority: _priority, fade_in_speed: _fade_in_speed, fade_out_speed: _fade_out_speed });
 }

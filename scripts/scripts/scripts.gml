@@ -384,7 +384,7 @@ function unequip_item(_slot_name) {
         return true;
     }
     
-    show_message("Inventory full!");
+    show_debug_message("Inventory full!");
     return false;
 }
 
