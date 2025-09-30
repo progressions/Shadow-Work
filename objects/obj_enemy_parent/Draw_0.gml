@@ -80,7 +80,11 @@ if (array_length(status_effects) > 0 && state != EnemyState.dead) {
             bar_index++;
         }
 
-        // Reset draw color
+        // Reset draw settings
         draw_set_color(c_white);
+        draw_set_alpha(1);
     }
 }
+
+// Ensure alpha is always reset at end of draw
+draw_set_alpha(1);
