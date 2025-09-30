@@ -95,7 +95,7 @@ global.item_database = {
     ),
     master_sword: new create_item_definition(
         3, "master_sword", "Master Sword", ItemType.weapon, EquipSlot.either_hand,
-        {damage: 6, attack_speed: 1.1, range: 38, handedness: WeaponHandedness.versatile, two_handed_damage: 7, two_handed_range: 42, magic_power: 5, status_effects: [{effect: StatusEffectType.empowered, chance: 0.3}]}
+        {damage: 6, attack_speed: 1.1, range: 38, handedness: WeaponHandedness.versatile, two_handed_damage: 7, two_handed_range: 42, magic_power: 5, wielder_effects: [{effect: StatusEffectType.empowered}]}
     ),
     greatsword: new create_item_definition(
         4, "greatsword", "Greatsword", ItemType.weapon, EquipSlot.right_hand,
@@ -352,12 +352,17 @@ function equip_item(_inventory_index, _target_hand = undefined) {
     
     // Unequip current item in that slot
     if (equipped[$ _slot_name] != undefined) {
-        inventory_add_item(equipped[$ _slot_name].definition, equipped[$ _slot_name].count);
+        var _old_item = equipped[$ _slot_name];
+        inventory_add_item(_old_item.definition, _old_item.count);
+        // Remove wielder effects from old item
+        if (variable_struct_exists(_old_item.definition, "stats")) {
+            remove_wielder_effects(_old_item.definition.stats);
+        }
     }
-    
+
     // Equip new item
     equipped[$ _slot_name] = _item;
-    
+
     // For stackable items, only take 1 from the stack
     if (_item.count > 1) {
         _item.count--;
@@ -370,20 +375,31 @@ function equip_item(_inventory_index, _target_hand = undefined) {
     } else {
         array_delete(inventory, _inventory_index, 1);
     }
-    
+
+    // Apply wielder effects from new item
+    if (variable_struct_exists(_def, "stats")) {
+        apply_wielder_effects(_def.stats);
+    }
+
     return true;
 }
 
 // Unequip item back to inventory
 function unequip_item(_slot_name) {
     if (equipped[$ _slot_name] == undefined) return false;
-    
+
     var _item = equipped[$ _slot_name];
+
+    // Remove wielder effects before unequipping
+    if (variable_struct_exists(_item.definition, "stats")) {
+        remove_wielder_effects(_item.definition.stats);
+    }
+
     if (inventory_add_item(_item.definition, _item.count)) {
         equipped[$ _slot_name] = undefined;
         return true;
     }
-    
+
     show_debug_message("Inventory full!");
     return false;
 }
@@ -688,44 +704,94 @@ function init_status_effects() {
     status_effects = [];
 }
 
-function apply_status_effect(_effect_type, _duration_override = -1) {
+function apply_status_effect(_effect_type, _duration_override = -1, _is_permanent = false) {
     var effect_data = get_status_effect_data(_effect_type);
     if (effect_data == undefined) return false;
+
+    // Check for trait immunity
+    var _immunity_name = "";
+    switch(_effect_type) {
+        case StatusEffectType.burning:
+            _immunity_name = "burn_immunity";
+            break;
+        case StatusEffectType.wet:
+            _immunity_name = "wet_immunity";
+            break;
+        case StatusEffectType.slowed:
+            _immunity_name = "slow_immunity";
+            break;
+        // Add more immunity checks as needed
+    }
+
+    if (_immunity_name != "" && has_trait_immunity(_immunity_name)) {
+        show_debug_message("Status effect blocked by trait immunity: " + _immunity_name);
+        return false;
+    }
 
     // Check for opposing effect
     var opposing_type = effect_data.opposing;
     if (has_status_effect(opposing_type)) {
-        // Remove opposing effect instead of applying new one
-        remove_status_effect(opposing_type);
-        return true;
+        // Neutralize both effects instead of removing
+        var opposing_index = find_status_effect(opposing_type);
+        if (opposing_index != -1) {
+            status_effects[opposing_index].neutralized = true;
+        }
     }
 
     // Check if effect already exists
     var existing_index = find_status_effect(_effect_type);
     if (existing_index != -1) {
-        // Refresh duration
-        var duration = (_duration_override != -1) ? _duration_override : effect_data.duration;
-        status_effects[existing_index].remaining_duration = duration;
-        status_effects[existing_index].tick_timer = 0;
+        // Refresh duration (unless permanent)
+        if (!_is_permanent) {
+            var duration = (_duration_override != -1) ? _duration_override : effect_data.duration;
+            status_effects[existing_index].remaining_duration = duration;
+            status_effects[existing_index].tick_timer = 0;
+        }
+        // Check if it should be un-neutralized
+        if (status_effects[existing_index].neutralized && !has_status_effect(opposing_type)) {
+            status_effects[existing_index].neutralized = false;
+        }
         return true;
     }
 
     // Add new effect
-    var duration = (_duration_override != -1) ? _duration_override : effect_data.duration;
+    var duration = _is_permanent ? -1 : ((_duration_override != -1) ? _duration_override : effect_data.duration);
     var new_effect = {
         type: _effect_type,
         remaining_duration: duration,
         tick_timer: 0,
-        data: effect_data
+        data: effect_data,
+        is_permanent: _is_permanent,
+        neutralized: has_status_effect(opposing_type) // Start neutralized if opposing effect exists
     };
 
     array_push(status_effects, new_effect);
+
+    // Spawn floating text showing effect name
+    var effect_name = get_status_effect_name(_effect_type);
+    var effect_color = ui_get_status_effect_color(_effect_type);
+    spawn_floating_text(x, y - 16, effect_name, effect_color);
+
     return true;
 }
 
 function remove_status_effect(_effect_type) {
     var index = find_status_effect(_effect_type);
     if (index != -1) {
+        var effect = status_effects[index];
+        var effect_data = effect.data;
+
+        // Before removing, check if this effect had an opposing effect
+        if (variable_struct_exists(effect_data, "opposing")) {
+            var opposing_type = effect_data.opposing;
+            var opposing_index = find_status_effect(opposing_type);
+
+            // If the opposing effect exists and was neutralized, un-neutralize it
+            if (opposing_index != -1 && status_effects[opposing_index].neutralized) {
+                status_effects[opposing_index].neutralized = false;
+            }
+        }
+
         array_delete(status_effects, index, 1);
         return true;
     }
@@ -748,6 +814,11 @@ function find_status_effect(_effect_type) {
 function tick_status_effects() {
     for (var i = array_length(status_effects) - 1; i >= 0; i--) {
         var effect = status_effects[i];
+
+        // Skip permanent effects
+        if (effect.is_permanent) {
+            continue;
+        }
 
         // Handle damage over time effects
         if (effect.type == StatusEffectType.burning) {
@@ -795,6 +866,11 @@ function get_status_effect_modifier(_modifier_type) {
     for (var i = 0; i < array_length(status_effects); i++) {
         var effect = status_effects[i];
 
+        // Skip neutralized effects
+        if (effect.neutralized) {
+            continue;
+        }
+
         switch(_modifier_type) {
             case "speed":
                 if (variable_struct_exists(effect.data, "speed_modifier")) {
@@ -813,9 +889,56 @@ function get_status_effect_modifier(_modifier_type) {
     return modifier;
 }
 
+// Apply wielder effects from equipped item
+function apply_wielder_effects(_item_stats) {
+    if (!variable_struct_exists(_item_stats, "wielder_effects")) {
+        return;
+    }
+
+    var _wielder_effects = _item_stats.wielder_effects;
+    for (var i = 0; i < array_length(_wielder_effects); i++) {
+        var _effect_data = _wielder_effects[i];
+        apply_status_effect(_effect_data.effect, -1, true);
+    }
+}
+
+// Remove wielder effects from equipped item
+function remove_wielder_effects(_item_stats) {
+    if (!variable_struct_exists(_item_stats, "wielder_effects")) {
+        return;
+    }
+
+    var _wielder_effects = _item_stats.wielder_effects;
+    for (var i = 0; i < array_length(_wielder_effects); i++) {
+        var _effect_data = _wielder_effects[i];
+        remove_status_effect(_effect_data.effect);
+    }
+}
+
 // ============================================
 // UI HELPERS
 // ============================================
+
+// Spawn floating text above an entity
+function spawn_floating_text(_x, _y, _text, _color = c_white) {
+    var _floating_text = instance_create_layer(_x, _y, "Instances", obj_floating_text);
+    _floating_text.text = _text;
+    _floating_text.text_color = _color;
+    return _floating_text;
+}
+
+// Get status effect display name
+function get_status_effect_name(_effect_type) {
+    switch(_effect_type) {
+        case StatusEffectType.burning: return "Burning";
+        case StatusEffectType.wet: return "Wet";
+        case StatusEffectType.empowered: return "Empowered";
+        case StatusEffectType.weakened: return "Weakened";
+        case StatusEffectType.swift: return "Swift";
+        case StatusEffectType.slowed: return "Slowed";
+        default: return "Unknown";
+    }
+}
 
 function ui_draw_bar(_x, _y, _w, _h, _value, _value_max, _fill_color, _back_color, _border_color) {
     var _max_value = max(1, _value_max);
