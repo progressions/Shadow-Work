@@ -13,22 +13,16 @@ var dir_names = ["down", "right", "left", "up"];
 var dir_name = dir_names[last_dir_index];
 
 // Look up animation data for this companion
-// Child objects should define their own anim_data in Create event
-if (variable_instance_exists(self, "anim_data")) {
-    var anim_key = anim_block + "_" + dir_name;
+var anim_key = anim_block + "_" + dir_name;
 
-    if (variable_struct_exists(anim_data, anim_key)) {
-        var anim_info = anim_data[$ anim_key];
-        var start_frame = anim_info.start;
-        var frame_count = anim_info.length;
+if (variable_struct_exists(anim_data, anim_key)) {
+    var anim_info = anim_data[$ anim_key];
+    var start_frame = anim_info.start;
+    var frame_count = anim_info.length;
 
-        // Advance animation timer
-        anim_timer += anim_speed;
-
-        // Calculate current frame
-        var frame_offset = floor(anim_timer) mod frame_count;
-        image_index = start_frame + frame_offset;
-    }
+    // Use global bob timer for synchronized animation (like enemies and player)
+    var frame_offset = floor(global.idle_bob_timer) mod frame_count;
+    image_index = start_frame + frame_offset;
 }
 
 // Draw companion sprite

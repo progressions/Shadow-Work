@@ -83,9 +83,23 @@ triggers = {
 // Animation variables
 image_speed = 0;
 image_index = 0;
-anim_timer = 0;
-anim_speed = 0.15;
 last_dir_index = 0; // 0=down, 1=right, 2=left, 3=up
+// Animation uses global.idle_bob_timer for synchronized bobbing (set in obj_game_controller)
+
+// Standard companion animation data (same for all companions)
+anim_data = {
+    // Idle animations (2 frames each)
+    idle_down: { start: 0, length: 2 },   // frames 0-1
+    idle_right: { start: 2, length: 2 },  // frames 2-3
+    idle_left: { start: 4, length: 2 },   // frames 4-5
+    idle_up: { start: 6, length: 2 },     // frames 6-7
+
+    // Walk animations
+    walk_down: { start: 8, length: 4 },   // frames 8-11 (4 frames)
+    walk_right: { start: 12, length: 5 }, // frames 12-16 (5 frames)
+    walk_left: { start: 17, length: 5 },  // frames 17-21 (5 frames)
+    walk_up: { start: 22, length: 4 }     // frames 22-25 (4 frames)
+};
 
 // Movement tracking
 move_dir_x = 0;

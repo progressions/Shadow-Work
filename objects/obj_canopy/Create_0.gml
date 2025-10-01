@@ -64,20 +64,5 @@ triggers = {
     }
 };
 
-// Animation data for Canopy (26 frames total)
-anim_data = {
-    // Idle animations (2 frames each)
-    idle_down: { start: 0, length: 2 },
-    idle_right: { start: 2, length: 2 },
-    idle_left: { start: 4, length: 2 },
-    idle_up: { start: 6, length: 2 },
-
-    // Walk animations (6 frames each)
-    walk_down: { start: 8, length: 6 },
-    walk_right: { start: 14, length: 6 },
-    walk_left: { start: 20, length: 6 }
-    // Note: Only 26 frames total, no walk_up animation in sprite
-};
-
-// Canopy starts at a fixed position until recruited
-// Position will be set in room editor
+// Animation data inherited from obj_companion_parent
+// All companions use the same 26-frame structure
