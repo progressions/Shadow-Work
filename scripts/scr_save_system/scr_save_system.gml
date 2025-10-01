@@ -669,6 +669,11 @@ function restore_room_state_if_visited() {
 function save_game(slot) {
     show_debug_message("=== SAVING GAME TO SLOT " + string(slot) + " ===");
 
+    // Update current room state before saving
+    var room_key = string(room);
+    show_debug_message("Updating current room state before save: " + room_get_name(room));
+    global.room_states[$ room_key] = serialize_room_state(room);
+
     // Build root save struct
     var save_data = {
         save_version: 1,
