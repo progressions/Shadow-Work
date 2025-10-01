@@ -92,7 +92,7 @@ function apply_status_effect(_effect_type, _duration_override = -1, _is_permanen
         // Add more immunity checks as needed
     }
 
-    if (_immunity_name != "" && has_trait_immunity(_immunity_name)) {
+    if (_immunity_name != "" && has_trait(_immunity_name)) {
         show_debug_message("Status effect blocked by trait immunity: " + _immunity_name);
         return false;
     }

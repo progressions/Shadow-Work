@@ -15,8 +15,11 @@ if (state == EnemyState.attacking) {
             var damage_modifier = get_status_effect_modifier("damage");
             var _status_modified_damage = attack_damage * damage_modifier;
 
-            // Apply damage type resistance multiplier
-            var _resistance_multiplier = get_damage_type_multiplier(_player, attack_damage_type);
+            // Apply damage type resistance multiplier using trait system v2.0
+            var _resistance_multiplier = 1.0;
+            with (_player) {
+                _resistance_multiplier = get_damage_modifier_for_type(other.attack_damage_type);
+            }
             var _after_resistance = _status_modified_damage * _resistance_multiplier;
 
             // Apply player armor defense (DR)

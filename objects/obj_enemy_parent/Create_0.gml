@@ -34,21 +34,12 @@ attack_range = 20; // Melee range
 attack_cooldown = 0;
 can_attack = true;
 
-// Damage type resistances (1.0 = normal, 0.0 = immune, 1.5 = vulnerable)
-damage_resistances = {
-    physical: 1.0,
-    magical: 1.0,
-    fire: 1.0,
-    holy: 1.0,
-    unholy: 1.0
-};
-
 // Status effects system
 init_status_effects();
 
-// Trait system
-// Child enemies can override this with traits = ["fireborne", "aquatic"], etc.
-traits = [];
+// Trait system v2.0 - Stacking traits
+permanent_traits = {}; // From tags (applied at creation)
+temporary_traits = {};  // From buffs/debuffs (applied during combat)
 
 // Enemy sound configuration
 // Child enemies can override specific sounds: enemy_sounds.on_attack = snd_orc_roar;

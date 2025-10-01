@@ -9,7 +9,8 @@ hp = 12;
 hp_total = hp;
 move_speed = 0.75;
 
-traits = ["fireborne"];
+// Apply fireborne tag (grants fire_immunity + ice_vulnerability)
+apply_tag_traits("fireborne");
 
 // Fire imp attacks cause burning
 attack_status_effects = [

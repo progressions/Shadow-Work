@@ -1,549 +1,551 @@
-# Trait System Design
+# Trait System v2.0 - Tag-Based Stacking Traits
 
 ## Overview
 
-A trait system for characters (both player and enemy) that allows modular gameplay effects based on character origins and attributes. Traits are lowercase string identifiers (e.g., "fireborne", "arboreal") that characters can possess, with each trait providing specific gameplay effects defined in a centralized configuration.
+The trait system provides damage type resistances and vulnerabilities through a tag-based architecture with stacking mechanics inspired by Age of Wonders 4. Tags grant bundles of traits, and traits stack up to 5 times with opposite traits canceling stack-by-stack.
 
 ## Core Principles
 
-- **Centralized Configuration**: All trait definitions stored in `global.trait_database`
-- **Character-Agnostic**: Any character with a trait receives the same effects
-- **Stackable**: Characters can have multiple traits simultaneously
-- **Modular**: Easy to add new traits without modifying existing code
-- **Data-Driven**: Effects are configured in data structures, not hardcoded
+- **Tag/Trait Separation**: Tags (fireborne, arboreal) grant bundles of individual traits (fire_immunity, ice_vulnerability)
+- **Stacking Mechanics**: Traits stack up to 5 times with multiplicative effects
+- **Opposite Cancellation**: Immunity vs vulnerability and resistance vs vulnerability cancel stack-by-stack
+- **Permanent vs Temporary**: Permanent traits from tags/quests, temporary traits from equipment/buffs
+- **Single Source of Truth**: All damage modifiers flow through trait system
 
 ## Architecture
 
-### 1. Trait Database Structure
-
-Create `global.trait_database` similar to the existing `global.item_database` pattern:
+### 1. Damage Types
 
 ```gml
-global.trait_database = {
-    fireborne: {
-        name: "Fireborne",
-        description: "Born of flame, immune to fire damage",
-        effects: {
-            fire_damage_modifier: 0,      // 0 = immune, 1 = normal, 2 = double damage
-            ice_damage_modifier: 1.5      // Takes 50% more ice damage
-        },
-        visual_indicator: spr_trait_fireborne  // Optional sprite for UI
-    },
-
-    arboreal: {
-        name: "Arboreal",
-        description: "Tree-dweller, weak to fire",
-        effects: {
-            fire_damage_modifier: 1.5,    // Takes 50% more fire damage
-            poison_damage_modifier: 0.5   // Takes 50% less poison damage
-        }
-    },
-
-    aquatic: {
-        name: "Aquatic",
-        description: "Water-born creature",
-        effects: {
-            lightning_damage_modifier: 2.0,    // Takes double lightning damage
-            fire_damage_modifier: 0.75,        // Takes 25% less fire damage
-            movement_speed_water: 1.5          // 50% faster in water tiles
-        }
-    },
-
-    glacial: {
-        name: "Glacial",
-        description: "From frozen lands",
-        effects: {
-            ice_damage_modifier: 0,
-            fire_damage_modifier: 2.0,
-            movement_speed_ice: 1.25,
-            freeze_immunity: true
-        }
-    },
-
-    swampridden: {
-        name: "Swampridden",
-        description: "Born in murky swamps",
-        effects: {
-            poison_damage_modifier: 0,
-            disease_resistance: 0.75,
-            movement_speed_swamp: 1.5
-        }
-    },
-
-    sandcrawler: {
-        name: "Sandcrawler",
-        description: "Desert wanderer",
-        effects: {
-            fire_damage_modifier: 0.5,
-            movement_speed_desert: 1.5,
-            quicksand_immunity: true
-        }
-    }
+enum DamageType {
+    physical,
+    magical,
+    fire,
+    ice,
+    lightning,
+    poison,
+    disease,
+    holy,
+    unholy
 }
 ```
 
-### 2. Character Trait Storage
-
-Add to character objects (`obj_player`, `obj_enemy_parent`):
+### 2. Resistance Levels
 
 ```gml
-// In Create_0 event
-traits = [];  // Array of trait keys: ["fireborne", "aquatic"]
-
-// Example initialization
-traits = ["fireborne"];  // Player starts with fireborne trait
-```
-
-### 3. Trait Helper Functions
-
-Create in `scripts/trait_system.gml`:
-
-```gml
-/// @function has_trait(trait_key)
-/// @description Check if character has a specific trait
-/// @param {string} trait_key The trait to check for
-function has_trait(_trait_key) {
-    for (var i = 0; i < array_length(traits); i++) {
-        if (traits[i] == _trait_key) {
-            return true;
-        }
-    }
-    return false;
-}
-
-/// @function add_trait(trait_key)
-/// @description Add a trait to the character
-/// @param {string} trait_key The trait to add
-function add_trait(_trait_key) {
-    if (!has_trait(_trait_key)) {
-        array_push(traits, _trait_key);
-    }
-}
-
-/// @function remove_trait(trait_key)
-/// @description Remove a trait from the character
-/// @param {string} trait_key The trait to remove
-function remove_trait(_trait_key) {
-    for (var i = 0; i < array_length(traits); i++) {
-        if (traits[i] == _trait_key) {
-            array_delete(traits, i, 1);
-            break;
-        }
-    }
-}
-
-/// @function get_trait_effect(trait_key, effect_name)
-/// @description Get a specific effect value from a trait
-/// @param {string} trait_key The trait to query
-/// @param {string} effect_name The effect property name
-/// @return {real|bool|undefined} The effect value or undefined if not found
-function get_trait_effect(_trait_key, _effect_name) {
-    if (!variable_struct_exists(global.trait_database, _trait_key)) {
-        return undefined;
-    }
-
-    var _trait_def = global.trait_database[$ _trait_key];
-
-    if (!variable_struct_exists(_trait_def.effects, _effect_name)) {
-        return undefined;
-    }
-
-    return _trait_def.effects[$ _effect_name];
-}
-
-/// @function get_all_trait_modifiers(effect_name)
-/// @description Get combined modifier from all traits for a specific effect
-/// @param {string} effect_name The effect property name
-/// @return {real} Combined modifier value (multiplicative)
-function get_all_trait_modifiers(_effect_name) {
-    var _modifier = 1.0;
-
-    for (var i = 0; i < array_length(traits); i++) {
-        var _trait_key = traits[i];
-        var _effect_value = get_trait_effect(_trait_key, _effect_name);
-
-        if (_effect_value != undefined) {
-            _modifier *= _effect_value;
-        }
-    }
-
-    return _modifier;
-}
-
-/// @function has_trait_immunity(immunity_name)
-/// @description Check if character has immunity from any trait
-/// @param {string} immunity_name The immunity property name
-/// @return {bool} True if any trait grants this immunity
-function has_trait_immunity(_immunity_name) {
-    for (var i = 0; i < array_length(traits); i++) {
-        var _trait_key = traits[i];
-        var _immunity = get_trait_effect(_trait_key, _immunity_name);
-
-        if (_immunity == true) {
-            return true;
-        }
-    }
-
-    return false;
+enum ResistanceLevel {
+    immune,      // 0.0x damage (complete immunity)
+    resistant,   // 0.75x damage per stack (multiplicative)
+    normal,      // 1.0x damage
+    vulnerable   // 1.5x damage per stack (multiplicative)
 }
 ```
 
-### 4. Damage Calculation Integration
+### 3. Tag Database
 
-Modify existing damage functions to respect traits:
-
-```gml
-/// @function apply_damage(target, base_damage, damage_type)
-/// @description Apply damage to target with trait modifiers
-/// @param {instance} target The target to damage
-/// @param {real} base_damage Base damage amount
-/// @param {string} damage_type Type of damage (fire, ice, poison, etc.)
-/// @return {real} Final damage dealt
-function apply_damage(_target, _base_damage, _damage_type) {
-    var _final_damage = _base_damage;
-
-    // Build modifier key (e.g., "fire_damage_modifier")
-    var _modifier_key = _damage_type + "_damage_modifier";
-
-    // Apply trait modifiers
-    with (_target) {
-        var _modifier = get_all_trait_modifiers(_modifier_key);
-        _final_damage *= _modifier;
-    }
-
-    // Apply damage to target
-    _target.hp_current -= _final_damage;
-
-    return _final_damage;
-}
-```
-
-## Effect Categories
-
-### Damage Modifiers
-Multiplicative modifiers to incoming damage:
-
-- `fire_damage_modifier` - Fire/burning damage
-- `ice_damage_modifier` - Ice/frost damage
-- `poison_damage_modifier` - Poison/toxic damage
-- `lightning_damage_modifier` - Lightning/electric damage
-- `physical_damage_modifier` - Physical/melee damage
-- `holy_damage_modifier` - Holy/light damage
-- `shadow_damage_modifier` - Shadow/dark damage
-
-**Values:**
-- `0` = Immune (no damage)
-- `< 1` = Resistant (reduced damage)
-- `1` = Normal damage
-- `> 1` = Vulnerable (increased damage)
-
-### Environmental Effects
-Affect movement and interaction with terrain:
-
-- `movement_speed_water` - Speed modifier in water tiles
-- `movement_speed_desert` - Speed modifier in desert/sand tiles
-- `movement_speed_ice` - Speed modifier on ice tiles
-- `movement_speed_swamp` - Speed modifier in swamp tiles
-- `movement_speed_mountain` - Speed modifier in mountainous terrain
-
-**Values:** Multiplicative speed modifier (1.0 = normal, 1.5 = 50% faster)
-
-### Immunity Flags
-Boolean flags granting complete immunity:
-
-- `freeze_immunity` - Cannot be frozen
-- `burn_immunity` - Cannot be set on fire
-- `poison_immunity` - Cannot be poisoned
-- `stun_immunity` - Cannot be stunned
-- `quicksand_immunity` - Not affected by quicksand
-- `can_breathe_underwater` - No drowning damage
-
-**Values:** `true` or omitted (false)
-
-### Combat Bonuses
-Passive stat increases:
-
-- `crit_chance_bonus` - Added to critical hit chance
-- `dodge_chance_bonus` - Added to dodge chance
-- `attack_speed_modifier` - Multiplier to attack speed
-- `damage_bonus` - Flat damage increase to all attacks
-- `armor_bonus` - Added to armor/defense value
-
-### Status Effect Resistance
-Reduce duration or chance of status effects:
-
-- `poison_resistance` - Reduces poison duration/damage
-- `stun_resistance` - Reduces stun duration
-- `slow_resistance` - Reduces slow effect magnitude
-- `disease_resistance` - Reduces disease effects
-
-**Values:** `0-1` range where `1` = normal, `0` = immune
-
-### Trait Interactions
-Damage modifiers based on target traits:
+Tags are thematic descriptors that grant bundles of traits. Defined in `obj_game_controller/Create_0.gml`:
 
 ```gml
-// Example in trait definition
-fireborne: {
-    name: "Fireborne",
-    effects: {
-        damage_vs_arboreal: 1.5,    // +50% damage to arboreal enemies
-        damage_vs_aquatic: 1.25     // +25% damage to aquatic enemies
-    }
-}
-```
-
-## Implementation Checklist
-
-### Core Files to Create/Modify
-
-- [ ] **`scripts/trait_database.gml`** - Global trait definitions
-- [ ] **`scripts/trait_system.gml`** - Trait helper functions
-- [ ] Modify **`obj_player/Create_0.gml`** - Add `traits = []` initialization
-- [ ] Modify **`obj_enemy_parent/Create_0.gml`** - Add `traits = []` initialization
-- [ ] Modify damage calculation in combat system to use `apply_damage()` with trait modifiers
-- [ ] Create **`obj_trait_ui`** (optional) - Display active traits to player
-
-### Testing Scenarios
-
-1. **Damage Type Modifiers**
-   - Fireborne character takes fire damage → should be immune
-   - Arboreal character takes fire damage → should take 150% damage
-
-2. **Multiple Traits**
-   - Character with both fireborne and aquatic traits
-   - Verify both sets of effects apply correctly
-
-3. **Environmental Interactions**
-   - Aquatic character moves through water tiles → should be faster
-   - Glacial character on ice tiles → should move faster
-
-4. **Immunity Flags**
-   - Swampridden character exposed to poison → should be immune
-   - Glacial character hit by freeze effect → should be immune
-
-## Design Decisions
-
-### Trait Stacking
-**Decision:** Traits are stackable with multiplicative modifiers.
-
-**Rationale:** Allows interesting combinations (fireborne + sandcrawler = desert fire creature) while preventing overpowered additive stacking.
-
-**Example:**
-```gml
-// Character with fireborne (0.5 ice modifier) and aquatic (0.75 fire modifier)
-// Takes ice damage: 100 * 0.5 = 50 damage
-// Takes fire damage: 100 * 0.75 = 75 damage
-```
-
-### Dynamic Trait Management
-**Decision:** Traits can be added/removed during gameplay via `add_trait()` and `remove_trait()`.
-
-**Rationale:** Enables:
-- Status effects that temporarily grant traits
-- Permanent trait acquisition through story/quests
-- Equipment that grants traits while worn
-- Environmental adaptation mechanics
-
-### Trait Display
-**Decision:** Traits shown in UI with lowercase identifiers and full name/description on hover.
-
-**Rationale:**
-- Lowercase feels more natural/mystical
-- Full details available when needed without cluttering UI
-- Consistent with existing item system display patterns
-
-### Damage Type Nomenclature
-**Decision:** Use standard fantasy damage types (fire, ice, lightning, poison, physical, holy, shadow).
-
-**Rationale:**
-- Familiar to players of RPGs
-- Expandable for future damage types
-- Maps clearly to trait themes (fireborne → fire immunity)
-
-## Future Extensions
-
-### Potential Additions
-
-1. **Trait Levels**
-   ```gml
-   traits = [
-       { key: "fireborne", level: 2 }  // Level 2 fireborne = stronger effects
-   ]
-   ```
-
-2. **Conditional Effects**
-   ```gml
-   effects: {
-       fire_damage_modifier: 0,
-       on_fire_damage_taken: "heal_hp"  // Heal instead of taking damage
-   }
-   ```
-
-3. **Trait Synergies**
-   ```gml
-   effects: {
-       synergy_with_aquatic: {
-           steam_damage_bonus: 2.0  // Fireborne + Aquatic = steam attacks
-       }
-   }
-   ```
-
-4. **Trait Evolution**
-   - Traits evolve after meeting certain conditions
-   - `fireborne` → `infernal` after dealing X fire damage
-
-5. **Trait Conflicts**
-   ```gml
-   fireborne: {
-       conflicts_with: ["aquatic", "glacial"]  // Cannot have both
-   }
-   ```
-
-## Integration with Existing Systems
-
-### Item System
-Equipment can grant traits while worn:
-
-```gml
-// In item database
-flame_ring: {
-    name: "Ring of Flames",
-    type: ItemType.equipment,
-    grants_trait: "fireborne"
-}
-
-// In equip_item() function
-if (variable_struct_exists(_item_def, "grants_trait")) {
-    add_trait(_item_def.grants_trait);
-}
-```
-
-### Status Effect System
-Status effects can temporarily apply traits:
-
-```gml
-// Burning status could temporarily give "on_fire" trait
-// Frozen status could give "frozen" trait with movement penalties
-```
-
-### Save/Load System
-Traits serialize easily as string arrays:
-
-```gml
-save_data = {
-    player_traits: obj_player.traits  // ["fireborne", "sandcrawler"]
-}
-```
-
-## Example Trait Definitions
-
-```gml
-global.trait_database = {
-    // Environmental Origin Traits
+global.tag_database = {
     fireborne: {
         name: "Fireborne",
         description: "Born of flame, immune to fire but weak to ice",
-        effects: {
-            fire_damage_modifier: 0,
-            ice_damage_modifier: 1.5,
-            burn_immunity: true
-        }
+        grants_traits: ["fire_immunity", "ice_vulnerability"]
     },
 
     arboreal: {
         name: "Arboreal",
-        description: "Tree-dweller, weak to fire and axes",
-        effects: {
-            fire_damage_modifier: 1.5,
-            poison_damage_modifier: 0.5,
-            movement_speed_forest: 1.3
-        }
+        description: "Forest dweller, vulnerable to fire, resistant to poison",
+        grants_traits: ["fire_vulnerability", "poison_resistance"]
     },
 
     aquatic: {
         name: "Aquatic",
-        description: "Water-born, vulnerable to lightning",
-        effects: {
-            lightning_damage_modifier: 2.0,
-            fire_damage_modifier: 0.75,
-            movement_speed_water: 1.5,
-            can_breathe_underwater: true
-        }
+        description: "Water-born, vulnerable to lightning, resistant to fire",
+        grants_traits: ["lightning_vulnerability", "fire_resistance"]
     },
 
     glacial: {
         name: "Glacial",
-        description: "From frozen lands, moves easily on ice",
-        effects: {
-            ice_damage_modifier: 0,
-            fire_damage_modifier: 2.0,
-            movement_speed_ice: 1.25,
-            freeze_immunity: true
-        }
+        description: "From frozen lands, immune to ice but weak to fire",
+        grants_traits: ["ice_immunity", "fire_vulnerability"]
     },
 
     swampridden: {
         name: "Swampridden",
-        description: "Born in murky swamps, resistant to disease",
-        effects: {
-            poison_damage_modifier: 0,
-            disease_resistance: 0.75,
-            movement_speed_swamp: 1.5
-        }
+        description: "Born in swamps, immune to poison and disease",
+        grants_traits: ["poison_immunity", "disease_immunity"]
     },
 
     sandcrawler: {
         name: "Sandcrawler",
-        description: "Desert wanderer, adapted to heat and sand",
-        effects: {
-            fire_damage_modifier: 0.5,
-            movement_speed_desert: 1.5,
-            quicksand_immunity: true
-        }
+        description: "Desert wanderer, resistant to fire",
+        grants_traits: ["fire_resistance"]
     },
 
-    // Combat Traits
-    berserker: {
-        name: "Berserker",
-        description: "Raging warrior with increased damage but lower defense",
-        effects: {
-            damage_bonus: 5,
-            physical_damage_modifier: 1.25,
-            crit_chance_bonus: 0.1
-        }
-    },
-
-    nimble: {
-        name: "Nimble",
-        description: "Quick and evasive",
-        effects: {
-            dodge_chance_bonus: 0.15,
-            attack_speed_modifier: 1.2,
-            movement_speed_modifier: 1.1
-        }
-    },
-
-    // Supernatural Traits
-    undead: {
-        name: "Undead",
-        description: "Neither living nor dead",
-        effects: {
-            holy_damage_modifier: 2.0,
-            shadow_damage_modifier: 0,
-            poison_immunity: true,
-            disease_immunity: true
-        }
-    },
-
-    celestial: {
-        name: "Celestial",
-        description: "Blessed by divine power",
-        effects: {
-            holy_damage_modifier: 0.5,
-            shadow_damage_modifier: 1.5,
-            crit_chance_bonus: 0.1
-        }
+    venomous: {
+        name: "Venomous",
+        description: "Toxic creature, immune to poison",
+        grants_traits: ["poison_immunity"]
     }
 }
 ```
+
+### 4. Trait Database
+
+Individual traits with stacking mechanics. Defined in `obj_game_controller/Create_0.gml`:
+
+```gml
+global.trait_database = {
+    // Fire traits
+    fire_immunity: {
+        name: "Fire Immunity",
+        damage_modifier: 0.0,
+        opposite_trait: "fire_vulnerability",
+        max_stacks: 5
+    },
+    fire_resistance: {
+        name: "Fire Resistance",
+        damage_modifier: 0.75,
+        opposite_trait: "fire_vulnerability",
+        max_stacks: 5
+    },
+    fire_vulnerability: {
+        name: "Fire Vulnerability",
+        damage_modifier: 1.5,
+        opposite_trait: "fire_immunity",
+        max_stacks: 5
+    },
+
+    // Ice traits
+    ice_immunity: { /* ... */ },
+    ice_resistance: { /* ... */ },
+    ice_vulnerability: { /* ... */ },
+
+    // Lightning, poison, disease, holy, unholy...
+    // (Pattern repeats for each damage type)
+}
+```
+
+### 5. Character Trait Storage
+
+Both player and enemies store traits in two structs:
+
+```gml
+// In obj_player/Create_0.gml and obj_enemy_parent/Create_0.gml
+permanent_traits = {}; // From tags, quests (cannot be removed)
+temporary_traits = {};  // From equipment, companions, buffs (removable)
+```
+
+**Storage format:**
+```gml
+permanent_traits = {
+    fire_immunity: 1,      // 1 stack of fire immunity
+    ice_vulnerability: 1   // 1 stack of ice vulnerability
+}
+```
+
+## Stacking Mechanics
+
+### Basic Stacking
+
+Traits stack up to 5 times with **multiplicative** effects:
+
+- **Resistance**: 1 stack = 0.75x, 2 stacks = 0.75² = 0.5625x, 3 stacks = 0.421875x
+- **Vulnerability**: 1 stack = 1.5x, 2 stacks = 1.5² = 2.25x, 3 stacks = 3.375x
+- **Immunity**: Always 0.0x regardless of stacks (but stacks matter for cancellation)
+
+### Opposite Trait Cancellation (Age of Wonders Style)
+
+Opposite traits cancel **stack-by-stack**:
+
+**Example 1: Immunity vs Vulnerability**
+```
+fire_immunity(3) + fire_vulnerability(2) = net fire_immunity(1)
+Result: 0.0x damage (still immune with 1 stack remaining)
+```
+
+**Example 2: Vulnerability Overcomes Immunity**
+```
+fire_immunity(2) + fire_vulnerability(3) = net fire_vulnerability(1)
+Result: 1.5x damage (vulnerability won)
+```
+
+**Example 3: Resistance vs Vulnerability**
+```
+fire_resistance(3) + fire_vulnerability(2) = net fire_resistance(1)
+Result: 0.75x damage
+```
+
+**Example 4: Perfect Cancellation**
+```
+fire_resistance(2) + fire_vulnerability(2) = perfect cancel
+Result: 1.0x damage (normal)
+```
+
+### Calculation Priority
+
+1. **Immunity Check**: If net immunity > 0, return 0.0x
+2. **Immunity Cancelled**: If vulnerability > immunity, return vulnerability multiplier
+3. **Resistance vs Vulnerability**: Calculate net stacks, apply appropriate multiplier
+4. **No Traits**: Return 1.0x (normal damage)
+
+## Core Functions
+
+Location: `scripts/trait_system/trait_system.gml`
+
+### has_trait(trait_key)
+Check if character has a specific trait (1+ stacks).
+
+```gml
+function has_trait(_trait_key) {
+    return get_total_trait_stacks(_trait_key) > 0;
+}
+```
+
+### get_total_trait_stacks(trait_key)
+Get total stacks from permanent + temporary (capped at 5).
+
+```gml
+function get_total_trait_stacks(_trait_key) {
+    var _perm_stacks = permanent_traits[$ _trait_key] ?? 0;
+    var _temp_stacks = temporary_traits[$ _trait_key] ?? 0;
+    return min(_perm_stacks + _temp_stacks, 5);
+}
+```
+
+### add_permanent_trait(trait_key)
+Add a permanent trait stack (from tags, quest rewards).
+
+```gml
+function add_permanent_trait(_trait_key) {
+    if (!variable_instance_exists(self, "permanent_traits")) {
+        permanent_traits = {};
+    }
+    var _current = permanent_traits[$ _trait_key] ?? 0;
+    permanent_traits[$ _trait_key] = min(_current + 1, 5);
+}
+```
+
+### add_temporary_trait(trait_key)
+Add a temporary trait stack (from equipment, companions, buffs).
+
+```gml
+function add_temporary_trait(_trait_key) {
+    if (!variable_instance_exists(self, "temporary_traits")) {
+        temporary_traits = {};
+    }
+    var _current = temporary_traits[$ _trait_key] ?? 0;
+    temporary_traits[$ _trait_key] = min(_current + 1, 5);
+}
+```
+
+### remove_temporary_trait(trait_key)
+Remove a temporary trait stack (when unequipping, buff expires).
+
+```gml
+function remove_temporary_trait(_trait_key) {
+    if (!variable_instance_exists(self, "temporary_traits")) return;
+    if (!variable_struct_exists(temporary_traits, _trait_key)) return;
+
+    var _current = temporary_traits[$ _trait_key];
+    _current--;
+
+    if (_current <= 0) {
+        variable_struct_remove(temporary_traits, _trait_key);
+    } else {
+        temporary_traits[$ _trait_key] = _current;
+    }
+}
+```
+
+### apply_tag_traits(tag_key)
+Apply all traits from a tag as permanent traits.
+
+```gml
+function apply_tag_traits(_tag_key) {
+    if (!variable_global_exists("tag_database")) return;
+    if (!variable_struct_exists(global.tag_database, _tag_key)) return;
+
+    var _tag = global.tag_database[$ _tag_key];
+    var _traits = _tag.grants_traits;
+
+    for (var i = 0; i < array_length(_traits); i++) {
+        add_permanent_trait(_traits[i]);
+    }
+}
+```
+
+### get_damage_modifier_for_type(damage_type)
+Calculate final damage modifier with opposite trait cancellation.
+
+```gml
+function get_damage_modifier_for_type(_damage_type) {
+    var _type_str = damage_type_to_string(_damage_type);
+
+    var _immunity_stacks = get_total_trait_stacks(_type_str + "_immunity");
+    var _resistance_stacks = get_total_trait_stacks(_type_str + "_resistance");
+    var _vulnerability_stacks = get_total_trait_stacks(_type_str + "_vulnerability");
+
+    // Immunity check with cancellation
+    if (_immunity_stacks > 0) {
+        if (_vulnerability_stacks > 0) {
+            var _net_immunity = _immunity_stacks - _vulnerability_stacks;
+            if (_net_immunity > 0) {
+                return 0.0; // Still immune
+            } else {
+                var _net_vuln = _vulnerability_stacks - _immunity_stacks;
+                return power(1.5, _net_vuln);
+            }
+        } else {
+            return 0.0; // Immune, no cancellation
+        }
+    }
+
+    // Resistance vs vulnerability
+    if (_resistance_stacks > 0 || _vulnerability_stacks > 0) {
+        var _net_stacks = _resistance_stacks - _vulnerability_stacks;
+
+        if (_net_stacks > 0) {
+            return power(0.75, _net_stacks); // Net resistance
+        } else if (_net_stacks < 0) {
+            return power(1.5, abs(_net_stacks)); // Net vulnerability
+        } else {
+            return 1.0; // Perfect cancellation
+        }
+    }
+
+    return 1.0; // No traits
+}
+```
+
+## Damage Calculation Integration
+
+Location: `objects/obj_enemy_parent/Collision_obj_attack.gml`
+
+```gml
+// Get weapon damage type from attacker's equipped weapon
+var _weapon_damage_type = DamageType.physical; // Default
+
+if (other.creator != noone && instance_exists(other.creator)) {
+    // Check right hand first
+    if (other.creator.equipped.right_hand != undefined) {
+        var _weapon_stats = other.creator.equipped.right_hand.definition.stats;
+        if (variable_struct_exists(_weapon_stats, "damage_type")) {
+            _weapon_damage_type = _weapon_stats.damage_type;
+        }
+    }
+    // Check left hand if no right hand weapon
+    else if (other.creator.equipped.left_hand != undefined) {
+        var _left_stats = other.creator.equipped.left_hand.definition.stats;
+        if (variable_struct_exists(_left_stats, "damage_type")) {
+            _weapon_damage_type = _left_stats.damage_type;
+        }
+    }
+}
+
+// Apply damage type resistance multiplier using trait system v2.0
+var _base_damage = other.damage;
+var _resistance_multiplier = get_damage_modifier_for_type(_weapon_damage_type);
+var _final_damage = _base_damage * _resistance_multiplier;
+
+hp -= _final_damage;
+
+// Spawn damage number or immunity text
+if (_resistance_multiplier <= 0) {
+    spawn_immune_text(x, y - 16, self);
+} else {
+    spawn_damage_number(x, y - 16, _final_damage, _weapon_damage_type, self);
+}
+```
+
+## Visual Feedback
+
+### Damage Numbers
+
+Colored damage numbers based on damage type:
+
+```gml
+function damage_type_to_color(_damage_type) {
+    switch(_damage_type) {
+        case DamageType.physical: return c_red;
+        case DamageType.magical: return make_color_rgb(138, 43, 226); // Blue-violet
+        case DamageType.fire: return make_color_rgb(255, 140, 0); // Dark orange
+        case DamageType.ice: return make_color_rgb(135, 206, 250); // Light sky blue
+        case DamageType.lightning: return make_color_rgb(255, 255, 0); // Bright yellow
+        case DamageType.poison: return make_color_rgb(0, 255, 0); // Bright green
+        case DamageType.disease: return make_color_rgb(139, 69, 19); // Saddle brown
+        case DamageType.holy: return make_color_rgb(255, 215, 0); // Gold
+        case DamageType.unholy: return make_color_rgb(128, 0, 128); // Purple
+        default: return c_white;
+    }
+}
+```
+
+### Immunity Text
+
+When resistance multiplier is 0.0, show "IMMUNE!" instead of damage number:
+
+```gml
+function spawn_immune_text(_x, _y, _target) {
+    var _text = instance_create_layer(_x, _y, "Instances", obj_floating_text);
+    _text.text = "IMMUNE!";
+    _text.color = c_gray;
+    _text.follow_target = _target;
+}
+```
+
+## Example Enemy Configuration
+
+### Fire Imp (Fireborne Tag)
+
+```gml
+// objects/obj_fire_imp/Create_0.gml
+event_inherited();
+
+attack_damage = 1;
+attack_damage_type = DamageType.fire; // Fire imp deals fire damage
+attack_speed = 0.8;
+attack_range = 32;
+hp = 12;
+hp_total = hp;
+move_speed = 0.75;
+
+// Apply fireborne tag (grants fire_immunity + ice_vulnerability)
+apply_tag_traits("fireborne");
+
+// Fire imp attacks cause burning
+attack_status_effects = [
+    {effect: StatusEffectType.burning, chance: 0.5} // 50% chance to burn on hit
+];
+```
+
+**Result:**
+- Immune to fire damage (fire_immunity trait)
+- Takes 1.5x damage from ice (ice_vulnerability trait)
+- Deals fire damage to enemies
+- 50% chance to apply burning status effect
+
+### Burglar (Arboreal Tag)
+
+```gml
+// objects/obj_burglar/Create_0.gml
+event_inherited();
+
+attack_damage = 1;
+attack_speed = 1.2;
+attack_range = 18;
+hp = 3;
+move_speed = 1.3;
+
+// Burglar traits - forest dweller, vulnerable to fire, resistant to poison
+apply_tag_traits("arboreal");
+```
+
+**Result:**
+- Takes 1.5x damage from fire (fire_vulnerability trait)
+- Takes 0.75x damage from poison (poison_resistance trait)
+
+## Equipment Integration (Future)
+
+Equipment can grant temporary traits while equipped:
+
+```gml
+// Example: Ring of Fire Protection
+flame_ring: new create_item_definition(
+    12, "flame_ring", "Ring of Fire Protection", ItemType.equipment, EquipSlot.ring,
+    {grants_traits: ["fire_resistance"]}
+)
+
+// In apply_wielder_effects()
+if (variable_struct_exists(_item_stats, "grants_traits")) {
+    var _traits = _item_stats.grants_traits;
+    for (var i = 0; i < array_length(_traits); i++) {
+        add_temporary_trait(_traits[i]);
+    }
+}
+
+// In remove_wielder_effects()
+if (variable_struct_exists(_item_stats, "grants_traits")) {
+    var _traits = _item_stats.grants_traits;
+    for (var i = 0; i < array_length(_traits); i++) {
+        remove_temporary_trait(_traits[i]);
+    }
+}
+```
+
+## Testing Scenarios
+
+### Scenario 1: Fire Immunity Test
+1. Spawn fire imp (has fireborne tag → fire_immunity)
+2. Equip torch (deals DamageType.fire)
+3. Attack fire imp
+4. **Expected**: "IMMUNE!" text appears, fire imp takes 0 damage
+
+### Scenario 2: Ice Vulnerability Test
+1. Spawn fire imp (has fireborne tag → ice_vulnerability)
+2. Equip ice weapon (deals DamageType.ice)
+3. Attack fire imp with 10 base damage
+4. **Expected**: Fire imp takes 15 damage (1.5x multiplier)
+
+### Scenario 3: Trait Stacking
+1. Player equips ring of fire resistance (grants fire_resistance)
+2. Player drinks potion of fire resistance (grants fire_resistance)
+3. Player now has 2 stacks of fire_resistance
+4. Fire imp deals 10 fire damage
+5. **Expected**: Player takes 10 * 0.75² = 5.625 damage
+
+### Scenario 4: Opposite Trait Cancellation
+1. Player has fire_immunity(1) from quest
+2. Player equips cursed amulet of fire vulnerability (grants fire_vulnerability)
+3. Net result: fire_immunity cancelled, fire_vulnerability(0) remains
+4. Fire imp deals 10 fire damage
+5. **Expected**: Player takes 10 damage (normal, perfect cancellation)
+
+## Save/Load System
+
+Traits serialize easily:
+
+```gml
+save_data = {
+    permanent_traits: obj_player.permanent_traits,
+    temporary_traits: {} // Don't save temporary traits from equipment
+}
+
+// On load
+obj_player.permanent_traits = save_data.permanent_traits;
+// temporary_traits will be rebuilt when equipment is re-applied
+```
+
+## Future Extensions
+
+### Trait Synergies
+```gml
+// Example: Fire + Ice = Steam
+if (has_trait("fire_immunity") && has_trait("ice_immunity")) {
+    add_permanent_trait("steam_mastery");
+}
+```
+
+### Conditional Traits
+```gml
+// Example: Stronger at night
+if (global.time_of_day == "night" && has_trait("nocturnal")) {
+    add_temporary_trait("shadow_damage_bonus");
+}
+```
+
+### Companion Auras
+```gml
+// Example: Fire mage companion grants fire resistance aura
+if (companion_nearby(obj_fire_mage)) {
+    add_temporary_trait("fire_resistance");
+}
+```
+
+## Related Systems
+
+- **Status Effects**: Burning, freezing, poisoned (see `status-effects-system.md`)
+- **Armor Defense**: Physical damage reduction (see `ARMOR_DEFENSE_SYSTEM.md`)
+- **Item System**: Equipment granting traits (see `scr_item_database.gml`)
+- **Combat System**: Damage calculation flow (see `scr_combat_system.gml`)

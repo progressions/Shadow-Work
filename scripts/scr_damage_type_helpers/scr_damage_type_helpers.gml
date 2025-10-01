@@ -47,6 +47,10 @@ function damage_type_to_string(_damage_type) {
         case DamageType.physical: return "physical";
         case DamageType.magical: return "magical";
         case DamageType.fire: return "fire";
+        case DamageType.ice: return "ice";
+        case DamageType.lightning: return "lightning";
+        case DamageType.poison: return "poison";
+        case DamageType.disease: return "disease";
         case DamageType.holy: return "holy";
         case DamageType.unholy: return "unholy";
         default: return "physical";
@@ -61,7 +65,11 @@ function damage_type_to_color(_damage_type) {
         case DamageType.physical: return c_red;
         case DamageType.magical: return make_color_rgb(138, 43, 226); // Blue-violet
         case DamageType.fire: return make_color_rgb(255, 140, 0); // Dark orange
-        case DamageType.holy: return c_yellow;
+        case DamageType.ice: return make_color_rgb(135, 206, 250); // Light sky blue
+        case DamageType.lightning: return make_color_rgb(255, 255, 0); // Bright yellow
+        case DamageType.poison: return make_color_rgb(0, 255, 0); // Bright green
+        case DamageType.disease: return make_color_rgb(139, 69, 19); // Saddle brown
+        case DamageType.holy: return make_color_rgb(255, 215, 0); // Gold
         case DamageType.unholy: return make_color_rgb(128, 0, 128); // Purple
         default: return c_white;
     }

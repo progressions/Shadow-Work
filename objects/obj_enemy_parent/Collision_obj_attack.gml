@@ -8,24 +8,37 @@ if (alarm[1] < 0) {
 	 // Get weapon damage type from attacker's equipped weapon
 	 var _weapon_damage_type = DamageType.physical; // Default
 	 if (other.creator != noone && instance_exists(other.creator)) {
+	     // Check right hand first
 	     if (other.creator.equipped.right_hand != undefined) {
 	         var _weapon_stats = other.creator.equipped.right_hand.definition.stats;
 	         if (variable_struct_exists(_weapon_stats, "damage_type")) {
 	             _weapon_damage_type = _weapon_stats.damage_type;
 	         }
 	     }
+	     // Check left hand if no right hand weapon
+	     else if (other.creator.equipped.left_hand != undefined) {
+	         var _left_stats = other.creator.equipped.left_hand.definition.stats;
+	         if (variable_struct_exists(_left_stats, "damage_type")) {
+	             _weapon_damage_type = _left_stats.damage_type;
+	         }
+	     }
 	 }
 
-	 // Apply trait-based damage modifiers
+	 // Apply damage type resistance multiplier using trait system v2.0
 	 var _base_damage = other.damage;
-	 var _damage_type_string = get_damage_type(other.creator); // For trait system
-	 var _modifier_key = _damage_type_string + "_damage_modifier";
-	 var _damage_modifier = get_all_trait_modifiers(_modifier_key);
-	 var _after_traits = _base_damage * _damage_modifier;
 
-	 // Apply damage type resistance multiplier
-	 var _resistance_multiplier = get_damage_type_multiplier(self, _weapon_damage_type);
-	 var _final_damage = _after_traits * _resistance_multiplier;
+	 // Debug: Check traits
+	 show_debug_message("=== TRAIT DEBUG ===");
+	 show_debug_message("permanent_traits: " + json_stringify(permanent_traits));
+	 show_debug_message("temporary_traits: " + json_stringify(temporary_traits));
+	 show_debug_message("Weapon damage type: " + damage_type_to_string(_weapon_damage_type));
+
+	 var _resistance_multiplier = get_damage_modifier_for_type(_weapon_damage_type);
+
+	 show_debug_message("Resistance multiplier: " + string(_resistance_multiplier));
+	 show_debug_message("==================");
+
+	 var _final_damage = _base_damage * _resistance_multiplier;
 
 	 hp -= _final_damage;
 	 image_blend = c_red;
@@ -41,8 +54,7 @@ if (alarm[1] < 0) {
 	 play_enemy_sfx("on_hit");
 
 	 show_debug_message("Damage calculation: base=" + string(_base_damage) +
-	                    " type=" + string(_damage_type_string) +
-	                    " trait_mod=" + string(_damage_modifier) +
+	                    " type=" + damage_type_to_string(_weapon_damage_type) +
 	                    " resist_mult=" + string(_resistance_multiplier) +
 	                    " final=" + string(_final_damage));
 

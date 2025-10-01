@@ -8,8 +8,8 @@ attack_range = 18;
 hp = 3;
 move_speed = 1.3;
 
-// Burglar traits - forest dweller, vulnerable to fire
-traits = ["arboreal"];
+// Burglar traits - forest dweller, vulnerable to fire, resistant to poison
+apply_tag_traits("arboreal");
 
 enemy_sounds.on_attack = snd_burglar_attack;
 enemy_sounds.on_hit = snd_burglar_hit;
