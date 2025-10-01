@@ -18,6 +18,30 @@ function spawn_floating_text(_x, _y, _text, _color = c_white, _parent_instance =
     return _floating_text;
 }
 
+// Spawn damage number with color based on damage type
+function spawn_damage_number(_x, _y, _damage_amount, _damage_type = DamageType.physical, _parent_instance = noone) {
+    var _color = damage_type_to_color(_damage_type);
+    var _text = "-" + string(_damage_amount);
+    return spawn_floating_text(_x, _y, _text, _color, _parent_instance);
+}
+
+// Spawn immunity indicator text
+function spawn_immune_text(_x, _y, _parent_instance = noone) {
+    var _floating_text = instance_create_layer(_x, _y, "Instances", obj_floating_text);
+    _floating_text.text = "IMMUNE!";
+    _floating_text.text_color = c_gray;
+    _floating_text.text_scale = 0.35; // Slightly larger than normal damage numbers
+
+    // Set parent instance to follow
+    if (_parent_instance != noone && instance_exists(_parent_instance)) {
+        _floating_text.parent_instance = _parent_instance;
+        _floating_text.offset_x = _x - _parent_instance.x;
+        _floating_text.offset_y = _y - _parent_instance.y;
+    }
+
+    return _floating_text;
+}
+
 function ui_draw_bar(_x, _y, _w, _h, _value, _value_max, _fill_color, _back_color, _border_color) {
     var _max_value = max(1, _value_max);
     var _pct = clamp(_value / _max_value, 0, 1);
