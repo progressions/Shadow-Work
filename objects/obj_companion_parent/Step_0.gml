@@ -3,19 +3,6 @@
 
 if (global.game_paused) exit;
 
-// Debug - remove later
-if (is_recruited && keyboard_check_pressed(ord("9"))) {
-    show_debug_message("=== COMPANION STEP DEBUG ===");
-    show_debug_message("Step event IS running");
-    show_debug_message("is_recruited: " + string(is_recruited));
-    show_debug_message("state: " + string(state));
-    show_debug_message("follow_target exists: " + string(instance_exists(follow_target)));
-    if (instance_exists(follow_target)) {
-        var dist = point_distance(x, y, follow_target.x, follow_target.y);
-        show_debug_message("distance to player: " + string(dist));
-        show_debug_message("follow_distance threshold: " + string(follow_distance));
-    }
-}
 
 // Update trigger cooldowns
 if (triggers.shield.cooldown > 0) triggers.shield.cooldown--;

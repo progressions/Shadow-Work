@@ -88,7 +88,7 @@ if (state != PlayerState.dead) {
     #endregion Attack System
 
     #region Companion System
-
+/*
     // Check for nearby recruitable companions
     var _nearest_companion = instance_nearest(x, y, obj_companion_parent);
     if (_nearest_companion != noone &&
@@ -101,7 +101,7 @@ if (state != PlayerState.dead) {
             show_debug_message("Recruited " + _nearest_companion.companion_name);
         }
     }
-
+*/
     // Apply companion regeneration auras
     apply_companion_regeneration_auras(self);
 

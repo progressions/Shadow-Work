@@ -28,3 +28,33 @@ function chatterbox_update() {
 	node = ChatterboxGetCurrent(chatterbox);
 	text = ChatterboxGetContent(chatterbox, 0);
 }
+
+// Start VN dialogue mode with a specific companion and yarn file
+function start_vn_dialogue(_companion_instance, _yarn_file, _start_node) {
+	// Set global VN state
+	global.vn_active = true;
+	global.game_paused = true;
+	global.vn_companion = _companion_instance;
+	global.vn_yarn_file = _yarn_file;
+
+	// Always reload yarn file from disk to pick up changes
+	ChatterboxLoadFromFile(_yarn_file);
+	global.vn_chatterbox = ChatterboxCreate(_yarn_file);
+
+	// Initialize recruitment variables
+	if (_companion_instance.companion_id == "canopy") {
+		ChatterboxVariableSet("canopy_recruited", _companion_instance.is_recruited);
+	}
+
+	// Jump to starting node
+	ChatterboxJump(global.vn_chatterbox, _start_node);
+}
+
+// Stop VN dialogue mode and return to gameplay
+function stop_vn_dialogue() {
+	global.vn_active = false;
+	global.game_paused = false;
+	global.vn_companion = undefined;
+	global.vn_chatterbox = undefined;
+	global.vn_yarn_file = "";
+}

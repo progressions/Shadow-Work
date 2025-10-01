@@ -269,3 +269,16 @@ global.idle_bob_timer = 0;  // Global timer that everyone uses
 
 // Initialize companion system
 init_companion_global_data();
+
+// Initialize VN system state
+global.vn_active = false;           // Is VN mode currently active?
+global.vn_chatterbox = undefined;   // Current Chatterbox instance
+global.vn_companion = undefined;    // Reference to companion being talked to
+global.vn_yarn_file = "";           // Current yarn file being used
+global.game_paused = false;         // General pause flag for gameplay
+
+// Register custom Chatterbox functions
+ChatterboxAddFunction("bg", background_set_index);
+
+// Declare Chatterbox variables for companions
+ChatterboxVariableDefault("canopy_recruited", false);
