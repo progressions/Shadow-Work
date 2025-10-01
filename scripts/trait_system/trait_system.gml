@@ -1,38 +1,142 @@
-// Trait System Helper Functions
-// Functions for managing and querying character traits
+// Trait System Helper Functions (VERSION 2.0 - Stacking Mechanics)
+// Functions for managing and querying character traits with stack counts
 
 /// @function has_trait(trait_key)
-/// @description Check if character has a specific trait
+/// @description Check if character has a specific trait (checks both permanent and temporary)
 /// @param {string} trait_key The trait to check for
-/// @return {bool} True if character has the trait
+/// @return {bool} True if character has the trait with 1+ stacks
 function has_trait(_trait_key) {
-    for (var i = 0; i < array_length(traits); i++) {
-        if (traits[i] == _trait_key) {
-            return true;
-        }
-    }
-    return false;
+    return get_total_trait_stacks(_trait_key) > 0;
 }
 
-/// @function add_trait(trait_key)
-/// @description Add a trait to the character
+/// @function get_total_trait_stacks(trait_key)
+/// @description Get total stacks of a trait from both permanent and temporary
+/// @param {string} trait_key The trait to check
+/// @return {real} Total stack count (0 if trait not present)
+function get_total_trait_stacks(_trait_key) {
+    var _perm_stacks = 0;
+    var _temp_stacks = 0;
+
+    if (variable_instance_exists(self, "permanent_traits") && variable_struct_exists(permanent_traits, _trait_key)) {
+        _perm_stacks = permanent_traits[$ _trait_key];
+    }
+
+    if (variable_instance_exists(self, "temporary_traits") && variable_struct_exists(temporary_traits, _trait_key)) {
+        _temp_stacks = temporary_traits[$ _trait_key];
+    }
+
+    return min(_perm_stacks + _temp_stacks, 5); // Cap at 5 stacks
+}
+
+/// @function add_permanent_trait(trait_key)
+/// @description Add a permanent trait stack (from tags, quest rewards)
 /// @param {string} trait_key The trait to add
-function add_trait(_trait_key) {
-    if (!has_trait(_trait_key)) {
-        array_push(traits, _trait_key);
+function add_permanent_trait(_trait_key) {
+    if (!variable_instance_exists(self, "permanent_traits")) {
+        permanent_traits = {};
+    }
+
+    var _current = variable_struct_exists(permanent_traits, _trait_key) ? permanent_traits[$ _trait_key] : 0;
+    permanent_traits[$ _trait_key] = min(_current + 1, 5); // Cap at 5 stacks
+}
+
+/// @function add_temporary_trait(trait_key)
+/// @description Add a temporary trait stack (from equipment, companions, buffs)
+/// @param {string} trait_key The trait to add
+function add_temporary_trait(_trait_key) {
+    if (!variable_instance_exists(self, "temporary_traits")) {
+        temporary_traits = {};
+    }
+
+    var _current = variable_struct_exists(temporary_traits, _trait_key) ? temporary_traits[$ _trait_key] : 0;
+    temporary_traits[$ _trait_key] = min(_current + 1, 5); // Cap at 5 stacks
+}
+
+/// @function remove_temporary_trait(trait_key)
+/// @description Remove a temporary trait stack (when unequipping, buff expires)
+/// @param {string} trait_key The trait to remove
+function remove_temporary_trait(_trait_key) {
+    if (!variable_instance_exists(self, "temporary_traits")) return;
+    if (!variable_struct_exists(temporary_traits, _trait_key)) return;
+
+    var _current = temporary_traits[$ _trait_key];
+    _current--;
+
+    if (_current <= 0) {
+        variable_struct_remove(temporary_traits, _trait_key);
+    } else {
+        temporary_traits[$ _trait_key] = _current;
     }
 }
 
-/// @function remove_trait(trait_key)
-/// @description Remove a trait from the character
-/// @param {string} trait_key The trait to remove
-function remove_trait(_trait_key) {
-    for (var i = 0; i < array_length(traits); i++) {
-        if (traits[i] == _trait_key) {
-            array_delete(traits, i, 1);
-            break;
+/// @function apply_tag_traits(tag_key)
+/// @description Apply all traits from a tag as permanent traits
+/// @param {string} tag_key The tag to apply
+function apply_tag_traits(_tag_key) {
+    if (!variable_global_exists("tag_database")) return;
+    if (!variable_struct_exists(global.tag_database, _tag_key)) return;
+
+    var _tag = global.tag_database[$ _tag_key];
+    var _traits = _tag.grants_traits;
+
+    for (var i = 0; i < array_length(_traits); i++) {
+        add_permanent_trait(_traits[i]);
+    }
+}
+
+/// @function get_damage_modifier_for_type(damage_type)
+/// @description Calculate final damage modifier for a damage type with opposite trait cancellation
+/// @param {Real} damage_type The DamageType enum value
+/// @return {Real} Final damage multiplier (0.0 = immune, 1.0 = normal, etc.)
+function get_damage_modifier_for_type(_damage_type) {
+    // Convert DamageType enum to string
+    var _type_str = damage_type_to_string(_damage_type);
+
+    // Build trait names for this damage type
+    var _immunity_trait = _type_str + "_immunity";
+    var _resistance_trait = _type_str + "_resistance";
+    var _vulnerability_trait = _type_str + "_vulnerability";
+
+    // Get stacks for each trait type
+    var _immunity_stacks = get_total_trait_stacks(_immunity_trait);
+    var _resistance_stacks = get_total_trait_stacks(_resistance_trait);
+    var _vulnerability_stacks = get_total_trait_stacks(_vulnerability_trait);
+
+    // Immunity check - if any immunity stacks, check if cancelled by vulnerability
+    if (_immunity_stacks > 0) {
+        if (_vulnerability_stacks > 0) {
+            // Cancel stack-by-stack
+            var _net_immunity = _immunity_stacks - _vulnerability_stacks;
+            if (_net_immunity > 0) {
+                return 0.0; // Still immune
+            } else {
+                // Immunity cancelled, vulnerability remains
+                var _net_vuln = _vulnerability_stacks - _immunity_stacks;
+                return power(1.5, _net_vuln);
+            }
+        } else {
+            return 0.0; // Immune, no cancellation
         }
     }
+
+    // No immunity, check resistance vs vulnerability
+    if (_resistance_stacks > 0 || _vulnerability_stacks > 0) {
+        var _net_stacks = _resistance_stacks - _vulnerability_stacks;
+
+        if (_net_stacks > 0) {
+            // Net resistance
+            return power(0.75, _net_stacks);
+        } else if (_net_stacks < 0) {
+            // Net vulnerability
+            return power(1.5, abs(_net_stacks));
+        } else {
+            // Perfect cancellation
+            return 1.0;
+        }
+    }
+
+    // No traits affecting this damage type
+    return 1.0;
 }
 
 /// @function get_trait_effect(trait_key, effect_name)

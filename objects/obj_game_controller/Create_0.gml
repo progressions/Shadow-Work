@@ -45,8 +45,162 @@ global.terrain_footstep_sounds = {
     // stone: snd_footsteps_stone,
 };
 
-// Initialize trait database
+// Initialize tag database (tags grant permanent trait bundles)
+global.tag_database = {
+    fireborne: {
+        name: "Fireborne",
+        description: "Born of flame",
+        grants_traits: ["fire_immunity", "ice_vulnerability"]
+    },
+
+    venomous: {
+        name: "Venomous",
+        description: "Deadly poison wielder",
+        grants_traits: ["poison_immunity", "deals_poison_damage"]
+    },
+
+    arboreal: {
+        name: "Arboreal",
+        description: "Tree-dwelling creature",
+        grants_traits: ["fire_vulnerability", "poison_resistance"]
+    },
+
+    aquatic: {
+        name: "Aquatic",
+        description: "Water-born creature",
+        grants_traits: ["lightning_vulnerability", "fire_resistance"]
+    },
+
+    glacial: {
+        name: "Glacial",
+        description: "From frozen lands",
+        grants_traits: ["ice_immunity", "fire_vulnerability"]
+    },
+
+    swampridden: {
+        name: "Swampridden",
+        description: "Murky swamp dweller",
+        grants_traits: ["poison_immunity", "disease_resistance"]
+    },
+
+    sandcrawler: {
+        name: "Sandcrawler",
+        description: "Desert wanderer",
+        grants_traits: ["fire_resistance", "heat_adapted"]
+    }
+};
+
+// Initialize trait database (individual traits with stacking mechanics)
 global.trait_database = {
+    // Fire traits
+    fire_immunity: {
+        name: "Fire Immunity",
+        damage_modifier: 0.0,
+        opposite_trait: "fire_vulnerability",
+        max_stacks: 5
+    },
+    fire_resistance: {
+        name: "Fire Resistance",
+        damage_modifier: 0.75,
+        opposite_trait: "fire_vulnerability",
+        max_stacks: 5
+    },
+    fire_vulnerability: {
+        name: "Fire Vulnerability",
+        damage_modifier: 1.5,
+        opposite_trait: "fire_resistance",
+        max_stacks: 5
+    },
+
+    // Ice traits
+    ice_immunity: {
+        name: "Ice Immunity",
+        damage_modifier: 0.0,
+        opposite_trait: "ice_vulnerability",
+        max_stacks: 5
+    },
+    ice_resistance: {
+        name: "Ice Resistance",
+        damage_modifier: 0.75,
+        opposite_trait: "ice_vulnerability",
+        max_stacks: 5
+    },
+    ice_vulnerability: {
+        name: "Ice Vulnerability",
+        damage_modifier: 1.5,
+        opposite_trait: "ice_resistance",
+        max_stacks: 5
+    },
+
+    // Lightning traits
+    lightning_immunity: {
+        name: "Lightning Immunity",
+        damage_modifier: 0.0,
+        opposite_trait: "lightning_vulnerability",
+        max_stacks: 5
+    },
+    lightning_resistance: {
+        name: "Lightning Resistance",
+        damage_modifier: 0.75,
+        opposite_trait: "lightning_vulnerability",
+        max_stacks: 5
+    },
+    lightning_vulnerability: {
+        name: "Lightning Vulnerability",
+        damage_modifier: 1.5,
+        opposite_trait: "lightning_resistance",
+        max_stacks: 5
+    },
+
+    // Poison traits
+    poison_immunity: {
+        name: "Poison Immunity",
+        damage_modifier: 0.0,
+        opposite_trait: "poison_vulnerability",
+        max_stacks: 5
+    },
+    poison_resistance: {
+        name: "Poison Resistance",
+        damage_modifier: 0.75,
+        opposite_trait: "poison_vulnerability",
+        max_stacks: 5
+    },
+    poison_vulnerability: {
+        name: "Poison Vulnerability",
+        damage_modifier: 1.5,
+        opposite_trait: "poison_resistance",
+        max_stacks: 5
+    },
+
+    // Disease traits
+    disease_immunity: {
+        name: "Disease Immunity",
+        damage_modifier: 0.0,
+        opposite_trait: "disease_vulnerability",
+        max_stacks: 5
+    },
+    disease_resistance: {
+        name: "Disease Resistance",
+        damage_modifier: 0.75,
+        opposite_trait: "disease_vulnerability",
+        max_stacks: 5
+    },
+
+    // Special traits
+    deals_poison_damage: {
+        name: "Deals Poison Damage",
+        effect_type: "damage_type_change",
+        max_stacks: 1
+    },
+    heat_adapted: {
+        name: "Heat Adapted",
+        effect_type: "environmental",
+        max_stacks: 1
+    }
+};
+
+// Initialize trait database (OLD - will be replaced with new structure)
+global.trait_database_old = {
     fireborne: {
         name: "Fireborne",
         description: "Born of flame, immune to fire damage but weak to ice",

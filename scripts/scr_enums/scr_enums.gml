@@ -67,6 +67,17 @@ enum DamageType {
     physical,
     magical,
     fire,
+    ice,
+    lightning,
+    poison,
+    disease,
     holy,
     unholy
+}
+
+enum ResistanceLevel {
+    immune,
+    resistant,
+    normal,
+    vulnerable
 }
