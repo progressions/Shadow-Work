@@ -33,6 +33,39 @@ if (is_recruited) {
     if (instance_exists(follow_target)) {
         var dist_to_player = point_distance(x, y, follow_target.x, follow_target.y);
 
+        // Check if too far from player
+        if (dist_to_player > teleport_distance_threshold) {
+            time_far_from_player++;
+
+            // Teleport if been far for too long
+            if (time_far_from_player >= teleport_time_threshold) {
+                // Find safe position near player (behind them based on their facing)
+                var teleport_offset = 32;
+                var player_facing = follow_target.facing_dir;
+
+                // Default behind player (opposite of facing direction)
+                var teleport_x = follow_target.x;
+                var teleport_y = follow_target.y;
+
+                switch (player_facing) {
+                    case "down":  teleport_y -= teleport_offset; break;
+                    case "up":    teleport_y += teleport_offset; break;
+                    case "left":  teleport_x += teleport_offset; break;
+                    case "right": teleport_x -= teleport_offset; break;
+                }
+
+                // Teleport
+                x = teleport_x;
+                y = teleport_y;
+                time_far_from_player = 0;
+
+                show_debug_message(companion_name + " teleported to player");
+            }
+        } else {
+            // Close enough, reset timer
+            time_far_from_player = 0;
+        }
+
         // Only move if beyond follow distance
         if (dist_to_player > follow_distance) {
             // Calculate direction to player

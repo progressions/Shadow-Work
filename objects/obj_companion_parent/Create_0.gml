@@ -93,5 +93,10 @@ move_dir_y = 0;
 target_x = x;
 target_y = y;
 
+// Teleport system - if too far from player for too long, teleport to them
+teleport_distance_threshold = 100; // If farther than this
+teleport_time_threshold = 90;      // For this many frames (1.5 seconds at 60fps)
+time_far_from_player = 0;
+
 // Persistent across room changes
 persistent = true;
