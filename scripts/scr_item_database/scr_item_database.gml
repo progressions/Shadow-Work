@@ -79,7 +79,7 @@ global.item_database = {
     ),
     chain_armor: new create_item_definition(
         13, "chain_armor", "Chain Armor", ItemType.armor, EquipSlot.armor,
-        {defense: 10, speed_modifier: 0.9}
+        {defense: 10, speed_modifier: 0.9, trait_grants: [{trait: "lightning_resistance", stacks: 1}]}
     ),
     chain_leggings: new create_item_definition(
         14, "chain_leggings", "Chain Leggings", ItemType.armor, EquipSlot.boots,
@@ -91,7 +91,7 @@ global.item_database = {
     ),
     leather_armor: new create_item_definition(
         16, "leather_armor", "Leather Armor", ItemType.armor, EquipSlot.armor,
-        {defense: 5}
+        {defense: 5, trait_grants: [{trait: "poison_resistance", stacks: 2}]}
     ),
     leather_greaves: new create_item_definition(
         17, "leather_greaves", "Leather Greaves", ItemType.armor, EquipSlot.boots,
@@ -105,7 +105,7 @@ global.item_database = {
     ),
     greatshield: new create_item_definition(
         19, "greatshield", "Greatshield", ItemType.armor, EquipSlot.left_hand,
-        {defense: 10, block_chance: 0.35, speed_modifier: 0.85}
+        {defense: 10, block_chance: 0.35, speed_modifier: 0.85, trait_grants: [{trait: "physical_resistance", stacks: 1}]}
     ),
     health_potion: new create_item_definition(
         20, "health_potion", "Health Potion", ItemType.consumable, EquipSlot.none,
@@ -137,11 +137,11 @@ global.item_database = {
     ),
     plate_armor: new create_item_definition(
         26, "plate_armor", "Plate Armor", ItemType.armor, EquipSlot.armor,
-        {defense: 15, speed_modifier: 0.8}
+        {defense: 15, speed_modifier: 0.8, trait_grants: [{trait: "fire_resistance", stacks: 2}]}
     ),
     plate_sabatons: new create_item_definition(
         27, "plate_sabatons", "Plate Sabatons", ItemType.armor, EquipSlot.boots,
-        {defense: 4, speed_modifier: 0.9}
+        {defense: 4, speed_modifier: 0.9, trait_grants: [{trait: "ice_resistance", stacks: 1}]}
     )
 };
 
