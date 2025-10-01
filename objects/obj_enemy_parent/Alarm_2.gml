@@ -15,12 +15,16 @@ if (state == EnemyState.attacking) {
             var damage_modifier = get_status_effect_modifier("damage");
             var _status_modified_damage = attack_damage * damage_modifier;
 
+            // Apply damage type resistance multiplier
+            var _resistance_multiplier = get_damage_type_multiplier(_player, attack_damage_type);
+            var _after_resistance = _status_modified_damage * _resistance_multiplier;
+
             // Apply player armor defense (DR)
             var _defense = 0;
             with (_player) {
                 _defense = get_total_defense();
             }
-            var _after_defense = _status_modified_damage - _defense;
+            var _after_defense = _after_resistance - _defense;
 
             // Apply chip damage floor only if armor fully blocked the attack
             var _chip = 1;
@@ -32,20 +36,16 @@ if (state == EnemyState.attacking) {
                 // Some damage got through
                 final_damage = _after_defense;
             }
-            var _mitigated_damage = final_damage;
-
-            // Debug logging
-            show_debug_message("Enemy Attack: base=" + string(attack_damage) +
-                             " defense=" + string(_defense) +
-                             " mitigated=" + string(_mitigated_damage) +
-                             " chip=" + string(_chip) +
-                             " final=" + string(final_damage));
 
             // Deal damage to player
             _player.hp -= final_damage;
 
-            // Spawn damage floating text
-            spawn_floating_text(_player.x, _player.y - 16, "-" + string(final_damage), c_red, _player);
+            // Spawn damage number or immunity text
+            if (_resistance_multiplier <= 0) {
+                spawn_immune_text(_player.x, _player.y - 16, _player);
+            } else {
+                spawn_damage_number(_player.x, _player.y - 16, final_damage, attack_damage_type, _player);
+            }
 
             // Check if player died
             if (_player.hp <= 0) {

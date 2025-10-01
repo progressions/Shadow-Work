@@ -5,15 +5,37 @@ show_debug_message("Enemy state check passed, alarm[1] = " + string(alarm[1]));
 if (alarm[1] < 0) {
 	 var old_hp = hp;
 
+	 // Get weapon damage type from attacker's equipped weapon
+	 var _weapon_damage_type = DamageType.physical; // Default
+	 if (other.creator != noone && instance_exists(other.creator)) {
+	     if (other.creator.equipped.right_hand != undefined) {
+	         var _weapon_stats = other.creator.equipped.right_hand.definition.stats;
+	         if (variable_struct_exists(_weapon_stats, "damage_type")) {
+	             _weapon_damage_type = _weapon_stats.damage_type;
+	         }
+	     }
+	 }
+
 	 // Apply trait-based damage modifiers
 	 var _base_damage = other.damage;
-	 var _damage_type = get_damage_type(other.creator);
-	 var _modifier_key = _damage_type + "_damage_modifier";
+	 var _damage_type_string = get_damage_type(other.creator); // For trait system
+	 var _modifier_key = _damage_type_string + "_damage_modifier";
 	 var _damage_modifier = get_all_trait_modifiers(_modifier_key);
-	 var _final_damage = _base_damage * _damage_modifier;
+	 var _after_traits = _base_damage * _damage_modifier;
+
+	 // Apply damage type resistance multiplier
+	 var _resistance_multiplier = get_damage_type_multiplier(self, _weapon_damage_type);
+	 var _final_damage = _after_traits * _resistance_multiplier;
 
 	 hp -= _final_damage;
 	 image_blend = c_red;
+
+	 // Spawn damage number or immunity text
+	 if (_resistance_multiplier <= 0) {
+	     spawn_immune_text(x, y - 16, self);
+	 } else {
+	     spawn_damage_number(x, y - 16, _final_damage, _weapon_damage_type, self);
+	 }
 
 	 // Play enemy hit sound
 	 play_enemy_sfx("on_hit");
