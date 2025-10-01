@@ -13,7 +13,33 @@ if (state == EnemyState.attacking) {
         if (_dist <= attack_range && _player.state != PlayerState.dead) {
             // Apply status effect damage modifiers
             var damage_modifier = get_status_effect_modifier("damage");
-            var final_damage = attack_damage * damage_modifier;
+            var _status_modified_damage = attack_damage * damage_modifier;
+
+            // Apply player armor defense (DR)
+            var _defense = 0;
+            with (_player) {
+                _defense = get_total_defense();
+            }
+            var _after_defense = _status_modified_damage - _defense;
+
+            // Apply chip damage floor only if armor fully blocked the attack
+            var _chip = 1;
+            var final_damage;
+            if (_after_defense <= 0) {
+                // Armor blocked everything, apply chip damage
+                final_damage = _chip;
+            } else {
+                // Some damage got through
+                final_damage = _after_defense;
+            }
+            var _mitigated_damage = final_damage;
+
+            // Debug logging
+            show_debug_message("Enemy Attack: base=" + string(attack_damage) +
+                             " defense=" + string(_defense) +
+                             " mitigated=" + string(_mitigated_damage) +
+                             " chip=" + string(_chip) +
+                             " final=" + string(final_damage));
 
             // Deal damage to player
             _player.hp -= final_damage;

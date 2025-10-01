@@ -105,9 +105,9 @@ if (state == EnemyState.idle) {
 
     // Check if attack animation has completed
     if (state == EnemyState.attacking && anim_timer >= frames_in_seq) {
-        // Attack animation finished, return to movement behavior
-        state = EnemyState.idle;
-        anim_timer = 0; // Reset for next attack
+        // Keep looping attack animation until alarm[2] finishes and resets state
+        // Don't reset state here - let the attack complete first
+        anim_timer = 0; // Reset animation to loop
     }
 }
 
