@@ -31,7 +31,9 @@ function player_handle_pickup() {
 
             // Track picked up item for room state persistence
             if (variable_instance_exists(_instance, "item_spawn_id")) {
+                show_debug_message("Tracking picked up item: " + _instance.item_spawn_id);
                 array_push(global.picked_up_items, _instance.item_spawn_id);
+                show_debug_message("Total picked up items tracked: " + string(array_length(global.picked_up_items)));
             }
 
             // Auto-equip logic

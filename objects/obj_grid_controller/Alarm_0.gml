@@ -13,8 +13,8 @@ with (obj_rising_pillar) {
     var grid_x = round((x - min_x) / other.tile_size);
     var grid_y = round((y - min_y) / other.tile_size);
     
-    show_debug_message("Pillar at x:" + string(x) + " y:" + string(y) + 
-                       " -> grid_x:" + string(grid_x) + " grid_y:" + string(grid_y));
+    // show_debug_message("Pillar at x:" + string(x) + " y:" + string(y) + 
+    //                   " -> grid_x:" + string(grid_x) + " grid_y:" + string(grid_y));
     
     // Check if this pillar is within our grid
     if (grid_x >= 0 && grid_x < other.grid_width && 
@@ -30,7 +30,7 @@ with (obj_rising_pillar) {
 }
 
 // Debug: Print the grid
-show_debug_message("Pillar grid initialized:");
+// show_debug_message("Pillar grid initialized:");
 for (var j = 0; j < grid_height; j++) {
     var row = "";
     for (var i = 0; i < grid_width; i++) {
@@ -41,5 +41,5 @@ for (var j = 0; j < grid_height; j++) {
             row += "X ";
         }
     }
-    show_debug_message(row);
+    // show_debug_message(row);
 }

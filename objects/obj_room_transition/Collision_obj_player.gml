@@ -1,6 +1,10 @@
 // Collision with obj_player - Trigger room transition
 
 if (target_room != undefined) {
+    show_debug_message("=== ROOM TRANSITION TRIGGERED ===");
+    show_debug_message("Current room: " + room_get_name(room));
+    show_debug_message("Target room: " + room_get_name(target_room));
+    show_debug_message("Target position: (" + string(target_x) + ", " + string(target_y) + ")");
     var spawn_x = (target_x != -1) ? target_x : obj_player.x;
     var spawn_y = (target_y != -1) ? target_y : obj_player.y;
 

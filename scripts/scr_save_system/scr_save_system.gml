@@ -145,27 +145,42 @@ function serialize_enemies() {
     var enemies_array = [];
 
     with (obj_enemy_parent) {
+        // Skip enemies that don't have required properties (probably being destroyed)
+        if (!variable_instance_exists(id, "hp") || !variable_instance_exists(id, "hp_max")) {
+            continue;
+        }
+
         // Serialize traits with stacks
         var traits_array = [];
-        for (var i = 0; i < array_length(traits); i++) {
-            var trait = traits[i];
-            array_push(traits_array, {
-                trait_name: trait.name,
-                stacks: trait.stacks
-            });
+        if (variable_instance_exists(id, "traits") && is_array(traits)) {
+            for (var i = 0; i < array_length(traits); i++) {
+                var trait = traits[i];
+                array_push(traits_array, {
+                    trait_name: trait.name,
+                    stacks: trait.stacks
+                });
+            }
         }
 
         // Serialize status effects
         var status_effects_array = [];
-        for (var i = 0; i < array_length(status_effects); i++) {
-            var effect = status_effects[i];
-            array_push(status_effects_array, {
-                type: effect.type,
-                remaining_duration: effect.remaining_duration,
-                tick_timer: effect.tick_timer,
-                is_permanent: effect.is_permanent,
-                neutralized: effect.neutralized
-            });
+        if (variable_instance_exists(id, "status_effects") && is_array(status_effects)) {
+            for (var i = 0; i < array_length(status_effects); i++) {
+                var effect = status_effects[i];
+                array_push(status_effects_array, {
+                    type: effect.type,
+                    remaining_duration: effect.remaining_duration,
+                    tick_timer: effect.tick_timer,
+                    is_permanent: effect.is_permanent,
+                    neutralized: effect.neutralized
+                });
+            }
+        }
+
+        // Serialize tags
+        var tags_array = [];
+        if (variable_instance_exists(id, "tags") && is_array(tags)) {
+            tags_array = tags;
         }
 
         array_push(enemies_array, {
@@ -174,10 +189,10 @@ function serialize_enemies() {
             y: y,
             hp: hp,
             hp_max: hp_max,
-            state: state,
-            facing_dir: facing_dir,
+            state: variable_instance_exists(id, "state") ? state : 0,
+            facing_dir: variable_instance_exists(id, "facing_dir") ? facing_dir : "down",
             traits: traits_array,
-            tags: tags,
+            tags: tags_array,
             status_effects: status_effects_array
         });
     }
@@ -554,37 +569,18 @@ function deserialize_room_state(room_index) {
     // Restore enemies
     deserialize_enemies(room_data.enemies);
 
-    // Mark chests as opened
-    with (obj_chest_parent) {
-        // Check if this chest's ID is in the opened list
-        if (variable_instance_exists(id, "chest_id")) {
-            for (var i = 0; i < array_length(global.opened_chests); i++) {
-                if (global.opened_chests[i] == chest_id) {
-                    opened = true;
-                    sprite_index = spr_chest_open; // Assuming you have this sprite
-                    break;
-                }
-            }
-        }
-    }
-
-    // Destroy breakables that were already broken
-    with (obj_breakable_parent) {
-        if (variable_instance_exists(id, "breakable_id")) {
-            for (var i = 0; i < array_length(global.broken_breakables); i++) {
-                if (global.broken_breakables[i] == breakable_id) {
-                    instance_destroy();
-                    break;
-                }
-            }
-        }
-    }
-
     // Destroy items that were already picked up
+    show_debug_message("Checking picked up items. Total tracked: " + string(array_length(global.picked_up_items)));
+    for (var i = 0; i < array_length(global.picked_up_items); i++) {
+        show_debug_message("  Tracked ID [" + string(i) + "]: " + global.picked_up_items[i]);
+    }
     with (obj_item_parent) {
         if (variable_instance_exists(id, "item_spawn_id")) {
+            show_debug_message("Item found with spawn_id: " + item_spawn_id);
             for (var i = 0; i < array_length(global.picked_up_items); i++) {
+                show_debug_message("  Comparing with tracked[" + string(i) + "]: " + global.picked_up_items[i]);
                 if (global.picked_up_items[i] == item_spawn_id) {
+                    show_debug_message("DESTROYING previously picked up item: " + item_spawn_id);
                     instance_destroy();
                     break;
                 }
