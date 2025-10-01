@@ -86,6 +86,29 @@ if (state != PlayerState.dead) {
     player_handle_dash_cooldown();
 
     #endregion Attack System
+
+    #region Companion System
+
+    // Check for nearby recruitable companions
+    var _nearest_companion = instance_nearest(x, y, obj_companion_parent);
+    if (_nearest_companion != noone &&
+        !_nearest_companion.is_recruited &&
+        point_distance(x, y, _nearest_companion.x, _nearest_companion.y) < 32) {
+
+        // Show recruitment prompt (Space key)
+        if (keyboard_check_pressed(vk_space)) {
+            recruit_companion(_nearest_companion, self);
+            show_debug_message("Recruited " + _nearest_companion.companion_name);
+        }
+    }
+
+    // Apply companion regeneration auras
+    apply_companion_regeneration_auras(self);
+
+    // Evaluate and activate companion triggers
+    evaluate_companion_triggers(self);
+
+    #endregion Companion System
 }
 
 // Debug keys for testing status effects (remove in final version)

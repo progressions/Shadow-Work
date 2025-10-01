@@ -266,3 +266,6 @@ global.trait_database_old = {
 // SETUP - In your initialization object
 // ============================================
 global.idle_bob_timer = 0;  // Global timer that everyone uses
+
+// Initialize companion system
+init_companion_global_data();

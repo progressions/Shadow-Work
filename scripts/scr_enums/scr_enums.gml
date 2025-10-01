@@ -17,6 +17,13 @@ enum EnemyState {
 	dead,
 }
 
+enum CompanionState {
+	not_recruited,
+	idle,
+	following,
+	recruited
+}
+
 enum StatusEffectType {
 	burning,
 	wet,
