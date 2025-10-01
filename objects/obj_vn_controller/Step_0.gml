@@ -28,22 +28,6 @@ if (global.vn_chatterbox != undefined) {
 
 	var _option_count = ChatterboxGetOptionCount(_chatterbox);
 
-	// Check if Canopy was recruited via dialogue
-	if (global.vn_companion != undefined && global.vn_companion.companion_id == "canopy") {
-		var _recruited = ChatterboxVariableGet("canopy_recruited");
-		if (_recruited == true && !global.vn_companion.is_recruited) {
-			// Recruit Canopy
-			global.vn_companion.is_recruited = true;
-			global.vn_companion.state = CompanionState.following;
-			global.vn_companion.follow_target = obj_player;
-			show_debug_message("Canopy recruited!");
-
-			// Close dialogue immediately after recruitment
-			stop_vn_dialogue();
-			exit;
-		}
-	}
-
 	// Handle input
 	if (_option_count > 0) {
 		// Choices available - navigate and select
@@ -73,6 +57,24 @@ if (global.vn_chatterbox != undefined) {
 			if (ChatterboxIsWaiting(_chatterbox)) {
 				show_debug_message("Continuing dialogue");
 				ChatterboxContinue(_chatterbox);
+
+				// Check if Canopy was recruited AFTER continuing (so the <<set>> command has executed)
+				if (global.vn_companion != undefined && global.vn_companion.companion_id == "canopy") {
+					var _recruited = ChatterboxVariableGet("canopy_recruited");
+					show_debug_message("canopy_recruited variable: " + string(_recruited));
+					show_debug_message("is_recruited flag: " + string(global.vn_companion.is_recruited));
+					if (_recruited == true && !global.vn_companion.is_recruited) {
+						// Recruit Canopy
+						global.vn_companion.is_recruited = true;
+						global.vn_companion.state = CompanionState.following;
+						global.vn_companion.follow_target = obj_player;
+						show_debug_message("Canopy recruited!");
+
+						// Close dialogue immediately after recruitment
+						stop_vn_dialogue();
+						exit;
+					}
+				}
 			} else {
 				// Check if we've reached the end
 				var _current_node = ChatterboxGetCurrent(_chatterbox);

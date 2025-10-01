@@ -4,6 +4,9 @@
 
 if (!global.vn_active) exit;
 
+// Enable texture filtering for smooth text/sprite rendering
+gpu_set_tex_filter(true);
+
 var _gui_width = display_get_gui_width();
 var _gui_height = display_get_gui_height();
 
@@ -44,7 +47,7 @@ if (global.vn_companion != undefined && global.vn_companion.vn_sprite != undefin
 
 // Draw name tag above dialogue box
 if (current_speaker != "") {
-	draw_set_font(fnt_ui);
+	draw_set_font(fnt_arial);
 	var _name_width = string_width(current_speaker) + 60;
 
 	draw_set_color(c_dkgray);
@@ -60,6 +63,7 @@ if (current_speaker != "") {
 }
 
 // Draw dialogue text
+draw_set_font(fnt_arial);
 draw_set_color(c_white);
 draw_set_halign(fa_left);
 draw_set_valign(fa_top);
@@ -95,7 +99,7 @@ if (global.vn_chatterbox != undefined) {
 			draw_set_color(c_white);
 			draw_set_halign(fa_left);
 			draw_set_valign(fa_middle);
-			draw_set_font(fnt_ui);
+			draw_set_font(fnt_arial);
 			draw_text(choice_x + 20, _choice_y + choice_height / 2, _option_text);
 		}
 	} else {
@@ -104,7 +108,7 @@ if (global.vn_chatterbox != undefined) {
 			draw_set_color(c_white);
 			draw_set_halign(fa_right);
 			draw_set_valign(fa_bottom);
-			draw_set_font(fnt_ui);
+			draw_set_font(fnt_arial);
 			draw_text(dialogue_box_x + dialogue_box_width - 20, dialogue_box_y + dialogue_box_height - 10, "[ENTER/E]");
 		}
 	}
@@ -115,3 +119,4 @@ draw_set_color(c_white);
 draw_set_alpha(1);
 draw_set_halign(fa_left);
 draw_set_valign(fa_top);
+gpu_set_tex_filter(false);
