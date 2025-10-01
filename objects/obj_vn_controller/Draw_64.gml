@@ -76,7 +76,8 @@ if (global.vn_chatterbox != undefined) {
 	if (_option_count > 0) {
 		var _choice_y = choice_start_y;
 
-		for (var i = 0; i < _option_count; i++) {
+		// Draw choices in reverse order so first option appears at top
+		for (var i = _option_count - 1; i >= 0; i--) {
 			var _option_text = ChatterboxGetOption(global.vn_chatterbox, i);
 
 			// Calculate choice position (stack upward)

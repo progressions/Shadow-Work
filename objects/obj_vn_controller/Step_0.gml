@@ -31,17 +31,17 @@ if (global.vn_chatterbox != undefined) {
 	// Handle input
 	if (_option_count > 0) {
 		// Choices available - navigate and select
-		// Up = increase index (choices drawn bottom-to-top)
+		// Up = decrease index (move up the list)
 		if (keyboard_check_pressed(vk_up) || keyboard_check_pressed(ord("W"))) {
-			selected_choice++;
-			if (selected_choice >= _option_count) selected_choice = 0;
+			selected_choice--;
+			if (selected_choice < 0) selected_choice = _option_count - 1;
 			show_debug_message("Selected choice: " + string(selected_choice));
 		}
 
-		// Down = decrease index
+		// Down = increase index (move down the list)
 		if (keyboard_check_pressed(vk_down) || keyboard_check_pressed(ord("S"))) {
-			selected_choice--;
-			if (selected_choice < 0) selected_choice = _option_count - 1;
+			selected_choice++;
+			if (selected_choice >= _option_count) selected_choice = 0;
 			show_debug_message("Selected choice: " + string(selected_choice));
 		}
 

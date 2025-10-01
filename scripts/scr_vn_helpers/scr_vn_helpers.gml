@@ -37,6 +37,10 @@ function start_vn_dialogue(_companion_instance, _yarn_file, _start_node) {
 	global.vn_companion = _companion_instance;
 	global.vn_yarn_file = _yarn_file;
 
+	// Save and disable SFX to stop all looped sounds
+	global.vn_saved_sfx_enabled = global.audio_config.sfx_enabled;
+	global.audio_config.sfx_enabled = false;
+
 	// Always reload yarn file from disk to pick up changes
 	ChatterboxLoadFromFile(_yarn_file);
 	global.vn_chatterbox = ChatterboxCreate(_yarn_file);
@@ -57,4 +61,7 @@ function stop_vn_dialogue() {
 	global.vn_companion = undefined;
 	global.vn_chatterbox = undefined;
 	global.vn_yarn_file = "";
+
+	// Restore SFX state (looped sounds will restart automatically from player state)
+	global.audio_config.sfx_enabled = global.vn_saved_sfx_enabled;
 }

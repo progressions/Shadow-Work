@@ -6,10 +6,6 @@ title: Start
 ---
 <<bg(0)>>
 Canopy: I'm Canopy! Hello.
-    -> Join me please <<if $canopy_recruited == false>>
-        Canopy: I would be honored to join you!
-        <<set $canopy_recruited = true>>
-        <<jump Exit>>
     -> How are you?
         Canopy: I'm lost in the woods!
         <<jump Option A>>
@@ -19,6 +15,10 @@ Canopy: I'm Canopy! Hello.
     -> Do you need help?
         Canopy: Yes I do!
         <<jump Option B>>
+    -> Join me please <<if $canopy_recruited == false>>
+        Canopy: I would be honored to join you!
+        <<set $canopy_recruited = true>>
+        <<jump Exit>>
     -> Goodbyeee
         Canopy: See you later!
         <<jump Exit>>
