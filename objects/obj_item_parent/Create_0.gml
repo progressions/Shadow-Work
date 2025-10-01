@@ -2,6 +2,10 @@
 // obj_item_parent (PARENT OBJECT - your existing parent)
 // ============================================
 // CREATE EVENT:
+
+// Call parent create event
+event_inherited();
+
 item_def = undefined;
 count = 1;
 base_y = y;

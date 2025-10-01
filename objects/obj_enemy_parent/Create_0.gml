@@ -1,3 +1,5 @@
+// Call parent create event
+event_inherited();
 
 // Get the tilemap for collisions
 tilemap = layer_tilemap_get_id("Tiles_Col");
@@ -52,3 +54,90 @@ enemy_sounds = {
     on_footstep: undefined,    // Default: undefined (no sound)
     on_status_effect: undefined // Default: snd_status_effect_generic
 };
+
+// Override serialize method for enemy-specific data
+function serialize() {
+    show_debug_message("SERIALIZING ENEMY: " + object_get_name(object_index) + " at position (" + string(x) + ", " + string(y) + ")");
+
+    var data = {
+        object_type: object_get_name(object_index),
+        x: x,
+        y: y,
+        persistent_id: object_get_name(object_index) + "_" + string(x) + "_" + string(y),
+        hp: hp,
+        hp_max: hp_total,
+        state: state,
+        facing_dir: variable_instance_exists(id, "facing_dir") ? facing_dir : "down",
+        tags: tags,
+        traits: [], // Will be populated below
+        status_effects: [] // Will be populated below
+    };
+
+    // Serialize traits (from both permanent and temporary)
+    var trait_names = variable_struct_get_names(permanent_traits);
+    for (var i = 0; i < array_length(trait_names); i++) {
+        var trait_name = trait_names[i];
+        array_push(data.traits, {
+            trait_name: trait_name,
+            stacks: permanent_traits[$ trait_name]
+        });
+    }
+    trait_names = variable_struct_get_names(temporary_traits);
+    for (var i = 0; i < array_length(trait_names); i++) {
+        var trait_name = trait_names[i];
+        array_push(data.traits, {
+            trait_name: trait_name,
+            stacks: temporary_traits[$ trait_name]
+        });
+    }
+
+    // Serialize status effects
+    for (var i = 0; i < array_length(status_effects); i++) {
+        var effect = status_effects[i];
+        array_push(data.status_effects, {
+            type: effect.type,
+            remaining_duration: effect.remaining_duration,
+            tick_timer: effect.tick_timer,
+            is_permanent: effect.is_permanent,
+            neutralized: effect.neutralized
+        });
+    }
+
+    return data;
+}
+
+// Override deserialize method to restore enemy-specific data
+function deserialize(data) {
+    show_debug_message("DESERIALIZING ENEMY: " + object_get_name(object_index) + " restoring to position (" + string(data.x) + ", " + string(data.y) + ")");
+
+    x = data.x;
+    y = data.y;
+    hp = data.hp;
+    hp_total = data.hp_max;
+    state = data.state;
+    facing_dir = data.facing_dir;
+    tags = data.tags;
+
+    // Restore traits
+    permanent_traits = {};
+    temporary_traits = {};
+    for (var i = 0; i < array_length(data.traits); i++) {
+        var trait_data = data.traits[i];
+        permanent_traits[$ trait_data.trait_name] = trait_data.stacks;
+    }
+
+    // Restore status effects
+    status_effects = [];
+    for (var i = 0; i < array_length(data.status_effects); i++) {
+        var effect_data = data.status_effects[i];
+        var effect_definition = get_status_effect_data(effect_data.type);
+        array_push(status_effects, {
+            type: effect_data.type,
+            remaining_duration: effect_data.remaining_duration,
+            tick_timer: effect_data.tick_timer,
+            data: effect_definition, // Restore the data property from global definitions
+            is_permanent: effect_data.is_permanent,
+            neutralized: effect_data.neutralized
+        });
+    }
+}

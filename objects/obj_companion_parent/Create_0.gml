@@ -1,6 +1,9 @@
 // Companion Parent Create Event
 // Base object for all companion NPCs
 
+// Call parent create event
+event_inherited();
+
 // Get tilemap for collision detection
 tilemap = layer_tilemap_get_id("Tiles_Col");
 

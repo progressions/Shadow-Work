@@ -1,21 +1,17 @@
 {
   "$GMObject":"",
-  "%Name":"obj_enemy_corpse",
+  "%Name":"obj_persistent_parent",
   "eventList":[
-    {"$GMEvent":"v1","%Name":"","collisionObjectId":null,"eventNum":0,"eventType":8,"isDnD":false,"name":"","resourceType":"GMEvent","resourceVersion":"2.0",},
     {"$GMEvent":"v1","%Name":"","collisionObjectId":null,"eventNum":0,"eventType":0,"isDnD":false,"name":"","resourceType":"GMEvent","resourceVersion":"2.0",},
   ],
   "managed":true,
-  "name":"obj_enemy_corpse",
+  "name":"obj_persistent_parent",
   "overriddenProperties":[],
   "parent":{
-    "name":"mobs",
-    "path":"folders/Objects/mobs.yy",
+    "name":"Objects",
+    "path":"folders/Objects.yy",
   },
-  "parentObjectId":{
-    "name":"obj_persistent_parent",
-    "path":"objects/obj_persistent_parent/obj_persistent_parent.yy",
-  },
+  "parentObjectId":null,
   "persistent":false,
   "physicsAngularDamping":0.1,
   "physicsDensity":0.5,

@@ -1,8 +1,5 @@
 // Room End Event
-// Save current room state before leaving
+// Auto-save when leaving room (state already saved in room transition)
 if (instance_exists(obj_player)) {
-    save_current_room_state();
-
-    // Auto-save when leaving room
     auto_save();
 }

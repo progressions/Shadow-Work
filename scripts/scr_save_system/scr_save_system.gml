@@ -144,11 +144,17 @@ function serialize_inventory() {
 function serialize_enemies() {
     var enemies_array = [];
 
+    var enemy_count = instance_number(obj_enemy_parent);
+    show_debug_message("Serializing enemies in room " + room_get_name(room) + " - Found " + string(enemy_count) + " enemies");
+
     with (obj_enemy_parent) {
         // Skip enemies that don't have required properties (probably being destroyed)
         if (!variable_instance_exists(id, "hp") || !variable_instance_exists(id, "hp_max")) {
+            show_debug_message("Skipping enemy without hp properties: " + object_get_name(object_index));
             continue;
         }
+
+        show_debug_message("  Serializing enemy: " + object_get_name(object_index) + " at (" + string(x) + ", " + string(y) + ") HP: " + string(hp) + "/" + string(hp_max));
 
         // Serialize traits with stacks
         var traits_array = [];
@@ -382,8 +388,11 @@ function deserialize_inventory(data) {
 /// @description Spawn enemies from saved data
 /// @param {array} data Array of enemy data structs
 function deserialize_enemies(data) {
+    show_debug_message("Deserializing enemies. Count: " + string(array_length(data)));
+
     // First, destroy all existing enemies in room
     with (obj_enemy_parent) {
+        show_debug_message("Destroying existing enemy: " + object_get_name(object_index));
         instance_destroy();
     }
 
@@ -397,6 +406,8 @@ function deserialize_enemies(data) {
             show_debug_message("Warning: Unknown enemy object type: " + enemy_data.object_type);
             continue;
         }
+
+        show_debug_message("Spawning enemy: " + enemy_data.object_type + " at (" + string(enemy_data.x) + ", " + string(enemy_data.y) + ") HP: " + string(enemy_data.hp) + "/" + string(enemy_data.hp_max));
 
         // Create enemy instance
         var enemy = instance_create_depth(enemy_data.x, enemy_data.y, -50, obj_index);
@@ -526,22 +537,34 @@ function deserialize_quest_data(data) {
 /// @param {real} room_index The room to serialize (use 'room' for current room)
 /// @return {struct} Room state data
 function serialize_room_state(room_index) {
+    // Serialize ALL persistent objects (enemies, items, etc.)
+    var instances_array = [];
+    var saved_count = 0;
+
+    with (obj_persistent_parent) {
+        // Skip the player - they're handled separately and are already persistent
+        if (object_index == obj_player) {
+            continue;
+        }
+
+        // Skip companions - they're handled by room transition companion spawning
+        if (object_index == obj_companion_parent || object_is_ancestor(object_index, obj_companion_parent)) {
+            continue;
+        }
+
+        array_push(instances_array, serialize());
+        saved_count++;
+    }
+
+    show_debug_message("Serialized " + string(saved_count) + " persistent objects in room " + room_get_name(room_index));
+
     var room_data = {
         room_index: room_index,
-        enemies: serialize_enemies(),
-        opened_chests: global.opened_chests,
-        broken_breakables: global.broken_breakables,
-        picked_up_items: global.picked_up_items
+        instances: instances_array
     };
 
     // TODO: Add puzzle state tracking here when puzzle system is implemented
     // room_data.puzzle_state = serialize_puzzle_state();
-
-    show_debug_message("Serialized room state for room " + room_get_name(room_index));
-    show_debug_message("  Enemies: " + string(array_length(room_data.enemies)));
-    show_debug_message("  Opened chests: " + string(array_length(room_data.opened_chests)));
-    show_debug_message("  Broken breakables: " + string(array_length(room_data.broken_breakables)));
-    show_debug_message("  Picked up items: " + string(array_length(room_data.picked_up_items)));
 
     return room_data;
 }
@@ -560,32 +583,32 @@ function deserialize_room_state(room_index) {
     var room_data = global.room_states[$ room_key];
 
     show_debug_message("Restoring room state for room " + room_get_name(room_index));
+    show_debug_message("  Restoring " + string(array_length(room_data.instances)) + " persistent objects");
 
-    // Restore world state tracking arrays
-    global.opened_chests = room_data.opened_chests;
-    global.broken_breakables = room_data.broken_breakables;
-    global.picked_up_items = room_data.picked_up_items;
-
-    // Restore enemies
-    deserialize_enemies(room_data.enemies);
-
-    // Destroy items that were already picked up
-    show_debug_message("Checking picked up items. Total tracked: " + string(array_length(global.picked_up_items)));
-    for (var i = 0; i < array_length(global.picked_up_items); i++) {
-        show_debug_message("  Tracked ID [" + string(i) + "]: " + global.picked_up_items[i]);
-    }
-    with (obj_item_parent) {
-        if (variable_instance_exists(id, "item_spawn_id")) {
-            show_debug_message("Item found with spawn_id: " + item_spawn_id);
-            for (var i = 0; i < array_length(global.picked_up_items); i++) {
-                show_debug_message("  Comparing with tracked[" + string(i) + "]: " + global.picked_up_items[i]);
-                if (global.picked_up_items[i] == item_spawn_id) {
-                    show_debug_message("DESTROYING previously picked up item: " + item_spawn_id);
-                    instance_destroy();
-                    break;
-                }
-            }
+    // Destroy ALL existing persistent objects (except player)
+    with (obj_persistent_parent) {
+        if (object_index != obj_player) {
+            instance_destroy();
         }
+    }
+
+    // Recreate all persistent objects from saved data
+    for (var i = 0; i < array_length(room_data.instances); i++) {
+        var inst_data = room_data.instances[i];
+        var obj_index = asset_get_index(inst_data.object_type);
+
+        if (obj_index == -1) {
+            show_debug_message("Warning: Unknown object type: " + inst_data.object_type);
+            continue;
+        }
+
+        show_debug_message("  Spawning: " + inst_data.object_type + " at (" + string(inst_data.x) + ", " + string(inst_data.y) + ")");
+
+        // Create instance
+        var inst = instance_create_depth(inst_data.x, inst_data.y, -50, obj_index);
+
+        // Restore its state
+        inst.deserialize(inst_data);
     }
 
     // TODO: Restore puzzle state when puzzle system is implemented

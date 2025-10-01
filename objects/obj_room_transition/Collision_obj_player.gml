@@ -1,5 +1,11 @@
 // Collision with obj_player - Trigger room transition
 
+// Prevent multiple triggers
+if (variable_instance_exists(id, "triggered") && triggered) {
+    exit;
+}
+triggered = true;
+
 if (target_room != undefined) {
     show_debug_message("=== ROOM TRANSITION TRIGGERED ===");
     show_debug_message("Current room: " + room_get_name(room));
@@ -34,6 +40,16 @@ if (target_room != undefined) {
         y: spawn_y,
         companions: companion_data
     };
+
+    // Save current room state BEFORE room_goto (enemies only exist in current room)
+    var room_key = string(room);
+    show_debug_message("Saving room state before transition: " + room_get_name(room));
+    global.room_states[$ room_key] = serialize_room_state(room);
+
+    // Mark this room as visited
+    if (array_get_index(global.visited_rooms, room) == -1) {
+        array_push(global.visited_rooms, room);
+    }
 
     room_goto(target_room);
 }

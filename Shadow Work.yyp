@@ -107,6 +107,7 @@
     {"id":{"name":"obj_music_controller","path":"objects/obj_music_controller/obj_music_controller.yy",},},
     {"id":{"name":"obj_orc","path":"objects/obj_orc/obj_orc.yy",},},
     {"id":{"name":"obj_pause_controller","path":"objects/obj_pause_controller/obj_pause_controller.yy",},},
+    {"id":{"name":"obj_persistent_parent","path":"objects/obj_persistent_parent/obj_persistent_parent.yy",},},
     {"id":{"name":"obj_player_hands","path":"objects/obj_player_hands/obj_player_hands.yy",},},
     {"id":{"name":"obj_player","path":"objects/obj_player/obj_player.yy",},},
     {"id":{"name":"obj_reset_pad","path":"objects/obj_reset_pad/obj_reset_pad.yy",},},
