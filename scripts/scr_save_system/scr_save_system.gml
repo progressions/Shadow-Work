@@ -1,0 +1,825 @@
+// ============================================
+// SAVE SYSTEM
+// ============================================
+
+/// @function serialize_player()
+/// @description Serialize player data to a struct for saving
+function serialize_player() {
+    var player = obj_player;
+
+    // Serialize traits with stacks
+    var traits_array = [];
+    var trait_keys = variable_struct_get_names(player.permanent_traits);
+    for (var i = 0; i < array_length(trait_keys); i++) {
+        var trait_name = trait_keys[i];
+        var stacks = player.permanent_traits[$ trait_name];
+        array_push(traits_array, {
+            trait_name: trait_name,
+            stacks: stacks
+        });
+    }
+
+    // Add temporary traits
+    var temp_trait_keys = variable_struct_get_names(player.temporary_traits);
+    for (var i = 0; i < array_length(temp_trait_keys); i++) {
+        var trait_name = temp_trait_keys[i];
+        var stacks = player.temporary_traits[$ trait_name];
+        array_push(traits_array, {
+            trait_name: trait_name,
+            stacks: stacks,
+            is_temporary: true
+        });
+    }
+
+    // Serialize status effects
+    var status_effects_array = [];
+    for (var i = 0; i < array_length(player.status_effects); i++) {
+        var effect = player.status_effects[i];
+        array_push(status_effects_array, {
+            type: effect.type,
+            remaining_duration: effect.remaining_duration,
+            tick_timer: effect.tick_timer,
+            is_permanent: effect.is_permanent,
+            neutralized: effect.neutralized
+        });
+    }
+
+    return {
+        x: player.x,
+        y: player.y,
+        hp: player.hp,
+        hp_total: player.hp_total,
+        xp: player.xp,
+        level: player.level,
+        facing_dir: player.facing_dir,
+        state: player.state,
+        dash_cooldown: player.dash_cooldown,
+        is_two_handing: player.is_two_handing,
+        traits: traits_array,
+        tags: player.tags,
+        status_effects: status_effects_array
+    };
+}
+
+/// @function serialize_companions()
+/// @description Serialize all companion data to array for saving
+function serialize_companions() {
+    var companions_array = [];
+
+    with (obj_companion_parent) {
+        // Serialize triggers
+        var triggers_data = {};
+        var trigger_names = variable_struct_get_names(triggers);
+        for (var i = 0; i < array_length(trigger_names); i++) {
+            var trigger_name = trigger_names[i];
+            var trigger = triggers[$ trigger_name];
+            triggers_data[$ trigger_name] = {
+                unlocked: trigger.unlocked,
+                cooldown: trigger.cooldown,
+                active: trigger.active
+            };
+        }
+
+        // Serialize auras
+        var auras_data = {};
+        var aura_names = variable_struct_get_names(auras);
+        for (var i = 0; i < array_length(aura_names); i++) {
+            var aura_name = aura_names[i];
+            var aura = auras[$ aura_name];
+            auras_data[$ aura_name] = {
+                active: aura.active
+            };
+        }
+
+        array_push(companions_array, {
+            companion_id: companion_id,
+            x: x,
+            y: y,
+            is_recruited: is_recruited,
+            state: state,
+            affinity: affinity,
+            quest_flags: quest_flags,
+            dialogue_history: dialogue_history,
+            relationship_stage: relationship_stage,
+            triggers: triggers_data,
+            auras: auras_data
+        });
+    }
+
+    return companions_array;
+}
+
+/// @function serialize_inventory()
+/// @description Serialize inventory and equipped items
+function serialize_inventory() {
+    var player = obj_player;
+
+    // Serialize inventory array - store item IDs and counts
+    var inventory_array = [];
+    for (var i = 0; i < array_length(player.inventory); i++) {
+        var item = player.inventory[i];
+        array_push(inventory_array, {
+            item_id: item.definition.item_id,
+            count: item.count,
+            durability: item.durability
+        });
+    }
+
+    // Serialize equipped items - store item IDs or undefined
+    var equipped_data = {
+        right_hand: (player.equipped.right_hand != undefined) ? player.equipped.right_hand.definition.item_id : undefined,
+        left_hand: (player.equipped.left_hand != undefined) ? player.equipped.left_hand.definition.item_id : undefined,
+        head: (player.equipped.head != undefined) ? player.equipped.head.definition.item_id : undefined,
+        torso: (player.equipped.torso != undefined) ? player.equipped.torso.definition.item_id : undefined,
+        legs: (player.equipped.legs != undefined) ? player.equipped.legs.definition.item_id : undefined
+    };
+
+    return {
+        inventory: inventory_array,
+        equipped: equipped_data
+    };
+}
+
+/// @function serialize_enemies()
+/// @description Serialize all enemies in current room
+function serialize_enemies() {
+    var enemies_array = [];
+
+    with (obj_enemy_parent) {
+        // Serialize traits with stacks
+        var traits_array = [];
+        for (var i = 0; i < array_length(traits); i++) {
+            var trait = traits[i];
+            array_push(traits_array, {
+                trait_name: trait.name,
+                stacks: trait.stacks
+            });
+        }
+
+        // Serialize status effects
+        var status_effects_array = [];
+        for (var i = 0; i < array_length(status_effects); i++) {
+            var effect = status_effects[i];
+            array_push(status_effects_array, {
+                type: effect.type,
+                remaining_duration: effect.remaining_duration,
+                tick_timer: effect.tick_timer,
+                is_permanent: effect.is_permanent,
+                neutralized: effect.neutralized
+            });
+        }
+
+        array_push(enemies_array, {
+            object_type: object_get_name(object_index),
+            x: x,
+            y: y,
+            hp: hp,
+            hp_max: hp_max,
+            state: state,
+            facing_dir: facing_dir,
+            traits: traits_array,
+            tags: tags,
+            status_effects: status_effects_array
+        });
+    }
+
+    return enemies_array;
+}
+
+/// @function deserialize_player(data)
+/// @description Restore player data from save struct
+/// @param {struct} data The player data struct
+function deserialize_player(data) {
+    var player = obj_player;
+
+    // Restore basic properties
+    player.x = data.x;
+    player.y = data.y;
+    player.hp = data.hp;
+    player.hp_total = data.hp_total;
+    player.xp = data.xp;
+    player.level = data.level;
+    player.facing_dir = data.facing_dir;
+    player.state = data.state;
+    player.dash_cooldown = data.dash_cooldown;
+    player.is_two_handing = data.is_two_handing;
+
+    // Restore tags
+    player.tags = data.tags;
+
+    // Restore traits
+    player.permanent_traits = {};
+    player.temporary_traits = {};
+    for (var i = 0; i < array_length(data.traits); i++) {
+        var trait_data = data.traits[i];
+        var is_temp = trait_data[$ "is_temporary"] ?? false;
+
+        if (is_temp) {
+            player.temporary_traits[$ trait_data.trait_name] = trait_data.stacks;
+        } else {
+            player.permanent_traits[$ trait_data.trait_name] = trait_data.stacks;
+        }
+    }
+
+    // Restore status effects
+    player.status_effects = [];
+    for (var i = 0; i < array_length(data.status_effects); i++) {
+        var effect_data = data.status_effects[i];
+
+        // Apply the status effect
+        apply_status_effect(effect_data.type, effect_data.remaining_duration, effect_data.is_permanent);
+
+        // Manually set tick_timer and neutralized state
+        var effect_index = array_length(player.status_effects) - 1;
+        if (effect_index >= 0) {
+            player.status_effects[effect_index].tick_timer = effect_data.tick_timer;
+            player.status_effects[effect_index].neutralized = effect_data.neutralized;
+        }
+    }
+}
+
+/// @function deserialize_companions(data)
+/// @description Restore or recreate companions from save data
+/// @param {array} data Array of companion data structs
+function deserialize_companions(data) {
+    // First, destroy any existing companions
+    with (obj_companion_parent) {
+        instance_destroy();
+    }
+
+    // Recreate companions from saved data
+    for (var i = 0; i < array_length(data); i++) {
+        var comp_data = data[i];
+
+        // Determine which companion object to create
+        var companion_obj = noone;
+        switch (comp_data.companion_id) {
+            case "canopy":
+                companion_obj = obj_canopy;
+                break;
+            // Add other companions as they're implemented
+            default:
+                show_debug_message("Warning: Unknown companion_id: " + comp_data.companion_id);
+                continue;
+        }
+
+        // Create companion instance
+        var companion = instance_create_depth(comp_data.x, comp_data.y, -100, companion_obj);
+
+        // Restore companion properties
+        companion.is_recruited = comp_data.is_recruited;
+        companion.state = comp_data.state;
+        companion.affinity = comp_data.affinity;
+        companion.quest_flags = comp_data.quest_flags;
+        companion.dialogue_history = comp_data.dialogue_history;
+        companion.relationship_stage = comp_data.relationship_stage;
+
+        // Restore triggers
+        var trigger_names = variable_struct_get_names(comp_data.triggers);
+        for (var j = 0; j < array_length(trigger_names); j++) {
+            var trigger_name = trigger_names[j];
+            var trigger_data = comp_data.triggers[$ trigger_name];
+
+            if (variable_struct_exists(companion.triggers, trigger_name)) {
+                companion.triggers[$ trigger_name].unlocked = trigger_data.unlocked;
+                companion.triggers[$ trigger_name].cooldown = trigger_data.cooldown;
+                companion.triggers[$ trigger_name].active = trigger_data.active;
+            }
+        }
+
+        // Restore auras
+        var aura_names = variable_struct_get_names(comp_data.auras);
+        for (var j = 0; j < array_length(aura_names); j++) {
+            var aura_name = aura_names[j];
+            var aura_data = comp_data.auras[$ aura_name];
+
+            if (variable_struct_exists(companion.auras, aura_name)) {
+                companion.auras[$ aura_name].active = aura_data.active;
+            }
+        }
+    }
+}
+
+/// @function deserialize_inventory(data)
+/// @description Restore inventory and re-equip items
+/// @param {struct} data Inventory data struct
+function deserialize_inventory(data) {
+    var player = obj_player;
+
+    // Clear current inventory
+    player.inventory = [];
+
+    // Restore inventory items
+    for (var i = 0; i < array_length(data.inventory); i++) {
+        var item_data = data.inventory[i];
+        var item_def = global.item_database[$ item_data.item_id];
+
+        if (item_def != undefined) {
+            var item_instance = {
+                definition: item_def,
+                count: item_data.count,
+                durability: item_data.durability
+            };
+            array_push(player.inventory, item_instance);
+        } else {
+            show_debug_message("Warning: Unknown item_id in save: " + item_data.item_id);
+        }
+    }
+
+    // Unequip all current items (without removing wielder effects yet)
+    player.equipped = {
+        right_hand: undefined,
+        left_hand: undefined,
+        head: undefined,
+        torso: undefined,
+        legs: undefined
+    };
+
+    // Re-equip items from save data
+    // NOTE: We don't apply wielder effects here because player status effects
+    // are already restored from the save file (including permanent wielder effects)
+    var slot_names = ["right_hand", "left_hand", "head", "torso", "legs"];
+    for (var i = 0; i < array_length(slot_names); i++) {
+        var slot = slot_names[i];
+        var item_id = data.equipped[$ slot];
+
+        if (item_id != undefined) {
+            var item_def = global.item_database[$ item_id];
+            if (item_def != undefined) {
+                // Create inventory item instance (matching your inventory structure)
+                var item_instance = {
+                    definition: item_def,
+                    count: 1,
+                    durability: 100
+                };
+                player.equipped[$ slot] = item_instance;
+
+                // DON'T call apply_wielder_effects() here - status effects already restored!
+            }
+        }
+    }
+}
+
+/// @function deserialize_enemies(data)
+/// @description Spawn enemies from saved data
+/// @param {array} data Array of enemy data structs
+function deserialize_enemies(data) {
+    // First, destroy all existing enemies in room
+    with (obj_enemy_parent) {
+        instance_destroy();
+    }
+
+    // Spawn enemies from saved data
+    for (var i = 0; i < array_length(data); i++) {
+        var enemy_data = data[i];
+
+        // Get object index from name
+        var obj_index = asset_get_index(enemy_data.object_type);
+        if (obj_index == -1) {
+            show_debug_message("Warning: Unknown enemy object type: " + enemy_data.object_type);
+            continue;
+        }
+
+        // Create enemy instance
+        var enemy = instance_create_depth(enemy_data.x, enemy_data.y, -50, obj_index);
+
+        // Restore basic properties
+        enemy.hp = enemy_data.hp;
+        enemy.hp_max = enemy_data.hp_max;
+        enemy.state = enemy_data.state;
+        enemy.facing_dir = enemy_data.facing_dir;
+        enemy.tags = enemy_data.tags;
+
+        // Restore traits
+        enemy.traits = [];
+        for (var j = 0; j < array_length(enemy_data.traits); j++) {
+            var trait_data = enemy_data.traits[j];
+            // Add trait the appropriate number of times for stacks
+            for (var k = 0; k < trait_data.stacks; k++) {
+                add_trait(trait_data.trait_name);
+            }
+        }
+
+        // Restore status effects
+        enemy.status_effects = [];
+        for (var j = 0; j < array_length(enemy_data.status_effects); j++) {
+            var effect_data = enemy_data.status_effects[j];
+
+            // Apply the status effect
+            with (enemy) {
+                apply_status_effect(effect_data.type, effect_data.remaining_duration, effect_data.is_permanent);
+
+                // Manually set tick_timer and neutralized state
+                var effect_index = array_length(status_effects) - 1;
+                if (effect_index >= 0) {
+                    status_effects[effect_index].tick_timer = effect_data.tick_timer;
+                    status_effects[effect_index].neutralized = effect_data.neutralized;
+                }
+            }
+        }
+    }
+}
+
+// ============================================
+// QUEST SYSTEM FUNCTIONS
+// ============================================
+
+/// @function set_quest_flag(key, value)
+/// @description Set a boolean quest flag
+/// @param {string} key The quest flag identifier
+/// @param {bool} value The flag value (true/false)
+function set_quest_flag(key, value) {
+    global.quest_flags[$ key] = value;
+    show_debug_message("Quest flag set: " + key + " = " + string(value));
+}
+
+/// @function get_quest_flag(key)
+/// @description Get a boolean quest flag (returns false if not set)
+/// @param {string} key The quest flag identifier
+/// @return {bool} The flag value
+function get_quest_flag(key) {
+    if (variable_struct_exists(global.quest_flags, key)) {
+        return global.quest_flags[$ key];
+    }
+    return false;
+}
+
+/// @function increment_quest_counter(key, amount)
+/// @description Increment a numeric quest counter
+/// @param {string} key The quest counter identifier
+/// @param {real} amount The amount to increment by (default 1)
+function increment_quest_counter(key, amount = 1) {
+    if (variable_struct_exists(global.quest_counters, key)) {
+        global.quest_counters[$ key] += amount;
+    } else {
+        global.quest_counters[$ key] = amount;
+    }
+    show_debug_message("Quest counter updated: " + key + " = " + string(global.quest_counters[$ key]));
+}
+
+/// @function get_quest_counter(key)
+/// @description Get a numeric quest counter (returns 0 if not set)
+/// @param {string} key The quest counter identifier
+/// @return {real} The counter value
+function get_quest_counter(key) {
+    if (variable_struct_exists(global.quest_counters, key)) {
+        return global.quest_counters[$ key];
+    }
+    return 0;
+}
+
+/// @function set_quest_counter(key, value)
+/// @description Set a numeric quest counter to a specific value
+/// @param {string} key The quest counter identifier
+/// @param {real} value The value to set
+function set_quest_counter(key, value) {
+    global.quest_counters[$ key] = value;
+    show_debug_message("Quest counter set: " + key + " = " + string(value));
+}
+
+/// @function serialize_quest_data()
+/// @description Serialize quest flags and counters to structs for JSON saving
+/// @return {struct} Struct containing quest_flags and quest_counters
+function serialize_quest_data() {
+    return {
+        quest_flags: global.quest_flags,
+        quest_counters: global.quest_counters
+    };
+}
+
+/// @function deserialize_quest_data(data)
+/// @description Restore quest flags and counters from save data
+/// @param {struct} data The quest data struct
+function deserialize_quest_data(data) {
+    global.quest_flags = data.quest_flags;
+    global.quest_counters = data.quest_counters;
+
+    show_debug_message("Quest data restored:");
+    show_debug_message("  Flags: " + string(variable_struct_names_count(global.quest_flags)));
+    show_debug_message("  Counters: " + string(variable_struct_names_count(global.quest_counters)));
+}
+
+// ============================================
+// ROOM STATE PERSISTENCE FUNCTIONS
+// ============================================
+
+/// @function serialize_room_state(room_index)
+/// @description Serialize the current room's state for persistence
+/// @param {real} room_index The room to serialize (use 'room' for current room)
+/// @return {struct} Room state data
+function serialize_room_state(room_index) {
+    var room_data = {
+        room_index: room_index,
+        enemies: serialize_enemies(),
+        opened_chests: global.opened_chests,
+        broken_breakables: global.broken_breakables,
+        picked_up_items: global.picked_up_items
+    };
+
+    // TODO: Add puzzle state tracking here when puzzle system is implemented
+    // room_data.puzzle_state = serialize_puzzle_state();
+
+    show_debug_message("Serialized room state for room " + room_get_name(room_index));
+    show_debug_message("  Enemies: " + string(array_length(room_data.enemies)));
+    show_debug_message("  Opened chests: " + string(array_length(room_data.opened_chests)));
+    show_debug_message("  Broken breakables: " + string(array_length(room_data.broken_breakables)));
+    show_debug_message("  Picked up items: " + string(array_length(room_data.picked_up_items)));
+
+    return room_data;
+}
+
+/// @function deserialize_room_state(room_index)
+/// @description Restore a room's state from saved data
+/// @param {real} room_index The room to restore
+function deserialize_room_state(room_index) {
+    var room_key = string(room_index);
+
+    if (!variable_struct_exists(global.room_states, room_key)) {
+        show_debug_message("No saved state for room " + room_get_name(room_index));
+        return false;
+    }
+
+    var room_data = global.room_states[$ room_key];
+
+    show_debug_message("Restoring room state for room " + room_get_name(room_index));
+
+    // Restore world state tracking arrays
+    global.opened_chests = room_data.opened_chests;
+    global.broken_breakables = room_data.broken_breakables;
+    global.picked_up_items = room_data.picked_up_items;
+
+    // Restore enemies
+    deserialize_enemies(room_data.enemies);
+
+    // Mark chests as opened
+    with (obj_chest_parent) {
+        // Check if this chest's ID is in the opened list
+        if (variable_instance_exists(id, "chest_id")) {
+            for (var i = 0; i < array_length(global.opened_chests); i++) {
+                if (global.opened_chests[i] == chest_id) {
+                    opened = true;
+                    sprite_index = spr_chest_open; // Assuming you have this sprite
+                    break;
+                }
+            }
+        }
+    }
+
+    // Destroy breakables that were already broken
+    with (obj_breakable_parent) {
+        if (variable_instance_exists(id, "breakable_id")) {
+            for (var i = 0; i < array_length(global.broken_breakables); i++) {
+                if (global.broken_breakables[i] == breakable_id) {
+                    instance_destroy();
+                    break;
+                }
+            }
+        }
+    }
+
+    // Destroy items that were already picked up
+    with (obj_item_parent) {
+        if (variable_instance_exists(id, "item_spawn_id")) {
+            for (var i = 0; i < array_length(global.picked_up_items); i++) {
+                if (global.picked_up_items[i] == item_spawn_id) {
+                    instance_destroy();
+                    break;
+                }
+            }
+        }
+    }
+
+    // TODO: Restore puzzle state when puzzle system is implemented
+    // deserialize_puzzle_state(room_data.puzzle_state);
+
+    show_debug_message("Room state restored successfully");
+    return true;
+}
+
+/// @function save_current_room_state()
+/// @description Save the current room's state before leaving
+function save_current_room_state() {
+    var room_key = string(room);
+
+    // Add to visited rooms if not already there
+    var already_visited = false;
+    for (var i = 0; i < array_length(global.visited_rooms); i++) {
+        if (global.visited_rooms[i] == room) {
+            already_visited = true;
+            break;
+        }
+    }
+
+    if (!already_visited) {
+        array_push(global.visited_rooms, room);
+    }
+
+    // Save room state
+    global.room_states[$ room_key] = serialize_room_state(room);
+
+    show_debug_message("Saved state for room: " + room_get_name(room));
+}
+
+/// @function restore_room_state_if_visited()
+/// @description Restore room state if this room has been visited before
+function restore_room_state_if_visited() {
+    var room_key = string(room);
+
+    if (variable_struct_exists(global.room_states, room_key)) {
+        deserialize_room_state(room);
+        show_debug_message("Restored previously visited room: " + room_get_name(room));
+    } else {
+        show_debug_message("First visit to room: " + room_get_name(room));
+        // Reset tracking arrays for new room
+        global.opened_chests = [];
+        global.broken_breakables = [];
+        global.picked_up_items = [];
+    }
+}
+
+// ============================================
+// SAVE/LOAD CORE FUNCTIONS
+// ============================================
+
+/// @function save_game(slot)
+/// @description Save the complete game state to a JSON file
+/// @param {real} slot The save slot number (1-5) or "autosave" for auto-save
+function save_game(slot) {
+    show_debug_message("=== SAVING GAME TO SLOT " + string(slot) + " ===");
+
+    // Build root save struct
+    var save_data = {
+        save_version: 1,
+        timestamp: current_time,
+        current_room: room,
+
+        // Serialize all game state
+        player: serialize_player(),
+        companions: serialize_companions(),
+        inventory: serialize_inventory(),
+        quest_data: serialize_quest_data(),
+        room_states: global.room_states,
+        visited_rooms: global.visited_rooms,
+
+        // Chatterbox dialogue variables
+        chatterbox_vars: ChatterboxVariablesExport()
+    };
+
+    // Convert to JSON
+    var json_string = json_stringify(save_data);
+
+    // Determine filename
+    var filename = (slot == "autosave") ? "autosave.json" : ("save_slot_" + string(slot) + ".json");
+
+    // Write to file
+    try {
+        var file = file_text_open_write(filename);
+        file_text_write_string(file, json_string);
+        file_text_close(file);
+
+        show_debug_message("Game saved successfully to: " + filename);
+        show_debug_message("  Save version: 1");
+        show_debug_message("  Current room: " + room_get_name(room));
+        show_debug_message("  Player HP: " + string(obj_player.hp) + "/" + string(obj_player.hp_total));
+        show_debug_message("  Companions: " + string(array_length(save_data.companions)));
+        show_debug_message("  Inventory items: " + string(array_length(save_data.inventory.inventory)));
+        show_debug_message("  Visited rooms: " + string(array_length(save_data.visited_rooms)));
+
+        return true;
+    } catch (error) {
+        show_debug_message("ERROR: Failed to save game to " + filename);
+        show_debug_message("Error: " + string(error));
+        return false;
+    }
+}
+
+/// @function load_game(slot)
+/// @description Load the complete game state from a JSON file
+/// @param {real} slot The save slot number (1-5) or "autosave" for auto-save
+function load_game(slot) {
+    show_debug_message("=== LOADING GAME FROM SLOT " + string(slot) + " ===");
+
+    // Determine filename
+    var filename = (slot == "autosave") ? "autosave.json" : ("save_slot_" + string(slot) + ".json");
+
+    // Check if save file exists
+    if (!file_exists(filename)) {
+        show_debug_message("ERROR: Save file does not exist: " + filename);
+        return false;
+    }
+
+    try {
+        // Read JSON file
+        var file = file_text_open_read(filename);
+        var json_string = "";
+
+        while (!file_text_eof(file)) {
+            json_string += file_text_read_string(file);
+            file_text_readln(file);
+        }
+
+        file_text_close(file);
+
+        // Parse JSON
+        var save_data = json_parse(json_string);
+
+        // Check save version
+        if (save_data.save_version != 1) {
+            show_debug_message("WARNING: Save file version mismatch. Expected 1, got " + string(save_data.save_version));
+            show_debug_message("Attempting to load anyway...");
+        }
+
+        show_debug_message("Save file loaded successfully");
+        show_debug_message("  Save version: " + string(save_data.save_version));
+        show_debug_message("  Timestamp: " + string(save_data.timestamp));
+        show_debug_message("  Saved room: " + room_get_name(save_data.current_room));
+
+        // Check if we need to transition to a different room
+        if (room != save_data.current_room) {
+            show_debug_message("Room transition needed: " + room_get_name(room) + " -> " + room_get_name(save_data.current_room));
+
+            // Store save data globally for restoration after room transition
+            global.pending_save_data = save_data;
+
+            // Transition to the saved room
+            room_goto(save_data.current_room);
+
+            // Restoration will happen in Room Start event
+            return true;
+        }
+
+        // If we're already in the correct room, restore immediately
+        restore_save_data(save_data);
+
+        return true;
+
+    } catch (error) {
+        show_debug_message("ERROR: Failed to load game from " + filename);
+        show_debug_message("Error: " + string(error));
+        return false;
+    }
+}
+
+/// @function restore_save_data(save_data)
+/// @description Restore game state from parsed save data
+/// @param {struct} save_data The parsed save data
+function restore_save_data(save_data) {
+    show_debug_message("=== RESTORING GAME STATE ===");
+
+    // Restore player data
+    deserialize_player(save_data.player);
+    show_debug_message("Player restored");
+
+    // Restore companions
+    deserialize_companions(save_data.companions);
+    show_debug_message("Companions restored: " + string(array_length(save_data.companions)));
+
+    // Restore inventory
+    deserialize_inventory(save_data.inventory);
+    show_debug_message("Inventory restored");
+
+    // Restore quest data
+    deserialize_quest_data(save_data.quest_data);
+    show_debug_message("Quest data restored");
+
+    // Restore room states
+    global.room_states = save_data.room_states;
+    global.visited_rooms = save_data.visited_rooms;
+    show_debug_message("Room states restored: " + string(variable_struct_names_count(global.room_states)) + " rooms");
+
+    // Restore current room state
+    restore_room_state_if_visited();
+
+    // Restore Chatterbox variables
+    if (variable_struct_exists(save_data, "chatterbox_vars")) {
+        ChatterboxVariablesImport(save_data.chatterbox_vars);
+        show_debug_message("Chatterbox variables restored");
+    }
+
+    // Clear pending save data
+    if (variable_global_exists("pending_save_data")) {
+        global.pending_save_data = undefined;
+    }
+
+    show_debug_message("=== GAME STATE RESTORED SUCCESSFULLY ===");
+}
+
+/// @function check_for_pending_save_restore()
+/// @description Check if there's a pending save to restore after room transition
+/// Call this in obj_game_controller Room Start event
+function check_for_pending_save_restore() {
+    if (variable_global_exists("pending_save_data") && global.pending_save_data != undefined) {
+        show_debug_message("Pending save data detected - restoring now");
+        restore_save_data(global.pending_save_data);
+    }
+}
+
+// ============================================
+// AUTO-SAVE SYSTEM
+// ============================================
+
+/// @function auto_save()
+/// @description Automatically save the game to the autosave slot
+function auto_save() {
+    return save_game("autosave");
+}

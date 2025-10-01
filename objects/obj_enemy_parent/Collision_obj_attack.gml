@@ -90,6 +90,9 @@ if (alarm[1] < 0) {
 	     // Play enemy death sound
 	     play_enemy_sfx("on_death");
 
+	     // Track enemy defeat for quest system
+	     increment_quest_counter("enemies_defeated", 1);
+
 	     show_debug_message("Enemy state set to dead");
 	 }
 

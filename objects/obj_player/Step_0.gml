@@ -258,3 +258,37 @@ if (keyboard_check_pressed(ord("P"))) {
     var _current_terrain = get_terrain_at_position(x, y);
     show_debug_message(">>> Current terrain: " + _current_terrain);
 }
+
+// ============================================
+// DEBUG SAVE/LOAD KEYS
+// ============================================
+
+// F5 - Save to slot 1
+if (keyboard_check_pressed(vk_f5)) {
+    save_game(1);
+    show_debug_message("=== MANUAL SAVE TO SLOT 1 ===");
+}
+
+// F9 - Load from slot 1
+if (keyboard_check_pressed(vk_f9)) {
+    load_game(1);
+    show_debug_message("=== MANUAL LOAD FROM SLOT 1 ===");
+}
+
+// F6 - Save to slot 2
+if (keyboard_check_pressed(vk_f6)) {
+    save_game(2);
+    show_debug_message("=== MANUAL SAVE TO SLOT 2 ===");
+}
+
+// F10 - Load from slot 2
+if (keyboard_check_pressed(vk_f10)) {
+    load_game(2);
+    show_debug_message("=== MANUAL LOAD FROM SLOT 2 ===");
+}
+
+// F8 - Load from autosave
+if (keyboard_check_pressed(vk_f8)) {
+    load_game("autosave");
+    show_debug_message("=== LOAD FROM AUTOSAVE ===");
+}

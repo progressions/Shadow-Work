@@ -24,6 +24,16 @@ function player_handle_pickup() {
 
             show_debug_message("Picked up " + string(_count) + " " + _item_def.name);
 
+            // Track item pickup for quest system
+            increment_quest_counter("items_collected", _count);
+            // Track specific item pickups with item_id as counter key
+            increment_quest_counter("item_" + _item_def.item_id, _count);
+
+            // Track picked up item for room state persistence
+            if (variable_instance_exists(_instance, "item_spawn_id")) {
+                array_push(global.picked_up_items, _instance.item_spawn_id);
+            }
+
             // Auto-equip logic
             if (_item_def.type == ItemType.weapon || _item_def.type == ItemType.armor || _item_def.type == ItemType.tool) {
 

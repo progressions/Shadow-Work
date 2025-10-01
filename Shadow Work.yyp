@@ -257,6 +257,7 @@
     {"id":{"name":"scr_inventory_system","path":"scripts/scr_inventory_system/scr_inventory_system.yy",},},
     {"id":{"name":"scr_item_database","path":"scripts/scr_item_database/scr_item_database.yy",},},
     {"id":{"name":"scr_music_functions","path":"scripts/scr_music_functions/scr_music_functions.yy",},},
+    {"id":{"name":"scr_save_system","path":"scripts/scr_save_system/scr_save_system.yy",},},
     {"id":{"name":"scr_sfx_functions","path":"scripts/scr_sfx_functions/scr_sfx_functions.yy",},},
     {"id":{"name":"scr_status_effects","path":"scripts/scr_status_effects/scr_status_effects.yy",},},
     {"id":{"name":"scr_ui_functions","path":"scripts/scr_ui_functions/scr_ui_functions.yy",},},

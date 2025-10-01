@@ -282,3 +282,16 @@ ChatterboxAddFunction("bg", background_set_index);
 
 // Declare Chatterbox variables for companions
 ChatterboxVariableDefault("canopy_recruited", false);
+
+// Initialize quest system
+global.quest_flags = {};      // Boolean quest flags (struct instead of ds_map for JSON compatibility)
+global.quest_counters = {};   // Numeric quest counters
+
+// Initialize room state persistence system
+global.room_states = {};      // Struct keyed by room name/index - stores state of each visited room
+global.visited_rooms = [];    // Array of visited room indices
+
+// Initialize world state tracking
+global.opened_chests = [];    // Array of opened chest IDs
+global.broken_breakables = []; // Array of broken breakable IDs
+global.picked_up_items = [];  // Array of picked-up item spawn IDs

@@ -1,0 +1,1 @@
+// load current room state from global room states
