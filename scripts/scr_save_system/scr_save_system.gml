@@ -245,8 +245,10 @@ function deserialize_player(data) {
     for (var i = 0; i < array_length(data.status_effects); i++) {
         var effect_data = data.status_effects[i];
 
-        // Apply the status effect
-        apply_status_effect(effect_data.type, effect_data.remaining_duration, effect_data.is_permanent);
+        // Apply the status effect in player context
+        with (player) {
+            apply_status_effect(effect_data.type, effect_data.remaining_duration, effect_data.is_permanent);
+        }
 
         // Manually set tick_timer and neutralized state
         var effect_index = array_length(player.status_effects) - 1;
