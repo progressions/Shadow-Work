@@ -96,6 +96,9 @@ function evaluate_companion_triggers(player_instance) {
                     companion.shield_timer = 0;
                 }
                 companion.shield_timer = companion.triggers.shield.duration;
+
+                // Spawn floating text
+                spawn_floating_text(companion.x, companion.bbox_top - 10, "Shield!", c_aqua, companion);
             }
         }
 
