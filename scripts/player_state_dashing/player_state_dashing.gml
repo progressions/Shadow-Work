@@ -28,8 +28,10 @@ function player_state_dashing() {
     move_and_collide(dash_x, dash_y, tilemap);
     move_dir = "dash";
 
-    // Check for pillar interaction while dashing
-    player_move_onto_pillar();
+    // Check for pillar interaction while dashing (only in grid puzzle rooms)
+    if (instance_exists(obj_grid_controller)) {
+        player_move_onto_pillar();
+    }
 
     // Update dash cooldown
     if (dash_cooldown > 0) {

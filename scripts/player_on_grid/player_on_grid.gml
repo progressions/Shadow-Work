@@ -1,4 +1,11 @@
 function player_on_grid(){
+    // Safety check - if no grid controller exists, return to idle state
+    if (!instance_exists(obj_grid_controller)) {
+        state = PlayerState.idle;
+        move_dir = "idle";
+        return;
+    }
+
     // Stop all footstep sounds when on grid
     stop_all_footstep_sounds();
 

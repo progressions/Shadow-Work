@@ -73,8 +73,10 @@ function player_state_walking() {
         }
     }
 
-    // Check for pillar interaction while walking
-    player_move_onto_pillar();
+    // Check for pillar interaction while walking (only in grid puzzle rooms)
+    if (instance_exists(obj_grid_controller)) {
+        player_move_onto_pillar();
+    }
 
     // Handle knockback
     player_handle_knockback();

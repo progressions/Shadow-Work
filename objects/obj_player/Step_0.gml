@@ -17,7 +17,9 @@ if (elevation_source != noone) {
     current_elevation = -1;
 }
 
-GRID_Y_OFFSET = obj_grid_controller.GRID_Y_OFFSET;
+if (instance_exists(obj_grid_controller)) {
+    GRID_Y_OFFSET = obj_grid_controller.GRID_Y_OFFSET;
+}
 
 
 #region Movement
