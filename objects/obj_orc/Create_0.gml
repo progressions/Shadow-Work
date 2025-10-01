@@ -10,7 +10,8 @@ hp_total = hp;
 move_speed = 0.8;
 
 // Orc traits - fire-born warrior, immune to fire but weak to ice
-apply_tag_traits("fireborne");
+array_push(tags, "fireborne");
+apply_tag_traits();
 
 enemy_sounds.on_aggro = snd_orc_aggro;
 enemy_sounds.on_death = snd_orc_death;

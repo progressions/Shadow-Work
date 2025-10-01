@@ -13,6 +13,7 @@ xp = 0;
 xp_to_next = 25;
 
 // Trait system v2.0 - Stacking traits (replaces old damage_resistances)
+tags = []; // Thematic descriptors (fireborne, venomous, etc.)
 permanent_traits = {}; // From tags, quests (permanent)
 temporary_traits = {};  // From equipment, companions, buffs (temporary)
 

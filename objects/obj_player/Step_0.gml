@@ -154,41 +154,51 @@ if (keyboard_check_pressed(ord("8"))) {
     show_debug_message("Gained 10 XP via debug key");
 }
 
-// Debug keys for testing trait system
+// Debug keys for testing trait system v2.0
 if (keyboard_check_pressed(ord("T"))) {
-    add_trait("fireborne");
-    show_debug_message("Added fireborne trait to player. Current traits: " + json_stringify(traits));
+    // Add fire_resistance trait (3 stacks)
+    add_temporary_trait("fire_resistance", 3);
+    show_debug_message("Added 3 stacks of fire_resistance to player");
 }
 
 if (keyboard_check_pressed(ord("Y"))) {
-    var nearest_enemy = instance_nearest(x, y, obj_enemy_parent);
-    if (nearest_enemy != noone && point_distance(x, y, nearest_enemy.x, nearest_enemy.y) < 200) {
-        with (nearest_enemy) {
-            add_trait("arboreal");
-            show_debug_message("Added arboreal trait to enemy. Current traits: " + json_stringify(traits));
-        }
-    } else {
-        show_debug_message("No enemy nearby to add trait");
-    }
+    // Add fire_vulnerability trait (2 stacks)
+    add_temporary_trait("fire_vulnerability", 2);
+    show_debug_message("Added 2 stacks of fire_vulnerability to player (should cancel 2 resistance stacks)");
 }
 
 if (keyboard_check_pressed(ord("U"))) {
-    traits = [];
-    show_debug_message("Removed all traits from player");
+    // Clear all temporary traits
+    temporary_traits = {};
+    show_debug_message("Cleared all temporary traits from player");
+}
+
+if (keyboard_check_pressed(ord("I"))) {
+    // Add fireborne tag (grants fire immunity)
+    if (!array_contains(tags, "fireborne")) {
+        array_push(tags, "fireborne");
+        apply_tag_traits();
+        show_debug_message("Added fireborne tag to player (grants fire_immunity)");
+    }
 }
 
 if (keyboard_check_pressed(ord("O"))) {
-    show_debug_message("=== PLAYER TRAITS ===");
-    show_debug_message("Traits: " + json_stringify(traits));
-    show_debug_message("Count: " + string(array_length(traits)));
+    show_debug_message("=== PLAYER TRAIT STATUS ===");
+    show_debug_message("Tags: " + json_stringify(tags));
+    show_debug_message("Permanent Traits: " + json_stringify(permanent_traits));
+    show_debug_message("Temporary Traits: " + json_stringify(temporary_traits));
+    show_debug_message("Fire Resistance Stacks: " + string(get_total_trait_stacks("fire_resistance")));
+    show_debug_message("Fire Vulnerability Stacks: " + string(get_total_trait_stacks("fire_vulnerability")));
+    show_debug_message("Fire Damage Modifier: " + string(get_damage_modifier_for_type(DamageType.fire)));
 
     // Show nearest enemy traits too
     var nearest_enemy = instance_nearest(x, y, obj_enemy_parent);
     if (nearest_enemy != noone && point_distance(x, y, nearest_enemy.x, nearest_enemy.y) < 200) {
         with (nearest_enemy) {
-            show_debug_message("=== NEAREST ENEMY TRAITS ===");
-            show_debug_message("Traits: " + json_stringify(traits));
-            show_debug_message("Count: " + string(array_length(traits)));
+            show_debug_message("=== NEAREST ENEMY TRAIT STATUS ===");
+            show_debug_message("Tags: " + json_stringify(tags));
+            show_debug_message("Permanent Traits: " + json_stringify(permanent_traits));
+            show_debug_message("Temporary Traits: " + json_stringify(temporary_traits));
         }
     }
 }

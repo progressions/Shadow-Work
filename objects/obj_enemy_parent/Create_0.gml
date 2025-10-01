@@ -38,6 +38,7 @@ can_attack = true;
 init_status_effects();
 
 // Trait system v2.0 - Stacking traits
+tags = []; // Thematic descriptors (fireborne, venomous, etc.) - set by child enemies
 permanent_traits = {}; // From tags (applied at creation)
 temporary_traits = {};  // From buffs/debuffs (applied during combat)
 

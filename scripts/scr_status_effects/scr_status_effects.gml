@@ -260,27 +260,43 @@ function get_status_effect_modifier(_modifier_type) {
 
 // Apply wielder effects from equipped item
 function apply_wielder_effects(_item_stats) {
-    if (!variable_struct_exists(_item_stats, "wielder_effects")) {
-        return;
+    // Apply status effects
+    if (variable_struct_exists(_item_stats, "wielder_effects")) {
+        var _wielder_effects = _item_stats.wielder_effects;
+        for (var i = 0; i < array_length(_wielder_effects); i++) {
+            var _effect_data = _wielder_effects[i];
+            apply_status_effect(_effect_data.effect, -1, true);
+        }
     }
 
-    var _wielder_effects = _item_stats.wielder_effects;
-    for (var i = 0; i < array_length(_wielder_effects); i++) {
-        var _effect_data = _wielder_effects[i];
-        apply_status_effect(_effect_data.effect, -1, true);
+    // Apply trait grants (Trait System v2.0)
+    if (variable_struct_exists(_item_stats, "trait_grants")) {
+        var _trait_grants = _item_stats.trait_grants;
+        for (var i = 0; i < array_length(_trait_grants); i++) {
+            var _trait_data = _trait_grants[i];
+            add_temporary_trait(_trait_data.trait, _trait_data.stacks);
+        }
     }
 }
 
 // Remove wielder effects from equipped item
 function remove_wielder_effects(_item_stats) {
-    if (!variable_struct_exists(_item_stats, "wielder_effects")) {
-        return;
+    // Remove status effects
+    if (variable_struct_exists(_item_stats, "wielder_effects")) {
+        var _wielder_effects = _item_stats.wielder_effects;
+        for (var i = 0; i < array_length(_wielder_effects); i++) {
+            var _effect_data = _wielder_effects[i];
+            remove_status_effect(_effect_data.effect);
+        }
     }
 
-    var _wielder_effects = _item_stats.wielder_effects;
-    for (var i = 0; i < array_length(_wielder_effects); i++) {
-        var _effect_data = _wielder_effects[i];
-        remove_status_effect(_effect_data.effect);
+    // Remove trait grants (Trait System v2.0)
+    if (variable_struct_exists(_item_stats, "trait_grants")) {
+        var _trait_grants = _item_stats.trait_grants;
+        for (var i = 0; i < array_length(_trait_grants); i++) {
+            var _trait_data = _trait_grants[i];
+            remove_temporary_trait(_trait_data.trait, _trait_data.stacks);
+        }
     }
 }
 
