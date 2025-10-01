@@ -28,10 +28,20 @@ kb_y = 0;
 
 // Attack system stats
 attack_damage = 2; // Base enemy damage
+attack_damage_type = DamageType.physical; // Default physical damage
 attack_speed = 0.8; // Slower than default player
 attack_range = 20; // Melee range
 attack_cooldown = 0;
 can_attack = true;
+
+// Damage type resistances (1.0 = normal, 0.0 = immune, 1.5 = vulnerable)
+damage_resistances = {
+    physical: 1.0,
+    magical: 1.0,
+    fire: 1.0,
+    holy: 1.0,
+    unholy: 1.0
+};
 
 // Status effects system
 init_status_effects();

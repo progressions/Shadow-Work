@@ -12,6 +12,15 @@ level = 1;
 xp = 0;
 xp_to_next = 25;
 
+// Damage type resistances (1.0 = normal, 0.0 = immune, 1.5 = vulnerable)
+damage_resistances = {
+    physical: 1.0,
+    magical: 1.0,
+    fire: 1.0,
+    holy: 1.0,
+    unholy: 1.0
+};
+
 #endregion Stats
 
 move_dir = "right";

@@ -23,53 +23,53 @@ global.item_database = {
     // Row 1 - Bladed weapons (frames 0-5)
     rusty_dagger: new create_item_definition(
         0, "rusty_dagger", "Rusty Dagger", ItemType.weapon, EquipSlot.either_hand,
-        {damage: 2, attack_speed: 1.5, range: 30, handedness: WeaponHandedness.one_handed}
+        {damage: 2, attack_speed: 1.5, range: 30, handedness: WeaponHandedness.one_handed, damage_type: DamageType.physical}
     ),
     short_sword: new create_item_definition(
         1, "short_sword", "Short Sword", ItemType.weapon, EquipSlot.either_hand,
-        {damage: 3, attack_speed: 1.2, range: 38, handedness: WeaponHandedness.one_handed}
+        {damage: 3, attack_speed: 1.2, range: 38, handedness: WeaponHandedness.one_handed, damage_type: DamageType.physical}
     ),
     long_sword: new create_item_definition(
         2, "long_sword", "Long Sword", ItemType.weapon, EquipSlot.either_hand,
-        {damage: 4, attack_speed: 1.0, range: 46, handedness: WeaponHandedness.versatile, two_handed_damage: 5, two_handed_range: 40}
+        {damage: 4, attack_speed: 1.0, range: 46, handedness: WeaponHandedness.versatile, two_handed_damage: 5, two_handed_range: 40, damage_type: DamageType.physical}
     ),
     master_sword: new create_item_definition(
         3, "master_sword", "Master Sword", ItemType.weapon, EquipSlot.either_hand,
-        {damage: 6, attack_speed: 1.1, range: 48, handedness: WeaponHandedness.versatile, two_handed_damage: 7, two_handed_range: 42, magic_power: 5, wielder_effects: [{effect: StatusEffectType.empowered}]}
+        {damage: 6, attack_speed: 1.1, range: 48, handedness: WeaponHandedness.versatile, two_handed_damage: 7, two_handed_range: 42, magic_power: 5, wielder_effects: [{effect: StatusEffectType.empowered}], damage_type: DamageType.holy}
     ),
     greatsword: new create_item_definition(
         4, "greatsword", "Greatsword", ItemType.weapon, EquipSlot.right_hand,
-        {damage: 8, attack_speed: 0.7, range: 55, handedness: WeaponHandedness.two_handed}
+        {damage: 8, attack_speed: 0.7, range: 55, handedness: WeaponHandedness.two_handed, damage_type: DamageType.physical}
     ),
     spear: new create_item_definition(
         5, "spear", "Spear", ItemType.weapon, EquipSlot.right_hand,
-        {damage: 4, attack_speed: 1.1, range: 60, handedness: WeaponHandedness.versatile, two_handed_damage: 5, two_handed_range: 55}
+        {damage: 4, attack_speed: 1.1, range: 60, handedness: WeaponHandedness.versatile, two_handed_damage: 5, two_handed_range: 55, damage_type: DamageType.physical}
     ),
 
     // Row 2 - Axe and bows (frames 6-11)
     axe: new create_item_definition(
         6, "axe", "Axe", ItemType.weapon, EquipSlot.either_hand,
-        {damage: 5, attack_speed: 0.8, range: 30, handedness: WeaponHandedness.versatile, two_handed_damage: 6}
+        {damage: 5, attack_speed: 0.8, range: 30, handedness: WeaponHandedness.versatile, two_handed_damage: 6, damage_type: DamageType.physical}
     ),
     wooden_bow: new create_item_definition(
         7, "wooden_bow", "Wooden Bow", ItemType.weapon, EquipSlot.right_hand,
-        {damage: 2, attack_speed: 1.2, range: 120, handedness: WeaponHandedness.two_handed, requires_ammo: "arrows"}
+        {damage: 2, attack_speed: 1.2, range: 120, handedness: WeaponHandedness.two_handed, requires_ammo: "arrows", damage_type: DamageType.physical}
     ),
     longbow: new create_item_definition(
         8, "longbow", "Longbow", ItemType.weapon, EquipSlot.right_hand,
-        {damage: 5, attack_speed: 1.0, range: 150, handedness: WeaponHandedness.two_handed, requires_ammo: "arrows"}
+        {damage: 5, attack_speed: 1.0, range: 150, handedness: WeaponHandedness.two_handed, requires_ammo: "arrows", damage_type: DamageType.physical}
     ),
     crossbow: new create_item_definition(
         9, "crossbow", "Crossbow", ItemType.weapon, EquipSlot.right_hand,
-        {damage: 3, attack_speed: 0.6, range: 140, handedness: WeaponHandedness.two_handed, requires_ammo: "arrows"}
+        {damage: 3, attack_speed: 0.6, range: 140, handedness: WeaponHandedness.two_handed, requires_ammo: "arrows", damage_type: DamageType.physical}
     ),
     heavy_crossbow: new create_item_definition(
         10, "heavy_crossbow", "Heavy Crossbow", ItemType.weapon, EquipSlot.right_hand,
-        {damage: 6, attack_speed: 0.4, range: 160, armor_penetration: 0.3, handedness: WeaponHandedness.two_handed, requires_ammo: "arrows"}
+        {damage: 6, attack_speed: 0.4, range: 160, armor_penetration: 0.3, handedness: WeaponHandedness.two_handed, requires_ammo: "arrows", damage_type: DamageType.physical}
     ),
     torch: new create_item_definition(
         11, "torch", "Torch", ItemType.tool, EquipSlot.left_hand,
-        {light_radius: 100, handedness: WeaponHandedness.one_handed, status_effects: [{effect: StatusEffectType.burning, chance: 0.2}]}
+        {light_radius: 100, handedness: WeaponHandedness.one_handed, status_effects: [{effect: StatusEffectType.burning, chance: 0.2}], damage_type: DamageType.fire}
     ),
 
     // Row 3 - Chain armor set (frames 12-14) and Leather armor set (frames 15-17)
