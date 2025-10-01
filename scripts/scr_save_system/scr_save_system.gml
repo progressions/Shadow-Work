@@ -54,7 +54,6 @@ function serialize_player() {
         facing_dir: player.facing_dir,
         state: player.state,
         dash_cooldown: player.dash_cooldown,
-        is_two_handing: player.is_two_handing,
         traits: traits_array,
         tags: player.tags,
         status_effects: status_effects_array
@@ -202,7 +201,6 @@ function deserialize_player(data) {
     player.facing_dir = data.facing_dir;
     player.state = data.state;
     player.dash_cooldown = data.dash_cooldown;
-    player.is_two_handing = data.is_two_handing;
 
     // Restore tags
     player.tags = data.tags;
@@ -273,6 +271,11 @@ function deserialize_companions(data) {
         companion.quest_flags = comp_data.quest_flags;
         companion.dialogue_history = comp_data.dialogue_history;
         companion.relationship_stage = comp_data.relationship_stage;
+
+        // Set follow target if recruited
+        if (companion.is_recruited && instance_exists(obj_player)) {
+            companion.follow_target = obj_player;
+        }
 
         // Restore triggers
         var trigger_names = variable_struct_get_names(comp_data.triggers);
