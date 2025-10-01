@@ -62,3 +62,11 @@ enum WeaponHandedness {
     two_handed,
     versatile
 }
+
+enum DamageType {
+    physical,
+    magical,
+    fire,
+    holy,
+    unholy
+}

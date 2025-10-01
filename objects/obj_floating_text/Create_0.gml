@@ -5,6 +5,9 @@ float_speed = 0.75;
 fade_speed = 0.03;
 lifetime = 40; // Frames until it starts fading
 
+// Damage type (for colored damage numbers)
+damage_type = DamageType.physical;
+
 // Animation
 alpha = 1;
 y_offset = 0;

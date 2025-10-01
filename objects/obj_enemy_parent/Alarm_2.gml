@@ -44,6 +44,9 @@ if (state == EnemyState.attacking) {
             // Deal damage to player
             _player.hp -= final_damage;
 
+            // Spawn damage floating text
+            spawn_floating_text(_player.x, _player.y - 16, "-" + string(final_damage), c_red, _player);
+
             // Check if player died
             if (_player.hp <= 0) {
                 _player.state = PlayerState.dead;
