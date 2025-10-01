@@ -65,6 +65,19 @@ if (state == EnemyState.attacking) {
             // Play hit confirmation sound (player got hit)
             play_sfx(snd_attack_hit, 1, false);
 
+            // Apply attack status effects (like burning from fire imp)
+            if (variable_instance_exists(self, "attack_status_effects")) {
+                for (var i = 0; i < array_length(attack_status_effects); i++) {
+                    var effect_data = attack_status_effects[i];
+                    if (random(1) < effect_data.chance) {
+                        with (_player) {
+                            apply_status_effect(effect_data.effect);
+                        }
+                        show_debug_message("Enemy applied status effect: " + string(effect_data.effect));
+                    }
+                }
+            }
+
             show_debug_message("Enemy dealt " + string(final_damage) + " damage to player");
         } else {
             // Player moved out of range, attack missed

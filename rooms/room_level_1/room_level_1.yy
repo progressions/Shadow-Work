@@ -48,6 +48,8 @@
     {"name":"inst_1EB82797","path":"rooms/room_level_1/room_level_1.yy",},
     {"name":"inst_335B1C5D","path":"rooms/room_level_1/room_level_1.yy",},
     {"name":"inst_DD754FC","path":"rooms/room_level_1/room_level_1.yy",},
+    {"name":"inst_14F3E930","path":"rooms/room_level_1/room_level_1.yy",},
+    {"name":"inst_60123010","path":"rooms/room_level_1/room_level_1.yy",},
   ],
   "isDnd":false,
   "layers":[
@@ -158,6 +160,8 @@
         {"$GMRInstance":"v2","%Name":"inst_1EB82797","colour":4294967295,"frozen":false,"hasCreationCode":false,"ignore":false,"imageIndex":0,"imageSpeed":1.0,"inheritCode":false,"inheritedItemId":null,"inheritItemSettings":false,"isDnd":false,"name":"inst_1EB82797","objectId":{"name":"obj_burglar","path":"objects/obj_burglar/obj_burglar.yy",},"properties":[],"resourceType":"GMRInstance","resourceVersion":"2.0","rotation":0.0,"scaleX":1.0,"scaleY":1.0,"x":336.0,"y":128.0,},
         {"$GMRInstance":"v2","%Name":"inst_335B1C5D","colour":4294967295,"frozen":false,"hasCreationCode":false,"ignore":false,"imageIndex":0,"imageSpeed":1.0,"inheritCode":false,"inheritedItemId":null,"inheritItemSettings":false,"isDnd":false,"name":"inst_335B1C5D","objectId":{"name":"obj_burglar","path":"objects/obj_burglar/obj_burglar.yy",},"properties":[],"resourceType":"GMRInstance","resourceVersion":"2.0","rotation":0.0,"scaleX":1.0,"scaleY":1.0,"x":400.0,"y":112.0,},
         {"$GMRInstance":"v2","%Name":"inst_DD754FC","colour":4294967295,"frozen":false,"hasCreationCode":false,"ignore":false,"imageIndex":0,"imageSpeed":1.0,"inheritCode":false,"inheritedItemId":null,"inheritItemSettings":false,"isDnd":false,"name":"inst_DD754FC","objectId":{"name":"obj_burglar","path":"objects/obj_burglar/obj_burglar.yy",},"properties":[],"resourceType":"GMRInstance","resourceVersion":"2.0","rotation":0.0,"scaleX":1.0,"scaleY":1.0,"x":464.0,"y":112.0,},
+        {"$GMRInstance":"v2","%Name":"inst_14F3E930","colour":4294967295,"frozen":false,"hasCreationCode":false,"ignore":false,"imageIndex":0,"imageSpeed":1.0,"inheritCode":false,"inheritedItemId":null,"inheritItemSettings":false,"isDnd":false,"name":"inst_14F3E930","objectId":{"name":"obj_fire_imp","path":"objects/obj_fire_imp/obj_fire_imp.yy",},"properties":[],"resourceType":"GMRInstance","resourceVersion":"2.0","rotation":0.0,"scaleX":1.0,"scaleY":1.0,"x":544.0,"y":176.0,},
+        {"$GMRInstance":"v2","%Name":"inst_60123010","colour":4294967295,"frozen":false,"hasCreationCode":false,"ignore":false,"imageIndex":0,"imageSpeed":1.0,"inheritCode":false,"inheritedItemId":null,"inheritItemSettings":false,"isDnd":false,"name":"inst_60123010","objectId":{"name":"obj_fire_imp","path":"objects/obj_fire_imp/obj_fire_imp.yy",},"properties":[],"resourceType":"GMRInstance","resourceVersion":"2.0","rotation":0.0,"scaleX":1.0,"scaleY":1.0,"x":496.0,"y":160.0,},
       ],"layers":[],"name":"Instances","properties":[],"resourceType":"GMRInstanceLayer","resourceVersion":"2.0","userdefinedDepth":false,"visible":true,},
     {"$GMRTileLayer":"","%Name":"Tiles_Col","depth":100,"effectEnabled":true,"effectType":null,"gridX":32,"gridY":32,"hierarchyFrozen":false,"inheritLayerDepth":false,"inheritLayerSettings":false,"inheritSubLayers":true,"inheritVisibility":true,"layers":[],"name":"Tiles_Col","properties":[],"resourceType":"GMRTileLayer","resourceVersion":"2.0","tiles":{"SerialiseHeight":23,"SerialiseWidth":40,"TileCompressedData":[
           -41,49,1,-2147483648,-3,49,-18,-2147483648,-3,0,-3,-2147483648,1,49,-8,-2147483648,-3,49,1,-2147483648,

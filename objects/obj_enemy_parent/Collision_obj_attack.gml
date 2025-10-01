@@ -41,8 +41,9 @@ if (alarm[1] < 0) {
 	 play_enemy_sfx("on_hit");
 
 	 show_debug_message("Damage calculation: base=" + string(_base_damage) +
-	                    " type=" + _damage_type +
-	                    " modifier=" + string(_damage_modifier) +
+	                    " type=" + string(_damage_type_string) +
+	                    " trait_mod=" + string(_damage_modifier) +
+	                    " resist_mult=" + string(_resistance_multiplier) +
 	                    " final=" + string(_final_damage));
 
 	 show_debug_message("Enemy hit! HP: " + string(old_hp) + " -> " + string(hp));
