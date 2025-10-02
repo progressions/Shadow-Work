@@ -1,9 +1,9 @@
 {
   "$GMScript":"v1",
-  "%Name":"enemy_handle_ranged_attack",
+  "%Name":"scr_enemy_pathfinding",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"enemy_handle_ranged_attack",
+  "name":"scr_enemy_pathfinding",
   "parent":{
     "name":"enemies",
     "path":"folders/Scripts/enemies.yy",

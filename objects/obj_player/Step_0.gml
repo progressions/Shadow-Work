@@ -64,6 +64,8 @@ switch (state) {
 // Tick status effects (runs even when dead)
 tick_status_effects();
 
+tilemap = layer_tilemap_get_id("Tiles_Col");
+
 // Don't run other systems when dead
 if (state != PlayerState.dead) {
     // ============================================

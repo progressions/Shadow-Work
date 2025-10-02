@@ -69,11 +69,31 @@ function remove_temporary_trait(_trait_key) {
     }
 }
 
-/// @function apply_tag_traits(tag_key)
-/// @description Apply all traits from a tag as permanent traits
-/// @param {string} tag_key The tag to apply
-function apply_tag_traits(_tag_key) {
+/// @function apply_tag_traits([tag_key])
+/// @description Apply all traits from a tag (or all tags array) as permanent traits
+/// @param {string} [tag_key] Optional - specific tag to apply. If omitted, applies all tags in tags array
+function apply_tag_traits(_tag_key = undefined) {
     if (!variable_global_exists("tag_database")) return;
+
+    // If no parameter provided, apply all tags from tags array
+    if (_tag_key == undefined) {
+        if (!variable_instance_exists(self, "tags")) return;
+
+        for (var i = 0; i < array_length(tags); i++) {
+            var _tag_name = tags[i];
+            if (variable_struct_exists(global.tag_database, _tag_name)) {
+                var _tag = global.tag_database[$ _tag_name];
+                var _traits = _tag.grants_traits;
+
+                for (var j = 0; j < array_length(_traits); j++) {
+                    add_permanent_trait(_traits[j]);
+                }
+            }
+        }
+        return;
+    }
+
+    // Apply specific tag if parameter provided
     if (!variable_struct_exists(global.tag_database, _tag_key)) return;
 
     var _tag = global.tag_database[$ _tag_key];

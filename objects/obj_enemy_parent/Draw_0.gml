@@ -1,3 +1,11 @@
+// Debug: Draw pathfinding path
+if (global.debug_pathfinding && path_exists(path)) {
+    draw_set_color(c_yellow);
+    draw_set_alpha(0.5);
+    draw_path(path, 0, 0, true);
+    draw_set_alpha(1);
+    draw_set_color(c_white);
+}
 
 // Draw shadow first
 draw_sprite_ext(spr_shadow, image_index, x, y + 2, 1, 0.5, 0, c_black, 0.3);

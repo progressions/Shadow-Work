@@ -55,15 +55,17 @@ var _hor = clamp(target_x - x, -1, 1);
 var _ver = clamp(target_y - y, -1, 1);
 var _is_moving = (abs(_hor) > 0.1) || (abs(_ver) > 0.1);
 
-/// ---------- State control
-if (state != EnemyState.attacking && state != EnemyState.ranged_attacking) {
-    state = _is_moving ? EnemyState.idle : EnemyState.idle;
+/// ---------- State control - Targeting state uses pathfinding
+if (state == EnemyState.targeting) {
+    enemy_state_targeting();
 }
-
-/// ---------- Apply movement with status effect speed modifiers
-var speed_modifier = get_status_effect_modifier("speed");
-var final_move_speed = move_speed * speed_modifier;
-move_and_collide(_hor * final_move_speed, _ver * final_move_speed, [tilemap, obj_enemy_parent, obj_rising_pillar]);
+// Old movement for idle state (simple wandering)
+else if (state == EnemyState.idle) {
+    /// ---------- Apply movement with status effect speed modifiers
+    var speed_modifier = get_status_effect_modifier("speed");
+    var final_move_speed = move_speed * speed_modifier;
+    move_and_collide(_hor * final_move_speed, _ver * final_move_speed, [tilemap, obj_enemy_parent, obj_rising_pillar]);
+}
 
 /// ---------- Determine facing (0=down,1=right,2=left,3=up)
 var dir_index;
@@ -150,35 +152,5 @@ if (state == EnemyState.ranged_attacking && ranged_attack_cooldown <= 0) {
     state = EnemyState.idle;
 }
 
-// Check if player is in attack range and we can attack
-if (state != EnemyState.attacking && state != EnemyState.ranged_attacking) {
-    var _player = instance_nearest(x, y, obj_player);
-    if (_player != noone) {
-        var _dist = point_distance(x, y, _player.x, _player.y);
-        if (_dist <= attack_range) {
-            // Play aggro sound on first detection (only if we haven't played it recently)
-            if (!variable_instance_exists(self, "last_aggro_time")) {
-                last_aggro_time = 0;
-            }
-            if (current_time - last_aggro_time > 3000) { // Cooldown: only play every 3 seconds
-                play_enemy_sfx("on_aggro");
-                last_aggro_time = current_time;
-            }
-
-            // Ranged attackers fire arrows
-            if (is_ranged_attacker && can_ranged_attack) {
-                enemy_handle_ranged_attack();
-            }
-            // Melee attackers use traditional attack
-            else if (!is_ranged_attacker && can_attack) {
-                state = EnemyState.attacking;
-                attack_cooldown = round(90 / attack_speed); // Enemy attacks are slower
-                can_attack = false;
-
-                // Create attack after a short delay (so animation plays first)
-                alarm[2] = 15; // Attack hits after 15 frames
-            }
-        }
-    }
-}
+// Old attack logic removed - now handled by enemy_state_targeting()
 }

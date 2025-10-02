@@ -295,3 +295,6 @@ global.visited_rooms = [];    // Array of visited room indices
 global.opened_chests = [];    // Array of opened chest IDs
 global.broken_breakables = []; // Array of broken breakable IDs
 global.picked_up_items = [];  // Array of picked-up item spawn IDs
+
+// Pathfinding debug visualization
+global.debug_pathfinding = true; // Set to false for production

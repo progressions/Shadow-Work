@@ -63,6 +63,17 @@ enemy_sounds = {
     on_status_effect: undefined // Default: snd_status_effect_generic
 };
 
+// Pathfinding system variables
+path = path_add();              // GameMaker path instance
+ideal_range = attack_range;     // Ideal distance from player (override in child enemies for ranged)
+                                // RANGED ENEMIES: Set ideal_range to ~75-80% of attack_range in child Create event
+                                // This enables kiting/circle strafe behavior while staying in attack range
+path_update_timer = 0;          // Frame counter for path updates
+last_target_x = 0;              // Track player position changes
+last_target_y = 0;
+current_path_target_x = 0;      // Where path is leading
+current_path_target_y = 0;
+
 // Override serialize method for enemy-specific data
 function serialize() {
     show_debug_message("SERIALIZING ENEMY: " + object_get_name(object_index) + " at position (" + string(x) + ", " + string(y) + ")");

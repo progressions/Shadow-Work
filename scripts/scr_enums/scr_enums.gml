@@ -13,6 +13,7 @@ enum PlayerState {
 
 enum EnemyState {
 	idle,
+	targeting,
 	attacking,
 	ranged_attacking,
 	dead,
