@@ -25,20 +25,7 @@ if (keyboard_check_pressed(ord("I"))) {
 if (is_open) {
 	audio_group_set_gain(audiogroup_sfx_world, 0, 0);
 
-    // TAB key to switch between tabs
-    if (keyboard_check_pressed(vk_tab)) {
-        current_tab = (current_tab + 1) % 3;
-        _play_ui_sfx(snd_open_menu, 0.7);
-
-        // Reset selections when switching tabs
-        if (current_tab == InventoryTab.loadout) {
-            var _player = instance_exists(obj_player) ? obj_player : noone;
-            if (_player != noone) {
-                loadout_selected_loadout = _player.loadouts.active;
-                loadout_selected_hand = "left";
-            }
-        }
-    }
+    // TAB key disabled for navigation; WASD handles tab transitions
 
     var _move_horizontal = 0;
     var _move_vertical = 0;
@@ -55,6 +42,91 @@ if (is_open) {
     }
     if (keyboard_check_pressed(ord("D")) || keyboard_check_pressed(vk_right)) {
         _move_horizontal = 1;
+    }
+
+    var _handled_tab_switch = false;
+    if (_move_horizontal != 0) {
+        switch (current_tab) {
+            case InventoryTab.loadout:
+                if (_move_horizontal > 0 && loadout_selected_hand == "right") {
+                    current_tab = InventoryTab.paper_doll;
+                    paper_doll_selected = (loadout_selected_loadout == "melee") ? "torso" : "legs";
+                    _handled_tab_switch = true;
+                } else if (_move_horizontal < 0 && loadout_selected_hand == "left") {
+                    current_tab = InventoryTab.inventory;
+                    if (loadout_selected_loadout == "melee") {
+                        selected_slot = (1 * grid_columns) + (grid_columns - 1);
+                    } else {
+                        selected_slot = (2 * grid_columns) + (grid_columns - 1);
+                    }
+                    _handled_tab_switch = true;
+                }
+                break;
+
+            case InventoryTab.paper_doll:
+                if (_move_horizontal > 0) {
+                    if (paper_doll_selected == "head") {
+                        current_tab = InventoryTab.inventory;
+                        selected_slot = 0;
+                    } else {
+                        current_tab = InventoryTab.inventory;
+                        var _target_row = (paper_doll_selected == "torso") ? 1 : 2;
+                        selected_slot = _target_row * grid_columns;
+                    }
+                    _handled_tab_switch = true;
+                } else if (_move_horizontal < 0) {
+                    if (paper_doll_selected == "head") {
+                        current_tab = InventoryTab.loadout;
+                        loadout_selected_loadout = "melee";
+                        loadout_selected_hand = "right";
+                    } else if (paper_doll_selected == "torso") {
+                        current_tab = InventoryTab.loadout;
+                        loadout_selected_loadout = "melee";
+                        loadout_selected_hand = "right";
+                    } else {
+                        current_tab = InventoryTab.loadout;
+                        loadout_selected_loadout = "ranged";
+                        loadout_selected_hand = "right";
+                    }
+                    _handled_tab_switch = true;
+                }
+                break;
+
+            case InventoryTab.inventory:
+                if (_move_horizontal != 0) {
+                    var _inventory_col = selected_slot % grid_columns;
+                    var _inventory_row = floor(selected_slot / grid_columns);
+
+                    if (_move_horizontal < 0 && _inventory_col == 0) {
+                        current_tab = InventoryTab.paper_doll;
+                        if (_inventory_row <= 0) {
+                            paper_doll_selected = "head";
+                        } else if (_inventory_row == 1) {
+                            paper_doll_selected = "torso";
+                        } else {
+                            paper_doll_selected = "legs";
+                        }
+                        _handled_tab_switch = true;
+                    } else if (_move_horizontal > 0 && _inventory_col == grid_columns - 1) {
+                        current_tab = InventoryTab.loadout;
+                        if (_inventory_row <= 1) {
+                            loadout_selected_loadout = "melee";
+                            loadout_selected_hand = "left";
+                        } else {
+                            loadout_selected_loadout = "ranged";
+                            loadout_selected_hand = "left";
+                        }
+                        _handled_tab_switch = true;
+                    }
+                }
+                break;
+        }
+
+        if (_handled_tab_switch) {
+            _play_ui_sfx(snd_open_menu, 0.7);
+            _move_horizontal = 0;
+            _move_vertical = 0;
+        }
     }
 
     // Handle navigation based on current tab

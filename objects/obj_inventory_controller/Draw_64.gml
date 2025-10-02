@@ -205,8 +205,8 @@ if (is_open) {
 			if (_player != noone && i < array_length(_player.inventory) && _player.inventory[i] != undefined) {
 				_item = _player.inventory[i];
 				_base_scale = get_item_scale(_item.definition, "inventory_grid");
-				_draw_scale = _base_scale;
-				if (_is_selected) {
+					_draw_scale = _base_scale;
+					if (_is_selected && current_tab == InventoryTab.inventory) {
 					if (_base_scale >= 4) {
 						_draw_scale = 5;
 					} else if (_base_scale == 2) {
