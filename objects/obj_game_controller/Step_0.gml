@@ -5,7 +5,6 @@ if (keyboard_check_pressed(ord("M"))) {
 	global.audio_config.music_enabled = !global.audio_config.music_enabled;
 }
 
-
 if (global.game_paused) return;
 
 global.idle_bob_timer += 0.05;

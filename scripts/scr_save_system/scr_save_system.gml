@@ -763,6 +763,9 @@ function load_game(slot) {
         show_debug_message("  Timestamp: " + string(save_data.timestamp));
         show_debug_message("  Saved room: " + room_get_name(save_data.current_room));
 
+        // Set loading flag for visual feedback
+        global.is_loading = true;
+
         // Check if we need to transition to a different room
         if (room != save_data.current_room) {
             show_debug_message("Room transition needed: " + room_get_name(room) + " -> " + room_get_name(save_data.current_room));
@@ -770,15 +773,21 @@ function load_game(slot) {
             // Store save data globally for restoration after room transition
             global.pending_save_data = save_data;
 
-            // Transition to the saved room
-            room_goto(save_data.current_room);
+            // Transition to the saved room with white fade
+            transition_start(save_data.current_room, seq_fade_out_white, seq_fade_in_white);
 
             // Restoration will happen in Room Start event
             return true;
         }
 
-        // If we're already in the correct room, restore immediately
-        restore_save_data(save_data);
+        // If we're already in the correct room, use fade transition
+        show_debug_message("Already in correct room - using fade transition");
+
+        // Store save data for restore during transition
+        global.pending_save_data = save_data;
+
+        // Use transition system (will restore in transition_change_room)
+        transition_start(room, seq_fade_out_white, seq_fade_in_white);
 
         return true;
 
@@ -831,6 +840,9 @@ function restore_save_data(save_data) {
     }
 
     show_debug_message("=== GAME STATE RESTORED SUCCESSFULLY ===");
+
+    // Clear loading flag
+    global.is_loading = false;
 }
 
 /// @function check_for_pending_save_restore()
