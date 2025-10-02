@@ -55,6 +55,10 @@ function enemy_handle_ranged_attack() {
         ranged_attack_cooldown = max(15, round(60 / ranged_attack_speed));
         can_ranged_attack = false;
 
+        if (path_exists(path)) {
+            path_end();
+        }
+
         // Play sound effect
         play_enemy_sfx("on_attack");
 

@@ -1,9 +1,9 @@
 {
   "$GMScript":"v1",
-  "%Name":"enemy_state_targeting",
+  "%Name":"scr_enemy_state_targeting",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"enemy_state_targeting",
+  "name":"scr_enemy_state_targeting",
   "parent":{
     "name":"enemies",
     "path":"folders/Scripts/enemies.yy",

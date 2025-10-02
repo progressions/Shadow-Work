@@ -9,9 +9,9 @@ hp = 4;
 move_speed = 1.0;
 
 // Ranged attack configuration
-is_ranged_attacker = false;
+is_ranged_attacker = true;
 ranged_damage = 3;           // Higher than melee damage
-ranged_attack_speed = 1.0;   // Slower than melee (longer cooldown)
+ranged_attack_speed = 0.8;   // Slower than melee (longer cooldown)
 
 // Ranged enemy ideal distance from player (for kiting/circle strafe)
 // PATTERN: Set ideal_range to ~75-80% of attack_range for ranged enemies
