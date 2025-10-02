@@ -46,7 +46,7 @@ loadouts = {
 };
 
 inventory = [];
-max_inventory_size = 10;
+max_inventory_size = 16;
 
 debug = false;
 
