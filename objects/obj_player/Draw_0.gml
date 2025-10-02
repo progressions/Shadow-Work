@@ -23,10 +23,20 @@ function get_torch_position(_facing) {
     return {x: 0, y: 0, flip: false};
 }
 
-function get_weapon_position(_facing) {
+function get_melee_weapon_position(_facing) {
     switch(_facing) {
         case "down":  return {x: 0, y: 2, angle: 0};
         case "up":    return {x: 0, y: 2, angle: 90};
+        case "left":  return {x: 0, y: 0, angle: 90};
+        case "right": return {x: 0, y: 2, angle: 0};
+    }
+    return {x: 0, y: 0, angle: 0};
+}
+
+function get_ranged_weapon_position(_facing) {
+    switch(_facing) {
+        case "down":  return {x: -4, y: -4, angle: -90};
+        case "up":    return {x: 4, y: -6, angle: 90};
         case "left":  return {x: 0, y: 0, angle: 90};
         case "right": return {x: 0, y: 2, angle: 0};
     }
@@ -95,15 +105,22 @@ function draw_shield_simple(_item, _facing, _player_x, _player_y) {
 }
 
 function draw_weapon_simple(_item, _facing, _player_x, _player_y) {
-	if (state == PlayerState.attacking) return;
-	
+	// Check if weapon is ranged
+	var _is_ranged_weapon = (_item.definition.stats[$ "requires_ammo"] != undefined);
+
+	// Only hide weapon during melee attacks (ranged weapons should stay visible)
+	if (state == PlayerState.attacking) {
+		if (!_is_ranged_weapon) return; // Hide only for melee attacks
+	}
+
     var _weapon_sprite = get_equipped_sprite(_item.definition.equipped_sprite_key);
     if (_weapon_sprite == -1) return;
-    
-    var _pos = get_weapon_position(_facing);
+
+    // Get position based on weapon type
+    var _pos = _is_ranged_weapon ? get_ranged_weapon_position(_facing) : get_melee_weapon_position(_facing);
     var _wx = _player_x + _pos.x;
     var _wy = _player_y + _pos.y;
-    
+
     // Add bobbing
     if (move_dir == "idle") {
         if (floor(global.idle_bob_timer) % 2 == 1) {
@@ -113,8 +130,16 @@ function draw_weapon_simple(_item, _facing, _player_x, _player_y) {
         var _bob = (floor(anim_frame) % 2) * 1;
         _wy += _bob;
     }
-    
-    draw_sprite_ext(_weapon_sprite, 0, _wx, _wy, 1, 1, _pos.angle, image_blend, 1);
+
+    // Adjust angle and scale for bows when facing left
+    var _draw_angle = _pos.angle;
+    var _draw_yscale = 1;
+    if (_is_ranged_weapon && _facing == "left") {
+        _draw_angle = 180; // Rotate 90 degrees counter-clockwise from 90
+        _draw_yscale = -1; // Flip vertically to correct orientation
+    }
+
+    draw_sprite_ext(_weapon_sprite, 0, _wx, _wy, 1, _draw_yscale, _draw_angle, image_blend, 1);
 }
 
 // FIXED FUNCTION: Selective hand drawing
@@ -139,7 +164,7 @@ function draw_player_hands(_base_frame) {
     } else if (_has_weapon && !_holding_torch) {
 
 		// if the weapon is two-handed, no need to draw the hands
-		if (equipped.right_hand.definition.stats.handedness == WeaponHandedness.two_handed) return;
+		if (equipped.right_hand.definition.handedness == WeaponHandedness.two_handed) return;
 
         // Right hand covered by weapon, left hand visibility depends on facing direction
         if (facing_dir == "left") {
@@ -234,24 +259,24 @@ function draw_player_with_equipment() {
     // Different layering for each direction
     switch(facing_dir) {
         case "up":
+            // Weapon behind player
+            if (equipped.right_hand != undefined) {
+                draw_weapon_simple(equipped.right_hand, facing_dir, x, y + y_offset);
+            }
+
             // Shield/torch behind player
             if (equipped.left_hand != undefined && !is_two_handing()) {
                 draw_left_hand_item(equipped.left_hand, facing_dir, x, y + y_offset);
             }
-            
+
             // Player
             draw_sprite_ext(sprite_index, _base_frame, x, y + y_offset, image_xscale, image_yscale, 0, image_blend, 1);
-            
+
             // Draw hands conditionally
             draw_player_hands(_base_frame);
-            
+
             // Armor layers
             draw_armor_layers(_base_frame, _item_x, y + y_offset);
-            
-            // Weapon in front
-            if (equipped.right_hand != undefined) {
-                draw_weapon_simple(equipped.right_hand, facing_dir, x, y + y_offset);
-            }
             break;
             
         case "right":
