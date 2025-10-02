@@ -294,3 +294,24 @@ if (keyboard_check_pressed(vk_f8)) {
     load_game("autosave");
     show_debug_message("=== LOAD FROM AUTOSAVE ===");
 }
+
+// F9 - Debug: Add test items to inventory
+if (keyboard_check_pressed(vk_f9)) {
+    show_debug_message("=== ADDING TEST ITEMS TO INVENTORY ===");
+
+    // Clear inventory first
+    inventory = [];
+
+    // Add variety of items to test scaling
+    inventory_add_item(global.item_database.short_sword, 1);      // Normal weapon (2x)
+    inventory_add_item(global.item_database.greatsword, 1);       // Large weapon (1x)
+    inventory_add_item(global.item_database.health_potion, 5);    // Stackable (2x, count: 5)
+    inventory_add_item(global.item_database.leather_helmet, 1);   // Armor (2x)
+    inventory_add_item(global.item_database.shield, 1);           // Shield (2x)
+    inventory_add_item(global.item_database.longbow, 1);          // Large weapon (1x)
+    inventory_add_item(global.item_database.crossbow, 1);         // Large weapon (1x)
+    inventory_add_item(global.item_database.chain_armor, 1);      // Armor (2x)
+    inventory_add_item(global.item_database.water, 3);            // Stackable (2x, count: 3)
+
+    show_debug_message("Added " + string(array_length(inventory)) + " test items to inventory");
+}
