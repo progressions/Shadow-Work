@@ -140,7 +140,7 @@ if (is_open) {
 		else if (paper_doll_selected == "legs") _highlight_y = _leg_y - 60;
 
 		draw_set_color(c_yellow);
-		draw_rectangle(_paper_doll_x + 42, _highlight_y - 24, _paper_doll_x + 138, _highlight_y + 24, true);
+		draw_rectangle(_paper_doll_x + 42, _highlight_y - 48, _paper_doll_x + 138, _highlight_y + 48, true);
 		draw_set_color(c_white);
 	}
 
