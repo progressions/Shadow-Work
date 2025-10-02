@@ -135,9 +135,9 @@ if (is_open) {
 
 	// Draw yellow highlight for selected paper doll slot if on paper doll tab
 	if (current_tab == InventoryTab.paper_doll) {
-		var _highlight_y = _head_y;
-		if (paper_doll_selected == "torso") _highlight_y = _torso_y;
-		else if (paper_doll_selected == "legs") _highlight_y = _leg_y;
+		var _highlight_y = _head_y - 60;
+		if (paper_doll_selected == "torso") _highlight_y = _torso_y - 60;
+		else if (paper_doll_selected == "legs") _highlight_y = _leg_y - 60;
 
 		draw_set_color(c_yellow);
 		draw_rectangle(_paper_doll_x + 42, _highlight_y - 24, _paper_doll_x + 138, _highlight_y + 24, true);
