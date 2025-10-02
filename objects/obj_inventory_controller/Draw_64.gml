@@ -101,7 +101,36 @@ if (is_open) {
 	
 	#region Paper Doll
 	// paper doll
-	draw_sprite_ext(spr_paper_doll, 0, _x + 300, _y + 40, 1.5, 1.5, 0, c_white, 1);
+	// draw_sprite_ext(spr_paper_doll, 0, _x + 300, _y + 40, 1.5, 1.5, 0, c_white, 1);
+	
+	var _armor_scale = 6;
+	
+	var _paper_doll_x = _x + 300;
+	var _paper_doll_y = _y + 40;
+	
+	if (_player.equipped.head != undefined) {
+		var _head_x = _paper_doll_x + 90;
+		var _head_y = _paper_doll_y + 160;
+		var _frame = _player.equipped.head.definition.world_sprite_frame;
+		
+		draw_sprite_ext(spr_items, _frame, _head_x, _head_y, _armor_scale, _armor_scale, 0, c_white, 1);
+	}
+	if (_player.equipped.torso != undefined) {
+		var _torso_x = _paper_doll_x + 90;
+		var _torso_y = _paper_doll_y + 250;
+		
+		var _frame = _player.equipped.torso.definition.world_sprite_frame;
+		
+		draw_sprite_ext(spr_items, _frame, _torso_x, _torso_y, _armor_scale, _armor_scale, 0, c_white, 1);
+	}
+	if (_player.equipped.legs != undefined) {
+		var _leg_x = _paper_doll_x + 90;
+		var _leg_y = _paper_doll_y + 350;
+		
+		var _frame = _player.equipped.legs.definition.world_sprite_frame;
+		
+		draw_sprite_ext(spr_items, _frame, _leg_x, _leg_y, _armor_scale, _armor_scale, 0, c_white, 1);
+	}
 	
 	#endregion Paper Doll
 	
