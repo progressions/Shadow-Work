@@ -42,10 +42,15 @@ if (is_open) {
 			var _item = _player.inventory[i];
 			var _item_scale = get_item_scale(_item.definition, "inventory_grid");
 
+			// The slot sprite is scaled 2x, so actual slot size is _slot_size * 2
+			// Center the item sprite in the middle of the scaled slot
+			var _scaled_slot_size = _slot_size * 2;
+			var _center_x = _slot_x + (_scaled_slot_size / 2);
+			var _center_y = _slot_y + (_scaled_slot_size / 2);
+
 			// Draw item sprite centered in slot
 			draw_sprite_ext(spr_items, _item.definition.world_sprite_frame,
-						   _slot_x + (_slot_size),
-						   _slot_y + (_slot_size),
+						   _center_x, _center_y,
 						   _item_scale, _item_scale, 0, c_white, 1);
 
 			// Draw stack count if > 1
@@ -53,7 +58,7 @@ if (is_open) {
 				draw_set_color(c_white);
 				draw_set_halign(fa_right);
 				draw_set_valign(fa_bottom);
-				draw_text(_slot_x + (_slot_size * 2) - 4, _slot_y + (_slot_size * 2) - 4, string(_item.count));
+				draw_text(_slot_x + _scaled_slot_size - 4, _slot_y + _scaled_slot_size - 4, string(_item.count));
 				draw_set_halign(fa_left);
 				draw_set_valign(fa_top);
 			}
