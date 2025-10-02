@@ -49,38 +49,55 @@ if (is_open) {
 		var _slot_center_x = _slot_x + _slot_half_w;
 		var _slot_center_y = _slot_y + _slot_half_h;
 
-		draw_sprite_ext(spr_inventory_slot, 0, _slot_x, _slot_y, _slot_scale, _slot_scale, 0, c_white, 1);
+			draw_sprite_ext(spr_inventory_slot, 0, _slot_x, _slot_y, _slot_scale, _slot_scale, 0, c_white, 1);
+			var _is_selected = (i == selected_slot);
+			var _item = undefined;
+			var _base_scale = 0;
+			var _draw_scale = 0;
+			var _item_x = 0;
+			var _item_y = 0;
 
-		// Draw item if it exists in player inventory
-		if (_player != noone && i < array_length(_player.inventory) && _player.inventory[i] != undefined) {
-			var _item = _player.inventory[i];
-			var _item_scale = get_item_scale(_item.definition, "inventory_grid");
-			var _item_x = _slot_center_x - (_item_center_offset_x * _item_scale);
-			var _item_y = _slot_center_y - (_item_center_offset_y * _item_scale);
-
-			// Draw item sprite
-			draw_sprite_ext(spr_items, _item.definition.world_sprite_frame,
-						   _item_x, _item_y,
-						   _item_scale, _item_scale, 0, c_white, 1);
-
-			// Draw stack count if > 1
-			if (_item.count > 1) {
-				draw_set_color(c_white);
-				draw_set_halign(fa_right);
-				draw_set_valign(fa_bottom);
-				draw_text(_slot_x + _slot_width - 4, _slot_y + _slot_height - 4, string(_item.count));
-				draw_set_halign(fa_left);
-				draw_set_valign(fa_top);
+			// Pre-calculate item info if present
+			if (_player != noone && i < array_length(_player.inventory) && _player.inventory[i] != undefined) {
+				_item = _player.inventory[i];
+				_base_scale = get_item_scale(_item.definition, "inventory_grid");
+				_draw_scale = _base_scale;
+				if (_is_selected) {
+					if (_base_scale >= 4) {
+						_draw_scale = 5;
+					} else if (_base_scale == 2) {
+						_draw_scale = 3;
+					}
+				}
+				_item_x = _slot_center_x - (_item_center_offset_x * _draw_scale);
+				_item_y = _slot_center_y - (_item_center_offset_y * _draw_scale);
 			}
-		}
 
-		// Draw selection cursor on selected slot
-		if (i == selected_slot) {
-			draw_set_color(c_yellow);
-			draw_rectangle(_slot_x - 2, _slot_y - 2, _slot_x + _slot_width + 2, _slot_y + _slot_height + 2, true);
-			draw_rectangle(_slot_x - 3, _slot_y - 3, _slot_x + _slot_width + 3, _slot_y + _slot_height + 3, true);
-			draw_set_color(c_white);
-		}
+			// Draw selection cursor on selected slot
+			if (_is_selected) {
+				draw_set_color(c_yellow);
+				draw_rectangle(_slot_x - 2, _slot_y - 2, _slot_x + _slot_width + 2, _slot_y + _slot_height + 2, true);
+				draw_rectangle(_slot_x - 3, _slot_y - 3, _slot_x + _slot_width + 3, _slot_y + _slot_height + 3, true);
+				draw_set_color(c_white);
+			}
+
+			// Draw item if it exists in player inventory
+			if (_item != undefined) {
+				// Draw item sprite
+				draw_sprite_ext(spr_items, _item.definition.world_sprite_frame,
+							   _item_x, _item_y,
+							   _draw_scale, _draw_scale, 0, c_white, 1);
+
+				// Draw stack count if > 1
+				if (_item.count > 1) {
+					draw_set_color(c_white);
+					draw_set_halign(fa_right);
+					draw_set_valign(fa_bottom);
+					draw_text(_slot_x + _slot_width - 4, _slot_y + _slot_height - 4, string(_item.count));
+					draw_set_halign(fa_left);
+					draw_set_valign(fa_top);
+				}
+			}
 	}
 
 	

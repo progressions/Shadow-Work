@@ -265,14 +265,126 @@ function inventory_get_slot_action(_player_instance, _slot_index) {
         return InventoryContextAction.equip;
     }
 
-    switch (_def.type) {
-        case ItemType.consumable:
-            return InventoryContextAction.use;
-
-        case ItemType.ammo:
-            return InventoryContextAction.use;
-
-        default:
-            return InventoryContextAction.none;
+    if (_def.type == ItemType.consumable) {
+        return InventoryContextAction.use;
     }
+
+    return InventoryContextAction.none;
+}
+
+function inventory_perform_equip_on_player(_player_instance, _slot_index, _target_hand = undefined) {
+    if (_player_instance == noone) return false;
+    if (!is_undefined(_slot_index) && _slot_index < 0) return false;
+    var _equip_method = method(_player_instance, equip_item);
+    if (_equip_method == undefined) return false;
+    return _equip_method(_slot_index, _target_hand);
+}
+
+function inventory_use_item(_inventory_index) {
+    if (_inventory_index < 0 || _inventory_index >= array_length(inventory)) return false;
+
+    var _item_entry = inventory[_inventory_index];
+    if (_item_entry == undefined) return false;
+
+    var _def = _item_entry.definition;
+    if (_def == undefined) return false;
+
+    if (_def.type != ItemType.consumable) return false;
+
+    var _stats = _def.stats;
+    if (_stats == undefined) {
+        return false;
+    }
+
+    var _consumed = false;
+
+    if (_stats[$ "heal_amount"] != undefined) {
+        if (variable_instance_exists(id, "hp") && variable_instance_exists(id, "hp_total")) {
+            if (hp < hp_total) {
+                var _heal_amount = _stats[$ "heal_amount"];
+                var _new_hp = clamp(hp + _heal_amount, 0, hp_total);
+                if (_new_hp > hp) {
+                    hp = _new_hp;
+                    _consumed = true;
+                }
+            }
+        }
+    }
+
+    if (_stats[$ "stamina_restore"] != undefined) {
+        var _stamina_var = undefined;
+        if (variable_instance_exists(id, "stamina")) {
+            _stamina_var = "stamina";
+        } else if (variable_instance_exists(id, "stamina_current")) {
+            _stamina_var = "stamina_current";
+        }
+
+        if (_stamina_var != undefined) {
+            var _stamina_max_var = undefined;
+            if (variable_instance_exists(id, "stamina_max")) {
+                _stamina_max_var = "stamina_max";
+            } else if (variable_instance_exists(id, "stamina_total")) {
+                _stamina_max_var = "stamina_total";
+            }
+
+            if (_stamina_max_var != undefined) {
+                var _restore = _stats[$ "stamina_restore"];
+                var _current_val = variable_instance_get(id, _stamina_var);
+                var _max_val = variable_instance_get(id, _stamina_max_var);
+                var _new_stamina = clamp(_current_val + _restore, 0, _max_val);
+                if (_new_stamina > _current_val) {
+                    variable_instance_set(id, _stamina_var, _new_stamina);
+                    _consumed = true;
+                }
+            }
+        }
+    }
+
+    if (_stats[$ "mana_restore"] != undefined) {
+        var _mana_var = undefined;
+        if (variable_instance_exists(id, "mana")) {
+            _mana_var = "mana";
+        } else if (variable_instance_exists(id, "mana_current")) {
+            _mana_var = "mana_current";
+        }
+
+        if (_mana_var != undefined) {
+            var _mana_max_var = undefined;
+            if (variable_instance_exists(id, "mana_max")) {
+                _mana_max_var = "mana_max";
+            } else if (variable_instance_exists(id, "mana_total")) {
+                _mana_max_var = "mana_total";
+            }
+
+            if (_mana_max_var != undefined) {
+                var _restore_mana = _stats[$ "mana_restore"];
+                var _mana_current = variable_instance_get(id, _mana_var);
+                var _mana_max = variable_instance_get(id, _mana_max_var);
+                var _new_mana = clamp(_mana_current + _restore_mana, 0, _mana_max);
+                if (_new_mana > _mana_current) {
+                    variable_instance_set(id, _mana_var, _new_mana);
+                    _consumed = true;
+                }
+            }
+        }
+    }
+
+    if (_stats[$ "damage_buff"] != undefined) {
+        // Placeholder: apply temporary buff handling later
+        _consumed = true;
+    }
+
+    if (!_consumed) {
+        return false;
+    }
+
+    inventory_remove_item(_inventory_index, 1);
+    return true;
+}
+
+function inventory_perform_use_on_player(_player_instance, _slot_index) {
+    if (_player_instance == noone) return false;
+    var _use_method = method(_player_instance, inventory_use_item);
+    if (_use_method == undefined) return false;
+    return _use_method(_slot_index);
 }

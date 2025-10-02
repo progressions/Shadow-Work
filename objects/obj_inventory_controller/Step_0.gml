@@ -60,20 +60,66 @@ if (is_open) {
             break;
     }
 
-    // Action key stubs
+    // Action keys
     if (keyboard_check_pressed(vk_space)) {
         if (_slot_action == InventoryContextAction.none) {
             show_debug_message("[Space] No context action for slot: " + string(_row) + ", " + string(_col) + " (index: " + string(selected_slot) + ")");
+        } else if (_player == noone) {
+            show_debug_message("[Space] No player instance found");
         } else {
-            show_debug_message("[Space] Context action '" + _action_text + "' at slot: " + string(_row) + ", " + string(_col) + " (index: " + string(selected_slot) + ")");
+            var _success = false;
+            switch (_slot_action) {
+                case InventoryContextAction.equip:
+                    _success = inventory_perform_equip_on_player(_player, selected_slot);
+                    break;
+
+                case InventoryContextAction.use:
+                    _success = inventory_perform_use_on_player(_player, selected_slot);
+                    break;
+            }
+
+            if (_success) {
+                show_debug_message("[Space] Executed '" + _action_text + "' on slot: " + string(_row) + ", " + string(_col) + " (index: " + string(selected_slot) + ")");
+            } else {
+                show_debug_message("[Space] Failed to execute '" + _action_text + "' on slot: " + string(_row) + ", " + string(_col) + " (index: " + string(selected_slot) + ")");
+            }
+            _slot_action = inventory_get_slot_action(_player, selected_slot);
+            _action_text = "none";
+            switch (_slot_action) {
+                case InventoryContextAction.equip:
+                    _action_text = "equip";
+                    break;
+
+                case InventoryContextAction.use:
+                    _action_text = "use";
+                    break;
+            }
         }
     }
 
     if (keyboard_check_pressed(ord("E"))) {
-        if (_slot_action == InventoryContextAction.equip) {
-            show_debug_message("[E] Equip item at slot: " + string(_row) + ", " + string(_col) + " (index: " + string(selected_slot) + ")");
-        } else {
+        if (_slot_action != InventoryContextAction.equip) {
             show_debug_message("[E] No equip action available (current context: " + _action_text + ")");
+        } else if (_player == noone) {
+            show_debug_message("[E] No player instance found");
+        } else {
+            var _equip_success = inventory_perform_equip_on_player(_player, selected_slot);
+            if (_equip_success) {
+                show_debug_message("[E] Equipped item from slot: " + string(_row) + ", " + string(_col) + " (index: " + string(selected_slot) + ")");
+            } else {
+                show_debug_message("[E] Equip failed for slot: " + string(_row) + ", " + string(_col) + " (index: " + string(selected_slot) + ")");
+            }
+            _slot_action = inventory_get_slot_action(_player, selected_slot);
+            _action_text = "none";
+            switch (_slot_action) {
+                case InventoryContextAction.equip:
+                    _action_text = "equip";
+                    break;
+
+                case InventoryContextAction.use:
+                    _action_text = "use";
+                    break;
+            }
         }
     }
 
@@ -82,10 +128,28 @@ if (is_open) {
     }
 
     if (keyboard_check_pressed(ord("U"))) {
-        if (_slot_action == InventoryContextAction.use) {
-            show_debug_message("[U] Use/consume item at slot: " + string(_row) + ", " + string(_col) + " (index: " + string(selected_slot) + ")");
-        } else {
+        if (_slot_action != InventoryContextAction.use) {
             show_debug_message("[U] No use action available (current context: " + _action_text + ")");
+        } else if (_player == noone) {
+            show_debug_message("[U] No player instance found");
+        } else {
+            var _use_success = inventory_perform_use_on_player(_player, selected_slot);
+            if (_use_success) {
+                show_debug_message("[U] Used item from slot: " + string(_row) + ", " + string(_col) + " (index: " + string(selected_slot) + ")");
+            } else {
+                show_debug_message("[U] Use failed for slot: " + string(_row) + ", " + string(_col) + " (index: " + string(selected_slot) + ")");
+            }
+            _slot_action = inventory_get_slot_action(_player, selected_slot);
+            _action_text = "none";
+            switch (_slot_action) {
+                case InventoryContextAction.equip:
+                    _action_text = "equip";
+                    break;
+
+                case InventoryContextAction.use:
+                    _action_text = "use";
+                    break;
+            }
         }
     }
 
