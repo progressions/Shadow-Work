@@ -130,7 +130,7 @@ global.item_database = {
     // Additional item (frame 24)
     arrows: new create_item_definition(
         24, "arrows", "Arrows", ItemType.ammo, EquipSlot.none,
-        {stack_size: 99}
+        {stack_size: 99, is_ammo: true}
     ),
 
     // Plate armor set (frames 25-27) - Heavy tier
@@ -150,7 +150,17 @@ global.item_database = {
 
 // Helper function to spawn items in the world with count support
 function spawn_item(_x, _y, _item_key, _count = 1) {
-    var _item = instance_create_layer(_x, _y, "Items", obj_item_pickup);
+    var _pickup_object = asset_get_index("obj_item_pickup");
+    if (_pickup_object == -1) {
+        _pickup_object = obj_item_parent;
+    }
+
+    var _target_layer = "Instances";
+    if (!layer_exists(_target_layer)) {
+        _target_layer = layer_get_name(layer_get_id(0));
+    }
+
+    var _item = instance_create_layer(_x, _y, _target_layer, _pickup_object);
     _item.item_def = global.item_database[$ _item_key];
     _item.sprite_index = spr_items;  // Your items sprite
     _item.image_index = _item.item_def.world_sprite_frame;

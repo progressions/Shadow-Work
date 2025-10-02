@@ -46,7 +46,7 @@ if (is_open) {
 
     var _row = floor(selected_slot / grid_columns);
     var _col = selected_slot % grid_columns;
-    var _player = instance_find(obj_player, 0);
+    var _player = instance_exists(obj_player) ? obj_player : noone;
     var _slot_action = inventory_get_slot_action(_player, selected_slot);
 
     var _action_text = "none";
@@ -151,7 +151,35 @@ if (is_open) {
     }
 
     if (keyboard_check_pressed(ord("P"))) {
-        show_debug_message("[P] Drop item at slot: " + string(_row) + ", " + string(_col) + " (index: " + string(selected_slot) + ")");
+        if (_player == noone) {
+            show_debug_message("[P] No player instance found");
+        } else if (selected_slot >= array_length(_player.inventory) || _player.inventory[selected_slot] == undefined) {
+            show_debug_message("[P] No item to drop in slot " + string(selected_slot));
+        } else {
+            var _drop_method = method(_player, drop_selected_item);
+            var _stack = _player.inventory[selected_slot];
+            var _drop_amount = (_stack != undefined) ? _stack.count : 0;
+            if (_drop_method != undefined && _drop_amount > 0 && _drop_method(selected_slot, _drop_amount)) {
+                show_debug_message("[P] Dropped item from slot: " + string(_row) + ", " + string(_col) + " (index: " + string(selected_slot) + ")");
+                if (selected_slot >= array_length(_player.inventory)) {
+                    selected_slot = max(0, array_length(_player.inventory) - 1);
+                }
+            } else {
+                show_debug_message("[P] Drop failed for slot: " + string(selected_slot));
+            }
+
+            _slot_action = inventory_get_slot_action(_player, selected_slot);
+            _action_text = "none";
+            switch (_slot_action) {
+                case InventoryContextAction.equip:
+                    _action_text = "equip";
+                    break;
+
+                case InventoryContextAction.use:
+                    _action_text = "use";
+                    break;
+            }
+        }
     }
 
     if (keyboard_check_pressed(ord("U"))) {

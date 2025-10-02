@@ -16,6 +16,38 @@ function player_handle_pickup() {
     if (_instance != noone && _instance.item_def != undefined) {
         var _item_def = _instance.item_def;
         var _count = _instance.count;
+        var _stats = _item_def.stats;
+        var _is_ammo_pickup = (_item_def.type == ItemType.ammo) || ((_stats != undefined) && (_stats[$ "is_ammo"] ?? false));
+
+        if (_is_ammo_pickup) {
+            var _max_arrows = arrow_max ?? 25;
+            var _space_available = clamp(_max_arrows - arrow_count, 0, _max_arrows);
+
+            if (_space_available <= 0) {
+                show_debug_message("Arrow pouch is full");
+            } else {
+                var _taken = min(_space_available, _count);
+                arrow_count += _taken;
+
+                play_sfx(snd_chest_open, 1, false);
+                show_debug_message("Picked up " + string(_taken) + " arrows (" + string(arrow_count) + "/" + string(_max_arrows) + ")");
+
+                increment_quest_counter("items_collected", _taken);
+                increment_quest_counter("item_" + _item_def.item_id, _taken);
+
+                if (_count > _taken) {
+                    _instance.count = _count - _taken;
+                } else {
+                    if (variable_instance_exists(_instance, "item_spawn_id")) {
+                        array_push(global.picked_up_items, _instance.item_spawn_id);
+                    }
+                    instance_destroy(_instance);
+                }
+            }
+
+            ds_list_destroy(pickup_list);
+            return;
+        }
 
         // Try to add to inventory
         if (inventory_add_item(_item_def, _count)) {

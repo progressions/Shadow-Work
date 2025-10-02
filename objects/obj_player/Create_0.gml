@@ -48,6 +48,9 @@ loadouts = {
 inventory = [];
 max_inventory_size = 16;
 
+arrow_count = 0;
+arrow_max = 25;
+
 debug = false;
 
 interaction_offset_x = 0;

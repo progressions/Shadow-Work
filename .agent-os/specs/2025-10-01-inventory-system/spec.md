@@ -60,6 +60,7 @@ The inventory screen displays a paper doll showing the player character with vis
 7. Press Q in-game to swap between melee/ranged loadouts with character sprite updating to show active weapon
 8. Two-handed weapon equipping clears left hand slot and returns displaced item to inventory
 9. Arrow counter displays current arrow count (0-25) below ranged loadout, updates when arrows picked up
+10. Saving and loading preserves picked-up/dropped items: items collected before a save remain in inventory after reload, and any items dropped stay in the world at their saved positions
 
 ## Audio Feedback
 

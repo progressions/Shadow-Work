@@ -93,6 +93,7 @@
   - [ ] 11.4 Create animated selection cursor sprite with pulse/glow effect
   - [ ] 11.5 Add visual polish to active loadout border/highlight
   - [ ] 11.6 Verify inventory opens/closes smoothly and state persists
+  - [ ] 11.7 Ensure save/load persistence for picked-up and dropped items (tracked via spawn IDs)
 
 - [ ] 12. Testing and Edge Cases
   - [ ] 12.1 Test equipping two-handed weapon with both hands full

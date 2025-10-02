@@ -57,6 +57,155 @@ function inventory_remove_item(_inventory_index, _count = 1) {
     }
 }
 
+function drop_selected_item(_inventory_index, _amount = undefined) {
+    if (_inventory_index < 0 || _inventory_index >= array_length(inventory)) return false;
+
+    var _entry = inventory[_inventory_index];
+    if (_entry == undefined) return false;
+
+    var _def = _entry.definition;
+    if (_def == undefined) return false;
+
+    var _drop_count = (_amount == undefined) ? _entry.count : max(1, min(_amount, _entry.count));
+
+    var _spawn_offset = 64;
+    var _drop_x = x;
+    var _drop_y = y;
+
+    var _dir_x = 0;
+    var _dir_y = -_spawn_offset;
+
+    if (variable_instance_exists(id, "facing_dir")) {
+        switch (facing_dir) {
+            case "up":
+                _dir_x = 0;
+                _dir_y = -_spawn_offset;
+                break;
+            case "down":
+                _dir_x = 0;
+                _dir_y = _spawn_offset;
+                break;
+            case "left":
+                _dir_x = -_spawn_offset;
+                _dir_y = 0;
+                break;
+            case "right":
+                _dir_x = _spawn_offset;
+                _dir_y = 0;
+                break;
+        }
+    }
+
+    _drop_x = x + _dir_x;
+    _drop_y = y + _dir_y;
+
+    var _tilemap_coll = layer_tilemap_get_id("Tiles_Col");
+    if (_tilemap_coll != -1) {
+        var _tile_value = tilemap_get_at_pixel(_tilemap_coll, _drop_x, _drop_y);
+        if (_tile_value != 0) {
+            var _alternates = [
+                {x: _dir_y, y: -_dir_x},
+                {x: -_dir_y, y: _dir_x},
+                {x: -_dir_x, y: -_dir_y},
+                {x: 0, y: -_spawn_offset},
+                {x: 0, y: _spawn_offset},
+                {x: -_spawn_offset, y: 0},
+                {x: _spawn_offset, y: 0}
+            ];
+
+            var _placed = false;
+            for (var _ai = 0; _ai < array_length(_alternates); _ai++) {
+                var _option = _alternates[_ai];
+                var _test_x = x + _option.x;
+                var _test_y = y + _option.y;
+                if (tilemap_get_at_pixel(_tilemap_coll, _test_x, _test_y) == 0) {
+                    _drop_x = _test_x;
+                    _drop_y = _test_y;
+                    _placed = true;
+                    break;
+                }
+            }
+
+            if (!_placed) {
+                _drop_x = x + _dir_x;
+                _drop_y = y + _dir_y;
+            }
+        }
+    }
+
+    var _spawn = spawn_item(_drop_x, _drop_y, _def.item_id, _drop_count);
+    if (_spawn != noone) {
+        _spawn.count = _drop_count;
+        if (_entry.durability != undefined) {
+            _spawn.durability = _entry.durability;
+        }
+    }
+
+    if (_entry.count > _drop_count) {
+        _entry.count -= _drop_count;
+    } else {
+        array_delete(inventory, _inventory_index, 1);
+    }
+
+    return true;
+}
+
+function inventory_can_accept_batch(_items) {
+    var _sim_inventory = [];
+    for (var _i = 0; _i < array_length(inventory); _i++) {
+        var _existing = inventory[_i];
+        if (_existing != undefined) {
+            array_push(_sim_inventory, {definition: _existing.definition, count: _existing.count});
+        }
+    }
+
+    var _max_slots = max_inventory_size;
+
+    for (var _j = 0; _j < array_length(_items); _j++) {
+        var _pending = _items[_j];
+        if (_pending == undefined) continue;
+
+        var _def = _pending.definition;
+        var _remaining = _pending.count;
+        if (_def == undefined || _remaining <= 0) continue;
+
+        var _stack_size = 1;
+        if (_def.stats != undefined) {
+            _stack_size = _def.stats[$ "stack_size"] ?? 1;
+        }
+
+        for (var _k = 0; _k < array_length(_sim_inventory) && _remaining > 0; _k++) {
+            var _sim_entry = _sim_inventory[_k];
+            if (_sim_entry != undefined && _sim_entry.definition.item_id == _def.item_id) {
+                var _sim_stack_size = 1;
+                if (_sim_entry.definition.stats != undefined) {
+                    _sim_stack_size = _sim_entry.definition.stats[$ "stack_size"] ?? 1;
+                }
+
+                var _space = _sim_stack_size - _sim_entry.count;
+                if (_space > 0) {
+                    var _add = min(_space, _remaining);
+                    _sim_entry.count += _add;
+                    _remaining -= _add;
+                    _sim_inventory[_k] = _sim_entry;
+                }
+            }
+        }
+
+        while (_remaining > 0 && array_length(_sim_inventory) < _max_slots) {
+            var _add_new = min(_stack_size, _remaining);
+            array_push(_sim_inventory, {definition: _def, count: _add_new});
+            _remaining -= _add_new;
+        }
+
+        if (_remaining > 0) {
+            return false;
+        }
+    }
+
+    return true;
+}
+
 // Equip item with two-handed weapon handling
 function equip_item(_inventory_index, _target_hand = undefined) {
     if (_inventory_index < 0 || _inventory_index >= array_length(inventory)) return false;
@@ -180,6 +329,37 @@ function equip_item(_inventory_index, _target_hand = undefined) {
         _slot_container = _loadout_struct;
     } else {
         _slot_container = equipped;
+    }
+
+    var _pending_returns = [];
+    var _skip_slot_check = false;
+
+    if (_is_hand_slot) {
+        var _source_struct = (_loadout_struct != undefined) ? _loadout_struct : equipped;
+
+        if (_def.handedness == WeaponHandedness.two_handed) {
+            if (_source_struct.right_hand != undefined) {
+                array_push(_pending_returns, {definition: _source_struct.right_hand.definition, count: _source_struct.right_hand.count});
+            }
+            if (_source_struct.left_hand != undefined) {
+                array_push(_pending_returns, {definition: _source_struct.left_hand.definition, count: _source_struct.left_hand.count});
+            }
+            _skip_slot_check = true;
+        }
+    }
+
+    if (!_skip_slot_check) {
+        var _existing_slot_entry = _slot_container[$ _slot_name];
+        if (_existing_slot_entry != undefined) {
+            array_push(_pending_returns, {definition: _existing_slot_entry.definition, count: _existing_slot_entry.count});
+        }
+    }
+
+    if (array_length(_pending_returns) > 0) {
+        if (!inventory_can_accept_batch(_pending_returns)) {
+            show_debug_message("Inventory full!");
+            return false;
+        }
     }
 
     // Unequip existing item in target slot
