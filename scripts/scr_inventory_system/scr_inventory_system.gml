@@ -233,8 +233,9 @@ function consume_ammo(_ammo_type, _amount = 1) {
 function get_item_scale(_item_def, _context) {
     switch (_context) {
         case "inventory_grid":
-            // Large items (greatsword, bow, etc.) render at 1x, normal items at 2x
-            return (_item_def.large_sprite ?? false) ? 1 : 2;
+            // Large items (greatsword, bow, etc.) render at 2x, normal items at 4x
+            // (spr_items is 32x32 base, needs scaling to be visible in 128px slots)
+            return (_item_def.large_sprite ?? false) ? 2 : 4;
 
         case "loadout_slot":
             return 2;
