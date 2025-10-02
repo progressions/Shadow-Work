@@ -43,4 +43,35 @@ if (is_open) {
 
     // Update selected slot
     selected_slot = (_current_row * grid_columns) + _current_col;
+
+    // Action key stubs
+    if (keyboard_check_pressed(vk_space)) {
+        var _row = floor(selected_slot / grid_columns);
+        var _col = selected_slot % grid_columns;
+        show_debug_message("Selected slot: " + string(_row) + ", " + string(_col) + " (index: " + string(selected_slot) + ")");
+    }
+
+    if (keyboard_check_pressed(ord("E"))) {
+        var _row = floor(selected_slot / grid_columns);
+        var _col = selected_slot % grid_columns;
+        show_debug_message("[E] Equip item at slot: " + string(_row) + ", " + string(_col) + " (index: " + string(selected_slot) + ")");
+    }
+
+    if (keyboard_check_pressed(ord("D"))) {
+        var _row = floor(selected_slot / grid_columns);
+        var _col = selected_slot % grid_columns;
+        show_debug_message("[D] Drop item at slot: " + string(_row) + ", " + string(_col) + " (index: " + string(selected_slot) + ")");
+    }
+
+    if (keyboard_check_pressed(ord("U"))) {
+        var _row = floor(selected_slot / grid_columns);
+        var _col = selected_slot % grid_columns;
+        show_debug_message("[U] Use/consume item at slot: " + string(_row) + ", " + string(_col) + " (index: " + string(selected_slot) + ")");
+    }
+
+    if (keyboard_check_pressed(vk_escape)) {
+        show_debug_message("[ESC] Closing inventory");
+        is_open = false;
+        global.game_paused = false;
+    }
 }

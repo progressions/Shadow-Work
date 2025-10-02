@@ -62,8 +62,8 @@ if (is_open) {
 		// Draw selection cursor on selected slot
 		if (i == selected_slot) {
 			draw_set_color(c_yellow);
-			draw_rectangle(_slot_x - 2, _slot_y - 2, _slot_x + (_slot_size * 2) + 2, _slot_y + (_slot_size * 2) + 2, true);
-			draw_rectangle(_slot_x - 3, _slot_y - 3, _slot_x + (_slot_size * 2) + 3, _slot_y + (_slot_size * 2) + 3, true);
+			draw_rectangle(_slot_x - 2, _slot_y - 2, _slot_x + _slot_size + 2, _slot_y + _slot_size + 2, true);
+			draw_rectangle(_slot_x - 3, _slot_y - 3, _slot_x + _slot_size + 3, _slot_y + _slot_size + 3, true);
 			draw_set_color(c_white);
 		}
 	}
