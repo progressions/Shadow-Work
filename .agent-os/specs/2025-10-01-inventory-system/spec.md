@@ -36,7 +36,7 @@ The inventory screen displays a paper doll showing the player character with vis
 5. **Arrow Resource Tracking** - Separate 0-25 arrow counter display (not occupying inventory slot)
 6. **Item Scaling System** - Context-aware sprite scaling (1x/2x/4x) based on item type and display location
 7. **Panel Rendering** - Four distinct UI panels (character, paper doll, inventory grid, companions) with sprite-based frames
-8. **Keyboard-Only Controls** - Complete inventory management without mouse (I/Esc to open/close, E to equip, D to drop, Q to swap loadouts)
+8. **Keyboard-Only Controls** - Complete inventory management without mouse (I/Esc to open/close, E to equip, D to drop, Q to swap loadouts, Space as a context-sensitive confirm for equip/use)
 
 ## Out of Scope
 
@@ -55,7 +55,8 @@ The inventory screen displays a paper doll showing the player character with vis
 2. Arrow keys navigate inventory grid with visible selection cursor, wrapping at edges
 3. Add items to player inventory (via debug command), see them rendered in grid at 2x scale (1x for large items)
 4. Press E on selected item to equip: weapons route to correct loadout, armor appears on paper doll at 4x scale
-5. Press Q in inventory screen to swap active loadout indicator between melee/ranged
-6. Press Q in-game to swap between melee/ranged loadouts with character sprite updating to show active weapon
-7. Two-handed weapon equipping clears left hand slot and returns displaced item to inventory
-8. Arrow counter displays current arrow count (0-25) below ranged loadout, updates when arrows picked up
+5. Space bar acts as a context-sensitive confirm: equipping items that respond to E, or using/consuming items that respond to U
+6. Press Q in inventory screen to swap active loadout indicator between melee/ranged
+7. Press Q in-game to swap between melee/ranged loadouts with character sprite updating to show active weapon
+8. Two-handed weapon equipping clears left hand slot and returns displaced item to inventory
+9. Arrow counter displays current arrow count (0-25) below ranged loadout, updates when arrows picked up

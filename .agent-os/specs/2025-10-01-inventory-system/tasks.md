@@ -19,6 +19,7 @@
   - [ ] 2.4 Add U key stub for use/consume action (debug message)
   - [ ] 2.5 Add Esc key to close inventory
   - [ ] 2.6 Verify all key stubs show correct slot indices
+  - [ ] 2.7 Update Space key stub to note upcoming context-sensitive behavior (equip/use)
 
 - [ ] 3. Equipment System - Armor and Paper Doll
   - [ ] 3.1 Create `equip_selected_item()` function with item type detection
@@ -110,3 +111,8 @@
   - [ ] 13.4 Remove debug-only code
   - [ ] 13.5 Final integration playthrough test
   - [ ] 13.6 Verify all deliverables from spec.md are complete
+
+- [ ] 14. Context-Sensitive Space Key Action
+  - [ ] 14.1 Detect whether the selected item would equip (E) or use (U)
+  - [ ] 14.2 Route Space key to call the corresponding equip/use function
+  - [ ] 14.3 Ensure Space-triggered actions mirror all feedback/validation (messages, inventory updates)
