@@ -167,6 +167,12 @@ if (keyboard_check_pressed(ord("8"))) {
     show_debug_message("Gained 10 XP via debug key");
 }
 
+// Debug key for adding arrows
+if (keyboard_check_pressed(ord("9"))) {
+    inventory_add_item(global.item_database.arrows, 10);
+    show_debug_message("Added 10 arrows to inventory");
+}
+
 // Debug keys for testing trait system v2.0
 if (keyboard_check_pressed(ord("T"))) {
     // Add fire_resistance trait (3 stacks)
