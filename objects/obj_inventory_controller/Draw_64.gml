@@ -86,6 +86,15 @@ if (is_open) {
 		_melee_label += " [ACTIVE]";
 	}
 	draw_text(_loadout_label_x, _melee_y - 20, _melee_label);
+
+	// Draw yellow highlight for selected loadout hand if on loadout tab
+	if (current_tab == InventoryTab.loadout && loadout_selected_loadout == "melee") {
+		var _highlight_x = (loadout_selected_hand == "left") ? _left_x : _right_x;
+		draw_set_color(c_yellow);
+		draw_rectangle(_highlight_x - 18, _melee_y - 18, _highlight_x + 18, _melee_y + 18, true);
+		draw_set_color(c_white);
+	}
+
 	draw_hand_item(_melee_left, _left_x, _melee_y);
 	draw_hand_item(_melee_right, _right_x, _melee_y);
 
@@ -94,6 +103,15 @@ if (is_open) {
 		_ranged_label += " [ACTIVE]";
 	}
 	draw_text(_loadout_label_x, _ranged_y - 20, _ranged_label);
+
+	// Draw yellow highlight for selected loadout hand if on loadout tab
+	if (current_tab == InventoryTab.loadout && loadout_selected_loadout == "ranged") {
+		var _highlight_x = (loadout_selected_hand == "left") ? _left_x : _right_x;
+		draw_set_color(c_yellow);
+		draw_rectangle(_highlight_x - 18, _ranged_y - 18, _highlight_x + 18, _ranged_y + 18, true);
+		draw_set_color(c_white);
+	}
+
 	draw_hand_item(_ranged_left, _left_x, _ranged_y);
 	draw_hand_item(_ranged_right, _right_x, _ranged_y);
 	
@@ -102,36 +120,43 @@ if (is_open) {
 	#region Paper Doll
 	// paper doll
 	// draw_sprite_ext(spr_paper_doll, 0, _x + 300, _y + 40, 1.5, 1.5, 0, c_white, 1);
-	
+
 	var _armor_scale = 6;
-	
+
 	var _paper_doll_x = _x + 300;
 	var _paper_doll_y = _y + 40;
-	
+
+	var _head_x = _paper_doll_x + 90;
+	var _head_y = _paper_doll_y + 160;
+	var _torso_x = _paper_doll_x + 90;
+	var _torso_y = _paper_doll_y + 250;
+	var _leg_x = _paper_doll_x + 90;
+	var _leg_y = _paper_doll_y + 350;
+
+	// Draw yellow highlight for selected paper doll slot if on paper doll tab
+	if (current_tab == InventoryTab.paper_doll) {
+		var _highlight_y = _head_y;
+		if (paper_doll_selected == "torso") _highlight_y = _torso_y;
+		else if (paper_doll_selected == "legs") _highlight_y = _leg_y;
+
+		draw_set_color(c_yellow);
+		draw_rectangle(_paper_doll_x + 42, _highlight_y - 24, _paper_doll_x + 138, _highlight_y + 24, true);
+		draw_set_color(c_white);
+	}
+
 	if (_player.equipped.head != undefined) {
-		var _head_x = _paper_doll_x + 90;
-		var _head_y = _paper_doll_y + 160;
 		var _frame = _player.equipped.head.definition.world_sprite_frame;
-		
 		draw_sprite_ext(spr_items, _frame, _head_x, _head_y, _armor_scale, _armor_scale, 0, c_white, 1);
 	}
 	if (_player.equipped.torso != undefined) {
-		var _torso_x = _paper_doll_x + 90;
-		var _torso_y = _paper_doll_y + 250;
-		
 		var _frame = _player.equipped.torso.definition.world_sprite_frame;
-		
 		draw_sprite_ext(spr_items, _frame, _torso_x, _torso_y, _armor_scale, _armor_scale, 0, c_white, 1);
 	}
 	if (_player.equipped.legs != undefined) {
-		var _leg_x = _paper_doll_x + 90;
-		var _leg_y = _paper_doll_y + 350;
-		
 		var _frame = _player.equipped.legs.definition.world_sprite_frame;
-		
 		draw_sprite_ext(spr_items, _frame, _leg_x, _leg_y, _armor_scale, _armor_scale, 0, c_white, 1);
 	}
-	
+
 	#endregion Paper Doll
 	
 	#region Inventory Grid
@@ -189,8 +214,8 @@ if (is_open) {
 				_item_y = _slot_center_y - (_item_center_offset_y * _draw_scale);
 			}
 
-			// Draw selection cursor on selected slot
-			if (_is_selected) {
+			// Draw selection cursor on selected slot (only when inventory tab is active)
+			if (_is_selected && current_tab == InventoryTab.inventory) {
 				draw_set_color(c_yellow);
 				draw_rectangle(_slot_x - 2, _slot_y - 2, _slot_x + _slot_width + 2, _slot_y + _slot_height + 2, true);
 				draw_rectangle(_slot_x - 3, _slot_y - 3, _slot_x + _slot_width + 3, _slot_y + _slot_height + 3, true);
