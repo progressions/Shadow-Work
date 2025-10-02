@@ -86,6 +86,7 @@
     {"id":{"name":"obj_canopy","path":"objects/obj_canopy/obj_canopy.yy",},},
     {"id":{"name":"obj_column_marble","path":"objects/obj_column_marble/obj_column_marble.yy",},},
     {"id":{"name":"obj_companion_parent","path":"objects/obj_companion_parent/obj_companion_parent.yy",},},
+    {"id":{"name":"obj_enemy_arrow","path":"objects/obj_enemy_arrow/obj_enemy_arrow.yy",},},
     {"id":{"name":"obj_enemy_attack","path":"objects/obj_enemy_attack/obj_enemy_attack.yy",},},
     {"id":{"name":"obj_enemy_corpse","path":"objects/obj_enemy_corpse/obj_enemy_corpse.yy",},},
     {"id":{"name":"obj_enemy_parent","path":"objects/obj_enemy_parent/obj_enemy_parent.yy",},},
