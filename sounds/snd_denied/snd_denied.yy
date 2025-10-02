@@ -2,8 +2,8 @@
   "$GMSound":"",
   "%Name":"snd_denied",
   "audioGroupId":{
-    "name":"audiogroup_default",
-    "path":"audiogroups/audiogroup_default",
+    "name":"audiogroup_sfx_ui",
+    "path":"audiogroups/audiogroup_sfx_ui",
   },
   "bitDepth":1,
   "bitRate":128,
@@ -12,8 +12,8 @@
   "duration":0.41666666,
   "name":"snd_denied",
   "parent":{
-    "name":"sfx",
-    "path":"folders/Sounds/sfx.yy",
+    "name":"ui",
+    "path":"folders/Sounds/sfx/ui.yy",
   },
   "preload":false,
   "resourceType":"GMSound",

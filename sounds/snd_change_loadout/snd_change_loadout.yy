@@ -2,8 +2,8 @@
   "$GMSound":"",
   "%Name":"snd_change_loadout",
   "audioGroupId":{
-    "name":"audiogroup_default",
-    "path":"audiogroups/audiogroup_default",
+    "name":"audiogroup_sfx_ui",
+    "path":"audiogroups/audiogroup_sfx_ui",
   },
   "bitDepth":1,
   "bitRate":128,
@@ -12,8 +12,8 @@
   "duration":1.3928572,
   "name":"snd_change_loadout",
   "parent":{
-    "name":"sfx",
-    "path":"folders/Sounds/sfx.yy",
+    "name":"ui",
+    "path":"folders/Sounds/sfx/ui.yy",
   },
   "preload":false,
   "resourceType":"GMSound",

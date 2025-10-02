@@ -3,8 +3,9 @@
   "%Name":"Shadow Work",
   "AudioGroups":[
     {"$GMAudioGroup":"","%Name":"audiogroup_default","name":"audiogroup_default","resourceType":"GMAudioGroup","resourceVersion":"2.0","targets":-1,},
-    {"$GMAudioGroup":"","%Name":"audiogroup_sfx","name":"audiogroup_sfx","resourceType":"GMAudioGroup","resourceVersion":"2.0","targets":-1,},
+    {"$GMAudioGroup":"","%Name":"audiogroup_sfx_world","name":"audiogroup_sfx_world","resourceType":"GMAudioGroup","resourceVersion":"2.0","targets":-1,},
     {"$GMAudioGroup":"","%Name":"audiogroup_music","name":"audiogroup_music","resourceType":"GMAudioGroup","resourceVersion":"2.0","targets":-1,},
+    {"$GMAudioGroup":"","%Name":"audiogroup_sfx_ui","name":"audiogroup_sfx_ui","resourceType":"GMAudioGroup","resourceVersion":"2.0","targets":-1,},
   ],
   "configs":{
     "children":[],
@@ -46,6 +47,8 @@
     {"$GMFolder":"","%Name":"Sounds","folderPath":"folders/Sounds.yy","name":"Sounds","resourceType":"GMFolder","resourceVersion":"2.0",},
     {"$GMFolder":"","%Name":"music","folderPath":"folders/Sounds/music.yy","name":"music","resourceType":"GMFolder","resourceVersion":"2.0",},
     {"$GMFolder":"","%Name":"sfx","folderPath":"folders/Sounds/sfx.yy","name":"sfx","resourceType":"GMFolder","resourceVersion":"2.0",},
+    {"$GMFolder":"","%Name":"ui","folderPath":"folders/Sounds/sfx/ui.yy","name":"ui","resourceType":"GMFolder","resourceVersion":"2.0",},
+    {"$GMFolder":"","%Name":"world","folderPath":"folders/Sounds/sfx/world.yy","name":"world","resourceType":"GMFolder","resourceVersion":"2.0",},
     {"$GMFolder":"","%Name":"Sprites","folderPath":"folders/Sprites.yy","name":"Sprites","resourceType":"GMFolder","resourceVersion":"2.0",},
     {"$GMFolder":"","%Name":"companions","folderPath":"folders/Sprites/companions.yy","name":"companions","resourceType":"GMFolder","resourceVersion":"2.0",},
     {"$GMFolder":"","%Name":"environment","folderPath":"folders/Sprites/environment.yy","name":"environment","resourceType":"GMFolder","resourceVersion":"2.0",},

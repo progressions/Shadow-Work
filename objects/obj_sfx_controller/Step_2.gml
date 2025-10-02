@@ -1,8 +1,11 @@
 
 // Calculate final volume, considering enabled state
-var _final_volume = global.audio_config.sfx_enabled
+var _final_volume_world = global.audio_config.sfx_enabled
 	? global.audio_config.sfx_volume * global.audio_config.master_volume
 	: 0;
+var _final_volume_ui = global.audio_config.sfx_volume * global.audio_config.master_volume;
+audio_group_set_gain(audiogroup_sfx_world, _final_volume_world, 0);
+audio_group_set_gain(audiogroup_sfx_ui, _final_volume_ui, 0);
 
 #region Play all queued sounds
 

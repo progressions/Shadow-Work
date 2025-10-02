@@ -2,8 +2,8 @@
   "$GMSound":"",
   "%Name":"snd_orc_attack",
   "audioGroupId":{
-    "name":"audiogroup_default",
-    "path":"audiogroups/audiogroup_default",
+    "name":"audiogroup_sfx_world",
+    "path":"audiogroups/audiogroup_sfx_world",
   },
   "bitDepth":1,
   "bitRate":128,
@@ -12,8 +12,8 @@
   "duration":0.98213154,
   "name":"snd_orc_attack",
   "parent":{
-    "name":"sfx",
-    "path":"folders/Sounds/sfx.yy",
+    "name":"world",
+    "path":"folders/Sounds/sfx/world.yy",
   },
   "preload":false,
   "resourceType":"GMSound",
