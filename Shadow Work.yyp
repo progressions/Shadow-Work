@@ -308,6 +308,7 @@
     {"id":{"name":"spr_forest_tiles","path":"sprites/spr_forest_tiles/spr_forest_tiles.yy",},},
     {"id":{"name":"spr_grass","path":"sprites/spr_grass/spr_grass.yy",},},
     {"id":{"name":"spr_greenwood_bandit","path":"sprites/spr_greenwood_bandit/spr_greenwood_bandit.yy",},},
+    {"id":{"name":"spr_inv_bar_frame","path":"sprites/spr_inv_bar_frame/spr_inv_bar_frame.yy",},},
     {"id":{"name":"spr_inventory_screen","path":"sprites/spr_inventory_screen/spr_inventory_screen.yy",},},
     {"id":{"name":"spr_inventory_slot","path":"sprites/spr_inventory_slot/spr_inventory_slot.yy",},},
     {"id":{"name":"spr_item_greatshield","path":"sprites/spr_item_greatshield/spr_item_greatshield.yy",},},

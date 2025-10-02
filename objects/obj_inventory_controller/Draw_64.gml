@@ -10,8 +10,7 @@ if (is_open) {
     // Draw the nine-slice background
     draw_sprite_stretched(spr_box_frame, 0, _x, _y, _width, _height);
     
-	var _player_exists = instance_exists(obj_player);
-	var _player = _player_exists ? obj_player : noone;
+	var _player = obj_player;
 
 	// character panel
 	// draw_sprite_ext(spr_character_panel, 0, _x + 40, _y + 40, 1.5, 1.5, 0, c_white, 1);
@@ -22,52 +21,47 @@ if (is_open) {
 	var _panel_width = sprite_get_width(spr_character_panel) * _panel_scale;
 	var _panel_height = sprite_get_height(spr_character_panel) * _panel_scale;
 
-	if (_player_exists) {
-		draw_set_color(c_white);
-		draw_text(_panel_char_x + 24, _panel_char_y + 24, "STATS");
+	draw_set_color(c_white);
+	draw_text(_panel_char_x + 24, _panel_char_y + 24, "STATS");
 
-		var _hp_ratio = clamp(obj_player.hp / max(1, obj_player.hp_total), 0, 1);
-		var _hp_bar_x = _panel_char_x + 24;
-		var _hp_bar_y = _panel_char_y + 52;
-		var _hp_bar_w = _panel_width - 48;
-		draw_set_color(make_colour_rgb(60, 60, 60));
-		draw_rectangle(_hp_bar_x, _hp_bar_y, _hp_bar_x + _hp_bar_w, _hp_bar_y + 12, false);
-		draw_set_color(make_colour_rgb(200, 40, 40));
-		draw_rectangle(_hp_bar_x, _hp_bar_y, _hp_bar_x + (_hp_bar_w * _hp_ratio), _hp_bar_y + 12, false);
-		draw_set_color(c_white);
-		draw_text(_hp_bar_x, _hp_bar_y - 16, "HP " + string(obj_player.hp) + "/" + string(obj_player.hp_total));
+	var _hp_x = _panel_char_x + 18;
+	var _hp_y = _panel_char_y + 42;
+	var _hp_w = sprite_get_width(spr_ui_healthbar) - 6;
+	var _hp_h = sprite_get_height(spr_ui_healthbar) - 6;
 
-		var _xp_ratio = clamp(obj_player.xp / max(1, obj_player.xp_to_next), 0, 1);
-		var _xp_bar_y = _hp_bar_y + 32;
-		draw_set_color(make_colour_rgb(60, 60, 60));
-		draw_rectangle(_hp_bar_x, _xp_bar_y, _hp_bar_x + _hp_bar_w, _xp_bar_y + 12, false);
-		draw_set_color(make_colour_rgb(80, 120, 220));
-		draw_rectangle(_hp_bar_x, _xp_bar_y, _hp_bar_x + (_hp_bar_w * _xp_ratio), _xp_bar_y + 12, false);
-		draw_set_color(c_white);
-		draw_text(_hp_bar_x, _xp_bar_y - 16, "XP " + string(obj_player.xp) + "/" + string(obj_player.xp_to_next));
+	draw_set_color(c_white);
+	ui_draw_health_bar(obj_player, _hp_x, _hp_y, _hp_w, _hp_h, health_bar_animation);
 
-		draw_text(_hp_bar_x, _xp_bar_y + 28, "Level " + string(obj_player.level));
-		draw_text(_hp_bar_x, _xp_bar_y + 52, "Tags: " + string(array_length(obj_player.tags)));
-		var _perm_traits_count = 0;
-		if (is_struct(obj_player.permanent_traits)) {
-			var _perm_keys = variable_struct_get_names(obj_player.permanent_traits);
-			_perm_traits_count = array_length(_perm_keys);
-		}
-		draw_text(_hp_bar_x, _xp_bar_y + 76, "Traits: " + string(_perm_traits_count));
+	var _xp_bar_max_width = 236;
+	var _xp_percentage = obj_player.xp / max(1, obj_player.xp_to_next);
+	var _xp_bar_width = _xp_bar_max_width * _xp_percentage;
+	var _xp_x = _panel_char_x + 18;
+	var _xp_y = _hp_y + 44;
+
+	draw_sprite_stretched(spr_ui_xp_bar, 0, _xp_x + 1, _xp_y + 1, _xp_bar_width, 5);
+	draw_sprite(spr_ui_xp_bar_frame, 0, _xp_x, _xp_y);
+
+	draw_text(_xp_x, _xp_y + 20, "Level " + string(obj_player.level));
+	draw_text(_xp_x, _xp_y + 40, "Tags: " + string(array_length(obj_player.tags)));
+	var _perm_traits_count = 0;
+	if (is_struct(obj_player.permanent_traits)) {
+		var _perm_keys = variable_struct_get_names(obj_player.permanent_traits);
+		_perm_traits_count = array_length(_perm_keys);
 	}
+	draw_text(_xp_x, _xp_y + 60, "Traits: " + string(_perm_traits_count));
 	
 	// paper doll
-	draw_sprite_ext(spr_paper_doll, 0, _x + 270, _y + 40, 1.5, 1.5, 0, c_white, 1);
+	draw_sprite_ext(spr_paper_doll, 0, _x + 300, _y + 40, 1.5, 1.5, 0, c_white, 1);
 	
 	// inventory grid
-	draw_rectangle(_x + 260, _y + 40, _x + 900, _y + 540, true);
+	// draw_rectangle(_x + 260, _y + 40, _x + 900, _y + 540, true);
 	
 	// inventory slots - 4x4 grid
 	var _slot_scale = 2;
 	var _slot_width = sprite_get_width(spr_inventory_slot) * _slot_scale;
 	var _slot_height = sprite_get_height(spr_inventory_slot) * _slot_scale;
 	var _slot_padding = 32;
-	var _grid_start_x = _x + 480;
+	var _grid_start_x = _x + 520;
 	var _grid_start_y = _y + 80;
 	var _slot_half_w = _slot_width * 0.5;
 	var _slot_half_h = _slot_height * 0.5;
