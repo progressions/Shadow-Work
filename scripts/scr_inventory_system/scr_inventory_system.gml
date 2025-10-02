@@ -228,3 +228,21 @@ function consume_ammo(_ammo_type, _amount = 1) {
     }
     return false;
 }
+
+// Get item scale based on context and item properties
+function get_item_scale(_item_def, _context) {
+    switch (_context) {
+        case "inventory_grid":
+            // Large items (greatsword, bow, etc.) render at 1x, normal items at 2x
+            return (_item_def[$ "large_sprite"] ?? false) ? 1 : 2;
+
+        case "loadout_slot":
+            return 2;
+
+        case "paperdoll_armor":
+            return 4;
+
+        default:
+            return 1;
+    }
+}

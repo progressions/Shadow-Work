@@ -39,7 +39,7 @@ global.item_database = {
     ),
     greatsword: new create_item_definition(
         4, "greatsword", "Greatsword", ItemType.weapon, EquipSlot.right_hand,
-        {damage: 8, attack_speed: 0.7, range: 55, handedness: WeaponHandedness.two_handed, damage_type: DamageType.physical}
+        {damage: 8, attack_speed: 0.7, range: 55, handedness: WeaponHandedness.two_handed, large_sprite: true, damage_type: DamageType.physical}
     ),
     spear: new create_item_definition(
         5, "spear", "Spear", ItemType.weapon, EquipSlot.right_hand,
@@ -53,19 +53,19 @@ global.item_database = {
     ),
     wooden_bow: new create_item_definition(
         7, "wooden_bow", "Wooden Bow", ItemType.weapon, EquipSlot.right_hand,
-        {damage: 2, attack_speed: 1.2, range: 120, handedness: WeaponHandedness.two_handed, requires_ammo: "arrows", damage_type: DamageType.physical}
+        {damage: 2, attack_speed: 1.2, range: 120, handedness: WeaponHandedness.two_handed, requires_ammo: "arrows", large_sprite: true, damage_type: DamageType.physical}
     ),
     longbow: new create_item_definition(
         8, "longbow", "Longbow", ItemType.weapon, EquipSlot.right_hand,
-        {damage: 5, attack_speed: 1.0, range: 150, handedness: WeaponHandedness.two_handed, requires_ammo: "arrows", damage_type: DamageType.physical}
+        {damage: 5, attack_speed: 1.0, range: 150, handedness: WeaponHandedness.two_handed, requires_ammo: "arrows", large_sprite: true, damage_type: DamageType.physical}
     ),
     crossbow: new create_item_definition(
         9, "crossbow", "Crossbow", ItemType.weapon, EquipSlot.right_hand,
-        {damage: 3, attack_speed: 0.6, range: 140, handedness: WeaponHandedness.two_handed, requires_ammo: "arrows", damage_type: DamageType.physical}
+        {damage: 3, attack_speed: 0.6, range: 140, handedness: WeaponHandedness.two_handed, requires_ammo: "arrows", large_sprite: true, damage_type: DamageType.physical}
     ),
     heavy_crossbow: new create_item_definition(
         10, "heavy_crossbow", "Heavy Crossbow", ItemType.weapon, EquipSlot.right_hand,
-        {damage: 6, attack_speed: 0.4, range: 160, armor_penetration: 0.3, handedness: WeaponHandedness.two_handed, requires_ammo: "arrows", damage_type: DamageType.physical}
+        {damage: 6, attack_speed: 0.4, range: 160, armor_penetration: 0.3, handedness: WeaponHandedness.two_handed, requires_ammo: "arrows", large_sprite: true, damage_type: DamageType.physical}
     ),
     torch: new create_item_definition(
         11, "torch", "Torch", ItemType.tool, EquipSlot.left_hand,
