@@ -264,7 +264,9 @@ function equip_item(_inventory_index, _target_hand = undefined) {
         } else if (_def.equip_slot == EquipSlot.left_hand) {
             _slot_name = "left_hand";
         } else {
-            if (_target_hand != undefined) {
+            if (_right_item != undefined && _right_item.definition.handedness == WeaponHandedness.two_handed) {
+                _slot_name = "right_hand";
+            } else if (_target_hand != undefined) {
                 _slot_name = _target_hand;
             } else if (_right_item == undefined) {
                 _slot_name = "right_hand";
@@ -312,13 +314,6 @@ function equip_item(_inventory_index, _target_hand = undefined) {
             if (_is_active_loadout) {
                 equipped.left_hand = undefined;
             }
-        } else {
-            var _current_right = (_loadout_struct != undefined) ? _loadout_struct.right_hand : equipped.right_hand;
-            if (_current_right != undefined &&
-                _current_right.definition.handedness == WeaponHandedness.two_handed) {
-                show_message("Cannot equip " + _def.name + " while wielding a two-handed weapon!");
-                return false;
-            }
         }
     } else {
         _slot_name = get_slot_name(_def.equip_slot);
@@ -332,27 +327,51 @@ function equip_item(_inventory_index, _target_hand = undefined) {
     }
 
     var _pending_returns = [];
-    var _skip_slot_check = false;
 
     if (_is_hand_slot) {
         var _source_struct = (_loadout_struct != undefined) ? _loadout_struct : equipped;
 
-        if (_def.handedness == WeaponHandedness.two_handed) {
-            if (_source_struct.right_hand != undefined) {
-                array_push(_pending_returns, {definition: _source_struct.right_hand.definition, count: _source_struct.right_hand.count});
+        if (_def.handedness != WeaponHandedness.two_handed) {
+            var _two_hand_entry = _source_struct.right_hand;
+            if (_two_hand_entry != undefined && _two_hand_entry.definition.handedness == WeaponHandedness.two_handed) {
+                var _returns = [{definition: _two_hand_entry.definition, count: _two_hand_entry.count}];
+                if (_source_struct.left_hand != undefined) {
+                    array_push(_returns, {definition: _source_struct.left_hand.definition, count: _source_struct.left_hand.count});
+                }
+
+                if (!inventory_can_accept_batch(_returns)) {
+                    show_debug_message("Inventory full!");
+                    return false;
+                }
+
+                if (_is_active_loadout && variable_struct_exists(_two_hand_entry.definition, "stats")) {
+                    remove_wielder_effects(_two_hand_entry.definition.stats);
+                }
+
+                inventory_add_item(_two_hand_entry.definition, _two_hand_entry.count);
+                _source_struct.right_hand = undefined;
+                if (_is_active_loadout) {
+                    equipped.right_hand = undefined;
+                }
+
+                if (_source_struct.left_hand != undefined) {
+                    var _left_entry = _source_struct.left_hand;
+                    inventory_add_item(_left_entry.definition, _left_entry.count);
+                    if (_is_active_loadout && variable_struct_exists(_left_entry.definition, "stats")) {
+                        remove_wielder_effects(_left_entry.definition.stats);
+                    }
+                    _source_struct.left_hand = undefined;
+                    if (_is_active_loadout) {
+                        equipped.left_hand = undefined;
+                    }
+                }
             }
-            if (_source_struct.left_hand != undefined) {
-                array_push(_pending_returns, {definition: _source_struct.left_hand.definition, count: _source_struct.left_hand.count});
-            }
-            _skip_slot_check = true;
         }
     }
 
-    if (!_skip_slot_check) {
-        var _existing_slot_entry = _slot_container[$ _slot_name];
-        if (_existing_slot_entry != undefined) {
-            array_push(_pending_returns, {definition: _existing_slot_entry.definition, count: _existing_slot_entry.count});
-        }
+    var _existing_slot_entry = _slot_container[$ _slot_name];
+    if (_existing_slot_entry != undefined) {
+        array_push(_pending_returns, {definition: _existing_slot_entry.definition, count: 1});
     }
 
     if (array_length(_pending_returns) > 0) {
@@ -365,7 +384,7 @@ function equip_item(_inventory_index, _target_hand = undefined) {
     // Unequip existing item in target slot
     if (_slot_container[$ _slot_name] != undefined) {
         var _old_item = _slot_container[$ _slot_name];
-        inventory_add_item(_old_item.definition, _old_item.count);
+        inventory_add_item(_old_item.definition, 1);
         if (_is_hand_slot) {
             if (_is_active_loadout && variable_struct_exists(_old_item.definition, "stats")) {
                 remove_wielder_effects(_old_item.definition.stats);

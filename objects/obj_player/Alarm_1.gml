@@ -1,5 +1,5 @@
 // Game over after death animation
 if (state == PlayerState.dead) {
-    show_message("You died");
+    // TODO: previously showed a message; replace with proper death handling
     game_end();
 }

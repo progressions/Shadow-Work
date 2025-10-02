@@ -4,6 +4,8 @@ if (keyboard_check_pressed(ord("I"))) {
 
     // Create a global pause variable if it doesn't exist
     global.game_paused = is_open;
+
+    global.audio_config.sfx_enabled = !is_open;
 }
 
 // Navigation only when inventory is open
