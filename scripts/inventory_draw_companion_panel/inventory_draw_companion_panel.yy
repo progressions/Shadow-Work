@@ -5,8 +5,8 @@
   "isDnD":false,
   "name":"inventory_draw_companion_panel",
   "parent":{
-    "name":"Scripts",
-    "path":"folders/Scripts.yy",
+    "name":"inventory",
+    "path":"folders/Scripts/inventory.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

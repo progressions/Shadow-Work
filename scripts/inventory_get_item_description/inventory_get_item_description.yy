@@ -5,8 +5,8 @@
   "isDnD":false,
   "name":"inventory_get_item_description",
   "parent":{
-    "name":"Scripts",
-    "path":"folders/Scripts.yy",
+    "name":"inventory",
+    "path":"folders/Scripts/inventory.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

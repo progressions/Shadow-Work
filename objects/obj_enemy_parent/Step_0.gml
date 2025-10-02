@@ -56,7 +56,7 @@ var _ver = clamp(target_y - y, -1, 1);
 var _is_moving = (abs(_hor) > 0.1) || (abs(_ver) > 0.1);
 
 /// ---------- State control
-if (state != EnemyState.attacking) {
+if (state != EnemyState.attacking && state != EnemyState.ranged_attacking) {
     state = _is_moving ? EnemyState.idle : EnemyState.idle;
 }
 
@@ -75,6 +75,14 @@ if (_is_moving) {
     dir_index = last_dir_index;
 }
 
+// Update facing_dir string for ranged attacks (matches dir_index)
+switch (dir_index) {
+    case 0: facing_dir = "down"; break;
+    case 1: facing_dir = "right"; break;
+    case 2: facing_dir = "left"; break;
+    case 3: facing_dir = "up"; break;
+}
+
 /// ---------- Animation block + direction offsets
 image_speed = 0;
 
@@ -87,7 +95,7 @@ var frames_in_seq = anim_info.length;
 if (prev_start_index != start_index) {
     // idle/walk use global timer so no need to reset anything there
     // attack uses local timer; reset it for crisp starts
-    if (state == EnemyState.attacking) anim_timer = 0;
+    if (state == EnemyState.attacking || state == EnemyState.ranged_attacking) anim_timer = 0;
     prev_start_index = start_index;
 }
 
@@ -121,7 +129,7 @@ if (idx < 0)         idx = 0;
 image_index = idx;
 
 /// ---------- Attack System
-// Update attack cooldown
+// Update attack cooldown (melee)
 if (attack_cooldown > 0) {
     attack_cooldown--;
     can_attack = false;
@@ -129,8 +137,21 @@ if (attack_cooldown > 0) {
     can_attack = true;
 }
 
+// Update ranged attack cooldown
+if (ranged_attack_cooldown > 0) {
+    ranged_attack_cooldown--;
+    can_ranged_attack = false;
+} else {
+    can_ranged_attack = true;
+}
+
+// Handle ranged attacking state transition back to idle
+if (state == EnemyState.ranged_attacking && ranged_attack_cooldown <= 0) {
+    state = EnemyState.idle;
+}
+
 // Check if player is in attack range and we can attack
-if (can_attack && state != EnemyState.attacking) {
+if (state != EnemyState.attacking && state != EnemyState.ranged_attacking) {
     var _player = instance_nearest(x, y, obj_player);
     if (_player != noone) {
         var _dist = point_distance(x, y, _player.x, _player.y);
@@ -144,13 +165,19 @@ if (can_attack && state != EnemyState.attacking) {
                 last_aggro_time = current_time;
             }
 
-            // Start attack
-            state = EnemyState.attacking;
-            attack_cooldown = round(90 / attack_speed); // Enemy attacks are slower
-            can_attack = false;
+            // Ranged attackers fire arrows
+            if (is_ranged_attacker && can_ranged_attack) {
+                enemy_handle_ranged_attack();
+            }
+            // Melee attackers use traditional attack
+            else if (!is_ranged_attacker && can_attack) {
+                state = EnemyState.attacking;
+                attack_cooldown = round(90 / attack_speed); // Enemy attacks are slower
+                can_attack = false;
 
-            // Create attack after a short delay (so animation plays first)
-            alarm[2] = 15; // Attack hits after 15 frames
+                // Create attack after a short delay (so animation plays first)
+                alarm[2] = 15; // Attack hits after 15 frames
+            }
         }
     }
 }

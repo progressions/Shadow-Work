@@ -30,6 +30,7 @@ function get_enemy_anim(state, dir_index) {
     switch(state) {
         case EnemyState.idle: state_name = "idle"; break;
         case EnemyState.attacking: state_name = "attack"; break;
+        case EnemyState.ranged_attacking: state_name = "attack"; break; // Use attack animation for ranged
         case EnemyState.dead: state_name = "dying"; break;
         default: state_name = "idle"; break;
     }

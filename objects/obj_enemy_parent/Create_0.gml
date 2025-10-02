@@ -24,6 +24,7 @@ current_base_frame = 0;
 frame_counter = 0;
 
 state = EnemyState.idle;
+facing_dir = "down"; // String direction for ranged attacks (updated from dir_index in Step event)
 
 kb_x = 0;
 kb_y = 0;
@@ -35,6 +36,13 @@ attack_speed = 0.8; // Slower than default player
 attack_range = 20; // Melee range
 attack_cooldown = 0;
 can_attack = true;
+
+// Ranged attack system
+is_ranged_attacker = false;  // Set to true for enemies that use ranged attacks
+ranged_damage = 2;           // Default arrow damage (override in child enemies)
+ranged_attack_cooldown = 0;  // Separate cooldown for ranged attacks
+ranged_attack_speed = 0.8;   // Attacks per second for ranged (default slower than melee)
+can_ranged_attack = true;    // Cooldown flag for ranged attacks
 
 // Status effects system
 init_status_effects();
