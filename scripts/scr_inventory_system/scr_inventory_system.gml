@@ -234,8 +234,7 @@ function get_item_scale(_item_def, _context) {
     switch (_context) {
         case "inventory_grid":
             // Large items (greatsword, bow, etc.) render at 1x, normal items at 2x
-            var _is_large = _item_def.stats[$ "large_sprite"] ?? false;
-            return _is_large ? 1 : 2;
+            return (_item_def.large_sprite ?? false) ? 1 : 2;
 
         case "loadout_slot":
             return 2;

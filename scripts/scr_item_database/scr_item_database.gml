@@ -14,6 +14,9 @@ function create_item_definition(_frame, _id, _name, _type, _slot, _stats) constr
     // Determine handedness from stats
     handedness = _stats[$ "handedness"] ?? WeaponHandedness.one_handed;
 
+    // Extract large_sprite from stats (not a stat, but a rendering property)
+    large_sprite = _stats[$ "large_sprite"] ?? false;
+
     // Sprite key for equipped version (used for save/load compatibility)
     equipped_sprite_key = _stats[$ "equipped_key"] ?? string_lower(string_replace(_name, " ", "_"));
 }
