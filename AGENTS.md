@@ -1,19 +1,19 @@
 # Repository Guidelines
 
 ## Project Structure & Module Organization
-Shadow Work is maintained as a GameMaker Studio 2 project anchored by `Shadow Work.yyp`. Gameplay logic lives in `objects/` event scripts (Create_0, Step_0, Draw_0). Shared GML utilities, enums, and inventory helpers belong in `scripts/`—group new modules by system (player, inventory, grid). Room layouts and puzzle flows reside in `rooms/`, with interface overlays in `roomui/`. Art and audio assets live in `sprites/`, `tilesets/`, `sounds/`, and `fonts/`; structured payloads go in `datafiles/`. When adding resources, let the IDE update `Shadow Work.resource_order` so ordering and folder tags stay consistent.
+Shadow Work anchors on `Shadow Work.yyp`; editing resources through the GameMaker IDE keeps GUIDs consistent. Runtime object logic lives in `objects/` event scripts (`Create_0`, `Step_0`, `Draw_0`). Shared helpers belong in `scripts/` grouped by system (`scripts/player`, `scripts/inventory`, `scripts/grid`). Rooms and puzzle flows sit in `rooms/`, while UI overlays and HUD pieces reside in `roomui/`. Binary assets live in `sprites/`, `tilesets/`, `sounds/`, and `fonts/`; narrative and config payloads stay in `datafiles/` and `yarn/`. Use `docs/` for design notes and keep `Shadow Work.resource_order` IDE-managed.
 
 ## Build, Test & Development Commands
-GameMaker IDE drives the toolchain. Use `F5` to run the game, `F6` to launch the debugger, and Build → Clean before exporting to clear stale caches. Export builds through File → Export with the target platform selected. For asset diffs, `git status` and `git diff --name-status` help confirm that binary resources were touched intentionally.
+GameMaker drives execution: press `F5` for a playtest build and `F6` for the debugger. Run Build → Clean before exports to purge stale caches. `git status` and `git diff --name-status` help confirm intentional asset changes; run them before committing. Export builds via File → Export with the target platform selected.
 
 ## Coding Style & Naming Conventions
-Follow the existing Ruby-inspired GML conventions: functions and variables in snake_case, enums in PascalCase, enum members snake_case, and local temporaries prefixed with an underscore (e.g., `_item_def`). Keep object names descriptive (e.g., `obj_player_dash`) and mirror sprite prefixes (`spr_`), tile sets (`tls_`), sounds (`snd_`). Prefer small, focused scripts over long event blocks; add inline comments only where control flow is non-obvious.
+Follow the Ruby-inspired GML style already in place. Functions, variables, and enums use snake_case names; enum types stay PascalCase. Prefix temporary locals with `_`, and mirror resource prefixes (`obj_`, `spr_`, `snd_`, `tls_`). Favor compact scripts over sprawling event blocks, and only add inline comments when control flow is non-obvious.
 
 ## Testing Guidelines
-There is no automated test harness—validate changes by running target rooms from the IDE. Exercise new combat behaviors, grid puzzles, and inventory flows after each change. Use the debugger (`F6`) and `show_debug_message()` for instrumentation, and keep temporary debug toggles behind a `global.debug_mode` check so they can be disabled quickly.
+There is no automated harness, so validate changes by running affected rooms through the IDE. Exercise combat loops, grid puzzles, and inventory flows after every mechanic tweak. Use `show_debug_message()` sparingly, and gate temporary instrumentation behind `global.debug_mode` so it can be disabled quickly.
 
 ## Commit & Pull Request Guidelines
-Match the current history: short, imperative commits (e.g., "Add plate armor"). Group related asset and code edits together and avoid bundling multiple features. Pull requests should outline gameplay impact, mention affected rooms or objects, and note any follow-up asset work. Include repro or validation steps and screenshots or GIFs when UI or VFX change.
+Keep commits short and imperative (e.g., `Add plate armor`) and group related code, asset, and data changes together. PRs should describe gameplay impact, note impacted rooms or objects, and flag follow-up art or audio needs. Include repro steps for bug fixes and attach screenshots or GIFs whenever UI or VFX shift.
 
 ## Asset & Configuration Tips
-Place new UI layers in `roomui/` rather than the base room to preserve draw order. Keep texture groups and audio groups balanced to avoid runtime spikes. Before merging, open the project in GameMaker to ensure resource GUIDs and folders sync correctly—manual merges in `.yy` files are brittle.
+Place supplemental UI on `roomui/` layers to protect draw order. Balance texture and audio groups to avoid runtime spikes. Before merging, open the project in GameMaker to ensure folders and `Shadow Work.resource_order` stay in sync—manual edits to `.yy` files are brittle.

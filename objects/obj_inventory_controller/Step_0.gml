@@ -1,13 +1,8 @@
 // === STEP EVENT ===
 var _play_ui_sfx = function(_sound, _volume = 1) {
-    var _prev_enabled = global.audio_config.sfx_enabled;
-    if (!_prev_enabled) {
-        global.audio_config.sfx_enabled = true;
-    }
+
     play_sfx(_sound, _volume);
-    if (!_prev_enabled) {
-        global.audio_config.sfx_enabled = false;
-    }
+
 };
 
 if (keyboard_check_pressed(ord("I"))) {
@@ -17,12 +12,18 @@ if (keyboard_check_pressed(ord("I"))) {
     global.game_paused = is_open;
 
     _play_ui_sfx(is_open ? snd_open_inventory : snd_close_inventory);
+	
+	if (is_open) {
+		audio_group_set_gain(audiogroup_sfx_world, 0, 0);
+	} else {
+		audio_group_set_gain(audiogroup_sfx_world, 1, 0);
+	}
 
-    global.audio_config.sfx_enabled = !is_open;
 }
 
 // Navigation only when inventory is open
 if (is_open) {
+	audio_group_set_gain(audiogroup_sfx_world, 0, 0);
     var _move_horizontal = 0;
     var _move_vertical = 0;
 
@@ -281,5 +282,6 @@ if (is_open) {
         show_debug_message("[ESC] Closing inventory");
         is_open = false;
         global.game_paused = false;
+		audio_group_set_gain(audiogroup_sfx_world, 1, 0);
     }
 }
