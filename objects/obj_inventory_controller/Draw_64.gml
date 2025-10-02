@@ -20,10 +20,22 @@ if (is_open) {
 	draw_rectangle(_x + 260, _y + 40, _x + 900, _y + 540, true);
 	
 	// inventory slots - 4x4 grid
-	var _slot_size = 64;
+	var _slot_scale = 2;
+	var _slot_width = sprite_get_width(spr_inventory_slot) * _slot_scale;
+	var _slot_height = sprite_get_height(spr_inventory_slot) * _slot_scale;
 	var _slot_padding = 32;
 	var _grid_start_x = _x + 480;
 	var _grid_start_y = _y + 80;
+	var _slot_half_w = _slot_width * 0.5;
+	var _slot_half_h = _slot_height * 0.5;
+
+	var _item_sprite = spr_items;
+	var _item_width = sprite_get_width(_item_sprite);
+	var _item_height = sprite_get_height(_item_sprite);
+	var _item_origin_x = sprite_get_xoffset(_item_sprite);
+	var _item_origin_y = sprite_get_yoffset(_item_sprite);
+	var _item_center_offset_x = (_item_width * 0.5) - _item_origin_x;
+	var _item_center_offset_y = (_item_height * 0.5) - _item_origin_y;
 
 	// Get player reference
 	var _player = instance_find(obj_player, 0);
@@ -32,25 +44,23 @@ if (is_open) {
 		var _col = i % 4;
 		var _row = floor(i / 4);
 
-		var _slot_x = _grid_start_x + (_col * (_slot_size + _slot_padding));
-		var _slot_y = _grid_start_y + (_row * (_slot_size + _slot_padding));
+		var _slot_x = _grid_start_x + (_col * (_slot_width + _slot_padding));
+		var _slot_y = _grid_start_y + (_row * (_slot_height + _slot_padding));
+		var _slot_center_x = _slot_x + _slot_half_w;
+		var _slot_center_y = _slot_y + _slot_half_h;
 
-		draw_sprite_ext(spr_inventory_slot, 0, _slot_x, _slot_y, 2, 2, 0, c_white, 1);
+		draw_sprite_ext(spr_inventory_slot, 0, _slot_x, _slot_y, _slot_scale, _slot_scale, 0, c_white, 1);
 
 		// Draw item if it exists in player inventory
 		if (_player != noone && i < array_length(_player.inventory) && _player.inventory[i] != undefined) {
 			var _item = _player.inventory[i];
 			var _item_scale = get_item_scale(_item.definition, "inventory_grid");
+			var _item_x = _slot_center_x - (_item_center_offset_x * _item_scale);
+			var _item_y = _slot_center_y - (_item_center_offset_y * _item_scale);
 
-			// The slot sprite is scaled 2x, so actual slot size is _slot_size * 2
-			// Center the item sprite in the middle of the scaled slot
-			var _scaled_slot_size = _slot_size * 2;
-			var _center_x = _slot_x + (_scaled_slot_size / 2);
-			var _center_y = _slot_y + (_scaled_slot_size / 2);
-
-			// Draw item sprite centered in slot
+			// Draw item sprite
 			draw_sprite_ext(spr_items, _item.definition.world_sprite_frame,
-						   _center_x, _center_y,
+						   _item_x, _item_y,
 						   _item_scale, _item_scale, 0, c_white, 1);
 
 			// Draw stack count if > 1
@@ -58,7 +68,7 @@ if (is_open) {
 				draw_set_color(c_white);
 				draw_set_halign(fa_right);
 				draw_set_valign(fa_bottom);
-				draw_text(_slot_x + _scaled_slot_size - 4, _slot_y + _scaled_slot_size - 4, string(_item.count));
+				draw_text(_slot_x + _slot_width - 4, _slot_y + _slot_height - 4, string(_item.count));
 				draw_set_halign(fa_left);
 				draw_set_valign(fa_top);
 			}
@@ -67,8 +77,8 @@ if (is_open) {
 		// Draw selection cursor on selected slot
 		if (i == selected_slot) {
 			draw_set_color(c_yellow);
-			draw_rectangle(_slot_x - 2, _slot_y - 2, _slot_x + _slot_size + 2, _slot_y + _slot_size + 2, true);
-			draw_rectangle(_slot_x - 3, _slot_y - 3, _slot_x + _slot_size + 3, _slot_y + _slot_size + 3, true);
+			draw_rectangle(_slot_x - 2, _slot_y - 2, _slot_x + _slot_width + 2, _slot_y + _slot_height + 2, true);
+			draw_rectangle(_slot_x - 3, _slot_y - 3, _slot_x + _slot_width + 3, _slot_y + _slot_height + 3, true);
 			draw_set_color(c_white);
 		}
 	}
