@@ -1,0 +1,25 @@
+{
+  "$GMSound":"",
+  "%Name":"snd_open_inventory",
+  "audioGroupId":{
+    "name":"audiogroup_default",
+    "path":"audiogroups/audiogroup_default",
+  },
+  "bitDepth":1,
+  "bitRate":128,
+  "compression":0,
+  "conversionMode":0,
+  "duration":0.75,
+  "name":"snd_open_inventory",
+  "parent":{
+    "name":"sfx",
+    "path":"folders/Sounds/sfx.yy",
+  },
+  "preload":false,
+  "resourceType":"GMSound",
+  "resourceVersion":"2.0",
+  "sampleRate":44100,
+  "soundFile":"snd_open_inventory.wav",
+  "type":0,
+  "volume":1.0,
+}

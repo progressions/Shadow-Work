@@ -1,0 +1,25 @@
+{
+  "$GMSound":"",
+  "%Name":"snd_using_potion",
+  "audioGroupId":{
+    "name":"audiogroup_default",
+    "path":"audiogroups/audiogroup_default",
+  },
+  "bitDepth":1,
+  "bitRate":128,
+  "compression":0,
+  "conversionMode":0,
+  "duration":0.16666667,
+  "name":"snd_using_potion",
+  "parent":{
+    "name":"sfx",
+    "path":"folders/Sounds/sfx.yy",
+  },
+  "preload":false,
+  "resourceType":"GMSound",
+  "resourceVersion":"2.0",
+  "sampleRate":44100,
+  "soundFile":"snd_using_potion.wav",
+  "type":0,
+  "volume":1.0,
+}

@@ -1,9 +1,22 @@
 // === STEP EVENT ===
+var _play_ui_sfx = function(_sound, _volume = 1) {
+    var _prev_enabled = global.audio_config.sfx_enabled;
+    if (!_prev_enabled) {
+        global.audio_config.sfx_enabled = true;
+    }
+    play_sfx(_sound, _volume);
+    if (!_prev_enabled) {
+        global.audio_config.sfx_enabled = false;
+    }
+};
+
 if (keyboard_check_pressed(ord("I"))) {
     is_open = !is_open;
 
     // Create a global pause variable if it doesn't exist
     global.game_paused = is_open;
+
+    _play_ui_sfx(is_open ? snd_open_inventory : snd_close_inventory);
 
     global.audio_config.sfx_enabled = !is_open;
 }
@@ -44,7 +57,11 @@ if (is_open) {
     if (_current_row >= grid_rows) _current_row = 0;
 
     // Update selected slot
+    var _previous_slot = selected_slot;
     selected_slot = (_current_row * grid_columns) + _current_col;
+    if (selected_slot != _previous_slot) {
+        _play_ui_sfx(snd_open_menu, 0.7);
+    }
 
     var _row = floor(selected_slot / grid_columns);
     var _col = selected_slot % grid_columns;
@@ -65,14 +82,18 @@ if (is_open) {
     if (keyboard_check_pressed(ord("Q"))) {
         if (_player == noone) {
             show_debug_message("[Q] No player instance found");
+            _play_ui_sfx(snd_denied);
         } else {
             var _swap_method = method(_player, swap_active_loadout);
-            if (_swap_method != undefined && _swap_method()) {
+            var _swap_success = (_swap_method != undefined) && _swap_method();
+            if (_swap_success) {
                 var _active_key = method(_player, loadouts_get_active_key);
                 var _active_name = (_active_key != undefined) ? _active_key() : "unknown";
                 show_debug_message("[Q] Active loadout set to " + string(_active_name));
+                _play_ui_sfx(snd_change_loadout);
             } else {
                 show_debug_message("[Q] Failed to swap loadout");
+                _play_ui_sfx(snd_denied);
             }
         }
 
@@ -93,9 +114,16 @@ if (is_open) {
     if (keyboard_check_pressed(vk_space)) {
         if (_slot_action == InventoryContextAction.none) {
             show_debug_message("[Space] No context action for slot: " + string(_row) + ", " + string(_col) + " (index: " + string(selected_slot) + ")");
+            _play_ui_sfx(snd_denied);
         } else if (_player == noone) {
             show_debug_message("[Space] No player instance found");
+            _play_ui_sfx(snd_denied);
         } else {
+            var _selected_item = undefined;
+            if (_slot_action == InventoryContextAction.equip && selected_slot < array_length(_player.inventory)) {
+                _selected_item = _player.inventory[selected_slot];
+            }
+
             var _success = false;
             switch (_slot_action) {
                 case InventoryContextAction.equip:
@@ -108,9 +136,27 @@ if (is_open) {
             }
 
             if (_success) {
-                show_debug_message("[Space] Executed '" + _action_text + "' on slot: " + string(_row) + ", " + string(_col) + " (index: " + string(selected_slot) + ")");
+                if (_slot_action == InventoryContextAction.equip) {
+                    var _equip_sound = snd_open_menu;
+                    if (_selected_item != undefined) {
+                        switch (_selected_item.definition.type) {
+                            case ItemType.armor:
+                                _equip_sound = snd_open_menu;
+                                break;
+                            case ItemType.weapon:
+                                _equip_sound = snd_open_menu;
+                                break;
+                            case ItemType.tool:
+                                _equip_sound = snd_open_menu;
+                                break;
+                        }
+                    }
+                    _play_ui_sfx(_equip_sound);
+                } else {
+                    _play_ui_sfx(snd_using_potion);
+                }
             } else {
-                show_debug_message("[Space] Failed to execute '" + _action_text + "' on slot: " + string(_row) + ", " + string(_col) + " (index: " + string(selected_slot) + ")");
+                _play_ui_sfx(snd_denied);
             }
             _slot_action = inventory_get_slot_action(_player, selected_slot);
             _action_text = "none";
@@ -129,14 +175,31 @@ if (is_open) {
     if (keyboard_check_pressed(ord("E"))) {
         if (_slot_action != InventoryContextAction.equip) {
             show_debug_message("[E] No equip action available (current context: " + _action_text + ")");
+            _play_ui_sfx(snd_denied);
         } else if (_player == noone) {
             show_debug_message("[E] No player instance found");
+            _play_ui_sfx(snd_denied);
         } else {
+            var _selected_item = (selected_slot < array_length(_player.inventory)) ? _player.inventory[selected_slot] : undefined;
             var _equip_success = inventory_perform_equip_on_player(_player, selected_slot);
             if (_equip_success) {
-                show_debug_message("[E] Equipped item from slot: " + string(_row) + ", " + string(_col) + " (index: " + string(selected_slot) + ")");
+                var _equip_sound = snd_open_menu;
+                if (_selected_item != undefined) {
+                    switch (_selected_item.definition.type) {
+                        case ItemType.armor:
+                            _equip_sound = snd_open_menu;
+                            break;
+                        case ItemType.weapon:
+                            _equip_sound = snd_open_menu;
+                            break;
+                        case ItemType.tool:
+                            _equip_sound = snd_open_menu;
+                            break;
+                    }
+                }
+                _play_ui_sfx(_equip_sound);
             } else {
-                show_debug_message("[E] Equip failed for slot: " + string(_row) + ", " + string(_col) + " (index: " + string(selected_slot) + ")");
+                _play_ui_sfx(snd_denied);
             }
             _slot_action = inventory_get_slot_action(_player, selected_slot);
             _action_text = "none";
@@ -155,19 +218,21 @@ if (is_open) {
     if (keyboard_check_pressed(ord("P"))) {
         if (_player == noone) {
             show_debug_message("[P] No player instance found");
+            _play_ui_sfx(snd_denied);
         } else if (selected_slot >= array_length(_player.inventory) || _player.inventory[selected_slot] == undefined) {
             show_debug_message("[P] No item to drop in slot " + string(selected_slot));
+            _play_ui_sfx(snd_denied);
         } else {
             var _drop_method = method(_player, drop_selected_item);
             var _stack = _player.inventory[selected_slot];
             var _drop_amount = (_stack != undefined) ? _stack.count : 0;
             if (_drop_method != undefined && _drop_amount > 0 && _drop_method(selected_slot, _drop_amount)) {
-                show_debug_message("[P] Dropped item from slot: " + string(_row) + ", " + string(_col) + " (index: " + string(selected_slot) + ")");
+                _play_ui_sfx(snd_drop_item);
                 if (selected_slot >= array_length(_player.inventory)) {
                     selected_slot = max(0, array_length(_player.inventory) - 1);
                 }
             } else {
-                show_debug_message("[P] Drop failed for slot: " + string(selected_slot));
+                _play_ui_sfx(snd_denied);
             }
 
             _slot_action = inventory_get_slot_action(_player, selected_slot);
@@ -187,14 +252,16 @@ if (is_open) {
     if (keyboard_check_pressed(ord("U"))) {
         if (_slot_action != InventoryContextAction.use) {
             show_debug_message("[U] No use action available (current context: " + _action_text + ")");
+            _play_ui_sfx(snd_denied);
         } else if (_player == noone) {
             show_debug_message("[U] No player instance found");
+            _play_ui_sfx(snd_denied);
         } else {
             var _use_success = inventory_perform_use_on_player(_player, selected_slot);
             if (_use_success) {
-                show_debug_message("[U] Used item from slot: " + string(_row) + ", " + string(_col) + " (index: " + string(selected_slot) + ")");
+                _play_ui_sfx(snd_using_potion);
             } else {
-                show_debug_message("[U] Use failed for slot: " + string(_row) + ", " + string(_col) + " (index: " + string(selected_slot) + ")");
+                _play_ui_sfx(snd_denied);
             }
             _slot_action = inventory_get_slot_action(_player, selected_slot);
             _action_text = "none";
