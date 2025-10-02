@@ -64,7 +64,7 @@ global.item_database = {
     ),
     crossbow: new create_item_definition(
         9, "crossbow", "Crossbow", ItemType.weapon, EquipSlot.right_hand,
-        {damage: 3, attack_speed: 0.6, range: 140, handedness: WeaponHandedness.two_handed, requires_ammo: "arrows", large_sprite: true, damage_type: DamageType.physical}
+        {damage: 3, attack_speed: 0.6, range: 140, handedness: WeaponHandedness.one_handed, requires_ammo: "arrows", large_sprite: true, damage_type: DamageType.physical}
     ),
     heavy_crossbow: new create_item_definition(
         10, "heavy_crossbow", "Heavy Crossbow", ItemType.weapon, EquipSlot.right_hand,

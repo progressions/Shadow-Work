@@ -33,6 +33,18 @@ equipped = {
     legs: undefined,
 }
 
+loadouts = {
+    active: "melee",
+    melee: {
+        right_hand: undefined,
+        left_hand: undefined
+    },
+    ranged: {
+        right_hand: undefined,
+        left_hand: undefined
+    }
+};
+
 inventory = [];
 max_inventory_size = 10;
 

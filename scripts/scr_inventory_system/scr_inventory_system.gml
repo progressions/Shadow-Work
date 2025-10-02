@@ -64,81 +64,150 @@ function equip_item(_inventory_index, _target_hand = undefined) {
     var _item = inventory[_inventory_index];
     var _def = _item.definition;
 
+    if (_def == undefined) return false;
     if (_def.equip_slot == EquipSlot.none) return false;
 
     var _slot_name = "";
+    var _is_hand_slot = false;
+
+    var _loadout_key = undefined;
+    var _loadout_struct = undefined;
+    var _active_loadout_key = loadouts_get_active_key();
+    var _is_active_loadout = true;
+    var _has_loadouts = (_active_loadout_key != undefined);
 
     // Handle hand slots
     if (_def.equip_slot == EquipSlot.right_hand ||
         _def.equip_slot == EquipSlot.left_hand ||
         _def.equip_slot == EquipSlot.either_hand) {
 
-        // Determine which hand to equip to
+        _is_hand_slot = true;
+
+        if (_has_loadouts) {
+            var _stats = _def.stats;
+            var _is_ranged_weapon = false;
+            if (_stats != undefined) {
+                if (_stats[$ "is_ranged"] != undefined) {
+                    _is_ranged_weapon = _stats[$ "is_ranged"];
+                } else if (_stats[$ "requires_ammo"] != undefined) {
+                    _is_ranged_weapon = true;
+                }
+            }
+
+            _loadout_key = _is_ranged_weapon ? "ranged" : "melee";
+            if (_def.equip_slot == EquipSlot.left_hand) {
+                _loadout_key = _active_loadout_key;
+            }
+            if (!variable_struct_exists(loadouts, _loadout_key)) {
+                _loadout_key = _active_loadout_key;
+            }
+
+            _loadout_struct = loadouts_get_struct(_loadout_key);
+            _is_active_loadout = (_loadout_key == _active_loadout_key);
+        }
+
+        var _right_item = (_loadout_struct != undefined) ? _loadout_struct.right_hand : equipped.right_hand;
+        var _left_item = (_loadout_struct != undefined) ? _loadout_struct.left_hand : equipped.left_hand;
+
+        // Determine which hand slot is being targeted
         if (_def.equip_slot == EquipSlot.right_hand) {
             _slot_name = "right_hand";
         } else if (_def.equip_slot == EquipSlot.left_hand) {
             _slot_name = "left_hand";
-        } else if (_def.equip_slot == EquipSlot.either_hand) {
-            // Player can choose, or auto-select empty hand
+        } else {
             if (_target_hand != undefined) {
                 _slot_name = _target_hand;
+            } else if (_right_item == undefined) {
+                _slot_name = "right_hand";
+            } else if (_left_item == undefined) {
+                _slot_name = "left_hand";
             } else {
-                // Auto-select: prefer right hand if empty, then left hand
-                if (equipped.right_hand == undefined) {
-                    _slot_name = "right_hand";
-                } else if (equipped.left_hand == undefined) {
-                    _slot_name = "left_hand";
-                } else {
-                    _slot_name = "right_hand"; // Default to right if both occupied
-                }
+                _slot_name = "right_hand";
             }
         }
 
-        // Check for two-handed weapon restrictions
+        // Two-handed handling
         if (_def.handedness == WeaponHandedness.two_handed) {
-            // Clear both hands for two-handed weapons
-            if (equipped.right_hand != undefined) {
-                inventory_add_item(equipped.right_hand.definition, equipped.right_hand.count);
-                equipped.right_hand = undefined;
+            if (_loadout_struct != undefined) {
+                if (_loadout_struct.right_hand != undefined) {
+                    inventory_add_item(_loadout_struct.right_hand.definition, _loadout_struct.right_hand.count);
+                    if (_is_active_loadout && variable_struct_exists(_loadout_struct.right_hand.definition, "stats")) {
+                        remove_wielder_effects(_loadout_struct.right_hand.definition.stats);
+                    }
+                }
+                if (_loadout_struct.left_hand != undefined) {
+                    inventory_add_item(_loadout_struct.left_hand.definition, _loadout_struct.left_hand.count);
+                    if (_is_active_loadout && variable_struct_exists(_loadout_struct.left_hand.definition, "stats")) {
+                        remove_wielder_effects(_loadout_struct.left_hand.definition.stats);
+                    }
+                }
+                _loadout_struct.right_hand = undefined;
+                _loadout_struct.left_hand = undefined;
+            } else {
+                if (equipped.right_hand != undefined) {
+                    inventory_add_item(equipped.right_hand.definition, equipped.right_hand.count);
+                    if (variable_struct_exists(equipped.right_hand.definition, "stats")) {
+                        remove_wielder_effects(equipped.right_hand.definition.stats);
+                    }
+                    equipped.right_hand = undefined;
+                }
+                if (equipped.left_hand != undefined) {
+                    inventory_add_item(equipped.left_hand.definition, equipped.left_hand.count);
+                    if (variable_struct_exists(equipped.left_hand.definition, "stats")) {
+                        remove_wielder_effects(equipped.left_hand.definition.stats);
+                    }
+                    equipped.left_hand = undefined;
+                }
             }
-            if (equipped.left_hand != undefined) {
-                inventory_add_item(equipped.left_hand.definition, equipped.left_hand.count);
+            _slot_name = "right_hand";
+            if (_is_active_loadout) {
                 equipped.left_hand = undefined;
             }
-            _slot_name = "right_hand"; // Two-handed weapons go in right hand
         } else {
-            // Check if currently holding a two-handed weapon
-            var _current_right = equipped.right_hand;
+            var _current_right = (_loadout_struct != undefined) ? _loadout_struct.right_hand : equipped.right_hand;
             if (_current_right != undefined &&
                 _current_right.definition.handedness == WeaponHandedness.two_handed) {
-                // Can't equip anything else while holding two-handed weapon
                 show_message("Cannot equip " + _def.name + " while wielding a two-handed weapon!");
                 return false;
             }
         }
     } else {
-        // Non-hand slots (helmet, armor, boots)
         _slot_name = get_slot_name(_def.equip_slot);
     }
 
-    // Unequip current item in that slot
-    if (equipped[$ _slot_name] != undefined) {
-        var _old_item = equipped[$ _slot_name];
+    var _slot_container;
+    if (_is_hand_slot && _loadout_struct != undefined) {
+        _slot_container = _loadout_struct;
+    } else {
+        _slot_container = equipped;
+    }
+
+    // Unequip existing item in target slot
+    if (_slot_container[$ _slot_name] != undefined) {
+        var _old_item = _slot_container[$ _slot_name];
         inventory_add_item(_old_item.definition, _old_item.count);
-        // Remove wielder effects from old item
-        if (variable_struct_exists(_old_item.definition, "stats")) {
+        if (_is_hand_slot) {
+            if (_is_active_loadout && variable_struct_exists(_old_item.definition, "stats")) {
+                remove_wielder_effects(_old_item.definition.stats);
+            }
+        } else if (variable_struct_exists(_old_item.definition, "stats")) {
             remove_wielder_effects(_old_item.definition.stats);
+        }
+        _slot_container[$ _slot_name] = undefined;
+        if (_is_hand_slot) {
+            if (_is_active_loadout) {
+                equipped[$ _slot_name] = undefined;
+            }
+        } else {
+            equipped[$ _slot_name] = undefined;
         }
     }
 
-    // Equip new item
-    equipped[$ _slot_name] = _item;
+    var _equipped_entry = _item;
 
-    // For stackable items, only take 1 from the stack
     if (_item.count > 1) {
         _item.count--;
-        // Create new instance for equipped item
-        equipped[$ _slot_name] = {
+        _equipped_entry = {
             definition: _def,
             count: 1,
             durability: _item.durability
@@ -147,8 +216,28 @@ function equip_item(_inventory_index, _target_hand = undefined) {
         array_delete(inventory, _inventory_index, 1);
     }
 
-    // Apply wielder effects from new item
-    if (variable_struct_exists(_def, "stats")) {
+    _slot_container[$ _slot_name] = _equipped_entry;
+
+    if (_is_hand_slot) {
+        if (_is_active_loadout) {
+            equipped[$ _slot_name] = _equipped_entry;
+        } else if (_loadout_struct != undefined && loadouts_get_active_key() != _loadout_key) {
+            // Ensure active loadout struct remains in sync with equipped data
+            var _active_struct = loadouts_get_struct(loadouts_get_active_key());
+            if (_active_struct != undefined) {
+                equipped.right_hand = _active_struct.right_hand;
+                equipped.left_hand = _active_struct.left_hand;
+            }
+        }
+    } else {
+        equipped[$ _slot_name] = _equipped_entry;
+    }
+
+    if (_is_hand_slot) {
+        if (_is_active_loadout && variable_struct_exists(_def, "stats")) {
+            apply_wielder_effects(_def.stats);
+        }
+    } else if (variable_struct_exists(_def, "stats")) {
         apply_wielder_effects(_def.stats);
     }
 
@@ -246,6 +335,66 @@ function get_item_scale(_item_def, _context) {
         default:
             return 1;
     }
+}
+
+function loadouts_get_active_key() {
+    if (!variable_instance_exists(id, "loadouts")) return undefined;
+    return loadouts.active;
+}
+
+function loadouts_get_struct(_loadout_key) {
+    if (!variable_instance_exists(id, "loadouts")) return undefined;
+    if (!variable_struct_exists(loadouts, _loadout_key)) return undefined;
+    return loadouts[$ _loadout_key];
+}
+
+function loadouts_set_active(_loadout_key) {
+    if (!variable_instance_exists(id, "loadouts")) return false;
+    if (!variable_struct_exists(loadouts, _loadout_key)) return false;
+
+    if (loadouts.active == _loadout_key) {
+        return true;
+    }
+
+    // Store current equipped into existing active loadout before switching
+    var _current_key = loadouts.active;
+    if (variable_struct_exists(loadouts, _current_key)) {
+        if (equipped.right_hand != undefined && variable_struct_exists(equipped.right_hand.definition, "stats")) {
+            remove_wielder_effects(equipped.right_hand.definition.stats);
+        }
+        if (equipped.left_hand != undefined && variable_struct_exists(equipped.left_hand.definition, "stats")) {
+            remove_wielder_effects(equipped.left_hand.definition.stats);
+        }
+
+        var _current_struct = loadouts[$ _current_key];
+        _current_struct.right_hand = equipped.right_hand;
+        _current_struct.left_hand = equipped.left_hand;
+    }
+
+    loadouts.active = _loadout_key;
+
+    var _target_struct = loadouts[$ _loadout_key];
+    equipped.right_hand = _target_struct.right_hand;
+    equipped.left_hand = _target_struct.left_hand;
+
+    if (equipped.right_hand != undefined && variable_struct_exists(equipped.right_hand.definition, "stats")) {
+        apply_wielder_effects(equipped.right_hand.definition.stats);
+    }
+    if (equipped.left_hand != undefined && variable_struct_exists(equipped.left_hand.definition, "stats")) {
+        apply_wielder_effects(equipped.left_hand.definition.stats);
+    }
+
+    return true;
+}
+
+function swap_active_loadout() {
+    var _current = loadouts_get_active_key();
+    if (_current == undefined) return false;
+
+    var _next = (_current == "melee") ? "ranged" : "melee";
+    if (!loadouts_set_active(_next)) return false;
+
+    return true;
 }
 
 function inventory_get_slot_action(_player_instance, _slot_index) {

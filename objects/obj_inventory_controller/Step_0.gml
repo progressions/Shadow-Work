@@ -60,6 +60,33 @@ if (is_open) {
             break;
     }
 
+    if (keyboard_check_pressed(ord("Q"))) {
+        if (_player == noone) {
+            show_debug_message("[Q] No player instance found");
+        } else {
+            var _swap_method = method(_player, swap_active_loadout);
+            if (_swap_method != undefined && _swap_method()) {
+                var _active_key = method(_player, loadouts_get_active_key);
+                var _active_name = (_active_key != undefined) ? _active_key() : "unknown";
+                show_debug_message("[Q] Active loadout set to " + string(_active_name));
+            } else {
+                show_debug_message("[Q] Failed to swap loadout");
+            }
+        }
+
+        _slot_action = inventory_get_slot_action(_player, selected_slot);
+        _action_text = "none";
+        switch (_slot_action) {
+            case InventoryContextAction.equip:
+                _action_text = "equip";
+                break;
+
+            case InventoryContextAction.use:
+                _action_text = "use";
+                break;
+        }
+    }
+
     // Action keys
     if (keyboard_check_pressed(vk_space)) {
         if (_slot_action == InventoryContextAction.none) {
