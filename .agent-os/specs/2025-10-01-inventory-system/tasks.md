@@ -15,7 +15,7 @@
 - [ ] 2. Keystroke Action Stubs
   - [ ] 2.1 Add Space key detection to show debug message with selected slot position (row, col)
   - [ ] 2.2 Add E key stub for equip action (debug message)
-  - [ ] 2.3 Add D key stub for drop action (debug message)
+  - [ ] 2.3 Add P key stub for drop action (debug message)
   - [ ] 2.4 Add U key stub for use/consume action (debug message)
   - [ ] 2.5 Add Esc key to close inventory
   - [ ] 2.6 Verify all key stubs show correct slot indices
@@ -74,7 +74,7 @@
   - [ ] 9.2 Render "Arrows: X/25" text below ranged loadout
   - [ ] 9.3 Add arrow item definition with `is_ammo: true` flag
   - [ ] 9.4 Implement arrow pickup logic (increment counter, max 25, don't add to inventory)
-  - [ ] 9.5 Create `drop_selected_item()` function for D key
+  - [ ] 9.5 Create `drop_selected_item()` function for P key
   - [ ] 9.6 Spawn dropped item in world at player position
   - [ ] 9.7 Verify arrows increment counter and items drop correctly
 
@@ -111,6 +111,7 @@
   - [ ] 13.4 Remove debug-only code
   - [ ] 13.5 Final integration playthrough test
   - [ ] 13.6 Verify all deliverables from spec.md are complete
+  - [ ] 13.7 Integrate navigation/action/error SFX per Audio Feedback section
 
 - [ ] 14. Context-Sensitive Space Key Action
   - [ ] 14.1 Detect whether the selected item would equip (E) or use (U)

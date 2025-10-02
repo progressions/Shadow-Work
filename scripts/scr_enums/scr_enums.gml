@@ -54,6 +54,12 @@ enum ItemType {
     ammo
 }
 
+enum InventoryContextAction {
+    none,
+    equip,
+    use
+}
+
 enum EquipSlot {
     none = -1,
     right_hand,

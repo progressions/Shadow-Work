@@ -110,6 +110,7 @@
     {"id":{"name":"obj_persistent_parent","path":"objects/obj_persistent_parent/obj_persistent_parent.yy",},},
     {"id":{"name":"obj_player_hands","path":"objects/obj_player_hands/obj_player_hands.yy",},},
     {"id":{"name":"obj_player","path":"objects/obj_player/obj_player.yy",},},
+    {"id":{"name":"obj_potion_health","path":"objects/obj_potion_health/obj_potion_health.yy",},},
     {"id":{"name":"obj_reset_pad","path":"objects/obj_reset_pad/obj_reset_pad.yy",},},
     {"id":{"name":"obj_rising_pillar","path":"objects/obj_rising_pillar/obj_rising_pillar.yy",},},
     {"id":{"name":"obj_room_transition","path":"objects/obj_room_transition/obj_room_transition.yy",},},

@@ -44,29 +44,49 @@ if (is_open) {
     // Update selected slot
     selected_slot = (_current_row * grid_columns) + _current_col;
 
+    var _row = floor(selected_slot / grid_columns);
+    var _col = selected_slot % grid_columns;
+    var _player = instance_find(obj_player, 0);
+    var _slot_action = inventory_get_slot_action(_player, selected_slot);
+
+    var _action_text = "none";
+    switch (_slot_action) {
+        case InventoryContextAction.equip:
+            _action_text = "equip";
+            break;
+
+        case InventoryContextAction.use:
+            _action_text = "use";
+            break;
+    }
+
     // Action key stubs
     if (keyboard_check_pressed(vk_space)) {
-        var _row = floor(selected_slot / grid_columns);
-        var _col = selected_slot % grid_columns;
-        show_debug_message("Selected slot: " + string(_row) + ", " + string(_col) + " (index: " + string(selected_slot) + ")");
+        if (_slot_action == InventoryContextAction.none) {
+            show_debug_message("[Space] No context action for slot: " + string(_row) + ", " + string(_col) + " (index: " + string(selected_slot) + ")");
+        } else {
+            show_debug_message("[Space] Context action '" + _action_text + "' at slot: " + string(_row) + ", " + string(_col) + " (index: " + string(selected_slot) + ")");
+        }
     }
 
     if (keyboard_check_pressed(ord("E"))) {
-        var _row = floor(selected_slot / grid_columns);
-        var _col = selected_slot % grid_columns;
-        show_debug_message("[E] Equip item at slot: " + string(_row) + ", " + string(_col) + " (index: " + string(selected_slot) + ")");
+        if (_slot_action == InventoryContextAction.equip) {
+            show_debug_message("[E] Equip item at slot: " + string(_row) + ", " + string(_col) + " (index: " + string(selected_slot) + ")");
+        } else {
+            show_debug_message("[E] No equip action available (current context: " + _action_text + ")");
+        }
     }
 
-    if (keyboard_check_pressed(ord("D"))) {
-        var _row = floor(selected_slot / grid_columns);
-        var _col = selected_slot % grid_columns;
-        show_debug_message("[D] Drop item at slot: " + string(_row) + ", " + string(_col) + " (index: " + string(selected_slot) + ")");
+    if (keyboard_check_pressed(ord("P"))) {
+        show_debug_message("[P] Drop item at slot: " + string(_row) + ", " + string(_col) + " (index: " + string(selected_slot) + ")");
     }
 
     if (keyboard_check_pressed(ord("U"))) {
-        var _row = floor(selected_slot / grid_columns);
-        var _col = selected_slot % grid_columns;
-        show_debug_message("[U] Use/consume item at slot: " + string(_row) + ", " + string(_col) + " (index: " + string(selected_slot) + ")");
+        if (_slot_action == InventoryContextAction.use) {
+            show_debug_message("[U] Use/consume item at slot: " + string(_row) + ", " + string(_col) + " (index: " + string(selected_slot) + ")");
+        } else {
+            show_debug_message("[U] No use action available (current context: " + _action_text + ")");
+        }
     }
 
     if (keyboard_check_pressed(vk_escape)) {

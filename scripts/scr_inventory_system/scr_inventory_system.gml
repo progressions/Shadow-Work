@@ -247,3 +247,32 @@ function get_item_scale(_item_def, _context) {
             return 1;
     }
 }
+
+function inventory_get_slot_action(_player_instance, _slot_index) {
+    if (_player_instance == noone) return InventoryContextAction.none;
+    if (_slot_index < 0) return InventoryContextAction.none;
+
+    var _inventory = _player_instance.inventory;
+    if (_slot_index >= array_length(_inventory)) return InventoryContextAction.none;
+
+    var _entry = _inventory[_slot_index];
+    if (_entry == undefined) return InventoryContextAction.none;
+
+    var _def = _entry.definition;
+    if (_def == undefined) return InventoryContextAction.none;
+
+    if (_def.equip_slot != EquipSlot.none) {
+        return InventoryContextAction.equip;
+    }
+
+    switch (_def.type) {
+        case ItemType.consumable:
+            return InventoryContextAction.use;
+
+        case ItemType.ammo:
+            return InventoryContextAction.use;
+
+        default:
+            return InventoryContextAction.none;
+    }
+}

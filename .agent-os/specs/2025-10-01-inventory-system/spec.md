@@ -36,7 +36,7 @@ The inventory screen displays a paper doll showing the player character with vis
 5. **Arrow Resource Tracking** - Separate 0-25 arrow counter display (not occupying inventory slot)
 6. **Item Scaling System** - Context-aware sprite scaling (1x/2x/4x) based on item type and display location
 7. **Panel Rendering** - Four distinct UI panels (character, paper doll, inventory grid, companions) with sprite-based frames
-8. **Keyboard-Only Controls** - Complete inventory management without mouse (I/Esc to open/close, E to equip, D to drop, Q to swap loadouts, Space as a context-sensitive confirm for equip/use)
+8. **Keyboard-Only Controls** - Complete inventory management without mouse (I/Esc to open/close, E to equip, P to drop, Q to swap loadouts, Space as a context-sensitive confirm for equip/use)
 
 ## Out of Scope
 
@@ -60,3 +60,10 @@ The inventory screen displays a paper doll showing the player character with vis
 7. Press Q in-game to swap between melee/ranged loadouts with character sprite updating to show active weapon
 8. Two-handed weapon equipping clears left hand slot and returns displaced item to inventory
 9. Arrow counter displays current arrow count (0-25) below ranged loadout, updates when arrows picked up
+
+## Audio Feedback
+
+1. Slot navigation plays a soft tick/scroll impact to reinforce movement across the grid
+2. Equipping or using an item triggers distinct confirmation cues (equip chime vs. consume gulp)
+3. Invalid actions (no context action, blocked equip) play a subtle error buzz without being jarring
+4. Inventory open/close uses an opening/closing swish to match the menu animation cadence
