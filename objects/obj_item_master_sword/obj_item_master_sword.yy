@@ -8,8 +8,8 @@
   "name":"obj_item_master_sword",
   "overriddenProperties":[],
   "parent":{
-    "name":"items",
-    "path":"folders/Objects/items.yy",
+    "name":"weapons",
+    "path":"folders/Objects/items/weapons.yy",
   },
   "parentObjectId":{
     "name":"obj_weapon_parent",

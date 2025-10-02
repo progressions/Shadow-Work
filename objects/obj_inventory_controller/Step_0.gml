@@ -185,7 +185,8 @@ if (is_open) {
                     _play_ui_sfx(snd_denied);
                 } else {
                     // Unequip from loadout back to inventory
-                    var _can_add = inventory_add_item(_equipped_item.definition, _equipped_item.count);
+				var _add_method = method(_player, inventory_add_item);
+				var _can_add = (_add_method != undefined) && _add_method(_equipped_item.definition, _equipped_item.count);
                     if (_can_add) {
                         // Remove wielder effects if this is the active loadout
                         if (loadout_selected_loadout == _player.loadouts.active) {
@@ -403,7 +404,8 @@ if (is_open) {
                     _play_ui_sfx(snd_denied);
                 } else {
                     // Unequip from loadout back to inventory
-                    var _can_add = inventory_add_item(_equipped_item.definition, _equipped_item.count);
+				var _add_method = method(_player, inventory_add_item);
+				var _can_add = (_add_method != undefined) && _add_method(_equipped_item.definition, _equipped_item.count);
                     if (_can_add) {
                         // Remove wielder effects if this is the active loadout
                         if (loadout_selected_loadout == _player.loadouts.active) {

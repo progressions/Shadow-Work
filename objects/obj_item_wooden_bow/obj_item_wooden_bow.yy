@@ -8,8 +8,8 @@
   "name":"obj_item_wooden_bow",
   "overriddenProperties":[],
   "parent":{
-    "name":"items",
-    "path":"folders/Objects/items.yy",
+    "name":"weapons",
+    "path":"folders/Objects/items/weapons.yy",
   },
   "parentObjectId":{
     "name":"obj_item_parent",
