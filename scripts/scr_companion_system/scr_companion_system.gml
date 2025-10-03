@@ -16,7 +16,7 @@ function get_active_companions() {
 }
 
 /// @function get_companion_dr_bonus()
-/// @description Calculate total DR bonus from all active companions
+/// @description Calculate total DR bonus from all active companions (FULLY MODULAR)
 function get_companion_dr_bonus() {
     var total_dr = 0;
     var companions = get_active_companions();
@@ -24,26 +24,33 @@ function get_companion_dr_bonus() {
     for (var i = 0; i < array_length(companions); i++) {
         var companion = companions[i];
 
-        // Add passive aura DR
-        if (companion.auras.protective.active) {
-            total_dr += companion.auras.protective.dr_bonus;
+        // MODULAR: Loop through all auras and check for DR bonuses
+        var _aura_names = variable_struct_get_names(companion.auras);
+        for (var j = 0; j < array_length(_aura_names); j++) {
+            var _aura_name = _aura_names[j];
+            var _aura = companion.auras[$ _aura_name];
+
+            if (_aura.active) {
+                // Check for various DR property names
+                if (variable_struct_exists(_aura, "dr_bonus")) {
+                    total_dr += _aura.dr_bonus;
+                }
+                if (variable_struct_exists(_aura, "projectile_dr")) {
+                    total_dr += _aura.projectile_dr;
+                }
+            }
         }
 
-        // Add active trigger DR
-        if (companion.triggers.shield.active) {
-            total_dr += companion.triggers.shield.dr_bonus;
-            show_debug_message(">>> SHIELD ACTIVE - Adding +" + string(companion.triggers.shield.dr_bonus) + " DR");
-        }
-        if (companion.triggers.aegis.active) {
-            total_dr += companion.triggers.aegis.dr_bonus;
-        }
-        if (companion.triggers.guardian_veil.active) {
-            total_dr += companion.triggers.guardian_veil.dr_bonus;
-        }
-    }
+        // MODULAR: Loop through all triggers and check for DR bonuses
+        var _trigger_names = variable_struct_get_names(companion.triggers);
+        for (var j = 0; j < array_length(_trigger_names); j++) {
+            var _trigger_name = _trigger_names[j];
+            var _trigger = companion.triggers[$ _trigger_name];
 
-    if (total_dr > 0) {
-        // show_debug_message("Total companion DR: " + string(total_dr));
+            if (_trigger.active && variable_struct_exists(_trigger, "dr_bonus")) {
+                total_dr += _trigger.dr_bonus;
+            }
+        }
     }
 
     return total_dr;
@@ -58,8 +65,8 @@ function apply_companion_regeneration_auras(player_instance) {
     for (var i = 0; i < array_length(companions); i++) {
         var companion = companions[i];
 
-        // Apply regeneration aura
-        if (companion.auras.regeneration.active) {
+        // Apply regeneration aura (only if companion has this aura)
+        if (variable_struct_exists(companion.auras, "regeneration") && companion.auras.regeneration.active) {
             if (!variable_instance_exists(player_instance, "companion_regen_timer")) {
                 player_instance.companion_regen_timer = 0;
             }
@@ -86,81 +93,88 @@ function evaluate_companion_triggers(player_instance) {
     for (var i = 0; i < array_length(companions); i++) {
         var companion = companions[i];
 
-        show_debug_message("Checking " + companion.companion_name + " triggers:");
-        show_debug_message("  shield.unlocked=" + string(companion.triggers.shield.unlocked));
-        show_debug_message("  shield.active=" + string(companion.triggers.shield.active));
-        show_debug_message("  shield.cooldown=" + string(companion.triggers.shield.cooldown));
+        // CANOPY: Shield Trigger - Activate when player HP is low
+        if (variable_struct_exists(companion.triggers, "shield")) {
+            if (companion.triggers.shield.unlocked &&
+                !companion.triggers.shield.active &&
+                companion.triggers.shield.cooldown == 0) {
 
-        // Shield Trigger: Activate when player HP is low
-        if (companion.triggers.shield.unlocked &&
-            !companion.triggers.shield.active &&
-            companion.triggers.shield.cooldown == 0) {
+                var hp_percent = player_instance.hp / player_instance.hp_total;
 
-            var hp_percent = player_instance.hp / player_instance.hp_total;
-
-            show_debug_message("Shield check: HP=" + string(player_instance.hp) + "/" + string(player_instance.hp_total) + " percent=" + string(hp_percent) + " threshold=" + string(companion.triggers.shield.hp_threshold));
-
-            if (hp_percent <= companion.triggers.shield.hp_threshold) {
-                companion.triggers.shield.active = true;
-                companion.triggers.shield.cooldown = companion.triggers.shield.cooldown_max;
-
-                // Set duration timer
-                if (!variable_instance_exists(companion, "shield_timer")) {
-                    companion.shield_timer = 0;
-                }
-                companion.shield_timer = companion.triggers.shield.duration;
-
-                // Spawn floating text over player's head
-                spawn_floating_text(player_instance.x, player_instance.bbox_top - 10, "Shield!", c_aqua, player_instance);
-                show_debug_message("*** SHIELD ACTIVATED! Player HP: " + string(player_instance.hp) + "/" + string(player_instance.hp_total) + " Duration=" + string(companion.shield_timer) + " frames ***");
-            }
-        }
-
-        // Update active trigger durations
-        if (companion.triggers.shield.active) {
-            if (!variable_instance_exists(companion, "shield_timer")) {
-                companion.shield_timer = 0;
-            }
-
-            companion.shield_timer--;
-            if (companion.shield_timer <= 0) {
-                companion.triggers.shield.active = false;
-            }
-        }
-
-        // Guardian Veil Trigger: Activate when surrounded by enemies
-        if (companion.triggers.guardian_veil.unlocked &&
-            !companion.triggers.guardian_veil.active &&
-            companion.triggers.guardian_veil.cooldown == 0) {
-
-            var nearby_enemies = 0;
-            with (obj_enemy_parent) {
-                if (state != EnemyState.dead &&
-                    point_distance(x, y, player_instance.x, player_instance.y) < 64) {
-                    nearby_enemies++;
+                if (hp_percent <= companion.triggers.shield.hp_threshold) {
+                    companion.triggers.shield.active = true;
+                    companion.triggers.shield.cooldown = companion.triggers.shield.cooldown_max;
+                    companion.shield_timer = companion.triggers.shield.duration;
+                    spawn_floating_text(player_instance.x, player_instance.bbox_top - 10, "Shield!", c_aqua, player_instance);
                 }
             }
 
-            if (nearby_enemies >= companion.triggers.guardian_veil.enemy_threshold) {
-                companion.triggers.guardian_veil.active = true;
-                companion.triggers.guardian_veil.cooldown = companion.triggers.guardian_veil.cooldown_max;
-
-                if (!variable_instance_exists(companion, "guardian_veil_timer")) {
-                    companion.guardian_veil_timer = 0;
-                }
-                companion.guardian_veil_timer = companion.triggers.guardian_veil.duration;
+            // Update shield duration
+            if (companion.triggers.shield.active) {
+                if (!variable_instance_exists(companion, "shield_timer")) companion.shield_timer = 0;
+                companion.shield_timer--;
+                if (companion.shield_timer <= 0) companion.triggers.shield.active = false;
             }
         }
 
-        // Update guardian veil duration
-        if (companion.triggers.guardian_veil.active) {
-            if (!variable_instance_exists(companion, "guardian_veil_timer")) {
-                companion.guardian_veil_timer = 0;
+        // CANOPY: Guardian Veil - Activate when surrounded
+        if (variable_struct_exists(companion.triggers, "guardian_veil")) {
+            if (companion.triggers.guardian_veil.unlocked &&
+                !companion.triggers.guardian_veil.active &&
+                companion.triggers.guardian_veil.cooldown == 0) {
+
+                var nearby_enemies = 0;
+                with (obj_enemy_parent) {
+                    if (state != EnemyState.dead &&
+                        point_distance(x, y, player_instance.x, player_instance.y) < 64) {
+                        nearby_enemies++;
+                    }
+                }
+
+                if (nearby_enemies >= companion.triggers.guardian_veil.enemy_threshold) {
+                    companion.triggers.guardian_veil.active = true;
+                    companion.triggers.guardian_veil.cooldown = companion.triggers.guardian_veil.cooldown_max;
+                    companion.guardian_veil_timer = companion.triggers.guardian_veil.duration;
+                }
             }
 
-            companion.guardian_veil_timer--;
-            if (companion.guardian_veil_timer <= 0) {
-                companion.triggers.guardian_veil.active = false;
+            // Update guardian veil duration
+            if (companion.triggers.guardian_veil.active) {
+                if (!variable_instance_exists(companion, "guardian_veil_timer")) companion.guardian_veil_timer = 0;
+                companion.guardian_veil_timer--;
+                if (companion.guardian_veil_timer <= 0) companion.triggers.guardian_veil.active = false;
+            }
+        }
+
+        // HOLA: Gust - Push back nearby enemies
+        if (variable_struct_exists(companion.triggers, "gust")) {
+            if (companion.triggers.gust.unlocked &&
+                !companion.triggers.gust.active &&
+                companion.triggers.gust.cooldown == 0) {
+
+                var nearby_enemies = 0;
+                with (obj_enemy_parent) {
+                    if (state != EnemyState.dead &&
+                        point_distance(x, y, player_instance.x, player_instance.y) < companion.triggers.gust.trigger_distance) {
+                        nearby_enemies++;
+                    }
+                }
+
+                if (nearby_enemies >= companion.triggers.gust.enemy_threshold) {
+                    companion.triggers.gust.active = true;
+                    companion.triggers.gust.cooldown = companion.triggers.gust.cooldown_max;
+
+                    // Push back enemies
+                    with (obj_enemy_parent) {
+                        if (state != EnemyState.dead &&
+                            point_distance(x, y, player_instance.x, player_instance.y) < companion.triggers.gust.trigger_distance) {
+                            var push_dir = point_direction(player_instance.x, player_instance.y, x, y);
+                            x += lengthdir_x(companion.triggers.gust.knockback_distance, push_dir);
+                            y += lengthdir_y(companion.triggers.gust.knockback_distance, push_dir);
+                        }
+                    }
+                    spawn_floating_text(player_instance.x, player_instance.bbox_top - 10, "Gust!", c_white, player_instance);
+                }
             }
         }
     }
@@ -179,14 +193,16 @@ function recruit_companion(companion_instance, player_instance) {
         // Mark first meeting
         quest_flags.met_player = true;
 
-        // Activate default auras
-        auras.protective.active = true;
-        auras.regeneration.active = true;
+        // Activate all auras (companions have different aura sets)
+        var _aura_names = variable_struct_get_names(auras);
+        for (var i = 0; i < array_length(_aura_names); i++) {
+            var _aura_name = _aura_names[i];
+            auras[$ _aura_name].active = true;
+        }
 
         // Visual feedback
         show_debug_message("✓ " + companion_name + " has joined your party!");
-        show_debug_message("  - Protective Aura: +" + string(auras.protective.dr_bonus) + " DR");
-        show_debug_message("  - Regeneration: " + string(auras.regeneration.hp_per_tick) + " HP/step");
+        show_debug_message("  - Activated " + string(array_length(_aura_names)) + " auras");
         show_debug_message("  - is_recruited: " + string(is_recruited));
         show_debug_message("  - state: " + string(state) + " (following=" + string(CompanionState.following) + ")");
         show_debug_message("  - follow_target: " + string(follow_target));
@@ -245,7 +261,7 @@ function serialize_all_companions() {
 }
 
 /// @function deserialize_companion_data(companion_instance, data)
-/// @description Restore a companion's state from save data
+/// @description Restore a companion's state from save data (FULLY MODULAR)
 /// @param {instance} companion_instance The companion to restore
 /// @param {struct} data The saved companion data
 function deserialize_companion_data(companion_instance, data) {
@@ -258,12 +274,17 @@ function deserialize_companion_data(companion_instance, data) {
         x = data.spawn_x;
         y = data.spawn_y;
 
-        // If recruited, set up following state
+        // If recruited, set up following state and activate all auras
         if (is_recruited) {
             state = CompanionState.following;
             follow_target = obj_player;
-            auras.protective.active = true;
-            auras.regeneration.active = true;
+
+            // MODULAR: Activate all auras (companions have different aura sets)
+            var _aura_names = variable_struct_get_names(auras);
+            for (var i = 0; i < array_length(_aura_names); i++) {
+                var _aura_name = _aura_names[i];
+                auras[$ _aura_name].active = true;
+            }
         }
     }
 }

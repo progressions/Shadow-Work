@@ -4,16 +4,21 @@
 if (global.game_paused) exit;
 
 
-// Update trigger cooldowns
-if (triggers.shield.cooldown > 0) triggers.shield.cooldown--;
-if (triggers.dash_mend.cooldown > 0) triggers.dash_mend.cooldown--;
-if (triggers.aegis.cooldown > 0) triggers.aegis.cooldown--;
-if (triggers.guardian_veil.cooldown > 0) triggers.guardian_veil.cooldown--;
+// Update trigger cooldowns (check if they exist first - companions have different triggers)
+if (variable_struct_exists(triggers, "shield") && triggers.shield.cooldown > 0) triggers.shield.cooldown--;
+if (variable_struct_exists(triggers, "dash_mend") && triggers.dash_mend.cooldown > 0) triggers.dash_mend.cooldown--;
+if (variable_struct_exists(triggers, "aegis") && triggers.aegis.cooldown > 0) triggers.aegis.cooldown--;
+if (variable_struct_exists(triggers, "guardian_veil") && triggers.guardian_veil.cooldown > 0) triggers.guardian_veil.cooldown--;
+if (variable_struct_exists(triggers, "gust") && triggers.gust.cooldown > 0) triggers.gust.cooldown--;
+if (variable_struct_exists(triggers, "slipstream_boost") && triggers.slipstream_boost.cooldown > 0) triggers.slipstream_boost.cooldown--;
+if (variable_struct_exists(triggers, "maelstrom") && triggers.maelstrom.cooldown > 0) triggers.maelstrom.cooldown--;
 
-// Unlock triggers based on affinity
-triggers.dash_mend.unlocked = (affinity >= 5.0);
-triggers.aegis.unlocked = (affinity >= 8.0);
-triggers.guardian_veil.unlocked = (affinity >= 10.0);
+// Unlock triggers based on affinity (check if they exist first)
+if (variable_struct_exists(triggers, "dash_mend")) triggers.dash_mend.unlocked = (affinity >= 5.0);
+if (variable_struct_exists(triggers, "aegis")) triggers.aegis.unlocked = (affinity >= 8.0);
+if (variable_struct_exists(triggers, "guardian_veil")) triggers.guardian_veil.unlocked = (affinity >= 10.0);
+if (variable_struct_exists(triggers, "slipstream_boost")) triggers.slipstream_boost.unlocked = (affinity >= 8.0);
+if (variable_struct_exists(triggers, "maelstrom")) triggers.maelstrom.unlocked = (affinity >= 10.0);
 
 // Following behavior
 if (is_recruited) {
@@ -64,8 +69,8 @@ if (is_recruited) {
             move_dir_x = move_x;
             move_dir_y = move_y;
 
-            // Move with collision detection
-            move_and_collide(move_x, move_y, [tilemap, obj_rising_pillar]);
+            // Move with collision detection (including other companions)
+            move_and_collide(move_x, move_y, [tilemap, obj_rising_pillar, obj_companion_parent]);
         } else {
             // Within follow range, stay idle
             move_dir_x = 0;

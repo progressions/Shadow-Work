@@ -49,6 +49,12 @@ function start_vn_dialogue(_companion_instance, _yarn_file, _start_node) {
 	if (_companion_instance.companion_id == "canopy") {
 		ChatterboxVariableSet("canopy_recruited", _companion_instance.is_recruited);
 	}
+	if (_companion_instance.companion_id == "hola") {
+		ChatterboxVariableSet("hola_recruited", _companion_instance.is_recruited);
+	}
+	if (_companion_instance.companion_id == "yorna") {
+		ChatterboxVariableSet("yorna_recruited", _companion_instance.is_recruited);
+	}
 
 	// Jump to starting node
 	ChatterboxJump(global.vn_chatterbox, _start_node);

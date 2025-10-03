@@ -1,0 +1,57 @@
+#__PrivCrochet_version:1
+__PrivCrochet_colorID: 0
+__PrivCrochet_position: 1178,557
+__PrivCrochet_tags:
+title: Start
+---
+<<bg(0)>>
+Hola: Oh! You startled me... I didn't expect anyone else here.
+    -> Are you alright?
+        Hola: I... I think so? Everything is so chaotic and I'm afraid to... to use my magic.
+        <<jump Afraid>>
+    -> Can you help me fight?
+        Hola: Fight? I... what if I hurt someone? What if I can't control it?
+        <<jump Afraid>>
+    -> You're safe now
+        Hola: Am I? I want to believe that... but my power, it's so strong. Too strong.
+        <<jump Afraid>>
+    -> Join me, I'll keep you safe <<if $hola_recruited == false>>
+        Hola: You would... protect me? Even knowing what I might do?
+        <<jump Recruit>>
+    -> I should go
+        Hola: Oh... yes, of course. Be careful out there.
+        <<jump Exit>>
+===
+__PrivCrochet_colorID: 0
+__PrivCrochet_position: 1397,437
+__PrivCrochet_tags:
+title: Afraid
+---
+<<bg(1)>>
+Hola: The All blessed me with wind magic, but... what if I'm not worthy? What if I make everything worse?
+    -> You're stronger than you think
+        Hola: Do you really think so? I... I want to believe you.
+        <<jump Start>>
+    -> We all have doubts
+        Hola: Yes... yes, I suppose that's true. Thank you for understanding.
+        <<jump Start>>
+    -> Join me, we'll face it together <<if $hola_recruited == false>>
+        Hola: Together? You would trust me, even with my fears?
+        <<jump Recruit>>
+===
+__PrivCrochet_colorID: 0
+__PrivCrochet_position: 1616,436
+__PrivCrochet_tags:
+title: Recruit
+---
+<<bg(2)>>
+Hola: I... yes. Yes! If you'll guide me, I'll use my power to protect you. I promise to be careful.
+<<set $hola_recruited = true>>
+<<jump Exit>>
+===
+__PrivCrochet_colorID: 0
+__PrivCrochet_position: 1834,435
+__PrivCrochet_tags:
+title: Exit
+---
+===

@@ -1,10 +1,10 @@
-// Canopy Step Event
+// Yorna Step Event
 // Handles VN interaction trigger
 
 // Call parent step event first
 event_inherited();
 
-// Check for VN interaction (only when recruited and near player)
+// Check for VN interaction (only when near player)
 if (instance_exists(obj_player)) {
 	if (global.game_paused) {
 		return;
@@ -14,7 +14,7 @@ if (instance_exists(obj_player)) {
 
 	// Debug output
 	if (keyboard_check_pressed(ord("0"))) {
-		show_debug_message("=== CANOPY VN DEBUG ===");
+		show_debug_message("=== YORNA VN DEBUG ===");
 		show_debug_message("is_recruited: " + string(is_recruited));
 		show_debug_message("distance to player: " + string(_dist_to_player));
 		show_debug_message("vn_active: " + string(global.vn_active));
@@ -22,13 +22,13 @@ if (instance_exists(obj_player)) {
 
 	// Debug - reload yarn file
 	if (keyboard_check_pressed(ord("9"))) {
-		show_debug_message("Reloading canopy.yarn");
-		ChatterboxLoadFromFile("canopy.yarn");
+		show_debug_message("Reloading yorna.yarn");
+		ChatterboxLoadFromFile("yorna.yarn");
 	}
 
 	// Player is close and presses space - open VN dialogue (only if not recruited)
 	if (_dist_to_player < 48 && keyboard_check_pressed(vk_space) && !is_recruited) {
-		show_debug_message("Starting VN dialogue!");
-		start_vn_dialogue(id, "canopy.yarn", "Start");
+		show_debug_message("Starting Yorna VN dialogue!");
+		start_vn_dialogue(id, "yorna.yarn", "Start");
 	}
 }

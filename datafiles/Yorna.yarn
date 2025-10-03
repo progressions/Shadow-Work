@@ -1,0 +1,57 @@
+#__PrivCrochet_version:1
+__PrivCrochet_colorID: 0
+__PrivCrochet_position: 1178,557
+__PrivCrochet_tags:
+title: Start
+---
+<<bg(0)>>
+Yorna: You're still standing. Good. Most wouldn't have made it this far.
+    -> Are you here to fight?
+        Yorna: Fight? I'm here to WIN. The question is... are you?
+        <<jump Strength>>
+    -> I could use your help
+        Yorna: "Help?" Weak word. I don't help. I dominate. If you're strong enough to lead me, I'll follow.
+        <<jump Strength>>
+    -> You look dangerous
+        Yorna: Dangerous? I'm the MOST dangerous thing in these woods. And soon, you will be too.
+        <<jump Strength>>
+    -> Join me. We'll crush them together. <<if $yorna_recruited == false>>
+        Yorna: Finally, someone who speaks my language. Let's paint this forest red.
+        <<jump Recruit>>
+    -> Not interested
+        Yorna: Then you're a fool. But you'll learn... or you'll die.
+        <<jump Exit>>
+===
+__PrivCrochet_colorID: 0
+__PrivCrochet_position: 1397,437
+__PrivCrochet_tags:
+title: Strength
+---
+<<bg(1)>>
+Yorna: Strength isn't given. It's TAKEN. Every enemy you crush proves your worth. Every hesitation proves your weakness.
+    -> I won't hesitate
+        Yorna: Good. Hesitation is death. Show me you mean it.
+        <<jump Start>>
+    -> What do you want?
+        Yorna: To stand beside someone as ruthless as I am. To watch the weak fall before us.
+        <<jump Start>>
+    -> Fight with me <<if $yorna_recruited == false>>
+        Yorna: About time. Let's show them what real power looks like.
+        <<jump Recruit>>
+===
+__PrivCrochet_colorID: 0
+__PrivCrochet_position: 1616,436
+__PrivCrochet_tags:
+title: Recruit
+---
+<<bg(2)>>
+Yorna: You want a warrior? You've got one. Just don't expect me to hold back. We end this invasion with blood and steel.
+<<set $yorna_recruited = true>>
+<<jump Exit>>
+===
+__PrivCrochet_colorID: 0
+__PrivCrochet_position: 1834,435
+__PrivCrochet_tags:
+title: Exit
+---
+===
