@@ -32,7 +32,7 @@ function chatterbox_update() {
 // Start VN dialogue mode with a specific companion and yarn file
 function start_vn_dialogue(_companion_instance, _yarn_file, _start_node) {
 	// Play VN open sound
-	audio_play_sound(snd_vn_open, 1, false);
+	play_sfx(snd_vn_open, 1);
 
 	// Set global VN state
 	global.vn_active = true;
@@ -94,7 +94,7 @@ function stop_vn_dialogue() {
 
 	// Play VN close sound only if not reopening another VN
 	if (!will_reopen_vn) {
-		audio_play_sound(snd_vn_close, 1, false);
+		play_sfx(snd_vn_close, 1);
 	}
 
 	global.vn_active = false;
