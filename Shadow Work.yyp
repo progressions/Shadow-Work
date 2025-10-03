@@ -144,7 +144,7 @@
     {"id":{"name":"obj_vn_controller_test","path":"objects/obj_vn_controller_test/obj_vn_controller_test.yy",},},
     {"id":{"name":"obj_vn_controller","path":"objects/obj_vn_controller/obj_vn_controller.yy",},},
     {"id":{"name":"obj_weapon_parent","path":"objects/obj_weapon_parent/obj_weapon_parent.yy",},},
-    {"id":{"name":"room_greenwood_forest_1","path":"rooms/room_greenwood_forest_1/room_greenwood_forest_1.yy",},},
+    {"id":{"name":"room_greenwood_forest_1_old","path":"rooms/room_greenwood_forest_1_old/room_greenwood_forest_1_old.yy",},},
     {"id":{"name":"room_greenwood_forest_2","path":"rooms/room_greenwood_forest_2/room_greenwood_forest_2.yy",},},
     {"id":{"name":"room_initial","path":"rooms/room_initial/room_initial.yy",},},
     {"id":{"name":"RoomUI","path":"roomui/RoomUI/RoomUI.yy",},},
@@ -417,7 +417,7 @@
   "resourceVersion":"2.0",
   "RoomOrderNodes":[
     {"roomId":{"name":"room_initial","path":"rooms/room_initial/room_initial.yy",},},
-    {"roomId":{"name":"room_greenwood_forest_1","path":"rooms/room_greenwood_forest_1/room_greenwood_forest_1.yy",},},
+    {"roomId":{"name":"room_greenwood_forest_1_old","path":"rooms/room_greenwood_forest_1_old/room_greenwood_forest_1_old.yy",},},
     {"roomId":{"name":"room_greenwood_forest_2","path":"rooms/room_greenwood_forest_2/room_greenwood_forest_2.yy",},},
   ],
   "templateType":"game",
