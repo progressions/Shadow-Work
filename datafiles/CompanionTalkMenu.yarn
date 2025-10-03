@@ -1,0 +1,26 @@
+#__PrivCrochet_version:1
+__PrivCrochet_colorID: 0
+__PrivCrochet_position: 1178,557
+__PrivCrochet_tags:
+title: Start
+---
+<<bg(0)>>
+Who would you like to talk to?
+    -> Canopy <<if $canopy_available == true>>
+        <<set $selected_companion = "canopy">>
+        <<jump Exit>>
+    -> Hola <<if $hola_available == true>>
+        <<set $selected_companion = "hola">>
+        <<jump Exit>>
+    -> Yorna <<if $yorna_available == true>>
+        <<set $selected_companion = "yorna">>
+        <<jump Exit>>
+    -> Never mind
+        <<jump Exit>>
+===
+__PrivCrochet_colorID: 0
+__PrivCrochet_position: 1397,437
+__PrivCrochet_tags:
+title: Exit
+---
+===

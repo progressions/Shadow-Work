@@ -102,6 +102,16 @@ if (state != PlayerState.dead) {
         }
     }
 
+    // Open companion talk menu with C key
+    if (keyboard_check_pressed(ord("C"))) {
+        var companions = get_active_companions();
+        if (array_length(companions) > 0) {
+            open_companion_talk_menu();
+        } else {
+            show_debug_message("No recruited companions to talk to");
+        }
+    }
+
     #endregion Attack System
 
     #region Companion System

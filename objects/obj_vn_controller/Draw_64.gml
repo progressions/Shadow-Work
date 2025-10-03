@@ -25,7 +25,7 @@ draw_set_color(c_ltgray);
 draw_rectangle(dialogue_box_x, dialogue_box_y, dialogue_box_x + dialogue_box_width, dialogue_box_y + dialogue_box_height, true);
 
 // Draw tall portrait on left side (fit inside box with border visible)
-if (global.vn_companion != undefined && global.vn_companion.vn_sprite != undefined) {
+if (global.vn_companion != undefined && global.vn_companion != noone && instance_exists(global.vn_companion) && global.vn_companion.vn_sprite != undefined) {
 	var _sprite = global.vn_companion.vn_sprite;
 	var _sprite_width = sprite_get_width(_sprite);
 	var _sprite_height = sprite_get_height(_sprite);

@@ -200,6 +200,9 @@ function recruit_companion(companion_instance, player_instance) {
             auras[$ _aura_name].active = true;
         }
 
+        // Play recruitment sound effect
+        play_sfx(snd_companion_recruited, 1, 8, false);
+
         // Visual feedback
         show_debug_message("✓ " + companion_name + " has joined your party!");
         show_debug_message("  - Activated " + string(array_length(_aura_names)) + " auras");

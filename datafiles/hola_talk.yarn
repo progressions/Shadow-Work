@@ -1,0 +1,28 @@
+#__PrivCrochet_version:1
+__PrivCrochet_colorID: 0
+__PrivCrochet_position: 1178,557
+__PrivCrochet_tags:
+title: Start
+---
+<<bg(0)>>
+Hola: Oh! You wanted to talk? I... I'm happy to listen.
+    -> Are you feeling more confident?
+        Hola: A little... having you nearby helps. I'm still scared of my power, but... I trust you.
+        <<jump Start>>
+    -> Your wind magic is incredible
+        Hola: Is it? I worry so much about losing control. But if you think I'm helping... that means everything.
+        <<jump Start>>
+    -> How are you handling the battles?
+        Hola: Each fight terrifies me, but I focus on keeping you safe. That's what matters most.
+        <<jump Start>>
+    -> Back
+        <<set $selected_companion = "">>
+        <<set $return_to_menu = true>>
+        <<jump Exit>>
+===
+__PrivCrochet_colorID: 0
+__PrivCrochet_position: 1397,437
+__PrivCrochet_tags:
+title: Exit
+---
+===

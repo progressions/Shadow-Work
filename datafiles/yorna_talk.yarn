@@ -1,0 +1,28 @@
+#__PrivCrochet_version:1
+__PrivCrochet_colorID: 0
+__PrivCrochet_position: 1178,557
+__PrivCrochet_tags:
+title: Start
+---
+<<bg(0)>>
+Yorna: What is it? Ready to spill more blood?
+    -> How do you feel about our progress?
+        Yorna: We're getting stronger. Every enemy we crush proves our worth. Don't slow down now.
+        <<jump Start>>
+    -> What drives you to fight?
+        Yorna: Power. Domination. The thrill of victory. This world respects only strength, and we have it.
+        <<jump Start>>
+    -> You're a formidable warrior
+        Yorna: Of course I am. And with you leading, we're unstoppable. Let's keep it that way.
+        <<jump Start>>
+    -> Back
+        <<set $selected_companion = "">>
+        <<set $return_to_menu = true>>
+        <<jump Exit>>
+===
+__PrivCrochet_colorID: 0
+__PrivCrochet_position: 1397,437
+__PrivCrochet_tags:
+title: Exit
+---
+===

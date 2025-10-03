@@ -1,0 +1,28 @@
+#__PrivCrochet_version:1
+__PrivCrochet_colorID: 0
+__PrivCrochet_position: 1178,557
+__PrivCrochet_tags:
+title: Start
+---
+<<bg(0)>>
+Canopy: It's good to see you! How can I help?
+    -> How are you holding up?
+        Canopy: I'm doing well. Having you to follow gives me strength.
+        <<jump Start>>
+    -> Tell me about your healing magic
+        Canopy: The All blessed me with the power to protect and mend. I'm grateful to use it for good.
+        <<jump Start>>
+    -> What do you think of our journey?
+        Canopy: Every battle we win, every person we save... it reminds me why I fight. Thank you for leading us.
+        <<jump Start>>
+    -> Back
+        <<set $selected_companion = "">>
+        <<set $return_to_menu = true>>
+        <<jump Exit>>
+===
+__PrivCrochet_colorID: 0
+__PrivCrochet_position: 1397,437
+__PrivCrochet_tags:
+title: Exit
+---
+===

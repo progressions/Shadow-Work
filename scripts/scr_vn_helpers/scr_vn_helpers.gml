@@ -45,15 +45,22 @@ function start_vn_dialogue(_companion_instance, _yarn_file, _start_node) {
 	ChatterboxLoadFromFile(_yarn_file);
 	global.vn_chatterbox = ChatterboxCreate(_yarn_file);
 
-	// Initialize recruitment variables
-	if (_companion_instance.companion_id == "canopy") {
-		ChatterboxVariableSet("canopy_recruited", _companion_instance.is_recruited);
+	// Initialize return_to_menu flag
+	if (!variable_global_exists("return_to_menu")) {
+		ChatterboxVariableDefault("return_to_menu", false);
 	}
-	if (_companion_instance.companion_id == "hola") {
-		ChatterboxVariableSet("hola_recruited", _companion_instance.is_recruited);
-	}
-	if (_companion_instance.companion_id == "yorna") {
-		ChatterboxVariableSet("yorna_recruited", _companion_instance.is_recruited);
+
+	// Initialize recruitment variables (only if we have a companion instance)
+	if (_companion_instance != noone && instance_exists(_companion_instance)) {
+		if (_companion_instance.companion_id == "canopy") {
+			ChatterboxVariableSet("canopy_recruited", _companion_instance.is_recruited);
+		}
+		if (_companion_instance.companion_id == "hola") {
+			ChatterboxVariableSet("hola_recruited", _companion_instance.is_recruited);
+		}
+		if (_companion_instance.companion_id == "yorna") {
+			ChatterboxVariableSet("yorna_recruited", _companion_instance.is_recruited);
+		}
 	}
 
 	// Jump to starting node
@@ -62,12 +69,82 @@ function start_vn_dialogue(_companion_instance, _yarn_file, _start_node) {
 
 // Stop VN dialogue mode and return to gameplay
 function stop_vn_dialogue() {
+	// Check if we need to return to menu or open a companion talk
+	var selected_companion = undefined;
+	var return_to_menu = false;
+	var should_restore_sfx = true;
+
+	if (global.vn_chatterbox != undefined) {
+		if (global.vn_yarn_file == "CompanionTalkMenu.yarn") {
+			selected_companion = ChatterboxVariableGet("selected_companion");
+		} else {
+			// Check if we're returning to menu from a talk dialogue
+			var _found = ChatterboxVariablesFind("return_to_menu", 0, true);
+			if (array_length(_found) > 0) {
+				return_to_menu = ChatterboxVariableGet("return_to_menu");
+			}
+		}
+	}
+
+	// Store whether we'll be reopening a VN
+	var will_reopen_vn = (return_to_menu == true) || (selected_companion != undefined && selected_companion != "");
+
 	global.vn_active = false;
 	global.game_paused = false;
 	global.vn_companion = undefined;
 	global.vn_chatterbox = undefined;
 	global.vn_yarn_file = "";
 
-	// Restore SFX state (looped sounds will restart automatically from player state)
-	global.audio_config.sfx_enabled = global.vn_saved_sfx_enabled;
+	// Only restore SFX if we're NOT reopening another VN
+	if (!will_reopen_vn) {
+		global.audio_config.sfx_enabled = global.vn_saved_sfx_enabled;
+	}
+
+	// If returning to menu, reopen it
+	if (return_to_menu == true) {
+		open_companion_talk_menu();
+	}
+	// If a companion was selected from the menu, open their talk dialogue
+	else if (selected_companion != undefined && selected_companion != "") {
+		// Find the companion instance
+		var companion_instance = noone;
+		with (obj_companion_parent) {
+			if (companion_id == selected_companion) {
+				companion_instance = id;
+				break;
+			}
+		}
+
+		if (companion_instance != noone) {
+			start_vn_dialogue(companion_instance, selected_companion + "_talk.yarn", "Start");
+		}
+	}
+}
+
+// Open the companion talk menu
+function open_companion_talk_menu() {
+	// Declare and set availability flags for each companion based on recruitment
+	with (obj_companion_parent) {
+		var _var_name = companion_id + "_available";
+		// Declare variable if it doesn't exist
+		if (!variable_global_exists(_var_name)) {
+			ChatterboxVariableDefault(_var_name, false);
+		}
+		ChatterboxVariableSet(_var_name, is_recruited);
+	}
+
+	// Declare and clear any previous selection
+	if (!variable_global_exists("selected_companion")) {
+		ChatterboxVariableDefault("selected_companion", "");
+	}
+	ChatterboxVariableSet("selected_companion", "");
+
+	// Declare and clear return to menu flag
+	if (!variable_global_exists("return_to_menu")) {
+		ChatterboxVariableDefault("return_to_menu", false);
+	}
+	ChatterboxVariableSet("return_to_menu", false);
+
+	// Open the companion menu
+	start_vn_dialogue(noone, "CompanionTalkMenu.yarn", "Start");
 }
