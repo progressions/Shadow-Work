@@ -1,0 +1,3 @@
+# Spec Summary (Lite)
+
+Implement a comprehensive quest system that allows NPCs (primarily companions) to give quests with multiple objective types (kill enemies, collect items, reach locations, spawn special enemies), quest chains that unlock sequentially, and rewards including affinity increases and items. The system integrates with Yarn dialogue for quest acceptance through companion conversations, tracks progress in the player object, and provides visual/audio feedback for acceptance, progress updates, and completion. Quest items are a new non-droppable item type, and most quests auto-complete when objectives are met, though some can require manual NPC turn-in.

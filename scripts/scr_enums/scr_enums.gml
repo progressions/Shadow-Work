@@ -54,7 +54,8 @@ enum ItemType {
     armor,
     consumable,
     tool,
-    ammo
+    ammo,
+    quest_item
 }
 
 enum InventoryContextAction {

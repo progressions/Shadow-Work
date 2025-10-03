@@ -28,6 +28,9 @@ function enemy_state_dead() {
             _corpse.sprite_index = sprite_index;
             _corpse.image_index = image_index;
 
+            // Check quest objectives for enemy kills
+            quest_check_enemy_kill(object_index, tags);
+
             instance_destroy();
         }
     } else {

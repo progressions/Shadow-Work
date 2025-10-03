@@ -51,6 +51,9 @@ max_inventory_size = 16;
 arrow_count = 0;
 arrow_max = 25;
 
+// Quest system
+active_quests = {};
+
 debug = false;
 
 interaction_offset_x = 0;

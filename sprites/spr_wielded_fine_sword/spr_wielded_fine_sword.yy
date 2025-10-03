@@ -2,8 +2,8 @@
   "$GMSprite":"",
   "%Name":"spr_wielded_fine_sword",
   "bboxMode":0,
-  "bbox_bottom":14,
-  "bbox_left":0,
+  "bbox_bottom":13,
+  "bbox_left":11,
   "bbox_right":24,
   "bbox_top":0,
   "collisionKind":1,
@@ -13,7 +13,6 @@
   "For3D":false,
   "frames":[
     {"$GMSpriteFrame":"","%Name":"3b0a083b-325e-41ee-80f9-541f4b3e641f","name":"3b0a083b-325e-41ee-80f9-541f4b3e641f","resourceType":"GMSpriteFrame","resourceVersion":"2.0",},
-    {"$GMSpriteFrame":"","%Name":"d78e0385-d494-4e38-9ee5-1635894b9aff","name":"d78e0385-d494-4e38-9ee5-1635894b9aff","resourceType":"GMSpriteFrame","resourceVersion":"2.0",},
   ],
   "gridX":0,
   "gridY":0,
@@ -50,7 +49,7 @@
     },
     "eventStubScript":null,
     "eventToFunction":{},
-    "length":2.0,
+    "length":1.0,
     "lockOrigin":false,
     "moments":{
       "$KeyframeStore<MomentsEventKeyframe>":"",
@@ -74,14 +73,11 @@
             {"$Keyframe<SpriteFrameKeyframe>":"","Channels":{
                 "0":{"$SpriteFrameKeyframe":"","Id":{"name":"3b0a083b-325e-41ee-80f9-541f4b3e641f","path":"sprites/spr_wielded_fine_sword/spr_wielded_fine_sword.yy",},"resourceType":"SpriteFrameKeyframe","resourceVersion":"2.0",},
               },"Disabled":false,"id":"4bacb0f6-b66a-4c06-9dd2-c977ece248a2","IsCreationKey":false,"Key":0.0,"Length":1.0,"resourceType":"Keyframe<SpriteFrameKeyframe>","resourceVersion":"2.0","Stretch":false,},
-            {"$Keyframe<SpriteFrameKeyframe>":"","Channels":{
-                "0":{"$SpriteFrameKeyframe":"","Id":{"name":"d78e0385-d494-4e38-9ee5-1635894b9aff","path":"sprites/spr_wielded_fine_sword/spr_wielded_fine_sword.yy",},"resourceType":"SpriteFrameKeyframe","resourceVersion":"2.0",},
-              },"Disabled":false,"id":"59f7adf8-828c-4f1c-9978-a39085279461","IsCreationKey":false,"Key":1.0,"Length":1.0,"resourceType":"Keyframe<SpriteFrameKeyframe>","resourceVersion":"2.0","Stretch":false,},
           ],"resourceType":"KeyframeStore<SpriteFrameKeyframe>","resourceVersion":"2.0",},"modifiers":[],"name":"frames","resourceType":"GMSpriteFramesTrack","resourceVersion":"2.0","spriteId":null,"trackColour":0,"tracks":[],"traits":0,},
     ],
     "visibleRange":null,
     "volume":1.0,
-    "xorigin":7,
+    "xorigin":9,
     "yorigin":16,
   },
   "swatchColours":null,

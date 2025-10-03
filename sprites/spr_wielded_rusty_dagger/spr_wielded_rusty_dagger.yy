@@ -2,9 +2,9 @@
   "$GMSprite":"",
   "%Name":"spr_wielded_rusty_dagger",
   "bboxMode":0,
-  "bbox_bottom":14,
-  "bbox_left":0,
-  "bbox_right":31,
+  "bbox_bottom":13,
+  "bbox_left":11,
+  "bbox_right":17,
   "bbox_top":5,
   "collisionKind":1,
   "collisionTolerance":0,
@@ -13,31 +13,6 @@
   "For3D":false,
   "frames":[
     {"$GMSpriteFrame":"","%Name":"614f045d-b812-4ea9-9bfb-c0a70ae4e23e","name":"614f045d-b812-4ea9-9bfb-c0a70ae4e23e","resourceType":"GMSpriteFrame","resourceVersion":"2.0",},
-    {"$GMSpriteFrame":"","%Name":"b293920d-e09e-4a67-9b21-b2db94928fa2","name":"b293920d-e09e-4a67-9b21-b2db94928fa2","resourceType":"GMSpriteFrame","resourceVersion":"2.0",},
-    {"$GMSpriteFrame":"","%Name":"a63c38bc-aa52-4eba-99cb-a3156540dd1e","name":"a63c38bc-aa52-4eba-99cb-a3156540dd1e","resourceType":"GMSpriteFrame","resourceVersion":"2.0",},
-    {"$GMSpriteFrame":"","%Name":"8dd475c5-a5d6-4c7a-836a-8dc495e1a730","name":"8dd475c5-a5d6-4c7a-836a-8dc495e1a730","resourceType":"GMSpriteFrame","resourceVersion":"2.0",},
-    {"$GMSpriteFrame":"","%Name":"b9119946-3695-4707-b851-56da77a8e611","name":"b9119946-3695-4707-b851-56da77a8e611","resourceType":"GMSpriteFrame","resourceVersion":"2.0",},
-    {"$GMSpriteFrame":"","%Name":"d1be90f7-027b-4520-9ff0-4354c4ec1150","name":"d1be90f7-027b-4520-9ff0-4354c4ec1150","resourceType":"GMSpriteFrame","resourceVersion":"2.0",},
-    {"$GMSpriteFrame":"","%Name":"ae547404-513f-4398-bbc6-15f9f133c0b0","name":"ae547404-513f-4398-bbc6-15f9f133c0b0","resourceType":"GMSpriteFrame","resourceVersion":"2.0",},
-    {"$GMSpriteFrame":"","%Name":"93691ce9-5f5c-49ef-bbaa-10d9eb0bcfb6","name":"93691ce9-5f5c-49ef-bbaa-10d9eb0bcfb6","resourceType":"GMSpriteFrame","resourceVersion":"2.0",},
-    {"$GMSpriteFrame":"","%Name":"7c948d27-150e-4756-b9fb-6fcf44aa1345","name":"7c948d27-150e-4756-b9fb-6fcf44aa1345","resourceType":"GMSpriteFrame","resourceVersion":"2.0",},
-    {"$GMSpriteFrame":"","%Name":"44352512-3f37-4515-89dd-890b0cc47002","name":"44352512-3f37-4515-89dd-890b0cc47002","resourceType":"GMSpriteFrame","resourceVersion":"2.0",},
-    {"$GMSpriteFrame":"","%Name":"e8d3ce8a-61e3-4c5f-a598-9b3e8e3c51e7","name":"e8d3ce8a-61e3-4c5f-a598-9b3e8e3c51e7","resourceType":"GMSpriteFrame","resourceVersion":"2.0",},
-    {"$GMSpriteFrame":"","%Name":"ae956d7f-9a4e-44c7-803e-871f2fe52e36","name":"ae956d7f-9a4e-44c7-803e-871f2fe52e36","resourceType":"GMSpriteFrame","resourceVersion":"2.0",},
-    {"$GMSpriteFrame":"","%Name":"87a22b22-fb22-4196-8e14-cc3fbd86c506","name":"87a22b22-fb22-4196-8e14-cc3fbd86c506","resourceType":"GMSpriteFrame","resourceVersion":"2.0",},
-    {"$GMSpriteFrame":"","%Name":"f0091311-ebd8-4fdd-8fae-8905ffea421f","name":"f0091311-ebd8-4fdd-8fae-8905ffea421f","resourceType":"GMSpriteFrame","resourceVersion":"2.0",},
-    {"$GMSpriteFrame":"","%Name":"57737e17-903c-4548-9d33-5edf7cc0f558","name":"57737e17-903c-4548-9d33-5edf7cc0f558","resourceType":"GMSpriteFrame","resourceVersion":"2.0",},
-    {"$GMSpriteFrame":"","%Name":"32bfff56-8349-4aed-8bfb-855e13d99144","name":"32bfff56-8349-4aed-8bfb-855e13d99144","resourceType":"GMSpriteFrame","resourceVersion":"2.0",},
-    {"$GMSpriteFrame":"","%Name":"d341bd36-9dd8-48bc-9605-d782a479b5f4","name":"d341bd36-9dd8-48bc-9605-d782a479b5f4","resourceType":"GMSpriteFrame","resourceVersion":"2.0",},
-    {"$GMSpriteFrame":"","%Name":"2e3aab3f-6d87-407e-8f4b-9d6a24d703ff","name":"2e3aab3f-6d87-407e-8f4b-9d6a24d703ff","resourceType":"GMSpriteFrame","resourceVersion":"2.0",},
-    {"$GMSpriteFrame":"","%Name":"d7eda383-3991-4580-818f-4c6d74278156","name":"d7eda383-3991-4580-818f-4c6d74278156","resourceType":"GMSpriteFrame","resourceVersion":"2.0",},
-    {"$GMSpriteFrame":"","%Name":"2e3a54e6-c79d-4c0a-826c-fe72a9090bdd","name":"2e3a54e6-c79d-4c0a-826c-fe72a9090bdd","resourceType":"GMSpriteFrame","resourceVersion":"2.0",},
-    {"$GMSpriteFrame":"","%Name":"0d033cc4-24e3-47c7-a892-ceecb44a81a7","name":"0d033cc4-24e3-47c7-a892-ceecb44a81a7","resourceType":"GMSpriteFrame","resourceVersion":"2.0",},
-    {"$GMSpriteFrame":"","%Name":"38ba5660-6c3a-42aa-bad6-70fc63c0d73c","name":"38ba5660-6c3a-42aa-bad6-70fc63c0d73c","resourceType":"GMSpriteFrame","resourceVersion":"2.0",},
-    {"$GMSpriteFrame":"","%Name":"8d595bea-46e2-413b-8e1c-a006133c9e96","name":"8d595bea-46e2-413b-8e1c-a006133c9e96","resourceType":"GMSpriteFrame","resourceVersion":"2.0",},
-    {"$GMSpriteFrame":"","%Name":"9b4e24cd-6921-4785-934f-510199031f12","name":"9b4e24cd-6921-4785-934f-510199031f12","resourceType":"GMSpriteFrame","resourceVersion":"2.0",},
-    {"$GMSpriteFrame":"","%Name":"8b867b5b-1696-4c32-bd18-fc2547338eaf","name":"8b867b5b-1696-4c32-bd18-fc2547338eaf","resourceType":"GMSpriteFrame","resourceVersion":"2.0",},
-    {"$GMSpriteFrame":"","%Name":"db8d8c8a-daef-4c6a-8f2e-5d2eeaa96e28","name":"db8d8c8a-daef-4c6a-8f2e-5d2eeaa96e28","resourceType":"GMSpriteFrame","resourceVersion":"2.0",},
   ],
   "gridX":0,
   "gridY":0,
@@ -74,7 +49,7 @@
     },
     "eventStubScript":null,
     "eventToFunction":{},
-    "length":26.0,
+    "length":1.0,
     "lockOrigin":false,
     "moments":{
       "$KeyframeStore<MomentsEventKeyframe>":"",
@@ -98,81 +73,6 @@
             {"$Keyframe<SpriteFrameKeyframe>":"","Channels":{
                 "0":{"$SpriteFrameKeyframe":"","Id":{"name":"614f045d-b812-4ea9-9bfb-c0a70ae4e23e","path":"sprites/spr_wielded_rusty_dagger/spr_wielded_rusty_dagger.yy",},"resourceType":"SpriteFrameKeyframe","resourceVersion":"2.0",},
               },"Disabled":false,"id":"69a5035b-51ab-4564-ab9e-fc415366ba67","IsCreationKey":false,"Key":0.0,"Length":1.0,"resourceType":"Keyframe<SpriteFrameKeyframe>","resourceVersion":"2.0","Stretch":false,},
-            {"$Keyframe<SpriteFrameKeyframe>":"","Channels":{
-                "0":{"$SpriteFrameKeyframe":"","Id":{"name":"b293920d-e09e-4a67-9b21-b2db94928fa2","path":"sprites/spr_wielded_rusty_dagger/spr_wielded_rusty_dagger.yy",},"resourceType":"SpriteFrameKeyframe","resourceVersion":"2.0",},
-              },"Disabled":false,"id":"3ea2394f-157d-4c43-950f-cc6bb0e09245","IsCreationKey":false,"Key":1.0,"Length":1.0,"resourceType":"Keyframe<SpriteFrameKeyframe>","resourceVersion":"2.0","Stretch":false,},
-            {"$Keyframe<SpriteFrameKeyframe>":"","Channels":{
-                "0":{"$SpriteFrameKeyframe":"","Id":{"name":"a63c38bc-aa52-4eba-99cb-a3156540dd1e","path":"sprites/spr_wielded_rusty_dagger/spr_wielded_rusty_dagger.yy",},"resourceType":"SpriteFrameKeyframe","resourceVersion":"2.0",},
-              },"Disabled":false,"id":"7faf8b3b-2f63-4ec5-8e00-bc70f06a531e","IsCreationKey":false,"Key":2.0,"Length":1.0,"resourceType":"Keyframe<SpriteFrameKeyframe>","resourceVersion":"2.0","Stretch":false,},
-            {"$Keyframe<SpriteFrameKeyframe>":"","Channels":{
-                "0":{"$SpriteFrameKeyframe":"","Id":{"name":"8dd475c5-a5d6-4c7a-836a-8dc495e1a730","path":"sprites/spr_wielded_rusty_dagger/spr_wielded_rusty_dagger.yy",},"resourceType":"SpriteFrameKeyframe","resourceVersion":"2.0",},
-              },"Disabled":false,"id":"3b0a644b-d631-4d4f-9d50-6ff17c016315","IsCreationKey":false,"Key":3.0,"Length":1.0,"resourceType":"Keyframe<SpriteFrameKeyframe>","resourceVersion":"2.0","Stretch":false,},
-            {"$Keyframe<SpriteFrameKeyframe>":"","Channels":{
-                "0":{"$SpriteFrameKeyframe":"","Id":{"name":"b9119946-3695-4707-b851-56da77a8e611","path":"sprites/spr_wielded_rusty_dagger/spr_wielded_rusty_dagger.yy",},"resourceType":"SpriteFrameKeyframe","resourceVersion":"2.0",},
-              },"Disabled":false,"id":"3a53ef07-38b8-47a2-b4da-e64f69466e8f","IsCreationKey":false,"Key":4.0,"Length":1.0,"resourceType":"Keyframe<SpriteFrameKeyframe>","resourceVersion":"2.0","Stretch":false,},
-            {"$Keyframe<SpriteFrameKeyframe>":"","Channels":{
-                "0":{"$SpriteFrameKeyframe":"","Id":{"name":"d1be90f7-027b-4520-9ff0-4354c4ec1150","path":"sprites/spr_wielded_rusty_dagger/spr_wielded_rusty_dagger.yy",},"resourceType":"SpriteFrameKeyframe","resourceVersion":"2.0",},
-              },"Disabled":false,"id":"d43c70df-ead7-41b8-ab98-9f460ed50858","IsCreationKey":false,"Key":5.0,"Length":1.0,"resourceType":"Keyframe<SpriteFrameKeyframe>","resourceVersion":"2.0","Stretch":false,},
-            {"$Keyframe<SpriteFrameKeyframe>":"","Channels":{
-                "0":{"$SpriteFrameKeyframe":"","Id":{"name":"ae547404-513f-4398-bbc6-15f9f133c0b0","path":"sprites/spr_wielded_rusty_dagger/spr_wielded_rusty_dagger.yy",},"resourceType":"SpriteFrameKeyframe","resourceVersion":"2.0",},
-              },"Disabled":false,"id":"1dd72d2b-fc8f-4656-b77a-3dc7abb01286","IsCreationKey":false,"Key":6.0,"Length":1.0,"resourceType":"Keyframe<SpriteFrameKeyframe>","resourceVersion":"2.0","Stretch":false,},
-            {"$Keyframe<SpriteFrameKeyframe>":"","Channels":{
-                "0":{"$SpriteFrameKeyframe":"","Id":{"name":"93691ce9-5f5c-49ef-bbaa-10d9eb0bcfb6","path":"sprites/spr_wielded_rusty_dagger/spr_wielded_rusty_dagger.yy",},"resourceType":"SpriteFrameKeyframe","resourceVersion":"2.0",},
-              },"Disabled":false,"id":"69cf64e3-92ec-4005-aeda-485cc7ca969e","IsCreationKey":false,"Key":7.0,"Length":1.0,"resourceType":"Keyframe<SpriteFrameKeyframe>","resourceVersion":"2.0","Stretch":false,},
-            {"$Keyframe<SpriteFrameKeyframe>":"","Channels":{
-                "0":{"$SpriteFrameKeyframe":"","Id":{"name":"7c948d27-150e-4756-b9fb-6fcf44aa1345","path":"sprites/spr_wielded_rusty_dagger/spr_wielded_rusty_dagger.yy",},"resourceType":"SpriteFrameKeyframe","resourceVersion":"2.0",},
-              },"Disabled":false,"id":"12fd07e1-ba76-48e8-ae95-c1842c5fc015","IsCreationKey":false,"Key":8.0,"Length":1.0,"resourceType":"Keyframe<SpriteFrameKeyframe>","resourceVersion":"2.0","Stretch":false,},
-            {"$Keyframe<SpriteFrameKeyframe>":"","Channels":{
-                "0":{"$SpriteFrameKeyframe":"","Id":{"name":"44352512-3f37-4515-89dd-890b0cc47002","path":"sprites/spr_wielded_rusty_dagger/spr_wielded_rusty_dagger.yy",},"resourceType":"SpriteFrameKeyframe","resourceVersion":"2.0",},
-              },"Disabled":false,"id":"5e0da3f4-fe13-4d14-accc-adf02b5d2255","IsCreationKey":false,"Key":9.0,"Length":1.0,"resourceType":"Keyframe<SpriteFrameKeyframe>","resourceVersion":"2.0","Stretch":false,},
-            {"$Keyframe<SpriteFrameKeyframe>":"","Channels":{
-                "0":{"$SpriteFrameKeyframe":"","Id":{"name":"e8d3ce8a-61e3-4c5f-a598-9b3e8e3c51e7","path":"sprites/spr_wielded_rusty_dagger/spr_wielded_rusty_dagger.yy",},"resourceType":"SpriteFrameKeyframe","resourceVersion":"2.0",},
-              },"Disabled":false,"id":"717711a3-89e3-4fe8-98f8-c44292fe0f8a","IsCreationKey":false,"Key":10.0,"Length":1.0,"resourceType":"Keyframe<SpriteFrameKeyframe>","resourceVersion":"2.0","Stretch":false,},
-            {"$Keyframe<SpriteFrameKeyframe>":"","Channels":{
-                "0":{"$SpriteFrameKeyframe":"","Id":{"name":"ae956d7f-9a4e-44c7-803e-871f2fe52e36","path":"sprites/spr_wielded_rusty_dagger/spr_wielded_rusty_dagger.yy",},"resourceType":"SpriteFrameKeyframe","resourceVersion":"2.0",},
-              },"Disabled":false,"id":"2d0b4c59-62ec-4288-8565-5512a48176bf","IsCreationKey":false,"Key":11.0,"Length":1.0,"resourceType":"Keyframe<SpriteFrameKeyframe>","resourceVersion":"2.0","Stretch":false,},
-            {"$Keyframe<SpriteFrameKeyframe>":"","Channels":{
-                "0":{"$SpriteFrameKeyframe":"","Id":{"name":"87a22b22-fb22-4196-8e14-cc3fbd86c506","path":"sprites/spr_wielded_rusty_dagger/spr_wielded_rusty_dagger.yy",},"resourceType":"SpriteFrameKeyframe","resourceVersion":"2.0",},
-              },"Disabled":false,"id":"ce0aab69-8562-4e69-ad7b-afacefb2c50f","IsCreationKey":false,"Key":12.0,"Length":1.0,"resourceType":"Keyframe<SpriteFrameKeyframe>","resourceVersion":"2.0","Stretch":false,},
-            {"$Keyframe<SpriteFrameKeyframe>":"","Channels":{
-                "0":{"$SpriteFrameKeyframe":"","Id":{"name":"f0091311-ebd8-4fdd-8fae-8905ffea421f","path":"sprites/spr_wielded_rusty_dagger/spr_wielded_rusty_dagger.yy",},"resourceType":"SpriteFrameKeyframe","resourceVersion":"2.0",},
-              },"Disabled":false,"id":"3f42b721-c0f5-47f4-942d-6fbb4933e0fe","IsCreationKey":false,"Key":13.0,"Length":1.0,"resourceType":"Keyframe<SpriteFrameKeyframe>","resourceVersion":"2.0","Stretch":false,},
-            {"$Keyframe<SpriteFrameKeyframe>":"","Channels":{
-                "0":{"$SpriteFrameKeyframe":"","Id":{"name":"57737e17-903c-4548-9d33-5edf7cc0f558","path":"sprites/spr_wielded_rusty_dagger/spr_wielded_rusty_dagger.yy",},"resourceType":"SpriteFrameKeyframe","resourceVersion":"2.0",},
-              },"Disabled":false,"id":"c350660a-8ad1-41f2-b388-6a4111b8c220","IsCreationKey":false,"Key":14.0,"Length":1.0,"resourceType":"Keyframe<SpriteFrameKeyframe>","resourceVersion":"2.0","Stretch":false,},
-            {"$Keyframe<SpriteFrameKeyframe>":"","Channels":{
-                "0":{"$SpriteFrameKeyframe":"","Id":{"name":"32bfff56-8349-4aed-8bfb-855e13d99144","path":"sprites/spr_wielded_rusty_dagger/spr_wielded_rusty_dagger.yy",},"resourceType":"SpriteFrameKeyframe","resourceVersion":"2.0",},
-              },"Disabled":false,"id":"25ad717a-3be6-4438-a720-fe695bd1ad7e","IsCreationKey":false,"Key":15.0,"Length":1.0,"resourceType":"Keyframe<SpriteFrameKeyframe>","resourceVersion":"2.0","Stretch":false,},
-            {"$Keyframe<SpriteFrameKeyframe>":"","Channels":{
-                "0":{"$SpriteFrameKeyframe":"","Id":{"name":"d341bd36-9dd8-48bc-9605-d782a479b5f4","path":"sprites/spr_wielded_rusty_dagger/spr_wielded_rusty_dagger.yy",},"resourceType":"SpriteFrameKeyframe","resourceVersion":"2.0",},
-              },"Disabled":false,"id":"73d3d16e-9daa-408c-bde0-bf6157c6b8bf","IsCreationKey":false,"Key":16.0,"Length":1.0,"resourceType":"Keyframe<SpriteFrameKeyframe>","resourceVersion":"2.0","Stretch":false,},
-            {"$Keyframe<SpriteFrameKeyframe>":"","Channels":{
-                "0":{"$SpriteFrameKeyframe":"","Id":{"name":"2e3aab3f-6d87-407e-8f4b-9d6a24d703ff","path":"sprites/spr_wielded_rusty_dagger/spr_wielded_rusty_dagger.yy",},"resourceType":"SpriteFrameKeyframe","resourceVersion":"2.0",},
-              },"Disabled":false,"id":"04b8befc-a7c3-4bc4-89da-5990f31effe5","IsCreationKey":false,"Key":17.0,"Length":1.0,"resourceType":"Keyframe<SpriteFrameKeyframe>","resourceVersion":"2.0","Stretch":false,},
-            {"$Keyframe<SpriteFrameKeyframe>":"","Channels":{
-                "0":{"$SpriteFrameKeyframe":"","Id":{"name":"d7eda383-3991-4580-818f-4c6d74278156","path":"sprites/spr_wielded_rusty_dagger/spr_wielded_rusty_dagger.yy",},"resourceType":"SpriteFrameKeyframe","resourceVersion":"2.0",},
-              },"Disabled":false,"id":"ffa8810b-304e-4286-872f-566de614fb3c","IsCreationKey":false,"Key":18.0,"Length":1.0,"resourceType":"Keyframe<SpriteFrameKeyframe>","resourceVersion":"2.0","Stretch":false,},
-            {"$Keyframe<SpriteFrameKeyframe>":"","Channels":{
-                "0":{"$SpriteFrameKeyframe":"","Id":{"name":"2e3a54e6-c79d-4c0a-826c-fe72a9090bdd","path":"sprites/spr_wielded_rusty_dagger/spr_wielded_rusty_dagger.yy",},"resourceType":"SpriteFrameKeyframe","resourceVersion":"2.0",},
-              },"Disabled":false,"id":"d41f32ee-4e02-444e-a806-8324c21063e1","IsCreationKey":false,"Key":19.0,"Length":1.0,"resourceType":"Keyframe<SpriteFrameKeyframe>","resourceVersion":"2.0","Stretch":false,},
-            {"$Keyframe<SpriteFrameKeyframe>":"","Channels":{
-                "0":{"$SpriteFrameKeyframe":"","Id":{"name":"0d033cc4-24e3-47c7-a892-ceecb44a81a7","path":"sprites/spr_wielded_rusty_dagger/spr_wielded_rusty_dagger.yy",},"resourceType":"SpriteFrameKeyframe","resourceVersion":"2.0",},
-              },"Disabled":false,"id":"87670e5a-7e35-4368-94f4-586792ff72d0","IsCreationKey":false,"Key":20.0,"Length":1.0,"resourceType":"Keyframe<SpriteFrameKeyframe>","resourceVersion":"2.0","Stretch":false,},
-            {"$Keyframe<SpriteFrameKeyframe>":"","Channels":{
-                "0":{"$SpriteFrameKeyframe":"","Id":{"name":"38ba5660-6c3a-42aa-bad6-70fc63c0d73c","path":"sprites/spr_wielded_rusty_dagger/spr_wielded_rusty_dagger.yy",},"resourceType":"SpriteFrameKeyframe","resourceVersion":"2.0",},
-              },"Disabled":false,"id":"b7717245-994c-4a95-b16b-76a20694d0ee","IsCreationKey":false,"Key":21.0,"Length":1.0,"resourceType":"Keyframe<SpriteFrameKeyframe>","resourceVersion":"2.0","Stretch":false,},
-            {"$Keyframe<SpriteFrameKeyframe>":"","Channels":{
-                "0":{"$SpriteFrameKeyframe":"","Id":{"name":"8d595bea-46e2-413b-8e1c-a006133c9e96","path":"sprites/spr_wielded_rusty_dagger/spr_wielded_rusty_dagger.yy",},"resourceType":"SpriteFrameKeyframe","resourceVersion":"2.0",},
-              },"Disabled":false,"id":"315e900d-1eb3-4024-843d-763b7751c9b9","IsCreationKey":false,"Key":22.0,"Length":1.0,"resourceType":"Keyframe<SpriteFrameKeyframe>","resourceVersion":"2.0","Stretch":false,},
-            {"$Keyframe<SpriteFrameKeyframe>":"","Channels":{
-                "0":{"$SpriteFrameKeyframe":"","Id":{"name":"9b4e24cd-6921-4785-934f-510199031f12","path":"sprites/spr_wielded_rusty_dagger/spr_wielded_rusty_dagger.yy",},"resourceType":"SpriteFrameKeyframe","resourceVersion":"2.0",},
-              },"Disabled":false,"id":"256c2a32-347b-46bc-83f6-7e75c7352890","IsCreationKey":false,"Key":23.0,"Length":1.0,"resourceType":"Keyframe<SpriteFrameKeyframe>","resourceVersion":"2.0","Stretch":false,},
-            {"$Keyframe<SpriteFrameKeyframe>":"","Channels":{
-                "0":{"$SpriteFrameKeyframe":"","Id":{"name":"8b867b5b-1696-4c32-bd18-fc2547338eaf","path":"sprites/spr_wielded_rusty_dagger/spr_wielded_rusty_dagger.yy",},"resourceType":"SpriteFrameKeyframe","resourceVersion":"2.0",},
-              },"Disabled":false,"id":"1c627596-7275-4d9c-bda7-8f9f3ca41e30","IsCreationKey":false,"Key":24.0,"Length":1.0,"resourceType":"Keyframe<SpriteFrameKeyframe>","resourceVersion":"2.0","Stretch":false,},
-            {"$Keyframe<SpriteFrameKeyframe>":"","Channels":{
-                "0":{"$SpriteFrameKeyframe":"","Id":{"name":"db8d8c8a-daef-4c6a-8f2e-5d2eeaa96e28","path":"sprites/spr_wielded_rusty_dagger/spr_wielded_rusty_dagger.yy",},"resourceType":"SpriteFrameKeyframe","resourceVersion":"2.0",},
-              },"Disabled":false,"id":"911820ab-541c-4ec9-b342-75b0125c39b8","IsCreationKey":false,"Key":25.0,"Length":1.0,"resourceType":"Keyframe<SpriteFrameKeyframe>","resourceVersion":"2.0","Stretch":false,},
           ],"resourceType":"KeyframeStore<SpriteFrameKeyframe>","resourceVersion":"2.0",},"modifiers":[],"name":"frames","resourceType":"GMSpriteFramesTrack","resourceVersion":"2.0","spriteId":null,"trackColour":0,"tracks":[],"traits":0,},
     ],
     "visibleRange":null,

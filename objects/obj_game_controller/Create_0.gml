@@ -279,6 +279,10 @@ global.game_paused = false;         // General pause flag for gameplay
 
 // Register custom Chatterbox functions
 ChatterboxAddFunction("bg", background_set_index);
+ChatterboxAddFunction("quest_accept", quest_accept);
+ChatterboxAddFunction("quest_is_active", quest_is_active);
+ChatterboxAddFunction("quest_is_complete", quest_is_complete);
+ChatterboxAddFunction("quest_can_accept", quest_can_accept);
 
 // Declare Chatterbox variables for companions
 ChatterboxVariableDefault("canopy_recruited", false);
@@ -286,6 +290,7 @@ ChatterboxVariableDefault("canopy_recruited", false);
 // Initialize quest system
 global.quest_flags = {};      // Boolean quest flags (struct instead of ds_map for JSON compatibility)
 global.quest_counters = {};   // Numeric quest counters
+init_quest_database();        // Initialize quest database with quest definitions
 
 // Initialize room state persistence system
 global.room_states = {};      // Struct keyed by room name/index - stores state of each visited room

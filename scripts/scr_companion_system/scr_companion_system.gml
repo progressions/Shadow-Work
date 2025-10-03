@@ -209,6 +209,9 @@ function recruit_companion(companion_instance, player_instance) {
         show_debug_message("  - is_recruited: " + string(is_recruited));
         show_debug_message("  - state: " + string(state) + " (following=" + string(CompanionState.following) + ")");
         show_debug_message("  - follow_target: " + string(follow_target));
+
+        // Check quest objectives for companion recruitment
+        quest_check_companion_recruitment(companion_id);
     }
 }
 

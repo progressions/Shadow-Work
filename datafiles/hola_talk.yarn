@@ -5,7 +5,26 @@ __PrivCrochet_tags:
 title: Start
 ---
 <<bg(0)>>
-Hola: Oh! You wanted to talk? I... I'm happy to listen.
+<<if quest_is_complete("hola_find_yorna") and not $hola_thanked_for_yorna>>
+    Hola: Thank you so much for finding Yorna! I was so worried about her. You're a true friend.
+    <<set $hola_thanked_for_yorna = true>>
+<<elseif quest_is_active("hola_find_yorna")>>
+    Hola: Have you found Yorna yet? I'm really worried about her... She's out there somewhere and I need to know she's safe.
+<<else>>
+    Hola: Oh! You wanted to talk? I... I'm happy to listen.
+<<endif>>
+    <<if quest_can_accept("hola_find_yorna")>>
+        -> Can I help you with something? [QUEST]
+            Hola: Actually... yes. There is something. My friend Yorna... I haven't seen her in so long. I'm worried something might have happened to her.
+            Hola: She's strong, much stronger than me, but... could you help me find her? Please?
+            -> Of course, I'll find her
+                <<quest_accept("hola_find_yorna")>>
+                Hola: Thank you! I knew I could count on you. Yorna has dark hair and carries a sword. She's probably training somewhere dangerous...
+                <<jump Start>>
+            -> Not right now
+                Hola: Oh... I understand. Maybe later then?
+                <<jump Start>>
+    <<endif>>
     -> Are you feeling more confident?
         Hola: A little... having you nearby helps. I'm still scared of my power, but... I trust you.
         <<jump Start>>
