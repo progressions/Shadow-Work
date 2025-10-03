@@ -70,6 +70,9 @@ function get_enemy_anim(state, dir_index) {
         case EnemyState.idle:
             return enemy_anim_get("idle_" + dir_names[dir_index]);
 
+        case EnemyState.wander:
+            return enemy_anim_get("idle_" + dir_names[dir_index]);
+
         case EnemyState.attacking:
             return enemy_anim_get("attack_" + dir_names[dir_index]);
 

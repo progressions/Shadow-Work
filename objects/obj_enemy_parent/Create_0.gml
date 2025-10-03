@@ -23,7 +23,14 @@ move_dir_y = 0;
 current_base_frame = 0;
 frame_counter = 0;
 
-state = EnemyState.targeting;
+if (!variable_instance_exists(self, "state")) {
+    state = EnemyState.targeting;
+}
+
+if (!variable_instance_exists(self, "wander_center_x")) wander_center_x = xstart;
+if (!variable_instance_exists(self, "wander_center_y")) wander_center_y = ystart;
+if (!variable_instance_exists(self, "wander_radius"))   wander_radius   = 100;
+if (!variable_instance_exists(self, "aggro_release_distance")) aggro_release_distance = -1;
 facing_dir = "down"; // String direction for ranged attacks (updated from dir_index in Step event)
 
 kb_x = 0;

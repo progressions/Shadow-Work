@@ -16,7 +16,8 @@ enum EnemyState {
 	targeting,
 	attacking,
 	ranged_attacking,
-	dead,
+	dead = 4,
+	wander,
 }
 
 enum CompanionState {

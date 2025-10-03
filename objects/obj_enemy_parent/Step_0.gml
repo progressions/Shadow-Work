@@ -36,6 +36,20 @@ if (state == EnemyState.dead) {
     return;
 }
 
+if ((state == EnemyState.targeting || state == EnemyState.ranged_attacking) && aggro_release_distance >= 0) {
+    var _player_exists = instance_exists(obj_player);
+    if (!_player_exists || point_distance(x, y, obj_player.x, obj_player.y) > aggro_release_distance) {
+        if (path_exists(path)) {
+            path_end();
+        }
+        path_speed = 0;
+        state = EnemyState.wander;
+        target_x = x;
+        target_y = y;
+        alarm[0] = 0;
+    }
+}
+
 // Dispatch to state-specific handlers
 switch (state) {
     case EnemyState.targeting:
@@ -50,13 +64,17 @@ switch (state) {
         enemy_state_ranged_attacking();
         break;
 
+    case EnemyState.wander:
+        enemy_state_wander();
+        break;
+
     case EnemyState.idle:
         enemy_state_idle();
         break;
 
     default:
-        state = EnemyState.idle;
-        enemy_state_idle();
+        state = EnemyState.targeting;
+        enemy_state_targeting();
         break;
 }
 
@@ -96,7 +114,7 @@ facing_dir = _dir_names[dir_index];
 // Animation handling
 image_speed = 0;
 
-var _using_walk_anim = (state == EnemyState.targeting && _is_moving);
+var _using_walk_anim = ((state == EnemyState.targeting || state == EnemyState.wander) && _is_moving);
 var anim_info;
 
 if (_using_walk_anim) {

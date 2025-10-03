@@ -21,6 +21,7 @@ if (global.debug_pathfinding) {
     var _state_text = "";
     switch(state) {
         case EnemyState.idle: _state_text = "IDLE"; break;
+        case EnemyState.wander: _state_text = "WANDER"; break;
         case EnemyState.targeting: _state_text = "TARGETING"; break;
         case EnemyState.attacking: _state_text = "ATTACKING"; break;
         case EnemyState.ranged_attacking: _state_text = "RANGED_ATK"; break;
