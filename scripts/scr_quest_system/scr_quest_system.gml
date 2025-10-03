@@ -217,6 +217,34 @@ function quest_complete(quest_id) {
         //     gold += quest.rewards.gold_reward;
         // }
 
+        // Remove quest items from inventory (unless they're reward items)
+        var reward_item_ids = [];
+        for (var i = 0; i < array_length(quest.rewards.item_rewards); i++) {
+            array_push(reward_item_ids, quest.rewards.item_rewards[i]);
+        }
+
+        for (var i = array_length(inventory) - 1; i >= 0; i--) {
+            var inv_item = inventory[i];
+            if (inv_item.definition.type == ItemType.quest_item &&
+                variable_struct_exists(inv_item.definition, "quest_id") &&
+                inv_item.definition.quest_id == quest_id) {
+
+                // Don't remove if it's a reward item
+                var is_reward = false;
+                for (var j = 0; j < array_length(reward_item_ids); j++) {
+                    if (inv_item.definition.item_id == reward_item_ids[j]) {
+                        is_reward = true;
+                        break;
+                    }
+                }
+
+                if (!is_reward) {
+                    array_delete(inventory, i, 1);
+                    show_debug_message("  - Removed quest item: " + inv_item.definition.name);
+                }
+            }
+        }
+
         // Set completion flag
         variable_global_set(quest.completion_flag, true);
         show_debug_message("  + Set flag: " + quest.completion_flag);
@@ -364,6 +392,29 @@ function quest_check_enemy_kill(enemy_object, enemy_tags) {
                     if (matches && objective.current < objective.count) {
                         quest_update_progress(quest_id, j, 1);
                     }
+                }
+            }
+        }
+    }
+}
+
+/// @function quest_check_item_collection(item_id, quest_id)
+/// @description Check if collecting this item progresses any collect objectives
+/// @param {string} item_id The item_id that was collected
+/// @param {string} quest_id The quest_id associated with this quest item
+function quest_check_item_collection(item_id, quest_id) {
+    if (!quest_is_active(quest_id)) return;
+
+    with (obj_player) {
+        var quest = active_quests[$ quest_id];
+
+        // Check each objective
+        for (var i = 0; i < array_length(quest.objectives); i++) {
+            var objective = quest.objectives[i];
+
+            if (objective.type == "collect" && objective.target == item_id) {
+                if (objective.current < objective.count) {
+                    quest_update_progress(quest_id, i, 1);
                 }
             }
         }

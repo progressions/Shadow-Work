@@ -38,6 +38,13 @@ This is a GameMaker Studio 2 project for a top-down action RPG called "Shadow Wo
 - **Controller**: `obj_grid_controller` - Manages pillar puzzle mechanics
 - **Components**: `obj_button`, `obj_rising_pillar`, `obj_reset_pad`
 
+### Quest System
+- **Database**: `global.quest_database` in `scripts/scr_quest_system/scr_quest_system.gml` defines all quests
+- **Quest types**: Multiple objective types (recruit_companion, kill, collect, deliver, location, spawn_kill)
+- **Quest functions**: `quest_accept()`, `quest_update_progress()`, `quest_complete()`, `quest_is_active()`, `quest_is_complete()`, `quest_can_accept()`
+- **Integration**: Quests are offered through Yarn dialogue files using Chatterbox functions
+- **Tracking**: Active quests stored in `obj_player.active_quests` struct, completion flags stored as global variables
+
 ## GML Code Conventions
 
 ### Code Style
@@ -99,3 +106,19 @@ The item system uses string keys (`equipped_sprite_key`) for save/load compatibi
 1. Add new state to `PlayerState` enum if needed
 2. Update player Step event state machine
 3. Add input handling in appropriate state check
+
+### Creating New Quests
+1. Add quest definition to `init_quest_database()` in `scripts/scr_quest_system/scr_quest_system.gml`
+2. Define quest properties: quest_id, quest_name, quest_giver, objectives, rewards, prerequisites, completion_flag
+3. Add quest dialogue to companion's Yarn file using quest functions:
+   - Use `<<if quest_can_accept("quest_id")>>` to show quest option
+   - Use `<<quest_accept("quest_id")>>` to accept the quest
+   - Use `<<if quest_is_active("quest_id")>>` to check if quest is in progress
+   - Use `<<if quest_is_complete("quest_id")>>` to check if quest is done
+4. Objective types automatically track progress:
+   - `recruit_companion`: Tracks when companions join (auto-tracked in `recruit_companion()`)
+   - `kill`: Tracks enemy kills (auto-tracked in `enemy_state_dead()`)
+   - `collect`: Tracks item pickup (requires integration with inventory system)
+   - `deliver`: Tracks item delivery (requires collision with delivery target)
+   - `location`: Tracks reaching locations (requires collision with `obj_quest_marker`)
+   - `spawn_kill`: Tracks killing spawned quest enemies (requires `spawn_quest_enemy()` call)

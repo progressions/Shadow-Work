@@ -153,6 +153,20 @@ global.item_database = {
     plate_sabatons: new create_item_definition(
         27, "plate_sabatons", "Plate Sabatons", ItemType.armor, EquipSlot.boots,
         {defense: 4, speed_modifier: 0.9, trait_grants: [{trait: "ice_resistance", stacks: 1}]}
+    ),
+
+    // Quest Items (frames 28-30) - Special items for quests
+    mysterious_letter: new create_item_definition(
+        28, "mysterious_letter", "Mysterious Letter", ItemType.quest_item, EquipSlot.none,
+        {quest_id: "example_quest", stack_size: 1}
+    ),
+    ancient_artifact: new create_item_definition(
+        29, "ancient_artifact", "Ancient Artifact", ItemType.quest_item, EquipSlot.none,
+        {quest_id: "example_quest", stack_size: 1}
+    ),
+    wolf_pelt: new create_item_definition(
+        30, "wolf_pelt", "Wolf Pelt", ItemType.quest_item, EquipSlot.none,
+        {quest_id: "example_collect_quest", stack_size: 5}
     )
 };
 

@@ -39,6 +39,11 @@ function inventory_add_item(_item_def, _count = 1) {
         _count -= _this_stack;
     }
 
+    // Check if this is a quest item and update quest objectives
+    if (_item_def.type == ItemType.quest_item && variable_struct_exists(_item_def, "quest_id")) {
+        quest_check_item_collection(_item_def.item_id, _item_def.quest_id);
+    }
+
     return (_count <= 0); // Return true if all items were added
 }
 
@@ -47,6 +52,12 @@ function inventory_remove_item(_inventory_index, _count = 1) {
     if (_inventory_index < 0 || _inventory_index >= array_length(inventory)) return false;
 
     var _item = inventory[_inventory_index];
+
+    // Prevent removing quest items
+    if (_item.definition.type == ItemType.quest_item) {
+        show_debug_message("Cannot remove quest item: " + _item.definition.name);
+        return false;
+    }
 
     if (_item.count > _count) {
         _item.count -= _count;
