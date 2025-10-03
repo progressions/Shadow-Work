@@ -87,6 +87,9 @@ if (alarm[1] < 0) {
 	     // Set enemy death state immediately
 	     state = EnemyState.dead;
 
+	     // Drop loot (rolls for drop chance and spawns item if successful)
+	     enemy_drop_loot(self);
+
 	     // Play enemy death sound
 	     play_enemy_sfx("on_death");
 

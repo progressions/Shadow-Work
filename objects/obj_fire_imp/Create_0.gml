@@ -25,3 +25,10 @@ enemy_sounds = {
     on_footstep: snd_fire_imp_footsteps,    // Default: undefined (no sound)
     on_status_effect: undefined // Default: snd_status_effect_generic
 };
+
+// Fire imp loot table - fire-themed items
+drop_chance = 0.4; // 40% chance to drop loot
+loot_table = [
+    {item_key: "torch"},  // Equal weights
+    {item_key: "small_health_potion"}
+];

@@ -197,7 +197,7 @@
           -575,-2147483648,1,8,-3,4,1,12,-34,-2147483648,2,8,2,-3,0,2,3,12,-33,-2147483648,1,6,-5,0,1,11,-33,-2147483648,
           2,14,5,-4,0,1,11,-34,-2147483648,1,6,-4,0,1,11,-34,-2147483648,1,6,-4,0,1,11,-34,-2147483648,1,6,-3,
           0,2,9,15,-34,-2147483648,5,6,0,0,9,15,-35,-2147483648,4,14,13,13,15,-21,-2147483648,
-        ],"TileDataFormat":1,},"tilesetId":{"name":"tiles_water","path":"tilesets/tiles_water/tiles_water.yy",},"userdefinedDepth":false,"visible":false,"x":0,"y":0,},
+        ],"TileDataFormat":1,},"tilesetId":{"name":"tiles_water","path":"tilesets/tiles_water/tiles_water.yy",},"userdefinedDepth":false,"visible":true,"x":0,"y":0,},
     {"$GMRTileLayer":"","%Name":"Tiles_Water_Background","depth":400,"effectEnabled":true,"effectType":null,"gridX":32,"gridY":32,"hierarchyFrozen":false,"inheritLayerDepth":false,"inheritLayerSettings":false,"inheritSubLayers":true,"inheritVisibility":true,"layers":[],"name":"Tiles_Water_Background","properties":[],"resourceType":"GMRTileLayer","resourceVersion":"2.0","tiles":{"SerialiseHeight":23,"SerialiseWidth":40,"TileCompressedData":[
           -469,-2147483648,1,0,-146,-2147483648,-3,1,-36,-2147483648,-5,1,-36,-2147483648,-4,1,-36,-2147483648,
           -4,1,-36,-2147483648,-4,1,-36,-2147483648,-3,1,-37,-2147483648,-2,1,-62,-2147483648,

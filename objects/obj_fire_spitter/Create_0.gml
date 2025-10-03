@@ -27,3 +27,12 @@ ranged_damage_type = DamageType.fire;
 ranged_status_effects = [
     {effect: StatusEffectType.burning, chance: 0.35}
 ];
+
+// Fire spitter loot table - ranged items and fire gear
+drop_chance = 0.35; // 35% chance to drop loot
+loot_table = [
+    {item_key: "arrows", weight: 4},
+    {item_key: "torch", weight: 2},
+    {item_key: "small_health_potion", weight: 2},
+    {item_key: "wooden_bow", weight: 1}
+];

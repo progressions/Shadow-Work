@@ -84,6 +84,32 @@ stuck_check_x = x;
 stuck_check_y = y;
 alarm[4] = 60; // Check if stuck every second
 
+// Loot drop system
+// drop_chance: Probability (0.0 to 1.0) that enemy drops loot on death
+// loot_table: Array of {item_key, weight} structs
+//   - item_key: String matching a key in global.item_database
+//   - weight: Optional number (defaults to 1 for equal probability)
+//
+// Example equal-weight table:
+//   loot_table = [
+//       {item_key: "small_health_potion"},
+//       {item_key: "rusty_dagger"}
+//   ];
+//
+// Example weighted table (5:2:1 ratio):
+//   loot_table = [
+//       {item_key: "small_health_potion", weight: 5},
+//       {item_key: "rusty_dagger", weight: 2},
+//       {item_key: "greatsword", weight: 1}
+//   ];
+//
+drop_chance = 0.3; // 30% chance to drop loot (default)
+loot_table = [
+    {item_key: "small_health_potion", weight: 3},
+    {item_key: "water", weight: 2},
+    {item_key: "arrows", weight: 1}
+];
+
 // Override serialize method for enemy-specific data
 function serialize() {
     show_debug_message("SERIALIZING ENEMY: " + object_get_name(object_index) + " at position (" + string(x) + ", " + string(y) + ")");

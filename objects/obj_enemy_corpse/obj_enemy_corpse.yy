@@ -9,8 +9,8 @@
   "name":"obj_enemy_corpse",
   "overriddenProperties":[],
   "parent":{
-    "name":"mobs",
-    "path":"folders/Objects/mobs.yy",
+    "name":"artifacts",
+    "path":"folders/Objects/artifacts.yy",
   },
   "parentObjectId":{
     "name":"obj_persistent_parent",
