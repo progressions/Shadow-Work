@@ -5,7 +5,7 @@ if (global.game_paused) exit;
 // Make pillars slightly behind player at same position
 depth = -bbox_bottom;
 
-show_debug_message("depth " + string(depth));
+// show_debug_message("depth " + string(depth));
 
 var _hor = 0;
 var _ver = 0;
