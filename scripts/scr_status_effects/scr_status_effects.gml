@@ -81,7 +81,7 @@ function apply_status_effect(_effect_type, _duration_override = -1, _is_permanen
     var _immunity_name = "";
     switch(_effect_type) {
         case StatusEffectType.burning:
-            _immunity_name = "burn_immunity";
+            _immunity_name = "fire_immunity";
             break;
         case StatusEffectType.wet:
             _immunity_name = "wet_immunity";

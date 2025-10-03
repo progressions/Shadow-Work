@@ -97,3 +97,8 @@ enum ResistanceLevel {
     normal,
     vulnerable
 }
+
+enum SpawnerMode {
+    finite,      // Spawn up to spawn_limit then stop
+    continuous   // Spawn indefinitely until destroyed/deactivated
+}
