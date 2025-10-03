@@ -1,4 +1,5 @@
 image_blend = c_white;
+if (global.game_paused) exit;
 
 // Check if enemy should die (only if not already dead)
 if (hp <= 0 && state != EnemyState.dead) {

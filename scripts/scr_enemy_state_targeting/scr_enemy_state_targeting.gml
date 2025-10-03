@@ -28,7 +28,7 @@ function enemy_state_targeting() {
         var _dy = lengthdir_y(_move_speed, unstuck_direction);
 
         // Just try to move with collision - don't force through walls
-        move_and_collide(_dx, _dy, [tilemap, obj_enemy_parent, obj_rising_pillar]);
+        move_and_collide(_dx, _dy, [tilemap, obj_enemy_parent, obj_rising_pillar, obj_player]);
 
         return; // Skip normal pathfinding while unsticking
     }
@@ -120,7 +120,7 @@ function enemy_state_targeting() {
             var _dx = lengthdir_x(_final_speed, _dir);
             var _dy = lengthdir_y(_final_speed, _dir);
 
-            move_and_collide(_dx, _dy, [tilemap, obj_enemy_parent, obj_rising_pillar]);
+            move_and_collide(_dx, _dy, [tilemap, obj_enemy_parent, obj_rising_pillar, obj_player]);
 
             // Try pathfinding again soon
             alarm[0] = 60;

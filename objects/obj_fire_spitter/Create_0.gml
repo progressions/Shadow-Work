@@ -19,8 +19,8 @@ attack_status_effects = [
 
 // Ranged attack configuration (mirrors Greenwood Bandit behavior)
 is_ranged_attacker = true;
-ranged_damage = 1;          // Firebolt damage matches melee claws
-ranged_attack_speed = 1;    // Slightly slower cadence than melee strikes
+ranged_damage = 2;          // Firebolt damage matches melee claws
+ranged_attack_speed = 1;
 ideal_range = 72;           // Maintain ~75% of attack range to kite the player
 ranged_projectile_object = obj_fireball;
 ranged_damage_type = DamageType.fire;

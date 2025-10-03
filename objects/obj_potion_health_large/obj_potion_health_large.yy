@@ -1,11 +1,11 @@
 {
   "$GMObject":"",
-  "%Name":"obj_potion_health",
+  "%Name":"obj_potion_health_large",
   "eventList":[
     {"$GMEvent":"v1","%Name":"","collisionObjectId":null,"eventNum":0,"eventType":0,"isDnD":false,"name":"","resourceType":"GMEvent","resourceVersion":"2.0",},
   ],
   "managed":true,
-  "name":"obj_potion_health",
+  "name":"obj_potion_health_large",
   "overriddenProperties":[],
   "parent":{
     "name":"items",

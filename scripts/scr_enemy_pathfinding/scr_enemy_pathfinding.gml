@@ -101,6 +101,16 @@ function enemy_update_path(target_x, target_y) {
 
     mp_grid_clear_rectangle(_grid, _start_left, _start_top, _start_right, _start_bottom);
 
+    // Mark player position as obstacle to prevent overlap
+    if (instance_exists(obj_player)) {
+        var _player_left = clamp(floor(obj_player.bbox_left / _cell_size), 0, _max_cell_x);
+        var _player_right = clamp(floor((obj_player.bbox_right - 1) / _cell_size), 0, _max_cell_x);
+        var _player_top = clamp(floor(obj_player.bbox_top / _cell_size), 0, _max_cell_y);
+        var _player_bottom = clamp(floor((obj_player.bbox_bottom - 1) / _cell_size), 0, _max_cell_y);
+
+        mp_grid_add_rectangle(_grid, _player_left, _player_top, _player_right, _player_bottom);
+    }
+
     // If the destination cell is blocked, search nearby cells for a walkable alternative
     if (mp_grid_get_cell(_grid, _target_cell_x, _target_cell_y)) {
         var _found_open = false;

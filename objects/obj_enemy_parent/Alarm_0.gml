@@ -1,4 +1,6 @@
 // Only pick random targets if idle (not targeting player with pathfinding)
+if (global.game_paused) exit;
+
 if (state == EnemyState.idle) {
     if (instance_exists(obj_player) && distance_to_object(obj_player) < aggro_distance) {
         state = EnemyState.targeting;

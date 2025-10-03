@@ -1,0 +1,25 @@
+{
+  "$GMSound":"",
+  "%Name":"snd_fire_imp_death",
+  "audioGroupId":{
+    "name":"audiogroup_default",
+    "path":"audiogroups/audiogroup_default",
+  },
+  "bitDepth":1,
+  "bitRate":128,
+  "compression":0,
+  "conversionMode":0,
+  "duration":1.1785715,
+  "name":"snd_fire_imp_death",
+  "parent":{
+    "name":"world",
+    "path":"folders/Sounds/sfx/world.yy",
+  },
+  "preload":false,
+  "resourceType":"GMSound",
+  "resourceVersion":"2.0",
+  "sampleRate":44100,
+  "soundFile":"snd_fire_imp_death.wav",
+  "type":0,
+  "volume":1.0,
+}

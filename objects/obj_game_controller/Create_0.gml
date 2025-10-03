@@ -297,4 +297,4 @@ global.broken_breakables = []; // Array of broken breakable IDs
 global.picked_up_items = [];  // Array of picked-up item spawn IDs
 
 // Pathfinding debug visualization
-global.debug_pathfinding = true; // Set to false for production
+global.debug_pathfinding = false; // Set to false for production

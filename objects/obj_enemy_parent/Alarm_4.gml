@@ -1,4 +1,6 @@
 // Stuck detection - if enemy hasn't moved in 1 second while targeting, try to unstick
+if (global.game_paused) exit;
+
 if (state == EnemyState.targeting) {
     // Don't re-trigger if already in unstuck mode
     if (variable_instance_exists(self, "unstuck_mode") && unstuck_mode > 0) {

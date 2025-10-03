@@ -1,4 +1,6 @@
 // Enemy attack execution
+if (global.game_paused) exit;
+
 if (state == EnemyState.attacking) {
     // Play enemy attack sound
     play_enemy_sfx("on_attack");

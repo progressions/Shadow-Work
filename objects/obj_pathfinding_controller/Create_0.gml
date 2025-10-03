@@ -29,6 +29,7 @@ if (tilemap != -1) {
 mp_grid_add_instances(grid, obj_rising_pillar, true);  // true = precise collision shape
 mp_grid_add_instances(grid, obj_companion_parent, true);
 mp_grid_add_instances(grid, obj_reset_pad, true);
+
 // Enemies are handled per-instance during path updates so they can leave their starting cell
 
 // Periodically refresh grid to capture dynamic obstacle movement

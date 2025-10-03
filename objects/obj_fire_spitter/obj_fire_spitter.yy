@@ -33,8 +33,8 @@
   "resourceVersion":"2.0",
   "solid":false,
   "spriteId":{
-    "name":"spr_fire_imp",
-    "path":"sprites/spr_fire_imp/spr_fire_imp.yy",
+    "name":"spr_firespitter",
+    "path":"sprites/spr_firespitter/spr_firespitter.yy",
   },
   "spriteMaskId":null,
   "visible":true,

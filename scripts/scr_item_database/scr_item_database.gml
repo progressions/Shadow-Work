@@ -110,9 +110,17 @@ global.item_database = {
         19, "greatshield", "Greatshield", ItemType.armor, EquipSlot.left_hand,
         {defense: 10, block_chance: 0.35, speed_modifier: 0.85, trait_grants: [{trait: "physical_resistance", stacks: 1}]}
     ),
-    health_potion: new create_item_definition(
-        20, "health_potion", "Health Potion", ItemType.consumable, EquipSlot.none,
-        {heal_amount: 50, stack_size: 10}
+    small_health_potion: new create_item_definition(
+        20, "small_health_potion", "Small Health Potion", ItemType.consumable, EquipSlot.none,
+        {heal_amount: 5, stack_size: 10}
+    ),
+    medium_health_potion: new create_item_definition(
+        20, "medium_health_potion", "Medium Health Potion", ItemType.consumable, EquipSlot.none,
+        {heal_amount: 10, stack_size: 10}
+    ),
+    large_health_potion: new create_item_definition(
+        20, "large_health_potion", "Large Health Potion", ItemType.consumable, EquipSlot.none,
+        {heal_amount: 15, stack_size: 10}
     ),
     water: new create_item_definition(
         21, "water", "Water", ItemType.consumable, EquipSlot.none,

@@ -1,4 +1,18 @@
-if (global.game_paused) exit;
+// Pause path movement when game is paused
+if (global.game_paused) {
+    // Save the path speed on first pause frame
+    if (path_speed != 0) {
+        saved_path_speed = path_speed;
+        path_speed = 0;
+    }
+    exit;
+}
+
+// Restore path speed when unpaused
+if (variable_instance_exists(self, "saved_path_speed") && saved_path_speed != 0) {
+    path_speed = saved_path_speed;
+    saved_path_speed = 0;
+}
 
 // Tick status effects (runs even when dead)
 tick_status_effects();
