@@ -29,7 +29,9 @@ function enemy_state_dead() {
             _corpse.image_index = image_index;
 
             // Check quest objectives for enemy kills
-            quest_check_enemy_kill(object_index, tags);
+            var _is_quest_enemy = variable_instance_exists(id, "quest_enemy") ? quest_enemy : false;
+            var _quest_enemy_id = variable_instance_exists(id, "quest_enemy_id") ? quest_enemy_id : "";
+            quest_check_enemy_kill(object_index, tags, _is_quest_enemy, _quest_enemy_id);
 
             instance_destroy();
         }

@@ -118,7 +118,19 @@ The item system uses string keys (`equipped_sprite_key`) for save/load compatibi
 4. Objective types automatically track progress:
    - `recruit_companion`: Tracks when companions join (auto-tracked in `recruit_companion()`)
    - `kill`: Tracks enemy kills (auto-tracked in `enemy_state_dead()`)
-   - `collect`: Tracks item pickup (requires integration with inventory system)
-   - `deliver`: Tracks item delivery (requires collision with delivery target)
-   - `location`: Tracks reaching locations (requires collision with `obj_quest_marker`)
-   - `spawn_kill`: Tracks killing spawned quest enemies (requires `spawn_quest_enemy()` call)
+   - `collect`: Tracks quest item pickup (auto-tracked in `inventory_add_item()`)
+   - `deliver`: Call `quest_check_delivery(object_name)` when player talks to NPC
+   - `location`: Create `obj_quest_marker` instance and call `quest_check_location_reached(quest_id)` in collision
+   - `spawn_kill`: Use `spawn_quest_enemy(obj, x, y, room, quest_id)` to spawn, auto-tracked when killed
+
+### Quest Marker Objects (for location objectives)
+To create a quest marker for location objectives:
+1. Create object inheriting from a parent or standalone
+2. Add variable `quest_id` (string) - set to the quest this marker is for
+3. Add Collision event with `obj_player`:
+   ```gml
+   if (quest_check_location_reached(quest_id)) {
+       instance_destroy(); // Remove marker after reaching it
+   }
+   ```
+4. Place marker in room where player should go

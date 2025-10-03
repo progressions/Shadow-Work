@@ -355,11 +355,13 @@ function quest_check_companion_recruitment(companion_id) {
     }
 }
 
-/// @function quest_check_enemy_kill(enemy_object, enemy_tags)
+/// @function quest_check_enemy_kill(enemy_object, enemy_tags, is_quest_enemy, quest_enemy_id)
 /// @description Check all active quests for kill objectives and update them
 /// @param {asset} enemy_object The object_index of the killed enemy
 /// @param {array} enemy_tags Array of tag strings (e.g., ["fireborne"])
-function quest_check_enemy_kill(enemy_object, enemy_tags) {
+/// @param {bool} is_quest_enemy Whether this enemy was spawned for a quest (optional)
+/// @param {string} quest_enemy_id The quest_id if this is a quest enemy (optional)
+function quest_check_enemy_kill(enemy_object, enemy_tags, is_quest_enemy = false, quest_enemy_id = "") {
     with (obj_player) {
         var quest_ids = variable_struct_get_names(active_quests);
 
@@ -393,6 +395,14 @@ function quest_check_enemy_kill(enemy_object, enemy_tags) {
                         quest_update_progress(quest_id, j, 1);
                     }
                 }
+                else if (objective.type == "spawn_kill") {
+                    // Check if this is a quest enemy for this specific quest
+                    if (is_quest_enemy && quest_enemy_id == quest_id) {
+                        if (objective.current < objective.count) {
+                            quest_update_progress(quest_id, j, 1);
+                        }
+                    }
+                }
             }
         }
     }
@@ -419,4 +429,98 @@ function quest_check_item_collection(item_id, quest_id) {
             }
         }
     }
+}
+
+/// @function quest_check_location_reached(marker_quest_id)
+/// @description Check if reaching this location completes any location objectives
+/// @param {string} marker_quest_id The quest_id associated with this quest marker
+function quest_check_location_reached(marker_quest_id) {
+    if (!quest_is_active(marker_quest_id)) return;
+
+    with (obj_player) {
+        var quest = active_quests[$ marker_quest_id];
+
+        // Check each objective
+        for (var i = 0; i < array_length(quest.objectives); i++) {
+            var objective = quest.objectives[i];
+
+            if (objective.type == "location") {
+                if (objective.current < objective.count) {
+                    quest_update_progress(marker_quest_id, i, 1);
+                    return true;
+                }
+            }
+        }
+    }
+
+    return false;
+}
+
+/// @function quest_check_delivery(npc_object_name)
+/// @description Check if player has quest items to deliver to this NPC
+/// @param {string} npc_object_name The object name of the delivery target
+function quest_check_delivery(npc_object_name) {
+    with (obj_player) {
+        var quest_ids = variable_struct_get_names(active_quests);
+
+        for (var i = 0; i < array_length(quest_ids); i++) {
+            var quest_id = quest_ids[i];
+            var quest = active_quests[$ quest_id];
+
+            // Check each objective
+            for (var j = 0; j < array_length(quest.objectives); j++) {
+                var objective = quest.objectives[j];
+
+                if (objective.type == "deliver" && objective.delivery_target == npc_object_name) {
+                    // Check if player has the required quest item
+                    var has_item = false;
+                    for (var k = 0; k < array_length(inventory); k++) {
+                        var inv_item = inventory[k];
+                        if (inv_item.definition.item_id == objective.target && inv_item.count >= objective.count) {
+                            has_item = true;
+                            break;
+                        }
+                    }
+
+                    if (has_item && objective.current < objective.count) {
+                        quest_update_progress(quest_id, j, 1);
+                        show_debug_message("Quest item delivered to " + npc_object_name);
+                        return true;
+                    }
+                }
+            }
+        }
+    }
+
+    return false;
+}
+
+/// @function spawn_quest_enemy(enemy_object, spawn_x, spawn_y, spawn_room, quest_id)
+/// @description Spawn a quest-specific enemy at a location
+/// @param {asset} enemy_object The enemy object to spawn
+/// @param {real} spawn_x X coordinate to spawn at
+/// @param {real} spawn_y Y coordinate to spawn at
+/// @param {asset} spawn_room Room to spawn in (use room for current room)
+/// @param {string} quest_id The quest_id this enemy is associated with
+/// @return {instance} The spawned enemy instance
+function spawn_quest_enemy(enemy_object, spawn_x, spawn_y, spawn_room, quest_id) {
+    var enemy_instance = noone;
+
+    // Spawn in specified room
+    if (room == spawn_room) {
+        enemy_instance = instance_create_layer(spawn_x, spawn_y, "Instances", enemy_object);
+    } else {
+        // If not in the same room, we can't spawn yet - this would need room persistence
+        show_debug_message("Cannot spawn quest enemy - not in target room");
+        return noone;
+    }
+
+    // Mark as quest enemy
+    with (enemy_instance) {
+        quest_enemy = true;
+        quest_enemy_id = quest_id;
+    }
+
+    show_debug_message("Spawned quest enemy for quest: " + quest_id);
+    return enemy_instance;
 }
