@@ -64,10 +64,8 @@ if (global.vn_chatterbox != undefined) {
 					show_debug_message("canopy_recruited variable: " + string(_recruited));
 					show_debug_message("is_recruited flag: " + string(global.vn_companion.is_recruited));
 					if (_recruited == true && !global.vn_companion.is_recruited) {
-						// Recruit Canopy
-						global.vn_companion.is_recruited = true;
-						global.vn_companion.state = CompanionState.following;
-						global.vn_companion.follow_target = obj_player;
+						// Recruit Canopy using the proper function (activates auras)
+						recruit_companion(global.vn_companion, obj_player);
 						show_debug_message("Canopy recruited!");
 
 						// Close dialogue immediately after recruitment

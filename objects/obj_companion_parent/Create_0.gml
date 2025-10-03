@@ -115,5 +115,5 @@ teleport_distance_threshold = 100; // If farther than this
 teleport_time_threshold = 90;      // For this many frames (1.5 seconds at 60fps)
 time_far_from_player = 0;
 
-// NOT persistent - room transitions handle recruited companion spawning
-persistent = false;
+// Persistent so companions persist across room changes
+persistent = true;

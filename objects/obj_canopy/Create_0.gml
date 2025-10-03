@@ -21,7 +21,7 @@ auras = {
     },
     regeneration: {
         active: false, // Activated on recruitment
-        hp_per_tick: 0.1, // Slow but constant healing
+        hp_per_tick: 0.5, // Slow but constant healing
         tick_interval: 60 // Every 1 second at 60fps
     }
 };
@@ -32,8 +32,8 @@ triggers = {
         unlocked: true,  // Available from start
         active: false,
         cooldown: 0,
-        cooldown_max: 600, // 10 seconds
-        dr_bonus: 3,
+        cooldown_max: 180, // 3 seconds
+        dr_bonus: 5,
         duration: 180, // 3 seconds
         hp_threshold: 0.3 // Activate at 30% HP
     },
@@ -69,3 +69,6 @@ triggers = {
 
 // VN system
 vn_sprite = spr_vn_canopy_1; // Portrait sprite for VN dialogue
+
+show_debug_message("=== CANOPY CREATE EVENT ===");
+show_debug_message("Shield trigger initialized: active=" + string(triggers.shield.active) + " cooldown=" + string(triggers.shield.cooldown));

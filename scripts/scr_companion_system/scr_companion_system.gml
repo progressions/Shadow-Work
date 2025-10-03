@@ -11,6 +11,7 @@ function get_active_companions() {
             array_push(companions, id);
         }
     }
+    show_debug_message("get_active_companions returned " + string(array_length(companions)) + " companions");
     return companions;
 }
 
@@ -31,6 +32,7 @@ function get_companion_dr_bonus() {
         // Add active trigger DR
         if (companion.triggers.shield.active) {
             total_dr += companion.triggers.shield.dr_bonus;
+            show_debug_message(">>> SHIELD ACTIVE - Adding +" + string(companion.triggers.shield.dr_bonus) + " DR");
         }
         if (companion.triggers.aegis.active) {
             total_dr += companion.triggers.aegis.dr_bonus;
@@ -38,6 +40,10 @@ function get_companion_dr_bonus() {
         if (companion.triggers.guardian_veil.active) {
             total_dr += companion.triggers.guardian_veil.dr_bonus;
         }
+    }
+
+    if (total_dr > 0) {
+        show_debug_message("Total companion DR: " + string(total_dr));
     }
 
     return total_dr;
@@ -80,12 +86,19 @@ function evaluate_companion_triggers(player_instance) {
     for (var i = 0; i < array_length(companions); i++) {
         var companion = companions[i];
 
+        show_debug_message("Checking " + companion.companion_name + " triggers:");
+        show_debug_message("  shield.unlocked=" + string(companion.triggers.shield.unlocked));
+        show_debug_message("  shield.active=" + string(companion.triggers.shield.active));
+        show_debug_message("  shield.cooldown=" + string(companion.triggers.shield.cooldown));
+
         // Shield Trigger: Activate when player HP is low
         if (companion.triggers.shield.unlocked &&
             !companion.triggers.shield.active &&
             companion.triggers.shield.cooldown == 0) {
 
             var hp_percent = player_instance.hp / player_instance.hp_total;
+
+            show_debug_message("Shield check: HP=" + string(player_instance.hp) + "/" + string(player_instance.hp_total) + " percent=" + string(hp_percent) + " threshold=" + string(companion.triggers.shield.hp_threshold));
 
             if (hp_percent <= companion.triggers.shield.hp_threshold) {
                 companion.triggers.shield.active = true;
@@ -97,8 +110,9 @@ function evaluate_companion_triggers(player_instance) {
                 }
                 companion.shield_timer = companion.triggers.shield.duration;
 
-                // Spawn floating text
-                spawn_floating_text(companion.x, companion.bbox_top - 10, "Shield!", c_aqua, companion);
+                // Spawn floating text over player's head
+                spawn_floating_text(player_instance.x, player_instance.bbox_top - 10, "Shield!", c_aqua, player_instance);
+                show_debug_message("*** SHIELD ACTIVATED! Player HP: " + string(player_instance.hp) + "/" + string(player_instance.hp_total) + " Duration=" + string(companion.shield_timer) + " frames ***");
             }
         }
 

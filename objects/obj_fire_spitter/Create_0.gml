@@ -5,7 +5,7 @@ attack_damage = 1;
 attack_damage_type = DamageType.fire; // Fire spitter deals elemental damage
 attack_speed = 0.8;
 attack_range = 128;
-hp = 12;
+hp = 8;
 hp_total = hp;
 move_speed = 0.85;
 

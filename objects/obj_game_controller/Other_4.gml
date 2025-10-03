@@ -43,6 +43,9 @@ if (variable_global_exists("pending_player_spawn") && global.pending_player_spaw
                     follow_target = obj_player;
                     is_recruited = true;
                     state = CompanionState.following;
+                    // Activate auras
+                    auras.protective.active = true;
+                    auras.regeneration.active = true;
                     break;
                 }
             }
@@ -59,6 +62,9 @@ if (variable_global_exists("pending_player_spawn") && global.pending_player_spaw
                 new_companion.is_recruited = true;
                 new_companion.state = CompanionState.following;
                 new_companion.follow_target = obj_player;
+                // Activate auras
+                new_companion.auras.protective.active = true;
+                new_companion.auras.regeneration.active = true;
                 show_debug_message("Companion spawned successfully: " + new_companion.companion_id);
             } else {
                 show_debug_message("Companion already exists in room: " + comp_data.companion_id);
