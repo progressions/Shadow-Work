@@ -43,6 +43,9 @@ ranged_damage = 2;           // Default arrow damage (override in child enemies)
 ranged_attack_cooldown = 0;  // Separate cooldown for ranged attacks
 ranged_attack_speed = 0.8;   // Attacks per second for ranged (default slower than melee)
 can_ranged_attack = true;    // Cooldown flag for ranged attacks
+ranged_damage_type = DamageType.physical; // Damage type for ranged projectiles
+ranged_status_effects = [];  // Optional status effects applied by ranged projectiles
+ranged_projectile_object = obj_enemy_arrow; // Default projectile for ranged enemies
 
 // Status effects system
 init_status_effects();

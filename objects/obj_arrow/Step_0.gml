@@ -13,6 +13,12 @@ if (_tilemap_col != -1) {
 // Check for collision with enemies
 var _hit_enemy = instance_place(x, y, obj_enemy_parent);
 if (_hit_enemy != noone) {
+    var _damage_type = DamageType.physical;
+    if (variable_instance_exists(self, "damage_type")) {
+        _damage_type = damage_type;
+    }
+    __proj_damage_type = _damage_type;
+
     with (_hit_enemy) {
         if (state != EnemyState.dead && alarm[1] < 0) {
             // Apply damage
@@ -23,7 +29,7 @@ if (_hit_enemy != noone) {
             play_enemy_sfx("on_hit");
 
             // Spawn damage number
-            spawn_damage_number(x, y - 16, other.damage, DamageType.physical, self);
+            spawn_damage_number(x, y - 16, other.damage, other.__proj_damage_type, self);
 
             // Check if enemy died and award XP
             if (hp <= 0) {
@@ -47,6 +53,7 @@ if (_hit_enemy != noone) {
         }
     }
 
+    __proj_damage_type = undefined;
     instance_destroy();
     exit;
 }

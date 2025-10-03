@@ -13,33 +13,102 @@ if (_tilemap_col != -1) {
 // Check for collision with player
 var _hit_player = instance_place(x, y, obj_player);
 if (_hit_player != noone) {
+    var _damage_type = DamageType.physical;
+    if (variable_instance_exists(self, "damage_type")) {
+        _damage_type = damage_type;
+    }
+
+    var _status_modifier = 1.0;
+    if (instance_exists(creator) && method(creator, get_status_effect_modifier) != undefined) {
+        _status_modifier = method(creator, get_status_effect_modifier)("damage");
+    }
+
+    var _base_damage = damage * _status_modifier;
+    var _resistance_multiplier = method(_hit_player, get_damage_modifier_for_type)(_damage_type);
+    var _after_resistance = _base_damage * _resistance_multiplier;
+
+    var _defense = method(_hit_player, get_total_defense)();
+    var _companion_dr = get_companion_dr_bonus();
+    var _total_defense = _defense + _companion_dr;
+    var _after_defense = _after_resistance - _total_defense;
+
+    var _final_damage;
+    if (_resistance_multiplier <= 0) {
+        _final_damage = 0;
+    } else if (_after_defense <= 0) {
+        _final_damage = 1;
+    } else {
+        _final_damage = _after_defense;
+    }
+
+    _final_damage = ceil(_final_damage);
+
+    var _status_effects = [];
+    if (variable_instance_exists(self, "status_effects_on_hit") && is_array(status_effects_on_hit)) {
+        _status_effects = status_effects_on_hit;
+    }
+
+    __proj_damage_type = _damage_type;
+    __proj_final_damage = _final_damage;
+    __proj_res_multiplier = _resistance_multiplier;
+    __proj_status_effects = _status_effects;
+
     with (_hit_player) {
         if (state != PlayerState.dead) {
-            // Apply damage
-            hp -= other.damage;
+            var _impact_damage = other.__proj_final_damage;
+            var _impact_type = other.__proj_damage_type;
+            var _res_mult = other.__proj_res_multiplier;
 
-            // Visual feedback
-            image_blend = c_red;
-            alarm[0] = 10; // Flash duration (alarm[0] for player, not alarm[1])
+            if (_impact_damage > 0) {
+                hp -= _impact_damage;
 
-            // Play hit sound
-            play_sfx(snd_player_hit, 1, false);
+                image_blend = c_red;
+                alarm[0] = 10; // Flash briefly
 
-            // Spawn damage number
-            spawn_damage_number(x, y - 16, other.damage, DamageType.physical, self);
+                play_sfx(snd_player_hit, 1, false);
+                spawn_damage_number(x, y - 16, _impact_damage, _impact_type, self);
+            } else {
+                play_sfx(snd_attack_miss, 1, false);
+                spawn_immune_text(x, y - 16, self);
+            }
 
             // Apply knockback
             kb_x = sign(x - other.x) * 2;
             kb_y = sign(y - other.y) * 2;
 
+            // Apply status effects carried by projectile
+            if (_impact_damage > 0) {
+                var _effects = other.__proj_status_effects;
+                if (is_array(_effects)) {
+                    for (var i = 0; i < array_length(_effects); i++) {
+                        var effect_data = _effects[i];
+                        if (random(1) < effect_data.chance) {
+                            apply_status_effect(effect_data.effect);
+                            if (variable_global_exists("debug_mode") && global.debug_mode) {
+                                show_debug_message("Projectile applied status effect: " + string(effect_data.effect));
+                            }
+                        }
+                    }
+                }
+            }
+
             // Check if player died
             if (hp <= 0) {
                 state = PlayerState.dead;
                 play_sfx(snd_player_death, 1, false);
-                show_debug_message("Player died from arrow");
+                show_debug_message("Player died from projectile");
+            }
+
+            if (variable_global_exists("debug_mode") && global.debug_mode) {
+                show_debug_message("Enemy projectile dealt " + string(_impact_damage) + " " + damage_type_to_string(_impact_type) + " damage (res mult=" + string(_res_mult) + ")");
             }
         }
     }
+
+    __proj_damage_type = undefined;
+    __proj_final_damage = undefined;
+    __proj_res_multiplier = undefined;
+    __proj_status_effects = undefined;
 
     instance_destroy();
     exit;

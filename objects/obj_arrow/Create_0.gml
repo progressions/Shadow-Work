@@ -2,6 +2,10 @@
 creator = noone;
 damage = 0;
 
+// Default projectile properties
+damage_type = DamageType.physical;
+status_effects_on_hit = [];
+
 // Movement (set by spawning code)
 speed = 6;
 direction = 0;
