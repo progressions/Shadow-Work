@@ -41,6 +41,7 @@ if (global.vn_chatterbox != undefined) {
 		if (keyboard_check_pressed(vk_up) || keyboard_check_pressed(ord("W"))) {
 			selected_choice--;
 			if (selected_choice < 0) selected_choice = _option_count - 1;
+			audio_play_sound(snd_vn_option_change, 1, false);
 			show_debug_message("Selected choice: " + string(selected_choice));
 		}
 
@@ -48,12 +49,14 @@ if (global.vn_chatterbox != undefined) {
 		if (keyboard_check_pressed(vk_down) || keyboard_check_pressed(ord("S"))) {
 			selected_choice++;
 			if (selected_choice >= _option_count) selected_choice = 0;
+			audio_play_sound(snd_vn_option_change, 1, false);
 			show_debug_message("Selected choice: " + string(selected_choice));
 		}
 
 		// Use Enter to select choices (Space might be consumed elsewhere)
 		if (keyboard_check_pressed(vk_enter) || keyboard_check_pressed(ord("E"))) {
 			show_debug_message("Selecting choice: " + string(selected_choice));
+			audio_play_sound(snd_vn_option_select, 1, false);
 			ChatterboxSelect(_chatterbox, selected_choice);
 			selected_choice = 0;
 		}

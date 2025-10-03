@@ -1,0 +1,25 @@
+{
+  "$GMSound":"",
+  "%Name":"snd_vn_option_change",
+  "audioGroupId":{
+    "name":"audiogroup_sfx_ui",
+    "path":"audiogroups/audiogroup_sfx_ui",
+  },
+  "bitDepth":1,
+  "bitRate":128,
+  "compression":0,
+  "conversionMode":0,
+  "duration":0.12501134,
+  "name":"snd_vn_option_change",
+  "parent":{
+    "name":"ui",
+    "path":"folders/Sounds/sfx/ui.yy",
+  },
+  "preload":false,
+  "resourceType":"GMSound",
+  "resourceVersion":"2.0",
+  "sampleRate":44100,
+  "soundFile":"snd_vn_option_change.wav",
+  "type":0,
+  "volume":1.0,
+}

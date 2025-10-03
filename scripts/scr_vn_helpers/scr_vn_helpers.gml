@@ -31,6 +31,9 @@ function chatterbox_update() {
 
 // Start VN dialogue mode with a specific companion and yarn file
 function start_vn_dialogue(_companion_instance, _yarn_file, _start_node) {
+	// Play VN open sound
+	audio_play_sound(snd_vn_open, 1, false);
+
 	// Set global VN state
 	global.vn_active = true;
 	global.game_paused = true;
@@ -88,6 +91,11 @@ function stop_vn_dialogue() {
 
 	// Store whether we'll be reopening a VN
 	var will_reopen_vn = (return_to_menu == true) || (selected_companion != undefined && selected_companion != "");
+
+	// Play VN close sound only if not reopening another VN
+	if (!will_reopen_vn) {
+		audio_play_sound(snd_vn_close, 1, false);
+	}
 
 	global.vn_active = false;
 	global.game_paused = false;
