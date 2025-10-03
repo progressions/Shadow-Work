@@ -286,6 +286,7 @@ ChatterboxAddFunction("quest_can_accept", quest_can_accept);
 
 // Declare Chatterbox variables for companions
 ChatterboxVariableDefault("canopy_recruited", false);
+ChatterboxVariableDefault("hola_thanked_for_yorna", false);
 
 // Initialize quest system
 global.quest_flags = {};      // Boolean quest flags (struct instead of ds_map for JSON compatibility)
