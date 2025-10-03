@@ -144,5 +144,5 @@ if (ranged_attack_cooldown > 0) {
 }
 
 if (state == EnemyState.ranged_attacking && ranged_attack_cooldown <= 0) {
-    state = EnemyState.idle;
+    state = EnemyState.targeting;
 }

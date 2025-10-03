@@ -7,6 +7,37 @@ if (global.debug_pathfinding && path_exists(path)) {
     draw_set_color(c_white);
 }
 
+// Debug: Draw last seen player position (for ranged enemies)
+if (global.debug_pathfinding && is_ranged_attacker && (last_seen_player_x != 0 || last_seen_player_y != 0)) {
+    draw_set_color(c_red);
+    draw_set_alpha(0.3);
+    draw_rectangle(last_seen_player_x - 8, last_seen_player_y - 8, last_seen_player_x + 8, last_seen_player_y + 8, false);
+    draw_set_alpha(1);
+    draw_set_color(c_white);
+}
+
+// Debug: Draw current state above enemy
+if (global.debug_pathfinding) {
+    var _state_text = "";
+    switch(state) {
+        case EnemyState.idle: _state_text = "IDLE"; break;
+        case EnemyState.targeting: _state_text = "TARGETING"; break;
+        case EnemyState.attacking: _state_text = "ATTACKING"; break;
+        case EnemyState.ranged_attacking: _state_text = "RANGED_ATK"; break;
+        case EnemyState.dead: _state_text = "DEAD"; break;
+        default: _state_text = "UNKNOWN"; break;
+    }
+
+    // Add alarm and path status
+    var _has_path = path_exists(path) && path_index == path;
+    var _path_active = (path_index != -1 && path_position >= 0 && path_position < 1);
+    _state_text += "\nA0:" + string(alarm[0]) + " P:" + (_has_path ? "Y" : "N");
+    _state_text += "\nPos:" + string(path_position) + " Spd:" + string(path_speed);
+
+    draw_set_color(c_white);
+    draw_text(x, bbox_top - 30, _state_text);
+}
+
 // Draw shadow first
 draw_sprite_ext(spr_shadow, image_index, x, y + 2, 1, 0.5, 0, c_black, 0.3);
 

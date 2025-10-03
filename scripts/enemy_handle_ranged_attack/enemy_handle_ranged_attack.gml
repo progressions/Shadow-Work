@@ -12,6 +12,16 @@ function enemy_handle_ranged_attack() {
 
     // Spawn arrow if cooldown ready and not already in ranged_attacking state
     if (can_ranged_attack && state != EnemyState.ranged_attacking) {
+        // Update facing_dir to point at player (not movement direction)
+        var _dx = obj_player.x - x;
+        var _dy = obj_player.y - y;
+
+        if (abs(_dx) > abs(_dy)) {
+            facing_dir = (_dx > 0) ? "right" : "left";
+        } else {
+            facing_dir = (_dy > 0) ? "down" : "up";
+        }
+
         // Calculate spawn position based on facing_dir
         var _arrow_x = x;
         var _arrow_y = y;
@@ -55,9 +65,10 @@ function enemy_handle_ranged_attack() {
         ranged_attack_cooldown = max(15, round(60 / ranged_attack_speed));
         can_ranged_attack = false;
 
-        if (path_exists(path)) {
-            path_end();
-        }
+        // Set failsafe alarm to prevent getting stuck in ranged_attacking
+        alarm[3] = 90; // Force exit after 1.5 seconds if still stuck
+
+        // Keep path active - enemy can move while shooting
 
         // Play sound effect
         play_enemy_sfx("on_attack");

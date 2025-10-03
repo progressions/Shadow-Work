@@ -5,67 +5,57 @@
 /// @desc Calculate ideal target position based on enemy archetype
 /// @return {struct} {x, y} Target coordinates in room space
 function enemy_calculate_target_position() {
-    if (!instance_exists(obj_player)) {
-        return { x: x, y: y };
-    }
-
     var _player_x = obj_player.x;
     var _player_y = obj_player.y;
 
-    // Melee enemies pursue the player directly
-    if (!is_ranged_attacker) {
-        return { x: _player_x, y: _player_y };
-    }
+    // Simple: always path directly to player position
+    // Pathfinding grid will route around obstacles automatically
+    return { x: _player_x, y: _player_y };
+}
 
-    var _distance = point_distance(x, y, _player_x, _player_y);
-    var _target_distance = ideal_range;
+/// @desc Find a position with clear cardinal line of sight to target
+/// @param {real} target_x
+/// @param {real} target_y
+/// @return {struct|noone} {x, y} position or noone if none found
+function enemy_find_shooting_position(target_x, target_y) {
+    var _controller = instance_exists(obj_pathfinding_controller) ? obj_pathfinding_controller : noone;
+    if (_controller == noone) return noone;
 
-    // Adjust distance to maintain a comfortable firing window
-    if (_distance < ideal_range - 20) {
-        _target_distance = ideal_range + 20;
-    } else if (_distance > ideal_range + 20) {
-        _target_distance = max(ideal_range - 20, 16);
-    } else {
-        // In preferred range — attempt a perpendicular circle strafe
-        var _angle_to_player = point_direction(x, y, _player_x, _player_y);
-        if (!variable_instance_exists(self, "strafe_direction")) {
-            strafe_direction = choose(-90, 90);
-        }
+    var _cell_size = _controller.cell_size;
+    var _search_distances = [48, 80, 96, 64, 32]; // Try various distances
 
-        var _controller = instance_exists(obj_pathfinding_controller) ? obj_pathfinding_controller : noone;
+    // Try the 4 cardinal directions at different distances
+    for (var d = 0; d < array_length(_search_distances); d++) {
+        var _dist = _search_distances[d];
+        var _directions = [0, 90, 180, 270]; // right, up, left, down
 
-        if (_controller != noone) {
-            var _cell_size = _controller.cell_size;
+        for (var i = 0; i < array_length(_directions); i++) {
+            var _angle = _directions[i];
+            var _test_x = target_x + lengthdir_x(_dist, _angle);
+            var _test_y = target_y + lengthdir_y(_dist, _angle);
 
-            for (var _attempt = 0; _attempt < 2; _attempt++) {
-                var _strafe_angle = _angle_to_player + strafe_direction;
-                var _strafe_x = _player_x + lengthdir_x(ideal_range, _strafe_angle);
-                var _strafe_y = _player_y + lengthdir_y(ideal_range, _strafe_angle);
-                var _grid_x = clamp(floor(_strafe_x / _cell_size), 0, _controller.horizontal_cells - 1);
-                var _grid_y = clamp(floor(_strafe_y / _cell_size), 0, _controller.vertical_cells - 1);
+            // Check if position is walkable
+            var _grid_x = clamp(floor(_test_x / _cell_size), 0, _controller.horizontal_cells - 1);
+            var _grid_y = clamp(floor(_test_y / _cell_size), 0, _controller.vertical_cells - 1);
 
-                if (!mp_grid_get_cell(_controller.grid, _grid_x, _grid_y)) {
-                    return { x: _strafe_x, y: _strafe_y };
+            if (!mp_grid_get_cell(_controller.grid, _grid_x, _grid_y)) {
+                // Check if this position has cardinal line of sight
+                var _old_x = x;
+                var _old_y = y;
+                x = _test_x;
+                y = _test_y;
+                var _has_los = enemy_has_line_of_sight(target_x, target_y);
+                x = _old_x;
+                y = _old_y;
+
+                if (_has_los) {
+                    return { x: _test_x, y: _test_y };
                 }
-
-                // Flip direction and retry if blocked
-                strafe_direction = -strafe_direction;
             }
         }
-
-        // Fallback: mirror player vector to maintain arc distance
-        return {
-            x: _player_x + lengthdir_x(ideal_range, _angle_to_player),
-            y: _player_y + lengthdir_y(ideal_range, _angle_to_player)
-        };
     }
 
-    var _angle_from_player = point_direction(_player_x, _player_y, x, y);
-
-    return {
-        x: _player_x + lengthdir_x(_target_distance, _angle_from_player),
-        y: _player_y + lengthdir_y(_target_distance, _angle_from_player)
-    };
+    return noone;
 }
 
 /// @desc Update the active path towards the supplied target position
@@ -139,6 +129,17 @@ function enemy_update_path(target_x, target_y) {
 
     var _path_found = mp_grid_path(_grid, path, x, y, target_x, target_y, false);
 
+    // If direct path fails, try waypoint halfway to target
+    if (!_path_found) {
+        var _waypoint_x = lerp(x, target_x, 0.5);
+        var _waypoint_y = lerp(y, target_y, 0.5);
+        _path_found = mp_grid_path(_grid, path, x, y, _waypoint_x, _waypoint_y, false);
+
+        if (_path_found) {
+            show_debug_message("Using waypoint path to halfway point");
+        }
+    }
+
     if (_path_found) {
         current_path_target_x = target_x;
         current_path_target_y = target_y;
@@ -156,6 +157,57 @@ function enemy_update_path(target_x, target_y) {
     }
 
     return false;
+}
+
+/// @desc Check if there's a clear cardinal line of sight to the target for ranged attacks
+/// @param {real} target_x
+/// @param {real} target_y
+/// @return {bool} True if clear cardinal line of sight exists
+function enemy_has_line_of_sight(target_x, target_y) {
+    var _tilemap_col = layer_tilemap_get_id("Tiles_Col");
+    if (_tilemap_col == -1) return true;
+
+    var _dx = target_x - x;
+    var _dy = target_y - y;
+
+    // Determine which cardinal direction the player is in
+    var _shoot_dir = "";
+    var _shoot_x = x;
+    var _shoot_y = y;
+    var _alignment_threshold = 16; // How close to axis player must be
+
+    // Check if player is aligned on a cardinal axis
+    if (abs(_dx) > abs(_dy)) {
+        // Horizontal shot (left or right)
+        if (abs(_dy) > _alignment_threshold) {
+            return false; // Player not aligned on horizontal axis
+        }
+        _shoot_dir = (_dx > 0) ? "right" : "left";
+        _shoot_y = y; // Lock to horizontal
+    } else {
+        // Vertical shot (up or down)
+        if (abs(_dx) > _alignment_threshold) {
+            return false; // Player not aligned on vertical axis
+        }
+        _shoot_dir = (_dy > 0) ? "down" : "up";
+        _shoot_x = x; // Lock to vertical
+    }
+
+    // Check line of sight along the cardinal direction
+    var _dist = point_distance(x, y, target_x, target_y);
+    var _steps = ceil(_dist / 8); // Check every 8 pixels
+
+    for (var i = 1; i < _steps; i++) {
+        var _check_x = lerp(_shoot_x, target_x, i / _steps);
+        var _check_y = lerp(_shoot_y, target_y, i / _steps);
+        var _tile_value = tilemap_get_at_pixel(_tilemap_col, _check_x, _check_y);
+
+        if (_tile_value != 0) {
+            return false; // Blocked by wall
+        }
+    }
+
+    return true; // Clear cardinal line of sight
 }
 
 /// @desc Determine movement speed bonus from terrain preferences

@@ -23,7 +23,7 @@ move_dir_y = 0;
 current_base_frame = 0;
 frame_counter = 0;
 
-state = EnemyState.idle;
+state = EnemyState.targeting;
 facing_dir = "down"; // String direction for ranged attacks (updated from dir_index in Step event)
 
 kb_x = 0;
@@ -73,6 +73,13 @@ last_target_x = 0;              // Track player position changes
 last_target_y = 0;
 current_path_target_x = 0;      // Where path is leading
 current_path_target_y = 0;
+last_seen_player_x = 0;         // Last position where enemy had LOS to player
+last_seen_player_y = 0;
+
+// Stuck detection
+stuck_check_x = x;
+stuck_check_y = y;
+alarm[4] = 60; // Check if stuck every second
 
 // Override serialize method for enemy-specific data
 function serialize() {
