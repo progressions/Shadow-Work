@@ -1,15 +1,20 @@
 {
   "$GMObject":"",
-  "%Name":"obj_wall_parent",
-  "eventList":[],
+  "%Name":"obj_item_rusty_dagger",
+  "eventList":[
+    {"$GMEvent":"v1","%Name":"","collisionObjectId":null,"eventNum":0,"eventType":0,"isDnD":false,"name":"","resourceType":"GMEvent","resourceVersion":"2.0",},
+  ],
   "managed":true,
-  "name":"obj_wall_parent",
+  "name":"obj_item_rusty_dagger",
   "overriddenProperties":[],
   "parent":{
-    "name":"Objects",
-    "path":"folders/Objects.yy",
+    "name":"weapons",
+    "path":"folders/Objects/items/weapons.yy",
   },
-  "parentObjectId":null,
+  "parentObjectId":{
+    "name":"obj_weapon_parent",
+    "path":"objects/obj_weapon_parent/obj_weapon_parent.yy",
+  },
   "persistent":false,
   "physicsAngularDamping":0.1,
   "physicsDensity":0.5,
@@ -28,8 +33,8 @@
   "resourceVersion":"2.0",
   "solid":false,
   "spriteId":{
-    "name":"spr_collision",
-    "path":"sprites/spr_collision/spr_collision.yy",
+    "name":"spr_wielded_master_sword",
+    "path":"sprites/spr_wielded_master_sword/spr_wielded_master_sword.yy",
   },
   "spriteMaskId":null,
   "visible":true,

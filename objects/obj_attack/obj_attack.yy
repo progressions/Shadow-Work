@@ -11,8 +11,8 @@
   "name":"obj_attack",
   "overriddenProperties":[],
   "parent":{
-    "name":"Objects",
-    "path":"folders/Objects.yy",
+    "name":"artifacts",
+    "path":"folders/Objects/artifacts.yy",
   },
   "parentObjectId":null,
   "persistent":false,

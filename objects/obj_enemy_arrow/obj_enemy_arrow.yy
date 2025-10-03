@@ -9,8 +9,8 @@
   "name":"obj_enemy_arrow",
   "overriddenProperties":[],
   "parent":{
-    "name":"weapons",
-    "path":"folders/Objects/items/weapons.yy",
+    "name":"artifacts",
+    "path":"folders/Objects/artifacts.yy",
   },
   "parentObjectId":{
     "name":"obj_arrow",
