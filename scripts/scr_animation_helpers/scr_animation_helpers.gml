@@ -22,19 +22,61 @@ global.enemy_anim_data = {
     dying: {start: 32, length: 3}
 };
 
+/// @description Look up animation data using instance overrides when available
+function enemy_anim_lookup(key) {
+    if (variable_instance_exists(self, "enemy_anim_overrides")) {
+        var _overrides = enemy_anim_overrides;
+        if (is_struct(_overrides) && variable_struct_exists(_overrides, key)) {
+            return _overrides[$ key];
+        }
+    }
+
+    if (variable_struct_exists(global.enemy_anim_data, key)) {
+        return global.enemy_anim_data[$ key];
+    }
+
+    return undefined;
+}
+
+/// @description Get animation data with optional fallback key
+function enemy_anim_get(key, fallback_key) {
+    var _anim = enemy_anim_lookup(key);
+    if (_anim != undefined) return _anim;
+
+    if (!is_undefined(fallback_key)) {
+        _anim = enemy_anim_lookup(fallback_key);
+        if (_anim != undefined) return _anim;
+    }
+
+    return global.enemy_anim_data.idle_down;
+}
+
 // Get animation data for enemy state and direction
 function get_enemy_anim(state, dir_index) {
     var dir_names = ["down", "right", "left", "up"];
-    var state_name = "";
 
-    switch(state) {
-        case EnemyState.idle: state_name = "idle"; break;
-        case EnemyState.attacking: state_name = "attack"; break;
-        case EnemyState.ranged_attacking: state_name = "attack"; break; // Use attack animation for ranged
-        case EnemyState.dead: state_name = "dying"; break;
-        default: state_name = "idle"; break;
+    if (state == EnemyState.ranged_attacking) {
+        var ranged_key = "ranged_attack_" + dir_names[dir_index];
+        var ranged_anim = enemy_anim_lookup(ranged_key);
+        if (ranged_anim != undefined) {
+            return ranged_anim;
+        }
+        // Fall back to melee attack frames if no ranged-specific data exists
+        var fallback_key = "attack_" + dir_names[dir_index];
+        return enemy_anim_get(fallback_key);
     }
 
-    var anim_key = state_name + "_" + dir_names[dir_index];
-    return global.enemy_anim_data[$ anim_key] ?? global.enemy_anim_data.idle_down;
+    switch(state) {
+        case EnemyState.idle:
+            return enemy_anim_get("idle_" + dir_names[dir_index]);
+
+        case EnemyState.attacking:
+            return enemy_anim_get("attack_" + dir_names[dir_index]);
+
+        case EnemyState.dead:
+            return enemy_anim_lookup("dying") ?? global.enemy_anim_data.dying;
+
+        default:
+            return enemy_anim_get("idle_" + dir_names[dir_index]);
+    }
 }

@@ -87,7 +87,8 @@ var anim_info;
 
 if (_using_walk_anim) {
     var _walk_keys = ["walk_down", "walk_right", "walk_left", "walk_up"];
-    anim_info = global.enemy_anim_data[$ _walk_keys[dir_index]] ?? global.enemy_anim_data.idle_down;
+    var _idle_keys = ["idle_down", "idle_right", "idle_left", "idle_up"];
+    anim_info = enemy_anim_get(_walk_keys[dir_index], _idle_keys[dir_index]);
 } else {
     anim_info = get_enemy_anim(state, dir_index);
 }

@@ -10,7 +10,7 @@ function enemy_state_dead() {
     }
 
     if (!death_anim_complete) {
-        var _dying_anim = global.enemy_anim_data.dying;
+        var _dying_anim = enemy_anim_get("dying");
         death_anim_timer += anim_speed;
         var _frame_offset = floor(death_anim_timer) % _dying_anim.length;
         image_index = _dying_anim.start + _frame_offset;
@@ -31,6 +31,7 @@ function enemy_state_dead() {
             instance_destroy();
         }
     } else {
-        image_index = global.enemy_anim_data.dying.start + (global.enemy_anim_data.dying.length - 1);
+        var _final_dying = enemy_anim_get("dying");
+        image_index = _final_dying.start + (_final_dying.length - 1);
     }
 }
