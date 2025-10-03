@@ -11,7 +11,7 @@ function get_active_companions() {
             array_push(companions, id);
         }
     }
-    show_debug_message("get_active_companions returned " + string(array_length(companions)) + " companions");
+    // show_debug_message("get_active_companions returned " + string(array_length(companions)) + " companions");
     return companions;
 }
 
@@ -43,7 +43,7 @@ function get_companion_dr_bonus() {
     }
 
     if (total_dr > 0) {
-        show_debug_message("Total companion DR: " + string(total_dr));
+        // show_debug_message("Total companion DR: " + string(total_dr));
     }
 
     return total_dr;
