@@ -1,6 +1,12 @@
 // Only process VN input when active
 if (!global.vn_active) exit;
 
+// ESC key cancels VN dialogue at any point
+if (keyboard_check_pressed(vk_escape)) {
+	stop_vn_dialogue();
+	exit;
+}
+
 // Get current dialogue state
 if (global.vn_chatterbox != undefined) {
 	var _chatterbox = global.vn_chatterbox;

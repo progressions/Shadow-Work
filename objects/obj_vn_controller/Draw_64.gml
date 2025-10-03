@@ -96,8 +96,12 @@ if (global.vn_chatterbox != undefined) {
 			draw_set_color(c_white);
 			draw_rectangle(choice_x, _choice_y, choice_x + choice_width, _choice_y + choice_height, true);
 
-			// Draw choice text
-			draw_set_color(c_white);
+			// Draw choice text (black if highlighted, white if not)
+			if (i == selected_choice) {
+				draw_set_color(c_black);
+			} else {
+				draw_set_color(c_white);
+			}
 			draw_set_halign(fa_left);
 			draw_set_valign(fa_middle);
 			draw_set_font(fnt_arial);
