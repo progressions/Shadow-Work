@@ -790,6 +790,9 @@ function save_game(slot) {
         room_states: global.room_states,
         visited_rooms: global.visited_rooms,
 
+        // VN intro system
+        vn_intro_seen: global.vn_intro_seen,
+
         // Chatterbox dialogue variables
         chatterbox_vars: ChatterboxVariablesExport()
     };
@@ -937,6 +940,16 @@ function restore_save_data(save_data) {
 
     // Restore current room state
     restore_room_state_if_visited();
+
+    // Restore VN intro seen flags
+    if (variable_struct_exists(save_data, "vn_intro_seen")) {
+        global.vn_intro_seen = save_data.vn_intro_seen;
+        var _seen_count = variable_struct_names_count(global.vn_intro_seen);
+        show_debug_message("VN intro seen flags restored: " + string(_seen_count) + " intros");
+    } else {
+        global.vn_intro_seen = {};
+        show_debug_message("No VN intro data in save file (older save)");
+    }
 
     // Restore Chatterbox variables
     if (variable_struct_exists(save_data, "chatterbox_vars")) {

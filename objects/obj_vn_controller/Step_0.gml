@@ -1,9 +1,16 @@
 // Only process VN input when active
 if (!global.vn_active) exit;
 
+// Determine if this is a companion dialogue or generic intro
+var _is_intro = (global.vn_intro_instance != undefined);
+
 // ESC key cancels VN dialogue at any point
 if (keyboard_check_pressed(vk_escape)) {
-	stop_vn_dialogue();
+	if (_is_intro) {
+		stop_vn_intro();
+	} else {
+		stop_vn_dialogue();
+	}
 	exit;
 }
 
@@ -14,7 +21,11 @@ if (global.vn_chatterbox != undefined) {
 	// Check if we've reached an exit node FIRST
 	var _current_node = ChatterboxGetCurrent(_chatterbox);
 	if (_current_node == "Exit" || _current_node == "Quit" || _current_node == "End") {
-		stop_vn_dialogue();
+		if (_is_intro) {
+			stop_vn_intro();
+		} else {
+			stop_vn_dialogue();
+		}
 		exit;
 	}
 
@@ -30,6 +41,11 @@ if (global.vn_chatterbox != undefined) {
 	} else {
 		current_speaker = "";
 		current_text = _content;
+	}
+
+	// For VN intros, override speaker name if vn_intro_character_name is set
+	if (_is_intro && variable_global_exists("vn_intro_character_name") && global.vn_intro_character_name != "") {
+		current_speaker = global.vn_intro_character_name;
 	}
 
 	var _option_count = ChatterboxGetOptionCount(_chatterbox);
@@ -125,7 +141,11 @@ if (global.vn_chatterbox != undefined) {
 				show_debug_message("Current node: " + _current_node);
 				if (_current_node == "Exit" || _current_node == "Quit" || _current_node == "End") {
 					show_debug_message("Stopping VN dialogue");
-					stop_vn_dialogue();
+					if (_is_intro) {
+						stop_vn_intro();
+					} else {
+						stop_vn_dialogue();
+					}
 				}
 			}
 		}

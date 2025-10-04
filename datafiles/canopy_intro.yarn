@@ -1,0 +1,14 @@
+title: Start
+---
+You see Canopy, a warm and gentle healer, standing peacefully among the trees.
+-> Back
+===
+
+title: Back
+---
+<<jump Exit>>
+===
+
+title: Exit
+---
+===

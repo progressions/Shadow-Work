@@ -59,5 +59,14 @@ triggers = {
 vn_sprite = spr_yorna_vn_intro; // Portrait sprite for VN dialogue
 theme_song = snd_yorna_theme; // Theme music for VN dialogue
 
+// VN intro on first sight
+has_vn_intro = true;
+vn_intro_id = "yorna_intro";
+vn_intro_yarn_file = "yorna_intro.yarn";
+vn_intro_node = "Start";
+vn_intro_character_name = "";  // No speaker name (just narration)
+vn_intro_portrait_sprite = noone;  // No portrait for simple narration
+vn_intro_sfx = snd_vn_intro_discovered;  // Sound to play when intro triggers
+
 show_debug_message("=== YORNA CREATE EVENT ===");
 show_debug_message("On-Hit Strike trigger initialized: active=" + string(triggers.on_hit_strike.active) + " cooldown=" + string(triggers.on_hit_strike.cooldown));

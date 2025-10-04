@@ -1,0 +1,14 @@
+title: Start
+---
+You see Hola, a nervous sorceress with power over the wind, anxiously moving through the forest.
+-> Back
+===
+
+title: Back
+---
+<<jump Exit>>
+===
+
+title: Exit
+---
+===

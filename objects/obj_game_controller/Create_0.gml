@@ -278,6 +278,26 @@ global.vn_yarn_file = "";           // Current yarn file being used
 global.game_paused = false;         // General pause flag for gameplay
 global.vn_torch_transfer_success = false;
 
+// Initialize VN intro system
+global.vn_intro_seen = {};          // Track which intro IDs have been seen (for persistence)
+global.vn_intro_instance = undefined; // Reference to instance triggering current intro (non-companion)
+global.debug_vn_intro = false;      // F3 to toggle debug overlay
+global.vn_intro_startup_delay = 60; // Wait 1 second before checking intros (let camera settle on player)
+
+// Initialize camera pan state
+global.camera_pan_state = {
+	active: false,
+	start_x: 0,
+	start_y: 0,
+	target_x: 0,
+	target_y: 0,
+	timer: 0,
+	duration: 30,  // Default 30 frames (0.5 seconds at 60fps)
+	hold_duration: 0,  // Frames to hold at target before callback
+	hold_timer: 0,     // Current hold timer
+	on_complete: undefined  // Optional callback function/method to call when pan completes
+};
+
 // VN torch variables and identifiers
 ChatterboxVariableDefault("torch_carrier", "none");
 ChatterboxVariableDefault("vn_torch_transfer_success", false);

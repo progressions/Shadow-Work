@@ -78,5 +78,14 @@ triggers = {
 vn_sprite = spr_hola_vn_startled; // Portrait sprite for VN dialogue
 theme_song = snd_hola_theme; // Theme music for VN dialogue
 
+// VN intro on first sight
+has_vn_intro = true;
+vn_intro_id = "hola_intro";
+vn_intro_yarn_file = "hola_intro.yarn";
+vn_intro_node = "Start";
+vn_intro_character_name = "";  // No speaker name (just narration)
+vn_intro_portrait_sprite = noone;  // No portrait for simple narration
+vn_intro_sfx = snd_vn_intro_discovered;  // Sound to play when intro triggers
+
 show_debug_message("=== HOLA CREATE EVENT ===");
 show_debug_message("Gust trigger initialized: active=" + string(triggers.gust.active) + " cooldown=" + string(triggers.gust.cooldown));

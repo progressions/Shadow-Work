@@ -1,4 +1,6 @@
-if (global.game_paused) exit;
+// Don't update lighting when game is paused, UNLESS camera pan is active
+// (we need lights to render correctly during camera pans to show torch positions)
+if (global.game_paused && !global.camera_pan_state.active) exit;
 
 var _expected_width = max(1, ceil(room_width / grid_cell_size));
 var _expected_height = max(1, ceil(room_height / grid_cell_size));

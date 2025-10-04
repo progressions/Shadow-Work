@@ -71,5 +71,14 @@ triggers = {
 vn_sprite = spr_vn_canopy_1; // Portrait sprite for VN dialogue
 theme_song = snd_canopy_theme; // Theme music for VN dialogue
 
+// VN intro on first sight
+has_vn_intro = true;
+vn_intro_id = "canopy_intro";
+vn_intro_yarn_file = "canopy_intro.yarn";
+vn_intro_node = "Start";
+vn_intro_character_name = "";  // No speaker name (just narration)
+vn_intro_portrait_sprite = noone;  // No portrait for simple narration
+vn_intro_sfx = snd_vn_intro_discovered;  // Sound to play when intro triggers
+
 show_debug_message("=== CANOPY CREATE EVENT ===");
 show_debug_message("Shield trigger initialized: active=" + string(triggers.shield.active) + " cooldown=" + string(triggers.shield.cooldown));

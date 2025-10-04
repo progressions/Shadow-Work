@@ -1,0 +1,14 @@
+title: Start
+---
+You see Yorna, a ruthless and confident warrior, prowling through the forest.
+-> Back
+===
+
+title: Back
+---
+<<jump Exit>>
+===
+
+title: Exit
+---
+===

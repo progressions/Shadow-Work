@@ -77,6 +77,10 @@ function add_light_source(_x, _y, _radius) {
 }
 
 function ensure_surface() {
+    // Make surface 3x larger than room to avoid edge issues during camera pans
+    var _surface_width = room_width * 3;
+    var _surface_height = room_height * 3;
+
     if (surface_dirty) {
         if (surface_exists(darkness_surface)) {
             surface_free(darkness_surface);
@@ -85,7 +89,7 @@ function ensure_surface() {
     }
 
     if (!surface_exists(darkness_surface)) {
-        darkness_surface = surface_create(room_width, room_height);
+        darkness_surface = surface_create(_surface_width, _surface_height);
         if (!surface_exists(darkness_surface)) {
             darkness_surface = -1;
             surface_dirty = true;
@@ -93,9 +97,9 @@ function ensure_surface() {
         }
     }
 
-    if (surface_get_width(darkness_surface) != room_width || surface_get_height(darkness_surface) != room_height) {
+    if (surface_get_width(darkness_surface) != _surface_width || surface_get_height(darkness_surface) != _surface_height) {
         surface_free(darkness_surface);
-        darkness_surface = surface_create(room_width, room_height);
+        darkness_surface = surface_create(_surface_width, _surface_height);
         if (!surface_exists(darkness_surface)) {
             darkness_surface = -1;
             surface_dirty = true;
@@ -117,14 +121,18 @@ function render_lighting() {
     gpu_set_blendmode(bm_subtract);
     draw_set_color(c_white);
 
+    // Offset for the oversized surface (room is centered within the 3x surface)
+    var _surface_offset_x = room_width;
+    var _surface_offset_y = room_height;
+
     for (var _cx = 0; _cx < grid_width; _cx++) {
         for (var _cy = 0; _cy < grid_height; _cy++) {
             var _intensity = light_grid[# _cx, _cy];
             if (_intensity <= 0) continue;
 
             draw_set_alpha(_intensity);
-            var _left = _cx * grid_cell_size;
-            var _top = _cy * grid_cell_size;
+            var _left = _cx * grid_cell_size + _surface_offset_x;
+            var _top = _cy * grid_cell_size + _surface_offset_y;
             var _right = _left + grid_cell_size - 1;
             var _bottom = _top + grid_cell_size - 1;
             draw_rectangle(_left, _top, _right, _bottom, false);
@@ -135,7 +143,11 @@ function render_lighting() {
     gpu_set_blendmode(bm_normal);
     surface_reset_target();
 
-    draw_surface(darkness_surface, 0, 0);
+    // Draw the oversized surface centered on the room
+    // This ensures edges are never visible during camera pans
+    var _offset_x = -room_width;
+    var _offset_y = -room_height;
+    draw_surface(darkness_surface, _offset_x, _offset_y);
     draw_set_color(c_white);
 }
 

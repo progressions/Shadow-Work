@@ -25,10 +25,18 @@ draw_set_color(c_ltgray);
 draw_rectangle(dialogue_box_x, dialogue_box_y, dialogue_box_x + dialogue_box_width, dialogue_box_y + dialogue_box_height, true);
 
 // Draw tall portrait on left side (fit inside box with border visible)
+// Check for companion portrait first, then intro portrait
+var _portrait_sprite = noone;
+
 if (global.vn_companion != undefined && global.vn_companion != noone && instance_exists(global.vn_companion) && global.vn_companion.vn_sprite != undefined) {
-	var _sprite = global.vn_companion.vn_sprite;
-	var _sprite_width = sprite_get_width(_sprite);
-	var _sprite_height = sprite_get_height(_sprite);
+	_portrait_sprite = global.vn_companion.vn_sprite;
+} else if (variable_global_exists("vn_intro_portrait_sprite") && global.vn_intro_portrait_sprite != noone) {
+	_portrait_sprite = global.vn_intro_portrait_sprite;
+}
+
+if (_portrait_sprite != noone && sprite_exists(_portrait_sprite)) {
+	var _sprite_width = sprite_get_width(_portrait_sprite);
+	var _sprite_height = sprite_get_height(_portrait_sprite);
 
 	// Calculate scale to fit portrait inside box (use min to keep it within bounds)
 	var _available_width = portrait_width - 4;  // Leave space for border
@@ -38,7 +46,7 @@ if (global.vn_companion != undefined && global.vn_companion != noone && instance
 	// Draw portrait centered in left panel
 	var _draw_x = portrait_x + (portrait_width / 2);
 	var _draw_y = portrait_y + (portrait_height / 2);
-	draw_sprite_ext(_sprite, 0, _draw_x, _draw_y, _scale, _scale, 0, c_white, 1);
+	draw_sprite_ext(_portrait_sprite, 0, _draw_x, _draw_y, _scale, _scale, 0, c_white, 1);
 
 	// Draw portrait border
 	draw_set_color(c_white);

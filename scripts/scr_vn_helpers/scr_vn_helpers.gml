@@ -181,3 +181,91 @@ function open_companion_talk_menu() {
 	// Open the companion menu
 	start_vn_dialogue(noone, "CompanionTalkMenu.yarn", "Start");
 }
+
+/// @function start_vn_intro(_instance, _yarn_file, _start_node, _character_name, _portrait_sprite)
+/// @description Start VN dialogue for non-companion intro (no theme song, recruitment vars)
+/// @param _instance The instance triggering the intro (can be noone for environmental triggers)
+/// @param _yarn_file Yarn file to load
+/// @param _start_node Starting node name
+/// @param _character_name Speaker name (use "" for no speaker)
+/// @param _portrait_sprite Portrait sprite index (use noone for no portrait)
+function start_vn_intro(_instance, _yarn_file, _start_node, _character_name = "", _portrait_sprite = noone) {
+	// Try to load yarn file - handle error if file doesn't exist
+	try {
+		ChatterboxLoadFromFile(_yarn_file);
+	} catch (error) {
+		show_debug_message("ERROR: Failed to load yarn file: " + _yarn_file);
+		show_debug_message("Error: " + string(error));
+
+		// Cancel VN intro - don't set active state
+		// Mark as seen to prevent repeated error attempts
+		if (_instance != noone && instance_exists(_instance)) {
+			if (variable_instance_exists(_instance, "vn_intro_id")) {
+				global.vn_intro_seen[$ _instance.vn_intro_id] = true;
+				show_debug_message("Marked intro as seen to prevent repeated errors: " + _instance.vn_intro_id);
+			}
+		}
+
+		// Pan camera back to player since intro failed
+		camera_pan_to_player(30);
+		return;
+	}
+
+	// Play VN open sound
+	play_sfx(snd_vn_open, 1);
+
+	// Set global VN state (no music change for generic intros)
+	global.vn_active = true;
+	global.game_paused = true;
+	global.vn_intro_instance = _instance;
+	global.vn_yarn_file = _yarn_file;
+
+	// Store character name and portrait for VN controller to use
+	global.vn_intro_character_name = _character_name;
+	global.vn_intro_portrait_sprite = _portrait_sprite;
+
+	// Stop all currently playing looped sounds (footsteps, etc.)
+	stop_all_footstep_sounds();
+
+	// Create chatterbox instance
+	// IMPORTANT: Pass obj_game_controller as scope to avoid scope issues with callbacks
+	var _game_controller = instance_find(obj_game_controller, 0);
+	if (_game_controller != noone) {
+		with (_game_controller) {
+			global.vn_chatterbox = ChatterboxCreate(_yarn_file);
+		}
+	} else {
+		// Fallback if game controller doesn't exist
+		global.vn_chatterbox = ChatterboxCreate(_yarn_file);
+	}
+
+	// Jump to starting node
+	ChatterboxJump(global.vn_chatterbox, _start_node);
+
+	show_debug_message("VN intro started: " + _yarn_file + " -> " + _start_node);
+}
+
+/// @function stop_vn_intro()
+/// @description Close VN intro and trigger camera pan back to player
+function stop_vn_intro() {
+	// Play VN close sound
+	play_sfx(snd_vn_close, 1);
+
+	// Clear VN state FIRST (before starting pan)
+	global.vn_active = false;
+	global.vn_intro_instance = undefined;
+	global.vn_chatterbox = undefined;
+	global.vn_yarn_file = "";
+	global.vn_intro_character_name = "";
+	global.vn_intro_portrait_sprite = noone;
+
+	// Trigger camera pan back to player (this will keep game paused during pan)
+	// We need to unpause AFTER the pan completes
+	camera_pan_to_player(30, 0, method({}, function() {
+		// Unpause game after camera returns to player
+		global.game_paused = false;
+		show_debug_message("Camera returned to player, game unpaused");
+	}));
+
+	show_debug_message("VN intro stopped, camera panning back to player");
+}
