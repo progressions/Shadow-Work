@@ -119,6 +119,9 @@ time_far_from_player = 0;
 carrying_torch = false;
 torch_time_remaining = 0;
 
+// Interaction prompt tracking
+interaction_prompt = noone;
+
 var _torch_stats = global.item_database.torch.stats;
 var _torch_burn_seconds = 60;
 if (_torch_stats != undefined && variable_struct_exists(_torch_stats, "burn_time_seconds")) {

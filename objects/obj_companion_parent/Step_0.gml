@@ -99,3 +99,25 @@ if (_is_moving) {
 
 // Torch state update
 companion_update_torch_state();
+
+// Handle recruitment prompt display
+if (!is_recruited && instance_exists(obj_player)) {
+    var _dist = point_distance(x, y, obj_player.x, obj_player.y);
+    var _in_range = (_dist < 32);
+
+    // Show/hide interaction prompt
+    if (_in_range && !instance_exists(interaction_prompt)) {
+        interaction_prompt = instance_create_layer(x, bbox_top - 12, "Instances", obj_interaction_prompt);
+        interaction_prompt.text = "[Space] Recruit";
+        interaction_prompt.parent_instance = id;
+        interaction_prompt.offset_y = bbox_top - y - 12;
+        interaction_prompt.depth = -9999;
+    } else if (!_in_range && instance_exists(interaction_prompt)) {
+        instance_destroy(interaction_prompt);
+        interaction_prompt = noone;
+    }
+} else if (is_recruited && instance_exists(interaction_prompt)) {
+    // Destroy prompt when recruited
+    instance_destroy(interaction_prompt);
+    interaction_prompt = noone;
+}

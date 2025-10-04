@@ -28,19 +28,6 @@ if (variable_struct_exists(anim_data, anim_key)) {
 // Draw companion sprite
 draw_self();
 
-// Draw recruitment prompt when player is nearby and companion not recruited
-if (!is_recruited && instance_exists(obj_player)) {
-    var dist_to_player = point_distance(x, y, obj_player.x, obj_player.y);
-    if (dist_to_player < 32) {
-        draw_set_color(c_white);
-        draw_set_halign(fa_center);
-        draw_set_valign(fa_middle);
-        draw_text(x, bbox_top - 12, "[Space] Recruit");
-        draw_set_halign(fa_left);
-        draw_set_valign(fa_top);
-    }
-}
-
 // Optional: Draw affinity indicator when recruited (heart icon)
 if (is_recruited && affinity >= 5.0) {
     var heart_alpha = 0.6;

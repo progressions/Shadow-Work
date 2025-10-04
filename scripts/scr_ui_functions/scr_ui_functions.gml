@@ -177,3 +177,28 @@ function ui_draw_status_effects(_player, _x, _y, _icon_size, _spacing) {
 
     draw_set_color(c_white);
 }
+
+/// @function draw_interaction_prompt(x, y, text)
+/// @description Draw an interaction prompt above an object
+/// @param {real} x - X position to draw the prompt
+/// @param {real} y - Y position to draw the prompt (usually bbox_top - offset)
+/// @param {string} text - Text to display (e.g., "[Space] Open", "[Space] Recruit")
+function draw_interaction_prompt(_x, _y, _text) {
+    // Store current depth and set to very negative (draws on top)
+    var _old_depth = depth;
+    depth = -9999;
+
+    draw_set_color(c_white);
+    draw_set_halign(fa_center);
+    draw_set_valign(fa_middle);
+
+    // Use draw_text_transformed for scaling
+    var _scale = 0.35;
+    draw_text_transformed(_x, _y, _text, _scale, _scale, 0);
+
+    draw_set_halign(fa_left);
+    draw_set_valign(fa_top);
+
+    // Restore depth
+    depth = _old_depth;
+}

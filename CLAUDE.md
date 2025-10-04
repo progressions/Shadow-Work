@@ -43,6 +43,19 @@ This is a GameMaker Studio 2 project for a top-down action RPG called "Shadow Wo
 - **Example parties**: `obj_gate_guard_party` (defensive patrol), `obj_orc_raiding_party` (aggressive)
 - **Integration**: Works with existing pathfinding, save/load system, and individual enemy AI
 
+### Openable Container System
+- **Parent object**: `obj_openable` - Inheritable base for chests, barrels, crates
+- **Child objects**: `obj_chest`, `obj_barrel`, `obj_crate` (inherit from obj_openable)
+- **Animation**: 4-frame sprite (0=closed → 3=open), manual control with `image_speed = 0`
+- **Interaction**: Player presses SPACE within 32px radius, displays "[Space] Open" prompt via `obj_interaction_prompt`
+- **Loot modes**:
+  - `"specific"` - Spawn exact items from `loot_items` array
+  - `"random_weighted"` - Spawn items from weighted `loot_table`, supports fixed or variable quantity (`loot_count_min/max`)
+- **Sound effects**: `snd_chest_open` (on open), `snd_loot_drop` (when loot spawns)
+- **Persistence**: Inherits from `obj_persistent_parent`, automatically saved/loaded with room state
+- **Functions**: `open_container()`, `spawn_loot()`, `spawn_specific_loot()`, `spawn_random_loot()`, `serialize()`, `deserialize()`
+- **Integration**: Uses `find_loot_spawn_position()`, `select_weighted_loot_item()`, `spawn_item()` from enemy loot system
+
 ### Grid Puzzle System
 - **Controller**: `obj_grid_controller` - Manages pillar puzzle mechanics
 - **Components**: `obj_button`, `obj_rising_pillar`, `obj_reset_pad`
@@ -167,3 +180,35 @@ To create a new enemy party controller:
 5. For protecting parties:
    - Set `protect_x`, `protect_y`, `protect_radius`
 6. Place the party controller object in the room - enemies spawn automatically
+
+### Creating Openable Containers
+To create a new container type:
+1. Create new object inheriting from `obj_openable`
+2. Create sprite with 4 frames: 0 (closed), 1-2 (opening), 3 (fully open)
+3. In Create event, call `event_inherited()` then configure loot:
+   ```gml
+   event_inherited();
+
+   // Specific items mode
+   loot_mode = "specific";
+   loot_items = ["health_potion", "short_sword"];
+
+   // OR Random weighted mode (fixed count)
+   loot_mode = "random_weighted";
+   loot_count = 2;
+   loot_table = [
+       {item_key: "health_potion", weight: 50},
+       {item_key: "rusty_dagger", weight: 30},
+       {item_key: "master_sword", weight: 5}
+   ];
+
+   // OR Variable quantity mode
+   loot_mode = "random_weighted";
+   use_variable_quantity = true;
+   loot_count_min = 1;
+   loot_count_max = 3;
+   loot_table = [...];
+   ```
+4. Place container in room - interaction and loot spawning work automatically
+5. Per-instance loot can be configured in Room Creation Code
+6. Container state persists across save/load and room transitions
