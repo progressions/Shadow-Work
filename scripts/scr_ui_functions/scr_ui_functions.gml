@@ -178,27 +178,37 @@ function ui_draw_status_effects(_player, _x, _y, _icon_size, _spacing) {
     draw_set_color(c_white);
 }
 
-/// @function draw_interaction_prompt(x, y, text)
-/// @description Draw an interaction prompt above an object
-/// @param {real} x - X position to draw the prompt
-/// @param {real} y - Y position to draw the prompt (usually bbox_top - offset)
+/// @function show_interaction_prompt(radius, offset_x, offset_y, text)
+/// @description Manage interaction prompt display based on player proximity
+/// @param {real} radius - Distance from object to show prompt
+/// @param {real} offset_x - X offset from object position
+/// @param {real} offset_y - Y offset from object position (usually negative, like -12)
 /// @param {string} text - Text to display (e.g., "[Space] Open", "[Space] Recruit")
-function draw_interaction_prompt(_x, _y, _text) {
-    // Store current depth and set to very negative (draws on top)
-    var _old_depth = depth;
-    depth = -9999;
+function show_interaction_prompt(_radius, _offset_x, _offset_y, _text) {
+    // Check if player exists and is in range
+    if (!instance_exists(obj_player)) {
+        // No player, destroy prompt if it exists
+        if (instance_exists(interaction_prompt)) {
+            instance_destroy(interaction_prompt);
+            interaction_prompt = noone;
+        }
+        return;
+    }
 
-    draw_set_color(c_white);
-    draw_set_halign(fa_center);
-    draw_set_valign(fa_middle);
+    var _dist = point_distance(x, y, obj_player.x, obj_player.y);
+    var _in_range = (_dist <= _radius);
 
-    // Use draw_text_transformed for scaling
-    var _scale = 0.35;
-    draw_text_transformed(_x, _y, _text, _scale, _scale, 0);
-
-    draw_set_halign(fa_left);
-    draw_set_valign(fa_top);
-
-    // Restore depth
-    depth = _old_depth;
+    // Show prompt if in range
+    if (_in_range && !instance_exists(interaction_prompt)) {
+        interaction_prompt = instance_create_layer(x + _offset_x, y + _offset_y, "Instances", obj_interaction_prompt);
+        interaction_prompt.text = _text;
+        interaction_prompt.parent_instance = id;
+        interaction_prompt.offset_y = _offset_y;
+        interaction_prompt.depth = -9999;
+    }
+    // Hide prompt if out of range
+    else if (!_in_range && instance_exists(interaction_prompt)) {
+        instance_destroy(interaction_prompt);
+        interaction_prompt = noone;
+    }
 }
