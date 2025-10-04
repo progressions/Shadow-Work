@@ -1,11 +1,15 @@
 /// @description Initialize openable container variables
 
+// Inherit from parent (obj_interactable_parent)
+event_inherited();
+
+// Override interaction properties
+interaction_priority = 50;
+interaction_action = "Open";
+
 // State tracking
 is_opened = false;
 loot_spawned = false;
-
-// Interaction settings
-interaction_radius = 32;
 
 // Animation control
 image_speed = 0;  // Manual animation control
@@ -179,4 +183,21 @@ function deserialize(_data) {
 
     // Set sprite to correct frame
     image_index = is_opened ? 3 : 0;
+}
+
+/// @function can_interact()
+/// @description Override - container can be interacted with if not opened
+function can_interact() {
+    return !is_opened;
+}
+
+/// @function on_interact()
+/// @description Override - trigger container opening when interacted
+function on_interact() {
+    open_container();
+    // Destroy prompt when opened
+    if (instance_exists(interaction_prompt)) {
+        instance_destroy(interaction_prompt);
+        interaction_prompt = noone;
+    }
 }

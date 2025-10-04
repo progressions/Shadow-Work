@@ -1,20 +1,12 @@
 /// @description Handle player interaction and animation
 
-// Show interaction prompt when not opened
-if (!is_opened) {
-    show_interaction_prompt(interaction_radius, 0, -24, "Space", "Open");
-}
+// Show interaction prompt only if this is the active interactive object
+if (!is_opened && global.active_interactive == id) {
+    show_interaction_prompt(interaction_radius, 0, -24, interaction_key, interaction_action);
 
-// Check for SPACE key press when in range and not opened
-if (instance_exists(obj_player) && !is_opened) {
-    var _dist = point_distance(x, y, obj_player.x, obj_player.y);
-    if (_dist <= interaction_radius && keyboard_check_pressed(vk_space)) {
-        open_container();
-        // Destroy prompt when opened
-        if (instance_exists(interaction_prompt)) {
-            instance_destroy(interaction_prompt);
-            interaction_prompt = noone;
-        }
+    // Handle SPACE key press
+    if (keyboard_check_pressed(vk_space)) {
+        on_interact();
     }
 }
 
