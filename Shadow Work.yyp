@@ -137,6 +137,8 @@
     {"id":{"name":"obj_item_wooden_bow","path":"objects/obj_item_wooden_bow/obj_item_wooden_bow.yy",},},
     {"id":{"name":"obj_lamp_standing","path":"objects/obj_lamp_standing/obj_lamp_standing.yy",},},
     {"id":{"name":"obj_light_source","path":"objects/obj_light_source/obj_light_source.yy",},},
+    {"id":{"name":"obj_interactable_parent","path":"objects/obj_interactable_parent/obj_interactable_parent.yy",},},
+    {"id":{"name":"obj_interaction_manager","path":"objects/obj_interaction_manager/obj_interaction_manager.yy",},},
     {"id":{"name":"obj_lighting_controller","path":"objects/obj_lighting_controller/obj_lighting_controller.yy",},},
     {"id":{"name":"obj_music_controller","path":"objects/obj_music_controller/obj_music_controller.yy",},},
     {"id":{"name":"obj_openable","path":"objects/obj_openable/obj_openable.yy",},},

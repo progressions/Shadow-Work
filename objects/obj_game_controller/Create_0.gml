@@ -370,6 +370,11 @@ global.formation_database = {
     }
 };
 
+// Initialize interaction manager (singleton pattern)
+if (!instance_exists(obj_interaction_manager)) {
+    instance_create_depth(0, 0, -9999, obj_interaction_manager);
+}
+
 // Loot system debug testing
 global.debug_loot_system = false; // Set to true to test weighted selection
 
