@@ -1,8 +1,14 @@
 // Companion Parent Create Event
 // Base object for all companion NPCs
 
-// Call parent create event
+// Call parent create event (obj_interactable_parent)
 event_inherited();
+
+// Override interaction properties
+interaction_priority = 100;  // Highest priority - companions should be selected over objects
+interaction_radius = 32;
+interaction_key = "Space";
+// interaction_action set dynamically in Step event based on recruitment state
 
 // Get tilemap for collision detection
 tilemap = layer_tilemap_get_id("Tiles_Col");
@@ -262,6 +268,21 @@ function companion_give_torch_to_player() {
     set_torch_carrier("player");
 
     return true;
+}
+
+/// @function can_interact()
+/// @description Override - companion can be interacted with when not recruited or when player wants to talk
+function can_interact() {
+    return true;  // Companions are always interactable (recruit or talk)
+}
+
+/// @function on_interact()
+/// @description Override - start VN dialogue with companion
+function on_interact() {
+    // Trigger VN dialogue system
+    if (instance_exists(obj_player)) {
+        start_vn_conversation(id);
+    }
 }
 
 // Persistent so companions persist across room changes

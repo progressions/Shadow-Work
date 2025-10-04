@@ -100,11 +100,15 @@ if (_is_moving) {
 // Torch state update
 companion_update_torch_state();
 
-// Handle recruitment prompt display
-if (!is_recruited) {
-    show_interaction_prompt(32, 0, bbox_top - y - 12, "Space", "Recruit");
-} else if (is_recruited && instance_exists(interaction_prompt)) {
-    // Destroy prompt when recruited
-    instance_destroy(interaction_prompt);
-    interaction_prompt = noone;
+// Update interaction_action based on recruitment state
+interaction_action = is_recruited ? "Talk" : "Recruit";
+
+// Handle interaction prompt display - only show if this is the active interactive
+if (global.active_interactive == id) {
+    show_interaction_prompt(interaction_radius, 0, bbox_top - y - 12, interaction_key, interaction_action);
+
+    // Handle SPACE key press
+    if (keyboard_check_pressed(vk_space)) {
+        on_interact();
+    }
 }
