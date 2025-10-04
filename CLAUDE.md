@@ -35,26 +35,14 @@ This is a GameMaker Studio 2 project for a top-down action RPG called "Shadow Wo
 - **Animation**: Uses 31-frame sprite sheets with animation state management
 
 ### Enemy Party System
+- **Documentation**: See `docs/ENEMY_PARTY_SYSTEM.md`
 - **Controller**: `obj_enemy_party_controller` - Manages coordinated enemy groups with formations
-- **Party States**: `PartyState` enum (protecting, aggressive, cautious, desperate, emboldened, retreating, patrolling)
-- **Formations**: Defined in `global.formation_database` (line_3, wedge_5, circle_4, protective_3)
-- **Auto-spawning**: Party controller objects spawn their own enemy members in Create event
-- **Decision System**: Weighted objectives (attack, formation, flee) with dynamic modifiers based on party/player health
-- **Example parties**: `obj_gate_guard_party` (defensive patrol), `obj_orc_raiding_party` (aggressive)
-- **Integration**: Works with existing pathfinding, save/load system, and individual enemy AI
+- **Key features**: Auto-spawning members, formation-based positioning, dynamic state changes, patrol/protect behaviors
 
 ### Openable Container System
+- **Documentation**: See `docs/OPENABLE_CONTAINERS.md`
 - **Parent object**: `obj_openable` - Inheritable base for chests, barrels, crates
-- **Child objects**: `obj_chest`, `obj_barrel`, `obj_crate` (inherit from obj_openable)
-- **Animation**: 4-frame sprite (0=closed → 3=open), manual control with `image_speed = 0`
-- **Interaction**: Player presses SPACE within 32px radius, displays "[Space] Open" prompt via `obj_interaction_prompt`
-- **Loot modes**:
-  - `"specific"` - Spawn exact items from `loot_items` array
-  - `"random_weighted"` - Spawn items from weighted `loot_table`, supports fixed or variable quantity (`loot_count_min/max`)
-- **Sound effects**: `snd_chest_open` (on open), `snd_loot_drop` (when loot spawns)
-- **Persistence**: Inherits from `obj_persistent_parent`, automatically saved/loaded with room state
-- **Functions**: `open_container()`, `spawn_loot()`, `spawn_specific_loot()`, `spawn_random_loot()`, `serialize()`, `deserialize()`
-- **Integration**: Uses `find_loot_spawn_position()`, `select_weighted_loot_item()`, `spawn_item()` from enemy loot system
+- **Key features**: 4-frame animations, flexible loot modes (specific/random weighted), persistence, interaction prompts
 
 ### Grid Puzzle System
 - **Controller**: `obj_grid_controller` - Manages pillar puzzle mechanics
@@ -158,57 +146,15 @@ To create a quest marker for location objectives:
 4. Place marker in room where player should go
 
 ### Creating Enemy Parties
-To create a new enemy party controller:
-1. Create new object inheriting from `obj_enemy_party_controller`
-2. In the Create event, configure party properties:
-   - Set `party_state` (PartyState enum value)
-   - Set `formation_template` (key from `global.formation_database`)
-   - Configure weights: `weight_attack`, `weight_formation`, `weight_flee`
-   - Set thresholds: `desperate_threshold`, `cautious_threshold`, `emboldened_player_hp_threshold`
-3. Auto-spawn enemy members using `instance_create_layer()`:
-   ```gml
-   var enemies = [
-       instance_create_layer(x - 48, y, layer, obj_burglar),
-       instance_create_layer(x, y, layer, obj_burglar),
-       instance_create_layer(x + 48, y, layer, obj_burglar)
-   ];
-   init_party(enemies, formation_template);
-   ```
-4. For patrolling parties:
-   - Create a path resource in GameMaker IDE
-   - Set `patrol_path`, `patrol_speed`, `patrol_loop`, `patrol_aggro_radius`
-5. For protecting parties:
-   - Set `protect_x`, `protect_y`, `protect_radius`
-6. Place the party controller object in the room - enemies spawn automatically
+See `docs/ENEMY_PARTY_SYSTEM.md` for detailed instructions. Quick overview:
+1. Create object inheriting from `obj_enemy_party_controller`
+2. Configure party state, formation, weights, and thresholds
+3. Auto-spawn members with `init_party(enemies_array, formation_key)`
+4. Optional: Configure patrol path or protect point
 
 ### Creating Openable Containers
-To create a new container type:
-1. Create new object inheriting from `obj_openable`
-2. Create sprite with 4 frames: 0 (closed), 1-2 (opening), 3 (fully open)
-3. In Create event, call `event_inherited()` then configure loot:
-   ```gml
-   event_inherited();
-
-   // Specific items mode
-   loot_mode = "specific";
-   loot_items = ["health_potion", "short_sword"];
-
-   // OR Random weighted mode (fixed count)
-   loot_mode = "random_weighted";
-   loot_count = 2;
-   loot_table = [
-       {item_key: "health_potion", weight: 50},
-       {item_key: "rusty_dagger", weight: 30},
-       {item_key: "master_sword", weight: 5}
-   ];
-
-   // OR Variable quantity mode
-   loot_mode = "random_weighted";
-   use_variable_quantity = true;
-   loot_count_min = 1;
-   loot_count_max = 3;
-   loot_table = [...];
-   ```
-4. Place container in room - interaction and loot spawning work automatically
-5. Per-instance loot can be configured in Room Creation Code
-6. Container state persists across save/load and room transitions
+See `docs/OPENABLE_CONTAINERS.md` for detailed instructions. Quick overview:
+1. Create object inheriting from `obj_openable`
+2. Create 4-frame sprite (closed → opening → open)
+3. Configure loot mode (`"specific"` or `"random_weighted"`)
+4. Container persists automatically via save/load system
