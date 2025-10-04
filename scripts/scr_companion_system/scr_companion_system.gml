@@ -137,6 +137,60 @@ function apply_companion_regeneration_auras(player_instance) {
     }
 }
 
+function companion_play_trigger_sfx(_companion_instance, _trigger_name) {
+    if (_companion_instance == undefined || _companion_instance == noone) {
+        return;
+    }
+
+    // Ensure SFX audio group is available before attempting playback
+    if (!audio_group_is_loaded(audiogroup_sfx_world)) {
+        audio_group_load(audiogroup_sfx_world);
+    }
+
+    var _resolve_sound = function(_candidate) {
+        if (_candidate == undefined || _candidate == noone) {
+            return undefined;
+        }
+
+        if (is_string(_candidate)) {
+            var _index = asset_get_index(_candidate);
+            return (_index != -1) ? _index : undefined;
+        }
+
+        return _candidate;
+    };
+
+    var _sound = undefined;
+
+    if (variable_struct_exists(_companion_instance.triggers, _trigger_name)) {
+        var _trigger = _companion_instance.triggers[$ _trigger_name];
+        if (variable_struct_exists(_trigger, "sfx_trigger_sound")) {
+            _sound = _resolve_sound(_trigger.sfx_trigger_sound);
+        }
+    }
+
+    if (_sound == undefined && variable_instance_exists(_companion_instance, "sfx_trigger_sound")) {
+        _sound = _resolve_sound(_companion_instance.sfx_trigger_sound);
+    }
+
+    if (_sound == undefined) {
+        _sound = _resolve_sound(snd_companion_trigger_activate);
+    }
+
+    var _companion_id = "unknown";
+    if (variable_instance_exists(_companion_instance, "companion_id")) {
+        _companion_id = _companion_instance.companion_id;
+    }
+
+    show_debug_message("Trigger activated: " + _companion_id + "." + string(_trigger_name));
+
+    if (_sound != undefined) {
+        play_sfx(_sound, 1, 8, false);
+    } else if (variable_global_exists("debug_mode") && global.debug_mode) {
+        show_debug_message("No trigger sound found for " + _companion_id + "." + string(_trigger_name));
+    }
+}
+
 /// @function evaluate_companion_triggers(player_instance)
 /// @description Check and activate companion triggers based on game state
 /// @param {instance} player_instance The player to check conditions for
@@ -159,6 +213,7 @@ function evaluate_companion_triggers(player_instance) {
                     companion.triggers.shield.cooldown = companion.triggers.shield.cooldown_max;
                     companion.shield_timer = companion.triggers.shield.duration;
                     spawn_floating_text(player_instance.x, player_instance.bbox_top - 10, "Shield!", c_aqua, player_instance);
+                    companion_play_trigger_sfx(companion, "shield");
                 }
             }
 
@@ -188,6 +243,7 @@ function evaluate_companion_triggers(player_instance) {
                     companion.triggers.guardian_veil.active = true;
                     companion.triggers.guardian_veil.cooldown = companion.triggers.guardian_veil.cooldown_max;
                     companion.guardian_veil_timer = companion.triggers.guardian_veil.duration;
+                    companion_play_trigger_sfx(companion, "guardian_veil");
                 }
             }
 
@@ -227,6 +283,7 @@ function evaluate_companion_triggers(player_instance) {
                         }
                     }
                     spawn_floating_text(player_instance.x, player_instance.bbox_top - 10, "Gust!", c_white, player_instance);
+                    companion_play_trigger_sfx(companion, "gust");
                 }
             }
         }

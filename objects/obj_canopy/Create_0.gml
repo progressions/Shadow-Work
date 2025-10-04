@@ -13,6 +13,9 @@ sprite_index = spr_canopy;
 image_speed = 0; // Disable automatic animation
 image_index = 0; // Start at first frame
 
+// Default trigger sound for Canopy
+sfx_trigger_sound = Spell_Healing_2;
+
 // Canopy-specific auras (Protective + Regeneration)
 auras = {
     protective: {
@@ -35,14 +38,16 @@ triggers = {
         cooldown_max: 180, // 3 seconds
         dr_bonus: 5,
         duration: 180, // 3 seconds
-        hp_threshold: 0.3 // Activate at 30% HP
+        hp_threshold: 0.3, // Activate at 30% HP
+        sfx_trigger_sound: snd_canopy_shield
     },
     dash_mend: {
         unlocked: false, // Unlocks at affinity 5+
         active: false,
         cooldown: 0,
         cooldown_max: 60,
-        heal_amount: 1
+        heal_amount: 1,
+        sfx_trigger_sound: noone
     },
     aegis: {
         unlocked: false, // Unlocks at affinity 8+
@@ -51,7 +56,8 @@ triggers = {
         cooldown_max: 300, // 5 seconds
         dr_bonus: 2,
         duration: 120, // 2 seconds
-        heal_amount: 2
+        heal_amount: 2,
+        sfx_trigger_sound: noone
     },
     guardian_veil: {
         unlocked: false, // Unlocks at affinity 10
@@ -60,7 +66,8 @@ triggers = {
         cooldown_max: 2400, // 40 seconds
         duration: 90, // 1.5 seconds
         dr_bonus: 5,
-        enemy_threshold: 3 // Need 3+ nearby enemies
+        enemy_threshold: 3, // Need 3+ nearby enemies
+        sfx_trigger_sound: noone
     }
 };
 

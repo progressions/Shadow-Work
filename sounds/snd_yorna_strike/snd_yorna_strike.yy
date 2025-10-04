@@ -1,6 +1,6 @@
 {
   "$GMSound":"",
-  "%Name":"Voice_Female_V2_Reflexion_Mouth_Close_Mono_03",
+  "%Name":"snd_yorna_strike",
   "audioGroupId":{
     "name":"audiogroup_sfx_world",
     "path":"audiogroups/audiogroup_sfx_world",
@@ -9,8 +9,8 @@
   "bitRate":128,
   "compression":0,
   "conversionMode":0,
-  "duration":0.32882085,
-  "name":"Voice_Female_V2_Reflexion_Mouth_Close_Mono_03",
+  "duration":0.6000907,
+  "name":"snd_yorna_strike",
   "parent":{
     "name":"world",
     "path":"folders/Sounds/sfx/world.yy",
@@ -19,7 +19,7 @@
   "resourceType":"GMSound",
   "resourceVersion":"2.0",
   "sampleRate":44100,
-  "soundFile":"Voice_Female_V2_Reflexion_Mouth_Close_Mono_03.wav",
+  "soundFile":"snd_yorna_strike.wav",
   "type":0,
   "volume":1.0,
 }

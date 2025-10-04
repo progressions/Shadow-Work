@@ -2,8 +2,8 @@
   "$GMSound":"",
   "%Name":"Voice_Female_V2_Reflexion_Mouth_Close_Mono_05",
   "audioGroupId":{
-    "name":"audiogroup_default",
-    "path":"audiogroups/audiogroup_default",
+    "name":"audiogroup_sfx_world",
+    "path":"audiogroups/audiogroup_sfx_world",
   },
   "bitDepth":1,
   "bitRate":128,

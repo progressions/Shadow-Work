@@ -2,8 +2,8 @@
   "$GMSound":"",
   "%Name":"snd_party_desperate",
   "audioGroupId":{
-    "name":"audiogroup_default",
-    "path":"audiogroups/audiogroup_default",
+    "name":"audiogroup_sfx_world",
+    "path":"audiogroups/audiogroup_sfx_world",
   },
   "bitDepth":1,
   "bitRate":128,

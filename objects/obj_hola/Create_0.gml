@@ -13,6 +13,9 @@ sprite_index = spr_companion_hola;
 image_speed = 0; // Disable automatic animation
 image_index = 0; // Start at first frame
 
+// Default trigger sound for Hola
+sfx_trigger_sound = snd_dash;
+
 // Hola-specific auras (Wind control + battlefield management)
 auras = {
     slowing: {
@@ -46,7 +49,8 @@ triggers = {
         slow_percent: 0.30, // 30% slow
         slow_duration: 180, // 3 seconds
         trigger_distance: 40, // Activate when enemies within this distance
-        enemy_threshold: 2 // Need 2+ nearby enemies
+        enemy_threshold: 2, // Need 2+ nearby enemies
+        sfx_trigger_sound: snd_hola_gust
     },
     slipstream_boost: {
         unlocked: false, // Unlocks at affinity 8+
@@ -54,7 +58,8 @@ triggers = {
         cooldown: 0,
         cooldown_max: 60, // 1 second
         dash_cd_boost: 0.35, // 35% temp boost to dash CD recovery
-        duration: 120 // 2 seconds
+        duration: 120, // 2 seconds
+        sfx_trigger_sound: noone
     },
     maelstrom: {
         unlocked: false, // Unlocks at affinity 10
@@ -67,7 +72,8 @@ triggers = {
         deflect_bonus: 0.25, // +25% deflection chance
         deflect_duration: 240, // 4 seconds
         radius: 96, // Large AoE
-        enemy_threshold: 4 // Need 4+ nearby enemies
+        enemy_threshold: 4, // Need 4+ nearby enemies
+        sfx_trigger_sound: noone
     }
 };
 

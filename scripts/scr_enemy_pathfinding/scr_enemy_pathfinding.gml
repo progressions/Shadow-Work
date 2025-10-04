@@ -151,7 +151,7 @@ function enemy_update_path(target_x, target_y) {
         _path_found = mp_grid_path(_grid, path, x, y, _waypoint_x, _waypoint_y, false);
 
         if (_path_found) {
-            show_debug_message("Using waypoint path to halfway point");
+            // show_debug_message("Using waypoint path to halfway point");
         }
     }
 

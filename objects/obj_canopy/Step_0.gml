@@ -4,6 +4,7 @@
 // Call parent step event first
 event_inherited();
 
+
 // Check for VN interaction (only when recruited and near player)
 if (instance_exists(obj_player)) {
 	if (global.game_paused) {

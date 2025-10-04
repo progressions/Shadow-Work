@@ -2,8 +2,8 @@
   "$GMSound":"",
   "%Name":"snd_chest_open",
   "audioGroupId":{
-    "name":"audiogroup_default",
-    "path":"audiogroups/audiogroup_default",
+    "name":"audiogroup_sfx_world",
+    "path":"audiogroups/audiogroup_sfx_world",
   },
   "bitDepth":1,
   "bitRate":128,
@@ -12,8 +12,8 @@
   "duration":1.041678,
   "name":"snd_chest_open",
   "parent":{
-    "name":"party",
-    "path":"folders/Sounds/sfx/world/party.yy",
+    "name":"world",
+    "path":"folders/Sounds/sfx/world.yy",
   },
   "preload":false,
   "resourceType":"GMSound",

@@ -13,6 +13,9 @@ sprite_index = spr_companion_yorna;
 image_speed = 0; // Disable automatic animation
 image_index = 0; // Start at first frame
 
+// Default trigger sound for Yorna
+sfx_trigger_sound = snd_attack_sword;
+
 // Yorna-specific auras (Offensive power + aggression)
 auras = {
     warriors_presence: {
@@ -29,7 +32,8 @@ triggers = {
         active: true, // Always checking for player hits
         cooldown: 0,
         cooldown_max: 30, // 0.5 seconds between procs
-        bonus_damage: 2 // Bonus damage added per hit
+        bonus_damage: 2, // Bonus damage added per hit
+        sfx_trigger_sound: snd_yorna_strike
     },
     expose_weakness: {
         unlocked: false, // Unlocks at affinity 8+
@@ -38,7 +42,8 @@ triggers = {
         cooldown_max: 300, // 5 seconds
         armor_reduction: 2, // -2 armor to nearby enemies
         duration: 180, // 3 seconds
-        radius: 64
+        radius: 64,
+        sfx_trigger_sound: noone
     },
     execution_window: {
         unlocked: false, // Unlocks at affinity 10
@@ -48,7 +53,8 @@ triggers = {
         damage_multiplier: 2.0, // 2x damage during window
         armor_pierce: 3, // Ignore 3 armor
         duration: 120, // 2 seconds
-        true_damage: true
+        true_damage: true,
+        sfx_trigger_sound: noone
     }
 };
 
