@@ -8,8 +8,8 @@
   "name":"obj_gate_guard_party",
   "overriddenProperties":[],
   "parent":{
-    "name":"mobs",
-    "path":"folders/Objects/mobs.yy",
+    "name":"parties",
+    "path":"folders/Objects/mobs/parties.yy",
   },
   "parentObjectId":{
     "name":"obj_enemy_party_controller",

@@ -30,3 +30,15 @@ function on_leader_death() {
     weight_flee *= 0.5;
     show_debug_message("Orc Raiding Party: Leader slain! Party enraged!");
 }
+
+// Auto-spawn party members in wedge formation
+var enemies = [
+    instance_create_layer(x, y - 48, layer, obj_orc),         // Front (leader)
+    instance_create_layer(x - 32, y - 16, layer, obj_orc),    // Left flank
+    instance_create_layer(x + 32, y - 16, layer, obj_orc),    // Right flank
+    instance_create_layer(x - 48, y + 16, layer, obj_orc),    // Left rear
+    instance_create_layer(x + 48, y + 16, layer, obj_orc)     // Right rear
+];
+
+// Initialize the party
+init_party(enemies, formation_template);
