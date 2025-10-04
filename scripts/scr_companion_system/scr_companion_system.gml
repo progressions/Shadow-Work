@@ -15,40 +15,93 @@ function get_active_companions() {
     return companions;
 }
 
-/// @function get_companion_dr_bonus()
-/// @description Calculate total DR bonus from all active companions (FULLY MODULAR)
-function get_companion_dr_bonus() {
+/// @function get_companion_melee_dr_bonus()
+/// @description Calculate total melee DR bonus from all active companions
+function get_companion_melee_dr_bonus() {
     var total_dr = 0;
     var companions = get_active_companions();
 
     for (var i = 0; i < array_length(companions); i++) {
         var companion = companions[i];
 
-        // MODULAR: Loop through all auras and check for DR bonuses
+        // Check all auras for melee DR bonuses
         var _aura_names = variable_struct_get_names(companion.auras);
         for (var j = 0; j < array_length(_aura_names); j++) {
             var _aura_name = _aura_names[j];
             var _aura = companion.auras[$ _aura_name];
 
             if (_aura.active) {
-                // Check for various DR property names
-                if (variable_struct_exists(_aura, "dr_bonus")) {
-                    total_dr += _aura.dr_bonus;
+                // General DR applies to melee
+                if (variable_struct_exists(_aura, "damage_reduction")) {
+                    total_dr += _aura.damage_reduction;
                 }
-                if (variable_struct_exists(_aura, "projectile_dr")) {
-                    total_dr += _aura.projectile_dr;
+                // Melee-specific DR
+                if (variable_struct_exists(_aura, "melee_damage_reduction")) {
+                    total_dr += _aura.melee_damage_reduction;
                 }
             }
         }
 
-        // MODULAR: Loop through all triggers and check for DR bonuses
+        // Check triggers for melee DR bonuses
         var _trigger_names = variable_struct_get_names(companion.triggers);
         for (var j = 0; j < array_length(_trigger_names); j++) {
             var _trigger_name = _trigger_names[j];
             var _trigger = companion.triggers[$ _trigger_name];
 
-            if (_trigger.active && variable_struct_exists(_trigger, "dr_bonus")) {
-                total_dr += _trigger.dr_bonus;
+            if (_trigger.active) {
+                if (variable_struct_exists(_trigger, "damage_reduction")) {
+                    total_dr += _trigger.damage_reduction;
+                }
+                if (variable_struct_exists(_trigger, "melee_damage_reduction")) {
+                    total_dr += _trigger.melee_damage_reduction;
+                }
+            }
+        }
+    }
+
+    return total_dr;
+}
+
+/// @function get_companion_ranged_dr_bonus()
+/// @description Calculate total ranged DR bonus from all active companions
+function get_companion_ranged_dr_bonus() {
+    var total_dr = 0;
+    var companions = get_active_companions();
+
+    for (var i = 0; i < array_length(companions); i++) {
+        var companion = companions[i];
+
+        // Check all auras for ranged DR bonuses
+        var _aura_names = variable_struct_get_names(companion.auras);
+        for (var j = 0; j < array_length(_aura_names); j++) {
+            var _aura_name = _aura_names[j];
+            var _aura = companion.auras[$ _aura_name];
+
+            if (_aura.active) {
+                // General DR applies to ranged
+                if (variable_struct_exists(_aura, "damage_reduction")) {
+                    total_dr += _aura.damage_reduction;
+                }
+                // Ranged-specific DR (Hola's wind_ward uses this)
+                if (variable_struct_exists(_aura, "ranged_damage_reduction")) {
+                    total_dr += _aura.ranged_damage_reduction;
+                }
+            }
+        }
+
+        // Check triggers for ranged DR bonuses
+        var _trigger_names = variable_struct_get_names(companion.triggers);
+        for (var j = 0; j < array_length(_trigger_names); j++) {
+            var _trigger_name = _trigger_names[j];
+            var _trigger = companion.triggers[$ _trigger_name];
+
+            if (_trigger.active) {
+                if (variable_struct_exists(_trigger, "damage_reduction")) {
+                    total_dr += _trigger.damage_reduction;
+                }
+                if (variable_struct_exists(_trigger, "ranged_damage_reduction")) {
+                    total_dr += _trigger.ranged_damage_reduction;
+                }
             }
         }
     }
@@ -336,7 +389,7 @@ function companion_take_torch_function() {
     var _companion = global.vn_companion;
     if (_companion == undefined) return;
 
-    var _player = obj_player;
+    var _player = instance_find(obj_player, 0);
     if (_player == noone) return;
 
     if (_companion.carrying_torch) {
@@ -367,18 +420,25 @@ function companion_take_torch_function() {
         }
     }
 
-    var _has_equipped_torch = _player.player_has_equipped_torch() && _player.torch_active;
-    var _inventory_has_torch = _player.player_has_torch_in_inventory();
+    var _has_equipped_torch = false;
+    var _inventory_has_torch = false;
+    var _remaining = 0;
+    var _radius_equipped = 100;
+
+    with (_player) {
+        _has_equipped_torch = player_has_equipped_torch() && torch_active;
+        _inventory_has_torch = player_has_torch_in_inventory();
+        _remaining = torch_time_remaining;
+        _radius_equipped = player_get_torch_light_radius();
+    }
 
     if (!_has_equipped_torch && !_inventory_has_torch) return;
 
     if (_has_equipped_torch) {
-        var _remaining = _player.torch_time_remaining;
-        var _radius_equipped = _player.player_get_torch_light_radius();
 
         if (companion_receive_torch(_companion, _remaining, _radius_equipped)) {
-            _player.player_play_torch_sfx("snd_companion_torch_receive");
             with (_player) {
+                player_play_torch_sfx("snd_companion_torch_receive");
                 player_stop_torch_loop();
                 player_remove_torch_from_loadouts();
                 torch_active = false;
@@ -392,15 +452,25 @@ function companion_take_torch_function() {
         return;
     }
 
-    if (!_player.player_supply_companion_torch()) return;
+    var _supplied = false;
+    var _torch_duration = 0;
+
+    with (_player) {
+        _supplied = player_supply_companion_torch();
+        _torch_duration = torch_duration;
+    }
+
+    if (!_supplied) return;
 
     var _torch_stats = global.item_database.torch.stats;
     var _radius = (_torch_stats != undefined && variable_struct_exists(_torch_stats, "light_radius"))
         ? _torch_stats[$ "light_radius"]
         : 100;
 
-    if (companion_receive_torch(_companion, _player.torch_duration, _radius)) {
-        _player.player_play_torch_sfx("snd_companion_torch_receive");
+    if (companion_receive_torch(_companion, _torch_duration, _radius)) {
+        with (_player) {
+            player_play_torch_sfx("snd_companion_torch_receive");
+        }
         global.vn_torch_transfer_success = true;
         if (variable_global_exists("ChatterboxVariableSet")) {
             ChatterboxVariableSet("vn_torch_transfer_success", true);
@@ -427,12 +497,17 @@ function companion_stop_carrying_torch_function() {
     var _companion = global.vn_companion;
     if (_companion == undefined) return;
 
-    var _player = obj_player;
+    var _player = instance_find(obj_player, 0);
     if (_player == noone) return;
 
     if (!_companion.carrying_torch) return;
 
-    if (!_player.player_can_receive_torch()) return;
+    var _can_receive = false;
+    with (_player) {
+        _can_receive = player_can_receive_torch();
+    }
+
+    if (!_can_receive) return;
 
     with (_companion) {
         if (companion_give_torch_to_player()) {

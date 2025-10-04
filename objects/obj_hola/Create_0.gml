@@ -22,7 +22,7 @@ auras = {
     },
     wind_ward: {
         active: false, // Activated on recruitment
-        projectile_dr: 3 // Strong resistance to ranged damage
+        ranged_damage_reduction: 3 // Strong resistance to ranged damage
     },
     wind_deflection: {
         active: false, // Activated on recruitment

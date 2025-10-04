@@ -1,5 +1,8 @@
 creator = obj_enemy_parent;
 
+// Attack category for damage reduction calculations
+attack_category = AttackCategory.melee;
+
 // Set damage based on enemy stats
 damage = creator.attack_damage;
 

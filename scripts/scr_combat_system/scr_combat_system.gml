@@ -2,6 +2,12 @@
 // COMBAT SYSTEM - Damage, defense, and XP calculations
 // ============================================
 
+// Attack Category Enum - Distinguishes melee vs ranged attacks
+enum AttackCategory {
+    melee,
+    ranged
+}
+
 function get_total_damage() {
     var _base_damage = 1; // Base unarmed damage
 
@@ -75,30 +81,93 @@ function gain_xp(_amount) {
     }
 }
 
-function get_total_defense() {
-    var _total_defense = 0;
+/// @function get_equipment_general_dr()
+/// @description Sum general damage_reduction from all equipped items (applies to both melee and ranged)
+function get_equipment_general_dr() {
+    var _total = 0;
     var _slots = ["head", "torso", "legs", "left_hand", "right_hand"];
 
     for (var i = 0; i < array_length(_slots); i++) {
         if (equipped[$ _slots[i]] != undefined) {
             var _stats = equipped[$ _slots[i]].definition.stats;
-            if (variable_struct_exists(_stats, "defense")) {
-                _total_defense += _stats.defense;
+            if (variable_struct_exists(_stats, "damage_reduction")) {
+                _total += _stats.damage_reduction;
             }
         }
     }
-
-    return _total_defense;
+    return _total;
 }
 
-function get_block_chance() {
-    // Check left hand for shield
-    if (equipped.left_hand != undefined && !is_two_handing()) {
-        var _stats = equipped.left_hand.definition.stats;
-        return _stats[$ "block_chance"] ?? 0;
+/// @function get_equipment_melee_dr()
+/// @description Sum melee_damage_reduction from all equipped items
+function get_equipment_melee_dr() {
+    var _total = 0;
+    var _slots = ["head", "torso", "legs", "left_hand", "right_hand"];
+
+    for (var i = 0; i < array_length(_slots); i++) {
+        if (equipped[$ _slots[i]] != undefined) {
+            var _stats = equipped[$ _slots[i]].definition.stats;
+            if (variable_struct_exists(_stats, "melee_damage_reduction")) {
+                _total += _stats.melee_damage_reduction;
+            }
+        }
     }
-    return 0;
+    return _total;
 }
+
+/// @function get_equipment_ranged_dr()
+/// @description Sum ranged_damage_reduction from all equipped items
+function get_equipment_ranged_dr() {
+    var _total = 0;
+    var _slots = ["head", "torso", "legs", "left_hand", "right_hand"];
+
+    for (var i = 0; i < array_length(_slots); i++) {
+        if (equipped[$ _slots[i]] != undefined) {
+            var _stats = equipped[$ _slots[i]].definition.stats;
+            if (variable_struct_exists(_stats, "ranged_damage_reduction")) {
+                _total += _stats.ranged_damage_reduction;
+            }
+        }
+    }
+    return _total;
+}
+
+/// @function get_melee_damage_reduction()
+/// @description Calculate total melee DR from equipment, traits, status effects, companions
+function get_melee_damage_reduction() {
+    var _total_dr = 0;
+
+    // Equipment DR (general applies to all, plus melee-specific)
+    _total_dr += get_equipment_general_dr();
+    _total_dr += get_equipment_melee_dr();
+
+    // Companion DR bonuses
+    _total_dr += get_companion_melee_dr_bonus();
+
+    // Trait modifiers (future)
+    // Status effect modifiers (future)
+
+    return _total_dr;
+}
+
+/// @function get_ranged_damage_reduction()
+/// @description Calculate total ranged DR from equipment, traits, status effects, companions
+function get_ranged_damage_reduction() {
+    var _total_dr = 0;
+
+    // Equipment DR (general applies to all, plus ranged-specific)
+    _total_dr += get_equipment_general_dr();
+    _total_dr += get_equipment_ranged_dr();
+
+    // Companion DR bonuses
+    _total_dr += get_companion_ranged_dr_bonus();
+
+    // Trait modifiers (future)
+    // Status effect modifiers (future)
+
+    return _total_dr;
+}
+
 
 function get_speed_modifier() {
     var _speed = 1.0;

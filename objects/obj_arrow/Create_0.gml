@@ -2,6 +2,9 @@
 creator = noone;
 damage = 0;
 
+// Attack category for damage reduction calculations
+attack_category = AttackCategory.ranged;
+
 // Default projectile properties
 damage_type = DamageType.physical;
 status_effects_on_hit = [];

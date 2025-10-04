@@ -470,3 +470,14 @@ if (array_length(status_effects) > 0) {
 
 // Ensure alpha is always reset at end of draw
 draw_set_alpha(1);
+
+// Debug: Display damage reduction values
+if (global.debug_mode) {
+    var _melee_dr = get_melee_damage_reduction();
+    var _ranged_dr = get_ranged_damage_reduction();
+
+    draw_set_color(c_white);
+    draw_set_alpha(1);
+    draw_text(x - 32, bbox_top - 40, "Melee DR: " + string(_melee_dr));
+    draw_text(x - 32, bbox_top - 50, "Ranged DR: " + string(_ranged_dr));
+}

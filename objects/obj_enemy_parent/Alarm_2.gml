@@ -24,15 +24,12 @@ if (state == EnemyState.attacking) {
             }
             var _after_resistance = _status_modified_damage * _resistance_multiplier;
 
-            // Apply player armor defense (DR) + companion DR bonus
-            var _defense = 0;
+            // Apply player melee damage reduction (enemy melee attacks)
+            var _player_dr = 0;
             with (_player) {
-                _defense = get_total_defense();
+                _player_dr = get_melee_damage_reduction();
             }
-            // Add companion DR bonus
-            var _companion_dr = get_companion_dr_bonus();
-            var _total_defense = _defense + _companion_dr;
-            var _after_defense = _after_resistance - _total_defense;
+            var _after_defense = _after_resistance - _player_dr;
 
             // Apply chip damage floor only if armor fully blocked the attack
             var _chip = 1;

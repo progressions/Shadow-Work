@@ -139,37 +139,37 @@ global.item_database = {
     // Row 3 - Chain armor set (frames 12-14) and Leather armor set (frames 15-17)
     chain_coif: new create_item_definition(
         12, "chain_coif", "Chain Coif", ItemType.armor, EquipSlot.helmet,
-        {defense: 4}
+        {damage_reduction: 4}
     ),
     chain_armor: new create_item_definition(
         13, "chain_armor", "Chain Armor", ItemType.armor, EquipSlot.armor,
-        {defense: 10, speed_modifier: 0.9, trait_grants: [{trait: "lightning_resistance", stacks: 1}]}
+        {damage_reduction: 10, speed_modifier: 0.9, trait_grants: [{trait: "lightning_resistance", stacks: 1}]}
     ),
     chain_leggings: new create_item_definition(
         14, "chain_leggings", "Chain Leggings", ItemType.armor, EquipSlot.boots,
-        {defense: 3, speed_modifier: 0.95}
+        {damage_reduction: 3, speed_modifier: 0.95}
     ),
     leather_helmet: new create_item_definition(
         15, "leather_helmet", "Leather Helmet", ItemType.armor, EquipSlot.helmet,
-        {defense: 2}
+        {damage_reduction: 2}
     ),
     leather_armor: new create_item_definition(
         16, "leather_armor", "Leather Armor", ItemType.armor, EquipSlot.armor,
-        {defense: 5, trait_grants: [{trait: "poison_resistance", stacks: 2}]}
+        {damage_reduction: 5, trait_grants: [{trait: "poison_resistance", stacks: 2}]}
     ),
     leather_greaves: new create_item_definition(
         17, "leather_greaves", "Leather Greaves", ItemType.armor, EquipSlot.boots,
-        {defense: 2, speed_modifier: 1.05}
+        {damage_reduction: 2, speed_modifier: 1.05}
     ),
 
     // Row 4 - Shields and consumables (frames 18-23)
     shield: new create_item_definition(
         18, "shield", "Shield", ItemType.armor, EquipSlot.left_hand,
-        {defense: 5, block_chance: 0.25}
+        {melee_damage_reduction: 3, ranged_damage_reduction: 8}
     ),
     greatshield: new create_item_definition(
         19, "greatshield", "Greatshield", ItemType.armor, EquipSlot.left_hand,
-        {defense: 10, block_chance: 0.35, speed_modifier: 0.85, trait_grants: [{trait: "physical_resistance", stacks: 1}]}
+        {melee_damage_reduction: 5, ranged_damage_reduction: 12, speed_modifier: 0.85, trait_grants: [{trait: "physical_resistance", stacks: 1}]}
     ),
     small_health_potion: new create_item_definition(
         20, "small_health_potion", "Small Health Potion", ItemType.consumable, EquipSlot.none,
@@ -205,15 +205,15 @@ global.item_database = {
     // Plate armor set (frames 25-27) - Heavy tier
     plate_helmet: new create_item_definition(
         25, "plate_helmet", "Plate Helmet", ItemType.armor, EquipSlot.helmet,
-        {defense: 6, speed_modifier: 0.9}
+        {damage_reduction: 6, speed_modifier: 0.9}
     ),
     plate_armor: new create_item_definition(
         26, "plate_armor", "Plate Armor", ItemType.armor, EquipSlot.armor,
-        {defense: 15, speed_modifier: 0.8, trait_grants: [{trait: "fire_resistance", stacks: 2}]}
+        {damage_reduction: 15, speed_modifier: 0.8, trait_grants: [{trait: "fire_resistance", stacks: 2}]}
     ),
     plate_sabatons: new create_item_definition(
         27, "plate_sabatons", "Plate Sabatons", ItemType.armor, EquipSlot.boots,
-        {defense: 4, speed_modifier: 0.9, trait_grants: [{trait: "ice_resistance", stacks: 1}]}
+        {damage_reduction: 4, speed_modifier: 0.9, trait_grants: [{trait: "ice_resistance", stacks: 1}]}
     ),
 
     // Quest Items (frames 28-30) - Special items for quests

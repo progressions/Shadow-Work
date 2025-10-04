@@ -207,11 +207,13 @@ function companion_handle_torch_burnout() {
     torch_time_remaining = 0;
     set_torch_carrier("none");
 
-    var _player = obj_player;
+    var _player = instance_find(obj_player, 0);
     if (_player != noone) {
-        if (_player.player_supply_companion_torch()) {
-            companion_take_torch_from_player(torch_duration, undefined);
-            return;
+        with (_player) {
+            if (player_supply_companion_torch()) {
+                other.companion_take_torch_from_player(other.torch_duration, undefined);
+                return;
+            }
         }
     }
 
@@ -237,10 +239,15 @@ function companion_update_torch_state() {
 function companion_give_torch_to_player() {
     if (!carrying_torch) return false;
 
-    var _player = obj_player;
+    var _player = instance_find(obj_player, 0);
     if (_player == noone) return false;
 
-    if (!_player.player_can_receive_torch()) {
+    var _can_receive = false;
+    with (_player) {
+        _can_receive = player_can_receive_torch();
+    }
+
+    if (!_can_receive) {
         return false;
     }
 

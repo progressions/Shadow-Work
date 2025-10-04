@@ -27,10 +27,9 @@ if (_hit_player != noone) {
     var _resistance_multiplier = method(_hit_player, get_damage_modifier_for_type)(_damage_type);
     var _after_resistance = _base_damage * _resistance_multiplier;
 
-    var _defense = method(_hit_player, get_total_defense)();
-    var _companion_dr = get_companion_dr_bonus();
-    var _total_defense = _defense + _companion_dr;
-    var _after_defense = _after_resistance - _total_defense;
+    // Apply player ranged damage reduction (enemy ranged attacks)
+    var _player_dr = method(_hit_player, get_ranged_damage_reduction)();
+    var _after_defense = _after_resistance - _player_dr;
 
     var _final_damage;
     if (_resistance_multiplier <= 0) {
