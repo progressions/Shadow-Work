@@ -2,6 +2,60 @@
 // ITEM DATABASE - Item definitions and spawning
 // ============================================
 
+// Item ID constants - Use Items.torch instead of "torch" strings
+global.Items = {
+    // Weapons
+    rusty_dagger: "rusty_dagger",
+    short_sword: "short_sword",
+    long_sword: "long_sword",
+    master_sword: "master_sword",
+    greatsword: "greatsword",
+    spear: "spear",
+    axe: "axe",
+    wooden_bow: "wooden_bow",
+    longbow: "longbow",
+    crossbow: "crossbow",
+    heavy_crossbow: "heavy_crossbow",
+
+    // Tools
+    torch: "torch",
+
+    // Armor - Chain
+    chain_coif: "chain_coif",
+    chain_armor: "chain_armor",
+    chain_leggings: "chain_leggings",
+
+    // Armor - Leather
+    leather_helmet: "leather_helmet",
+    leather_armor: "leather_armor",
+    leather_greaves: "leather_greaves",
+
+    // Armor - Plate
+    plate_helmet: "plate_helmet",
+    plate_armor: "plate_armor",
+    plate_sabatons: "plate_sabatons",
+
+    // Shields
+    shield: "shield",
+    greatshield: "greatshield",
+
+    // Consumables
+    small_health_potion: "small_health_potion",
+    medium_health_potion: "medium_health_potion",
+    large_health_potion: "large_health_potion",
+    water: "water",
+    purple_potion: "purple_potion",
+    red_potion: "red_potion",
+
+    // Ammo
+    arrows: "arrows",
+
+    // Quest Items
+    mysterious_letter: "mysterious_letter",
+    ancient_artifact: "ancient_artifact",
+    wolf_pelt: "wolf_pelt",
+};
+
 // Item definition constructor
 function create_item_definition(_frame, _id, _name, _type, _slot, _stats) constructor {
     item_id = _id;
@@ -73,7 +127,7 @@ global.item_database = {
     torch: new create_item_definition(
         11, "torch", "Torch", ItemType.tool, EquipSlot.left_hand,
         {
-            light_radius: 100,
+            light_radius: 125,
             handedness: WeaponHandedness.one_handed,
             status_effects: [{effect: StatusEffectType.burning, chance: 0.2}],
             damage_type: DamageType.fire,

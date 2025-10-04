@@ -52,14 +52,17 @@ function add_light_source(_x, _y, _radius) {
             var _distance_cells = point_distance(_x, _y, _cell_center_x, _cell_center_y) / grid_cell_size;
             if (_distance_cells > _cell_radius + 1) continue;
 
+            // Calculate intensity based on distance from center as fraction of radius
             var _intensity = 0;
-            if (_distance_cells <= 1) {
+            var _normalized_distance = _distance_cells / _cell_radius;
+
+            if (_normalized_distance <= 0.25) {
                 _intensity = 1;
-            } else if (_distance_cells <= 2) {
+            } else if (_normalized_distance <= 0.5) {
                 _intensity = 0.75;
-            } else if (_distance_cells <= 3) {
+            } else if (_normalized_distance <= 0.75) {
                 _intensity = 0.5;
-            } else if (_distance_cells <= 4) {
+            } else if (_normalized_distance <= 1.0) {
                 _intensity = 0.25;
             }
 

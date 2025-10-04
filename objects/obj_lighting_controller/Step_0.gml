@@ -18,7 +18,8 @@ if (room_darkness_level <= 0 && !surface_dirty) {
 var _player = obj_player;
 if (_player != noone) {
     if (_player.torch_active) {
-        var _radius = _player.player_get_torch_light_radius();
+        var _get_radius = method(_player, player_get_torch_light_radius);
+        var _radius = _get_radius();
         add_light_source(_player.x, _player.y, _radius);
     }
 }

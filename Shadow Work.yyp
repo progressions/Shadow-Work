@@ -321,6 +321,7 @@
     {"id":{"name":"scr_enums","path":"scripts/scr_enums/scr_enums.yy",},},
     {"id":{"name":"scr_inventory_system","path":"scripts/scr_inventory_system/scr_inventory_system.yy",},},
     {"id":{"name":"scr_item_database","path":"scripts/scr_item_database/scr_item_database.yy",},},
+    {"id":{"name":"scr_lighting","path":"scripts/scr_lighting/scr_lighting.yy",},},
     {"id":{"name":"scr_music_functions","path":"scripts/scr_music_functions/scr_music_functions.yy",},},
     {"id":{"name":"scr_quest_system","path":"scripts/scr_quest_system/scr_quest_system.yy",},},
     {"id":{"name":"scr_save_system","path":"scripts/scr_save_system/scr_save_system.yy",},},
@@ -497,8 +498,8 @@
   "resourceVersion":"2.0",
   "RoomOrderNodes":[
     {"roomId":{"name":"room_initial","path":"rooms/room_initial/room_initial.yy",},},
-    {"roomId":{"name":"room_greenwood_forest_4","path":"rooms/room_greenwood_forest_4/room_greenwood_forest_4.yy",},},
     {"roomId":{"name":"room_greenwood_forest_1_old","path":"rooms/room_greenwood_forest_1_old/room_greenwood_forest_1_old.yy",},},
+    {"roomId":{"name":"room_greenwood_forest_4","path":"rooms/room_greenwood_forest_4/room_greenwood_forest_4.yy",},},
     {"roomId":{"name":"room_greenwood_forest_3","path":"rooms/room_greenwood_forest_3/room_greenwood_forest_3.yy",},},
     {"roomId":{"name":"room_greenwood_forest_2","path":"rooms/room_greenwood_forest_2/room_greenwood_forest_2.yy",},},
   ],
