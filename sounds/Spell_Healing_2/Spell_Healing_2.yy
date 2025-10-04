@@ -12,8 +12,8 @@
   "duration":3.1463265,
   "name":"Spell_Healing_2",
   "parent":{
-    "name":"Scripts",
-    "path":"folders/Scripts.yy",
+    "name":"world",
+    "path":"folders/Sounds/sfx/world.yy",
   },
   "preload":false,
   "resourceType":"GMSound",

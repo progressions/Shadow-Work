@@ -4,3 +4,4 @@
 event_inherited();  // Calls parent's create event
 item_def = global.item_database.torch;
 image_index = item_def.world_sprite_frame;  // Sets to frame 0
+
