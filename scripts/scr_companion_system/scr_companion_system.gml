@@ -307,45 +307,138 @@ function restore_all_companions(companions_data) {
     }
 }
 
-/// @function companion_receive_torch(companion_instance, time_remaining)
+/// @function companion_receive_torch(companion_instance, time_remaining, light_radius)
 /// @description Transfer a lit torch to the given companion instance
 /// @param {instance} companion_instance Companion receiving torch
 /// @param {real} time_remaining Remaining burn time to inherit
 /// @return {bool} True if transfer succeeded
-function companion_receive_torch(companion_instance, time_remaining) {
+function companion_receive_torch(companion_instance, time_remaining, light_radius) {
     if (companion_instance == undefined) return false;
 
     with (companion_instance) {
         if (!variable_instance_exists(id, "companion_take_torch_from_player")) {
             return false;
         }
-        companion_take_torch_from_player(time_remaining);
+        companion_take_torch_from_player(time_remaining, light_radius);
     }
 
     return true;
 }
 
 /// @function companion_take_torch_function()
-/// @description VN dialogue hook: companion takes a torch from player inventory
+/// @description VN dialogue hook: companion takes a torch from player inventory or another companion
 function companion_take_torch_function() {
+    global.vn_torch_transfer_success = false;
+    if (variable_global_exists("ChatterboxVariableSet")) {
+        ChatterboxVariableSet("vn_torch_transfer_success", false);
+    }
+
     var _companion = global.vn_companion;
     if (_companion == undefined) return;
 
     var _player = obj_player;
     if (_player == noone) return;
 
-    if (!_player.player_has_torch_in_inventory()) return;
+    if (_companion.carrying_torch) {
+        global.vn_torch_transfer_success = true;
+        if (variable_global_exists("ChatterboxVariableSet")) {
+            ChatterboxVariableSet("vn_torch_transfer_success", true);
+        }
+        return;
+    }
+
+    var _carrier = noone;
+    with (obj_companion_parent) {
+        if (carrying_torch && id != _companion) {
+            other._carrier = id;
+            exit;
+        }
+    }
+
+    if (_carrier != noone) {
+        with (_carrier) {
+            other._torch_transfer_temp = companion_give_torch_to_player();
+        }
+        var _returned = _torch_transfer_temp;
+        _torch_transfer_temp = undefined;
+
+        if (!_returned) {
+            return;
+        }
+    }
+
+    var _has_equipped_torch = _player.player_has_equipped_torch() && _player.torch_active;
+    var _inventory_has_torch = _player.player_has_torch_in_inventory();
+
+    if (!_has_equipped_torch && !_inventory_has_torch) return;
+
+    if (_has_equipped_torch) {
+        var _remaining = _player.torch_time_remaining;
+        var _radius_equipped = _player.player_get_torch_light_radius();
+
+        if (companion_receive_torch(_companion, _remaining, _radius_equipped)) {
+            _player.player_play_torch_sfx("snd_companion_torch_receive");
+            with (_player) {
+                player_stop_torch_loop();
+                player_remove_torch_from_loadouts();
+                torch_active = false;
+                torch_time_remaining = 0;
+            }
+            global.vn_torch_transfer_success = true;
+            if (variable_global_exists("ChatterboxVariableSet")) {
+                ChatterboxVariableSet("vn_torch_transfer_success", true);
+            }
+        }
+        return;
+    }
 
     if (!_player.player_supply_companion_torch()) return;
 
-    if (companion_receive_torch(_companion, _player.torch_duration)) {
+    var _torch_stats = global.item_database.torch.stats;
+    var _radius = (_torch_stats != undefined && variable_struct_exists(_torch_stats, "light_radius"))
+        ? _torch_stats[$ "light_radius"]
+        : 100;
+
+    if (companion_receive_torch(_companion, _player.torch_duration, _radius)) {
         _player.player_play_torch_sfx("snd_companion_torch_receive");
+        global.vn_torch_transfer_success = true;
+        if (variable_global_exists("ChatterboxVariableSet")) {
+            ChatterboxVariableSet("vn_torch_transfer_success", true);
+        }
     } else {
         // Failed to hand off torch, return it to inventory
         var _torch_def = global.item_database.torch;
         if (_torch_def != undefined) {
             with (_player) {
                 inventory_add_item(_torch_def, 1);
+            }
+        }
+    }
+}
+
+/// @function companion_stop_carrying_torch_function()
+/// @description VN dialogue hook: companion hands torch back to the player
+function companion_stop_carrying_torch_function() {
+    global.vn_torch_transfer_success = false;
+    if (variable_global_exists("ChatterboxVariableSet")) {
+        ChatterboxVariableSet("vn_torch_transfer_success", false);
+    }
+
+    var _companion = global.vn_companion;
+    if (_companion == undefined) return;
+
+    var _player = obj_player;
+    if (_player == noone) return;
+
+    if (!_companion.carrying_torch) return;
+
+    if (!_player.player_can_receive_torch()) return;
+
+    with (_companion) {
+        if (companion_give_torch_to_player()) {
+            global.vn_torch_transfer_success = true;
+            if (variable_global_exists("ChatterboxVariableSet")) {
+                ChatterboxVariableSet("vn_torch_transfer_success", true);
             }
         }
     }

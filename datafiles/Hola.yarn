@@ -15,6 +15,22 @@ Hola: Oh! You startled me... I didn't expect anyone else here.
     -> You're safe now
         Hola: Am I? I want to believe that... but my power, it's so strong. Too strong.
         <<jump Afraid>>
+    -> Carry the torch for me <<if $hola_recruited and $torch_carrier != $hola_id>>
+        <<companion_take_torch()>>
+        <<if $hola_recruited and $torch_carrier == $hola_id>>
+            Hola: I-I'll hold it steady. Just stay close so I know you're safe.
+        <<else>>
+            Hola: I don't think I can manage that right now... maybe when you're ready again?
+        <<endif>>
+        <<jump Start>>
+    -> Could you give the torch back? <<if $hola_recruited and $torch_carrier == $hola_id>>
+        <<companion_stop_carrying_torch()>>
+        <<if $vn_torch_transfer_success>>
+            Hola: Here--careful, it's still warm. You're better at keeping everyone calm than I am.
+        <<else>>
+            Hola: Oh! Your hand's full. Let me keep it until you're ready, alright?
+        <<endif>>
+        <<jump Start>>
     -> Join me, I'll keep you safe <<if $hola_recruited == false>>
         Hola: You would... protect me? Even knowing what I might do?
         <<jump Recruit>>

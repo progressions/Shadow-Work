@@ -1,0 +1,25 @@
+{
+  "$GMSound":"",
+  "%Name":"Voice_Female_V2_Reflexion_Mouth_Close_Mono_01",
+  "audioGroupId":{
+    "name":"audiogroup_default",
+    "path":"audiogroups/audiogroup_default",
+  },
+  "bitDepth":1,
+  "bitRate":128,
+  "compression":0,
+  "conversionMode":0,
+  "duration":0.45968255,
+  "name":"Voice_Female_V2_Reflexion_Mouth_Close_Mono_01",
+  "parent":{
+    "name":"ui",
+    "path":"folders/Sounds/sfx/ui.yy",
+  },
+  "preload":false,
+  "resourceType":"GMSound",
+  "resourceVersion":"2.0",
+  "sampleRate":44100,
+  "soundFile":"Voice_Female_V2_Reflexion_Mouth_Close_Mono_01.wav",
+  "type":0,
+  "volume":1.0,
+}

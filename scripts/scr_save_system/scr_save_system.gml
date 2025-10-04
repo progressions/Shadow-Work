@@ -104,6 +104,7 @@ function serialize_companions() {
             relationship_stage: relationship_stage,
             carrying_torch: carrying_torch,
             torch_time_remaining: torch_time_remaining,
+            torch_light_radius: torch_light_radius,
             triggers: triggers_data,
             auras: auras_data
         });
@@ -242,6 +243,12 @@ function deserialize_player(data) {
 
     player_stop_torch_loop();
 
+    if (player.torch_active) {
+        set_torch_carrier("player");
+    } else {
+        set_torch_carrier("none");
+    }
+
     if (!player.torch_active) {
         player.torch_time_remaining = 0;
     }
@@ -318,6 +325,11 @@ function deserialize_companions(data) {
         companion.dialogue_history = comp_data.dialogue_history;
         companion.relationship_stage = comp_data.relationship_stage;
 
+        var _torch_stats = global.item_database.torch.stats;
+        if (_torch_stats != undefined && variable_struct_exists(_torch_stats, "light_radius")) {
+            companion.torch_light_radius = _torch_stats[$ "light_radius"];
+        }
+
         // Set follow target if recruited
         if (companion.is_recruited && instance_exists(obj_player)) {
             companion.follow_target = obj_player;
@@ -356,6 +368,10 @@ function deserialize_companions(data) {
             }
             companion.torch_time_remaining = clamp(_torch_time, 0, companion.torch_duration);
 
+            if (variable_struct_exists(comp_data, "torch_light_radius")) {
+                companion.torch_light_radius = comp_data.torch_light_radius;
+            }
+
             with (companion) {
                 companion_stop_torch_loop();
                 companion_start_torch_loop();
@@ -363,6 +379,7 @@ function deserialize_companions(data) {
                     audio_emitter_position(torch_sound_emitter, x, y, 0);
                 }
             }
+            set_torch_carrier(companion.companion_id);
         } else {
             companion.carrying_torch = false;
             companion.torch_time_remaining = 0;

@@ -276,6 +276,23 @@ global.vn_chatterbox = undefined;   // Current Chatterbox instance
 global.vn_companion = undefined;    // Reference to companion being talked to
 global.vn_yarn_file = "";           // Current yarn file being used
 global.game_paused = false;         // General pause flag for gameplay
+global.vn_torch_transfer_success = false;
+
+// VN torch variables and identifiers
+ChatterboxVariableDefault("torch_carrier", "none");
+ChatterboxVariableDefault("vn_torch_transfer_success", false);
+set_torch_carrier("none");
+if (variable_global_exists("ChatterboxVariableSetConstant")) {
+    ChatterboxVariableSetConstant("player_id", "player");
+    ChatterboxVariableSetConstant("canopy_id", "canopy");
+    ChatterboxVariableSetConstant("hola_id", "hola");
+    ChatterboxVariableSetConstant("yorna_id", "yorna");
+}
+
+if (variable_global_exists("ChatterboxVariableSet")) {
+    ChatterboxVariableSet("vn_torch_transfer_success", false);
+}
+global.vn_torch_transfer_success = false;
 
 // Register custom Chatterbox functions
 ChatterboxAddFunction("bg", background_set_index);
@@ -284,6 +301,7 @@ ChatterboxAddFunction("quest_is_active", quest_is_active);
 ChatterboxAddFunction("quest_is_complete", quest_is_complete);
 ChatterboxAddFunction("quest_can_accept", quest_can_accept);
 ChatterboxAddFunction("companion_take_torch", companion_take_torch_function);
+ChatterboxAddFunction("companion_stop_carrying_torch", companion_stop_carrying_torch_function);
 
 // Declare Chatterbox variables for companions
 ChatterboxVariableDefault("canopy_recruited", false);

@@ -15,6 +15,22 @@ Yorna: What is it? Ready to spill more blood?
     -> You're a formidable warrior
         Yorna: Of course I am. And with you leading, we're unstoppable. Let's keep it that way.
         <<jump Start>>
+    -> Carry the torch for me. <<if $yorna_recruited and $torch_carrier != $yorna_id>>
+        <<companion_take_torch()>>
+        <<if $yorna_recruited and $torch_carrier == $yorna_id>>
+            Yorna: Fine. I'll hold the light--make sure you use the opening.
+        <<else>>
+            Yorna: You're still clutching too much steel. Clear your grip first.
+        <<endif>>
+        <<jump Start>>
+    -> Give it back. <<if $yorna_recruited and $torch_carrier == $yorna_id>>
+        <<companion_stop_carrying_torch()>>
+        <<if $vn_torch_transfer_success>>
+            Yorna: Here. Prove you can swing harder with it than I can.
+        <<else>>
+            Yorna: Can't drop it if you refuse to free a hand. Decide.
+        <<endif>>
+        <<jump Start>>
     -> Back
         <<set $selected_companion = "">>
         <<set $return_to_menu = true>>

@@ -15,6 +15,22 @@ Canopy: It's good to see you! How can I help?
     -> What do you think of our journey?
         Canopy: Every battle we win, every person we save... it reminds me why I fight. Thank you for leading us.
         <<jump Start>>
+    -> Could you carry the torch for me? <<if $canopy_recruited and $torch_carrier != $canopy_id>>
+        <<companion_take_torch()>>
+        <<if $canopy_recruited and $torch_carrier == $canopy_id>>
+            Canopy: I'll hold it high so you can focus on the fight.
+        <<else>>
+            Canopy: I can't take it yet--free up your hands and ask again.
+        <<endif>>
+        <<jump Start>>
+    -> Could I have the torch back? <<if $canopy_recruited and $torch_carrier == $canopy_id>>
+        <<companion_stop_carrying_torch()>>
+        <<if $vn_torch_transfer_success>>
+            Canopy: Of course--it's safer with you for now.
+        <<else>>
+            Canopy: I tried, but you're still carrying too much.
+        <<endif>>
+        <<jump Start>>
     -> Back
         <<set $selected_companion = "">>
         <<set $return_to_menu = true>>

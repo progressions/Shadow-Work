@@ -83,6 +83,15 @@ function start_vn_dialogue(_companion_instance, _yarn_file, _start_node) {
 	}
 
 	// Jump to starting node
+	global.vn_torch_transfer_success = false;
+	if (variable_global_exists("ChatterboxVariableSet")) {
+		var _carrier = "none";
+		if (variable_global_exists("torch_carrier_id")) {
+			_carrier = global.torch_carrier_id;
+		}
+		ChatterboxVariableSet("torch_carrier", _carrier);
+		ChatterboxVariableSet("vn_torch_transfer_success", false);
+	}
 	ChatterboxJump(global.vn_chatterbox, _start_node);
 }
 

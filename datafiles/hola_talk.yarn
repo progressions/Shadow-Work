@@ -34,6 +34,22 @@ title: Start
     -> How are you handling the battles?
         Hola: Each fight terrifies me, but I focus on keeping you safe. That's what matters most.
         <<jump Start>>
+    -> Could you carry the torch for me? <<if $hola_recruited and $torch_carrier != $hola_id>>
+        <<companion_take_torch()>>
+        <<if $hola_recruited and $torch_carrier == $hola_id>>
+            Hola: I-I'll keep it steady. Stay close so I don't panic.
+        <<else>>
+            Hola: Oh! I don't think I can while you're still holding so much. Maybe clear a hand?
+        <<endif>>
+        <<jump Start>>
+    -> Could you hand it back? <<if $hola_recruited and $torch_carrier == $hola_id>>
+        <<companion_stop_carrying_torch()>>
+        <<if $vn_torch_transfer_success>>
+            Hola: Here--careful, it's still warm. I'll be right behind you.
+        <<else>>
+            Hola: I tried, but your hands are still full... maybe once you have room?
+        <<endif>>
+        <<jump Start>>
     -> Back
         <<set $selected_companion = "">>
         <<set $return_to_menu = true>>

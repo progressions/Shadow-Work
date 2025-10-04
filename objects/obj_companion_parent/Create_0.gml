@@ -163,7 +163,7 @@ function companion_stop_torch_loop() {
     torch_looping = false;
 }
 
-function companion_take_torch_from_player(_time_remaining) {
+function companion_take_torch_from_player(_time_remaining, _light_radius) {
     carrying_torch = true;
 
     if (_time_remaining <= 0) {
@@ -172,9 +172,13 @@ function companion_take_torch_from_player(_time_remaining) {
         torch_time_remaining = clamp(_time_remaining, 1, torch_duration);
     }
 
-    var _torch_stats = global.item_database.torch.stats;
-    if (_torch_stats != undefined && variable_struct_exists(_torch_stats, "light_radius")) {
-        torch_light_radius = _torch_stats[$ "light_radius"];
+    if (_light_radius != undefined) {
+        torch_light_radius = _light_radius;
+    } else {
+        var _torch_stats = global.item_database.torch.stats;
+        if (_torch_stats != undefined && variable_struct_exists(_torch_stats, "light_radius")) {
+            torch_light_radius = _torch_stats[$ "light_radius"];
+        }
     }
 
     companion_play_torch_sfx("snd_torch_equip");
@@ -183,6 +187,8 @@ function companion_take_torch_from_player(_time_remaining) {
     if (audio_emitter_exists(torch_sound_emitter)) {
         audio_emitter_position(torch_sound_emitter, x, y, 0);
     }
+
+    set_torch_carrier(companion_id);
 }
 
 function companion_handle_torch_burnout() {
@@ -190,18 +196,12 @@ function companion_handle_torch_burnout() {
     companion_stop_torch_loop();
     carrying_torch = false;
     torch_time_remaining = 0;
+    set_torch_carrier("none");
 
     var _player = obj_player;
     if (_player != noone) {
         if (_player.player_supply_companion_torch()) {
-            carrying_torch = true;
-            torch_time_remaining = torch_duration;
-            var _torch_stats = global.item_database.torch.stats;
-            if (_torch_stats != undefined && variable_struct_exists(_torch_stats, "light_radius")) {
-                torch_light_radius = _torch_stats[$ "light_radius"];
-            }
-            companion_play_torch_sfx("snd_torch_equip");
-            companion_start_torch_loop();
+            companion_take_torch_from_player(torch_duration, undefined);
             return;
         }
     }
@@ -223,6 +223,42 @@ function companion_update_torch_state() {
     } else {
         companion_stop_torch_loop();
     }
+}
+
+function companion_give_torch_to_player() {
+    if (!carrying_torch) return false;
+
+    var _player = obj_player;
+    if (_player == noone) return false;
+
+    if (!_player.player_can_receive_torch()) {
+        return false;
+    }
+
+    var _remaining = torch_time_remaining;
+    var _radius = torch_light_radius;
+
+    companion_stop_torch_loop();
+    carrying_torch = false;
+    torch_time_remaining = 0;
+
+    var _accepted = false;
+    with (_player) {
+        other._torch_transfer_temp = player_receive_torch_from_companion(_remaining, _radius);
+    }
+
+    _accepted = _torch_transfer_temp;
+    _torch_transfer_temp = undefined;
+
+    if (!_accepted) {
+        // Player couldn't take it, resume holding the torch
+        companion_take_torch_from_player(_remaining, _radius);
+        return false;
+    }
+
+    set_torch_carrier("player");
+
+    return true;
 }
 
 // Persistent so companions persist across room changes

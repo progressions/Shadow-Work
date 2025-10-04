@@ -15,6 +15,22 @@ Canopy: I'm Canopy! Hello.
     -> Do you need help?
         Canopy: Yes I do!
         <<jump Option B>>
+    -> Carry the torch for me <<if $canopy_recruited and $torch_carrier != $canopy_id>>
+        <<companion_take_torch()>>
+        <<if $canopy_recruited and $torch_carrier == $canopy_id>>
+            Canopy: I'll keep the light going.
+        <<else>>
+            Canopy: I can't take it right now.
+        <<endif>>
+        <<jump Start>>
+    -> Please rest your arm and give me the torch <<if $canopy_recruited and $torch_carrier == $canopy_id>>
+        <<companion_stop_carrying_torch()>>
+        <<if $vn_torch_transfer_success>>
+            Canopy: Of course--it's safest in your hands again.
+        <<else>>
+            Canopy: I'd love to, but your hands are full.
+        <<endif>>
+        <<jump Start>>
     -> Join me please <<if $canopy_recruited == false>>
         Canopy: I would be honored to join you!
         <<set $canopy_recruited = true>>

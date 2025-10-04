@@ -1,5 +1,7 @@
 // Lighting controller setup
 
+visible = true;
+
 grid_cell_size = 16;
 cached_room_width = room_width;
 cached_room_height = room_height;
@@ -7,7 +9,7 @@ cached_room_height = room_height;
 grid_width = max(1, ceil(cached_room_width / grid_cell_size));
 grid_height = max(1, ceil(cached_room_height / grid_cell_size));
 
-depth = -1000000;
+depth = -1000000; // Very low depth so overlay draws last (in front of the scene)
 
 light_grid = ds_grid_create(grid_width, grid_height);
 room_darkness_level = 0;
@@ -120,7 +122,9 @@ function render_lighting() {
             draw_set_alpha(_intensity);
             var _left = _cx * grid_cell_size;
             var _top = _cy * grid_cell_size;
-            draw_rectangle(_left, _top, _left + grid_cell_size, _top + grid_cell_size, false);
+            var _right = _left + grid_cell_size - 1;
+            var _bottom = _top + grid_cell_size - 1;
+            draw_rectangle(_left, _top, _right, _bottom, false);
         }
     }
 

@@ -141,18 +141,15 @@ if (state != PlayerState.dead) {
             var _companions = get_active_companions();
             if (array_length(_companions) > 0) {
                 var _target = _companions[0];
-                var _remaining = torch_time_remaining;
-
-                player_play_torch_sfx("snd_companion_torch_receive");
-                player_stop_torch_loop();
-                player_remove_torch_from_loadouts();
-
-                torch_active = false;
-                torch_time_remaining = 0;
-
-                with (_target) {
-                    if (variable_instance_exists(id, "companion_take_torch_from_player")) {
-                        companion_take_torch_from_player(_remaining);
+                if (!_target.carrying_torch) {
+                    var _remaining = torch_time_remaining;
+                    var _radius = player_get_torch_light_radius();
+                    if (companion_receive_torch(_target, _remaining, _radius)) {
+                        player_play_torch_sfx("snd_companion_torch_receive");
+                        player_stop_torch_loop();
+                        player_remove_torch_from_loadouts();
+                        torch_active = false;
+                        torch_time_remaining = 0;
                     }
                 }
             }

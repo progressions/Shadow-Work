@@ -15,6 +15,22 @@ Yorna: You're still standing. Good. Most wouldn't have made it this far.
     -> You look dangerous
         Yorna: Dangerous? I'm the MOST dangerous thing in these woods. And soon, you will be too.
         <<jump Strength>>
+    -> Carry the torch for me <<if $yorna_recruited and $torch_carrier != $yorna_id>>
+        <<companion_take_torch()>>
+        <<if $yorna_recruited and $torch_carrier == $yorna_id>>
+            Yorna: Fine. I'll hold the light while you cut. Don't waste the opening.
+        <<else>>
+            Yorna: Your grip's crowded. Clear it and try again.
+        <<endif>>
+        <<jump Start>>
+    -> Give it back, Yorna <<if $yorna_recruited and $torch_carrier == $yorna_id>>
+        <<companion_stop_carrying_torch()>>
+        <<if $vn_torch_transfer_success>>
+            Yorna: Here. Prove you can strike harder with it than I can.
+        <<else>>
+            Yorna: Can't hand it over if you won't free that hand. Decide.
+        <<endif>>
+        <<jump Start>>
     -> Join me. We'll crush them together. <<if $yorna_recruited == false>>
         Yorna: Finally, someone who speaks my language. Let's paint this forest red.
         <<jump Recruit>>
