@@ -185,6 +185,9 @@ function ui_draw_status_effects(_player, _x, _y, _icon_size, _spacing) {
 /// @param {real} offset_y - Y offset from object position (usually negative, like -12)
 /// @param {string} key - Key name to display (e.g., "Space", "E", "F")
 /// @param {string} action - Action text to display (e.g., "Open", "Recruit", "Talk")
+///
+/// NOTE: This function should only be called when the calling object
+/// is the active interactive (global.active_interactive == id)
 function show_interaction_prompt(_radius, _offset_x, _offset_y, _key, _action) {
     // Check if player exists and is in range
     if (!instance_exists(obj_player)) {
@@ -202,16 +205,22 @@ function show_interaction_prompt(_radius, _offset_x, _offset_y, _key, _action) {
     // Build prompt text: "[Key] Action"
     var _text = "[" + _key + "] " + _action;
 
-    // Show prompt if in range
-    if (_in_range && !instance_exists(interaction_prompt)) {
-        interaction_prompt = instance_create_layer(x + _offset_x, y + _offset_y, "Instances", obj_interaction_prompt);
-        interaction_prompt.text = _text;
-        interaction_prompt.parent_instance = id;
-        interaction_prompt.offset_y = _offset_y;
-        interaction_prompt.depth = -9999;
+    // Create or update prompt if in range
+    if (_in_range) {
+        if (!instance_exists(interaction_prompt)) {
+            // Create new prompt
+            interaction_prompt = instance_create_layer(x + _offset_x, y + _offset_y, "Instances", obj_interaction_prompt);
+            interaction_prompt.text = _text;
+            interaction_prompt.parent_instance = id;
+            interaction_prompt.offset_y = _offset_y;
+            interaction_prompt.depth = -9999;
+        } else {
+            // Update existing prompt text (in case action changed, e.g., "Recruit" -> "Talk")
+            interaction_prompt.text = _text;
+        }
     }
     // Hide prompt if out of range
-    else if (!_in_range && instance_exists(interaction_prompt)) {
+    else if (instance_exists(interaction_prompt)) {
         instance_destroy(interaction_prompt);
         interaction_prompt = noone;
     }

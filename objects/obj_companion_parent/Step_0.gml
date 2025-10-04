@@ -112,3 +112,8 @@ if (global.active_interactive == id) {
         on_interact();
     }
 }
+// Clean up prompt if we're no longer the active interactive
+else if (instance_exists(interaction_prompt)) {
+    instance_destroy(interaction_prompt);
+    interaction_prompt = noone;
+}
