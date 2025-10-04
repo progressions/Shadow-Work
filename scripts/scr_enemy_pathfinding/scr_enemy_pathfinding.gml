@@ -5,6 +5,11 @@
 /// @desc Calculate ideal target position based on enemy archetype
 /// @return {struct} {x, y} Target coordinates in room space
 function enemy_calculate_target_position() {
+    // If in a party, use objective target instead of player position
+    if (instance_exists(party_controller)) {
+        return { x: objective_target_x, y: objective_target_y };
+    }
+
     var _player_x = obj_player.x;
     var _player_y = obj_player.y;
 

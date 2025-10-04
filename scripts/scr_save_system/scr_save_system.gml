@@ -624,9 +624,20 @@ function serialize_room_state(room_index) {
 
     show_debug_message("Serialized " + string(saved_count) + " persistent objects in room " + room_get_name(room_index));
 
+    // Serialize party controllers
+    var party_controllers_array = [];
+    with (obj_enemy_party_controller) {
+        array_push(party_controllers_array, serialize_party_data());
+    }
+
+    if (array_length(party_controllers_array) > 0) {
+        show_debug_message("Serialized " + string(array_length(party_controllers_array)) + " party controllers");
+    }
+
     var room_data = {
         room_index: room_index,
-        instances: instances_array
+        instances: instances_array,
+        party_controllers: party_controllers_array
     };
 
     // TODO: Add puzzle state tracking here when puzzle system is implemented
@@ -658,6 +669,9 @@ function deserialize_room_state(room_index) {
         }
     }
 
+    // Build enemy lookup table for party controller linkage
+    var enemy_lookup = {};
+
     // Recreate all persistent objects from saved data
     for (var i = 0; i < array_length(room_data.instances); i++) {
         var inst_data = room_data.instances[i];
@@ -675,6 +689,28 @@ function deserialize_room_state(room_index) {
 
         // Restore its state
         inst.deserialize(inst_data);
+
+        // Add to enemy lookup if it's an enemy
+        if (object_is_ancestor(obj_index, obj_enemy_parent) || obj_index == obj_enemy_parent) {
+            enemy_lookup[$ inst_data.persistent_id] = inst;
+        }
+    }
+
+    // Restore party controllers (must happen AFTER enemies are restored)
+    if (variable_struct_exists(room_data, "party_controllers")) {
+        show_debug_message("  Restoring " + string(array_length(room_data.party_controllers)) + " party controllers");
+
+        for (var i = 0; i < array_length(room_data.party_controllers); i++) {
+            var party_data = room_data.party_controllers[i];
+
+            // Create party controller instance
+            var controller = instance_create_depth(party_data.controller_x, party_data.controller_y, -50, obj_enemy_party_controller);
+
+            // Restore party state
+            controller.deserialize_party_data(party_data, enemy_lookup);
+
+            show_debug_message("  Restored party controller with " + string(array_length(controller.party_members)) + " members");
+        }
     }
 
     // TODO: Restore puzzle state when puzzle system is implemented

@@ -4,6 +4,10 @@
 // ============================================
 
 function enemy_state_targeting() {
+    // Use objective target if in a party, otherwise target player directly
+    var _target_x = instance_exists(party_controller) ? objective_target_x : obj_player.x;
+    var _target_y = instance_exists(party_controller) ? objective_target_y : obj_player.y;
+
     var _player_x = obj_player.x;
     var _player_y = obj_player.y;
     var _dist_to_player = point_distance(x, y, _player_x, _player_y);

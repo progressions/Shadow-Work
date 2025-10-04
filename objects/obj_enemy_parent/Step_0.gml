@@ -50,6 +50,11 @@ if ((state == EnemyState.targeting || state == EnemyState.ranged_attacking) && a
     }
 }
 
+// Party controller weighted decision system
+if (instance_exists(party_controller)) {
+    party_controller.calculate_decision_weights(id);
+}
+
 // Dispatch to state-specific handlers
 switch (state) {
     case EnemyState.targeting:

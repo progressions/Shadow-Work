@@ -91,6 +91,16 @@ stuck_check_x = x;
 stuck_check_y = y;
 alarm[4] = 60; // Check if stuck every second
 
+// Party controller system
+party_controller = noone;  // Reference to obj_enemy_party_controller if in a party
+current_objective = "attack"; // Current objective: "attack", "formation", or "flee"
+objective_target_x = 0;  // Target x for current objective
+objective_target_y = 0;  // Target y for current objective
+formation_target_x = 0;  // Formation position x
+formation_target_y = 0;  // Formation position y
+flee_target_x = 0;       // Flee destination x
+flee_target_y = 0;       // Flee destination y
+
 // Loot drop system
 // drop_chance: Probability (0.0 to 1.0) that enemy drops loot on death
 // loot_table: Array of {item_key, weight} structs

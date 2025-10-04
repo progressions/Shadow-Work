@@ -34,6 +34,15 @@ This is a GameMaker Studio 2 project for a top-down action RPG called "Shadow Wo
 - **Enemy types**: `obj_orc`, `obj_burglar`, `obj_greenwood_bandit`, `obj_ronald`
 - **Animation**: Uses 31-frame sprite sheets with animation state management
 
+### Enemy Party System
+- **Controller**: `obj_enemy_party_controller` - Manages coordinated enemy groups with formations
+- **Party States**: `PartyState` enum (protecting, aggressive, cautious, desperate, emboldened, retreating, patrolling)
+- **Formations**: Defined in `global.formation_database` (line_3, wedge_5, circle_4, protective_3)
+- **Auto-spawning**: Party controller objects spawn their own enemy members in Create event
+- **Decision System**: Weighted objectives (attack, formation, flee) with dynamic modifiers based on party/player health
+- **Example parties**: `obj_gate_guard_party` (defensive patrol), `obj_orc_raiding_party` (aggressive)
+- **Integration**: Works with existing pathfinding, save/load system, and individual enemy AI
+
 ### Grid Puzzle System
 - **Controller**: `obj_grid_controller` - Manages pillar puzzle mechanics
 - **Components**: `obj_button`, `obj_rising_pillar`, `obj_reset_pad`
@@ -134,3 +143,27 @@ To create a quest marker for location objectives:
    }
    ```
 4. Place marker in room where player should go
+
+### Creating Enemy Parties
+To create a new enemy party controller:
+1. Create new object inheriting from `obj_enemy_party_controller`
+2. In the Create event, configure party properties:
+   - Set `party_state` (PartyState enum value)
+   - Set `formation_template` (key from `global.formation_database`)
+   - Configure weights: `weight_attack`, `weight_formation`, `weight_flee`
+   - Set thresholds: `desperate_threshold`, `cautious_threshold`, `emboldened_player_hp_threshold`
+3. Auto-spawn enemy members using `instance_create_layer()`:
+   ```gml
+   var enemies = [
+       instance_create_layer(x - 48, y, layer, obj_burglar),
+       instance_create_layer(x, y, layer, obj_burglar),
+       instance_create_layer(x + 48, y, layer, obj_burglar)
+   ];
+   init_party(enemies, formation_template);
+   ```
+4. For patrolling parties:
+   - Create a path resource in GameMaker IDE
+   - Set `patrol_path`, `patrol_speed`, `patrol_loop`, `patrol_aggro_radius`
+5. For protecting parties:
+   - Set `protect_x`, `protect_y`, `protect_radius`
+6. Place the party controller object in the room - enemies spawn automatically

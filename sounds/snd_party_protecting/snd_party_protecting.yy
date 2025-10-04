@@ -1,6 +1,6 @@
 {
   "$GMSound":"",
-  "%Name":"snd_player_hit",
+  "%Name":"snd_party_protecting",
   "audioGroupId":{
     "name":"audiogroup_sfx_world",
     "path":"audiogroups/audiogroup_sfx_world",
@@ -9,8 +9,8 @@
   "bitRate":128,
   "compression":0,
   "conversionMode":0,
-  "duration":0.07870749,
-  "name":"snd_player_hit",
+  "duration":0.9250567,
+  "name":"snd_party_protecting",
   "parent":{
     "name":"party",
     "path":"folders/Sounds/sfx/world/party.yy",
@@ -19,7 +19,7 @@
   "resourceType":"GMSound",
   "resourceVersion":"2.0",
   "sampleRate":44100,
-  "soundFile":"snd_player_hit.wav",
+  "soundFile":"snd_party_protecting.wav",
   "type":0,
   "volume":1.0,
 }

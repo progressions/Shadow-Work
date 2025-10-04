@@ -6,7 +6,7 @@ attack_damage = 1;
 attack_speed = 1.2;
 attack_range = 18;
 hp = 3;
-move_speed = 0.9;
+move_speed = 0.8;
 
 // Burglar traits - forest dweller, vulnerable to fire, resistant to poison
 array_push(tags, "arboreal");

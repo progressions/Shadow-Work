@@ -103,3 +103,13 @@ enum SpawnerMode {
     finite,      // Spawn up to spawn_limit then stop
     continuous   // Spawn indefinitely until destroyed/deactivated
 }
+
+enum PartyState {
+    protecting,   // Guard a location, limited pursuit radius
+    aggressive,   // Chase and attack player
+    cautious,     // Maintain formation, engage when approached
+    desperate,    // Few members remaining, high flee weights
+    emboldened,   // Player is weak, high attack weights
+    retreating,   // Flee as a group
+    patrolling    // Follow a defined path, engage when player detected
+}

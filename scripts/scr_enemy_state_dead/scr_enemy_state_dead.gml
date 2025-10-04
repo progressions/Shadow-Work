@@ -33,6 +33,11 @@ function enemy_state_dead() {
             var _quest_enemy_id = variable_instance_exists(id, "quest_enemy_id") ? quest_enemy_id : "";
             quest_check_enemy_kill(object_index, tags, _is_quest_enemy, _quest_enemy_id);
 
+            // Notify party controller of death
+            if (instance_exists(party_controller)) {
+                party_controller.on_member_death(id);
+            }
+
             instance_destroy();
         }
     } else {

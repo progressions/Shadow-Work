@@ -12,8 +12,8 @@
   "duration":1.0714285,
   "name":"snd_player_death",
   "parent":{
-    "name":"world",
-    "path":"folders/Sounds/sfx/world.yy",
+    "name":"party",
+    "path":"folders/Sounds/sfx/world/party.yy",
   },
   "preload":false,
   "resourceType":"GMSound",
