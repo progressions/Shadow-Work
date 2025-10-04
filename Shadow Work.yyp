@@ -451,6 +451,7 @@
     {"id":{"name":"spr_slash","path":"sprites/spr_slash/spr_slash.yy",},},
     {"id":{"name":"spr_spooky_forest","path":"sprites/spr_spooky_forest/spr_spooky_forest.yy",},},
     {"id":{"name":"spr_tileset_castle","path":"sprites/spr_tileset_castle/spr_tileset_castle.yy",},},
+    {"id":{"name":"spr_transition","path":"sprites/spr_transition/spr_transition.yy",},},
     {"id":{"name":"spr_ui_back","path":"sprites/spr_ui_back/spr_ui_back.yy",},},
     {"id":{"name":"spr_ui_box","path":"sprites/spr_ui_box/spr_ui_box.yy",},},
     {"id":{"name":"spr_ui_button","path":"sprites/spr_ui_button/spr_ui_button.yy",},},
