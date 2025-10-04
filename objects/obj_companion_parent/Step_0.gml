@@ -102,7 +102,7 @@ companion_update_torch_state();
 
 // Handle recruitment prompt display
 if (!is_recruited) {
-    show_interaction_prompt(32, 0, bbox_top - y - 12, "[Space] Recruit");
+    show_interaction_prompt(32, 0, bbox_top - y - 12, "Space", "Recruit");
 } else if (is_recruited && instance_exists(interaction_prompt)) {
     // Destroy prompt when recruited
     instance_destroy(interaction_prompt);

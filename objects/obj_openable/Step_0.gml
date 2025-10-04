@@ -2,7 +2,7 @@
 
 // Show interaction prompt when not opened
 if (!is_opened) {
-    show_interaction_prompt(interaction_radius, 0, -8, "[Space] Open");
+    show_interaction_prompt(interaction_radius, 0, -24, "Space", "Open");
 }
 
 // Check for SPACE key press when in range and not opened

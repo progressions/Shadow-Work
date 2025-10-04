@@ -178,13 +178,14 @@ function ui_draw_status_effects(_player, _x, _y, _icon_size, _spacing) {
     draw_set_color(c_white);
 }
 
-/// @function show_interaction_prompt(radius, offset_x, offset_y, text)
+/// @function show_interaction_prompt(radius, offset_x, offset_y, key, action)
 /// @description Manage interaction prompt display based on player proximity
 /// @param {real} radius - Distance from object to show prompt
 /// @param {real} offset_x - X offset from object position
 /// @param {real} offset_y - Y offset from object position (usually negative, like -12)
-/// @param {string} text - Text to display (e.g., "[Space] Open", "[Space] Recruit")
-function show_interaction_prompt(_radius, _offset_x, _offset_y, _text) {
+/// @param {string} key - Key name to display (e.g., "Space", "E", "F")
+/// @param {string} action - Action text to display (e.g., "Open", "Recruit", "Talk")
+function show_interaction_prompt(_radius, _offset_x, _offset_y, _key, _action) {
     // Check if player exists and is in range
     if (!instance_exists(obj_player)) {
         // No player, destroy prompt if it exists
@@ -197,6 +198,9 @@ function show_interaction_prompt(_radius, _offset_x, _offset_y, _text) {
 
     var _dist = point_distance(x, y, obj_player.x, obj_player.y);
     var _in_range = (_dist <= _radius);
+
+    // Build prompt text: "[Key] Action"
+    var _text = "[" + _key + "] " + _action;
 
     // Show prompt if in range
     if (_in_range && !instance_exists(interaction_prompt)) {
