@@ -17,10 +17,32 @@ if (variable_instance_exists(self, "saved_path_speed") && saved_path_speed != 0)
 // Tick status effects (runs even when dead)
 tick_status_effects();
 
-// Apply knockback target offset when hit
-if (alarm[1] > 0) {
-    target_x = x + kb_x;
-    target_y = y + kb_y;
+// Handle knockback movement when recently hit
+if (knockback_timer > 0) {
+    if (path_exists(path)) {
+        path_end();
+    }
+    path_speed = 0;
+
+    var _colliders = [tilemap, obj_enemy_parent, obj_rising_pillar, obj_player, obj_companion_parent];
+    move_and_collide(kb_x, kb_y, _colliders);
+
+    kb_x *= knockback_damping;
+    kb_y *= knockback_damping;
+
+    if (abs(kb_x) < 0.05) kb_x = 0;
+    if (abs(kb_y) < 0.05) kb_y = 0;
+
+    knockback_timer--;
+    target_x = x;
+    target_y = y;
+
+    if (knockback_timer <= 0) {
+        kb_x = 0;
+        kb_y = 0;
+    }
+
+    return;
 }
 
 // Safe one-time inits (shared across states)

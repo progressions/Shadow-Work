@@ -133,9 +133,14 @@ if (alarm[1] < 0) {
 	     }
 	 }
 
-	 kb_x = sign(x - other.x);
-	 kb_y = sign(y - other.y);
-
-	 alarm[1] = 20;
+	 var _knockback_force = 6;
+	 if (variable_instance_exists(other, "knockback_force")) {
+	     _knockback_force = other.knockback_force;
+	 }
+	 var _knockback_dir = point_direction(other.x, other.y, x, y);
+	 kb_x = lengthdir_x(_knockback_force, _knockback_dir);
+	 kb_y = lengthdir_y(_knockback_force, _knockback_dir);
+	 knockback_timer = max(8, round(_knockback_force));
+	 alarm[1] = knockback_timer;
 }
 }

@@ -8,9 +8,16 @@ hit_range = 28;
 hit_scale = 1;
 
 // Pull combat values from the player instance
+knockback_force = 6;
 with (creator) {
     other.damage = get_total_damage();
     other.hit_range = get_attack_range();
+    if (equipped.right_hand != undefined) {
+        var _weapon_stats = equipped.right_hand.definition.stats;
+        if (variable_struct_exists(_weapon_stats, "knockback_force")) {
+            other.knockback_force = _weapon_stats.knockback_force;
+        }
+    }
 }
 
 // Use the slash sprite for collision detection regardless of the visual weapon

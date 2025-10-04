@@ -408,6 +408,15 @@ function equip_item(_inventory_index, _target_hand = undefined) {
                 equipped.left_hand = undefined;
             }
         }
+
+        if (_slot_name == "left_hand" && _def.equip_slot != EquipSlot.left_hand) {
+            if (_def.equip_slot == EquipSlot.either_hand) {
+                _slot_name = "right_hand";
+            } else {
+                show_debug_message("Item cannot be equipped in left hand");
+                return false;
+            }
+        }
     } else {
         _slot_name = get_slot_name(_def.equip_slot);
     }

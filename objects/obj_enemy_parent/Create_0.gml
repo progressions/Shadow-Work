@@ -35,6 +35,8 @@ facing_dir = "down"; // String direction for ranged attacks (updated from dir_in
 
 kb_x = 0;
 kb_y = 0;
+knockback_timer = 0;
+knockback_damping = 0.8;
 
 // Attack system stats
 attack_damage = 2; // Base enemy damage
