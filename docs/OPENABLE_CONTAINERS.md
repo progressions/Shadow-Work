@@ -174,10 +174,37 @@ Reuses loot functions from `scr_enemy_loot_system`:
 - `loot_spawned` flag prevents duplicate loot on reload
 
 #### Interaction Prompt System
-- `obj_interaction_prompt` is a reusable UI element
-- Also used by `obj_companion_parent` for recruitment
-- Spawned/destroyed dynamically in Step event
-- Configurable text, color, scale, and font
+Helper function in `scr_ui_functions.gml`:
+```gml
+show_interaction_prompt(radius, offset_x, offset_y, key, action)
+```
+
+**Parameters:**
+- `radius` - Distance from object to show prompt (e.g., 32)
+- `offset_x` - Horizontal offset from object (usually 0)
+- `offset_y` - Vertical offset from object (usually negative, like -24)
+- `key` - Key name to display (e.g., "Space", "E", "F")
+- `action` - Action text to display (e.g., "Open", "Recruit", "Talk")
+
+**Usage examples:**
+```gml
+// In obj_openable Step event
+if (!is_opened) {
+    show_interaction_prompt(interaction_radius, 0, -24, "Space", "Open");
+}
+
+// In obj_companion_parent Step event
+if (!is_recruited) {
+    show_interaction_prompt(32, 0, bbox_top - y - 12, "Space", "Recruit");
+}
+```
+
+**Features:**
+- Automatically creates/destroys `obj_interaction_prompt` based on player distance
+- Builds text as "[Key] Action" format (e.g., "[Space] Open")
+- Manages prompt lifecycle (no manual cleanup needed)
+- Reusable across all interactive objects
+- Prepares for future custom key rendering (icons, styling)
 
 ### Debug Features
 
@@ -248,13 +275,38 @@ draw_sprite_ext(spr_shadow, image_index, x, y + 2, 1, 0.5, 0, c_black, 0.3);
 draw_self();
 ```
 
-### Interaction Prompt
-`obj_interaction_prompt` appearance:
+### Interaction Prompt (`obj_interaction_prompt`)
+
+**Object properties:**
 - Font: `fnt_arial` at 0.35 scale
-- Position: Follows parent with configurable `offset_y` (default -8)
-- Color: White (`c_white`) with black outline
-- Depth: -9999 (always on top)
+- Position: Follows parent with configurable `offset_y`
+- Color: White (`c_white`) with black 4-way outline
+- Depth: -9999 (always renders on top)
 - Auto-destroys when parent is destroyed or out of range
+
+**Variables (Create_0.gml):**
+```gml
+text = "[Space]";           // Full prompt text
+text_color = c_white;       // Text color
+text_scale = 0.35;          // Scale factor
+parent_instance = noone;    // Instance to follow
+offset_y = -8;              // Y offset from parent
+font = fnt_arial;           // Font to use
+```
+
+**Rendering (Draw_0.gml):**
+- Draws black outline in 4 directions (±1 pixel offset)
+- Draws main text on top with `draw_text_transformed()`
+- Centers horizontally and vertically
+- Properly saves/restores draw state
+
+**Lifecycle (Step_0.gml):**
+- Follows parent instance position each frame
+- Updates: `x = parent_instance.x`, `y = parent_instance.y + offset_y`
+- Auto-destroys if parent no longer exists
+
+**Usage:**
+Managed automatically by `show_interaction_prompt()` helper function - no manual instantiation needed
 
 ## State Flow
 
