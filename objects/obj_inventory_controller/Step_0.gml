@@ -268,6 +268,8 @@ if (is_open) {
                                     _remove_method(_equipped_item.definition.stats);
                                 }
                             }
+                            // Also clear from equipped struct if this is the active loadout
+                            _player.equipped[$ _hand_slot] = undefined;
                         }
 
                         _loadout[$ _hand_slot] = undefined;
@@ -487,6 +489,8 @@ if (is_open) {
                                     _remove_method(_equipped_item.definition.stats);
                                 }
                             }
+                            // Also clear from equipped struct if this is the active loadout
+                            _player.equipped[$ _hand_slot] = undefined;
                         }
 
                         _loadout[$ _hand_slot] = undefined;

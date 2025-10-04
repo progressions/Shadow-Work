@@ -188,6 +188,44 @@ function drop_selected_item(_inventory_index, _amount = undefined) {
         }
     }
 
+    // Check if this item is equipped and unequip it before dropping
+    if (variable_instance_exists(id, "equipped")) {
+        var _equip_slots = ["right_hand", "left_hand", "head", "torso", "legs"];
+        for (var _i = 0; _i < array_length(_equip_slots); _i++) {
+            var _slot = _equip_slots[_i];
+            if (equipped[$ _slot] != undefined && equipped[$ _slot] == _entry) {
+                // Remove wielder effects before unequipping
+                if (variable_struct_exists(_def, "stats")) {
+                    remove_wielder_effects(_def.stats);
+                }
+                equipped[$ _slot] = undefined;
+            }
+        }
+
+        // Also check loadouts if they exist
+        if (variable_instance_exists(id, "loadouts")) {
+            var _loadout_keys = ["melee", "ranged"];
+            for (var _k = 0; _k < array_length(_loadout_keys); _k++) {
+                var _loadout_key = _loadout_keys[_k];
+                if (variable_struct_exists(loadouts, _loadout_key)) {
+                    var _loadout = loadouts[$ _loadout_key];
+                    if (_loadout.right_hand != undefined && _loadout.right_hand == _entry) {
+                        if (variable_struct_exists(_def, "stats")) {
+                            remove_wielder_effects(_def.stats);
+                        }
+                        _loadout.right_hand = undefined;
+                    }
+                    if (_loadout.left_hand != undefined && _loadout.left_hand == _entry) {
+                        if (variable_struct_exists(_def, "stats")) {
+                            remove_wielder_effects(_def.stats);
+                        }
+                        _loadout.left_hand = undefined;
+                    }
+                }
+            }
+        }
+    }
+
     var _spawn = spawn_item(_drop_x, _drop_y, _def.item_id, _drop_count);
     if (_spawn != noone) {
         _spawn.count = _drop_count;
@@ -511,6 +549,18 @@ function unequip_item(_slot_name) {
 
     if (inventory_add_item(_item.definition, _item.count)) {
         equipped[$ _slot_name] = undefined;
+
+        // Also clear from loadouts if this is a hand slot and loadouts exist
+        if ((_slot_name == "right_hand" || _slot_name == "left_hand") && variable_instance_exists(id, "loadouts")) {
+            var _active_loadout_key = loadouts_get_active_key();
+            if (_active_loadout_key != undefined) {
+                var _active_loadout = loadouts_get_struct(_active_loadout_key);
+                if (_active_loadout != undefined && _active_loadout[$ _slot_name] == _item) {
+                    _active_loadout[$ _slot_name] = undefined;
+                }
+            }
+        }
+
         return true;
     }
 
