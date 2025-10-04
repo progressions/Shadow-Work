@@ -115,5 +115,115 @@ teleport_distance_threshold = 100; // If farther than this
 teleport_time_threshold = 90;      // For this many frames (1.5 seconds at 60fps)
 time_far_from_player = 0;
 
+// Torch lighting state
+carrying_torch = false;
+torch_time_remaining = 0;
+
+var _torch_stats = global.item_database.torch.stats;
+var _torch_burn_seconds = 60;
+if (_torch_stats != undefined && variable_struct_exists(_torch_stats, "burn_time_seconds")) {
+    _torch_burn_seconds = max(1, _torch_stats[$ "burn_time_seconds"]);
+}
+torch_duration = max(1, floor(_torch_burn_seconds * room_speed));
+torch_light_radius = (_torch_stats != undefined && variable_struct_exists(_torch_stats, "light_radius"))
+    ? _torch_stats[$ "light_radius"]
+    : 100;
+
+torch_sound_emitter = audio_emitter_create();
+torch_sound_loop_instance = -1;
+torch_looping = false;
+
+function companion_play_torch_sfx(_asset_name) {
+    var _sound = asset_get_index(_asset_name);
+    if (_sound != -1) {
+        play_sfx(_sound, 1, false);
+    }
+}
+
+function companion_start_torch_loop() {
+    if (!audio_emitter_exists(torch_sound_emitter)) {
+        torch_sound_emitter = audio_emitter_create();
+    }
+
+    if (torch_looping) return;
+
+    var _loop_sound = asset_get_index("snd_torch_burning_loop");
+    if (_loop_sound != -1) {
+        audio_emitter_position(torch_sound_emitter, x, y, 0);
+        torch_sound_loop_instance = audio_play_sound_on(torch_sound_emitter, _loop_sound, 0, true);
+        torch_looping = true;
+    }
+}
+
+function companion_stop_torch_loop() {
+    if (torch_sound_loop_instance != -1) {
+        audio_stop_sound(torch_sound_loop_instance);
+        torch_sound_loop_instance = -1;
+    }
+    torch_looping = false;
+}
+
+function companion_take_torch_from_player(_time_remaining) {
+    carrying_torch = true;
+
+    if (_time_remaining <= 0) {
+        torch_time_remaining = torch_duration;
+    } else {
+        torch_time_remaining = clamp(_time_remaining, 1, torch_duration);
+    }
+
+    var _torch_stats = global.item_database.torch.stats;
+    if (_torch_stats != undefined && variable_struct_exists(_torch_stats, "light_radius")) {
+        torch_light_radius = _torch_stats[$ "light_radius"];
+    }
+
+    companion_play_torch_sfx("snd_torch_equip");
+    companion_start_torch_loop();
+
+    if (audio_emitter_exists(torch_sound_emitter)) {
+        audio_emitter_position(torch_sound_emitter, x, y, 0);
+    }
+}
+
+function companion_handle_torch_burnout() {
+    companion_play_torch_sfx("snd_torch_burnout");
+    companion_stop_torch_loop();
+    carrying_torch = false;
+    torch_time_remaining = 0;
+
+    var _player = obj_player;
+    if (_player != noone) {
+        if (_player.player_supply_companion_torch()) {
+            carrying_torch = true;
+            torch_time_remaining = torch_duration;
+            var _torch_stats = global.item_database.torch.stats;
+            if (_torch_stats != undefined && variable_struct_exists(_torch_stats, "light_radius")) {
+                torch_light_radius = _torch_stats[$ "light_radius"];
+            }
+            companion_play_torch_sfx("snd_torch_equip");
+            companion_start_torch_loop();
+            return;
+        }
+    }
+
+    companion_stop_torch_loop();
+}
+
+function companion_update_torch_state() {
+    if (carrying_torch) {
+        if (audio_emitter_exists(torch_sound_emitter)) {
+            audio_emitter_position(torch_sound_emitter, x, y, 0);
+        }
+
+        torch_time_remaining = max(0, torch_time_remaining - 1);
+
+        if (torch_time_remaining <= 0) {
+            companion_handle_torch_burnout();
+        }
+    } else {
+        companion_stop_torch_loop();
+    }
+}
+
 // Persistent so companions persist across room changes
 persistent = true;

@@ -306,3 +306,47 @@ function restore_all_companions(companions_data) {
         }
     }
 }
+
+/// @function companion_receive_torch(companion_instance, time_remaining)
+/// @description Transfer a lit torch to the given companion instance
+/// @param {instance} companion_instance Companion receiving torch
+/// @param {real} time_remaining Remaining burn time to inherit
+/// @return {bool} True if transfer succeeded
+function companion_receive_torch(companion_instance, time_remaining) {
+    if (companion_instance == undefined) return false;
+
+    with (companion_instance) {
+        if (!variable_instance_exists(id, "companion_take_torch_from_player")) {
+            return false;
+        }
+        companion_take_torch_from_player(time_remaining);
+    }
+
+    return true;
+}
+
+/// @function companion_take_torch_function()
+/// @description VN dialogue hook: companion takes a torch from player inventory
+function companion_take_torch_function() {
+    var _companion = global.vn_companion;
+    if (_companion == undefined) return;
+
+    var _player = obj_player;
+    if (_player == noone) return;
+
+    if (!_player.player_has_torch_in_inventory()) return;
+
+    if (!_player.player_supply_companion_torch()) return;
+
+    if (companion_receive_torch(_companion, _player.torch_duration)) {
+        _player.player_play_torch_sfx("snd_companion_torch_receive");
+    } else {
+        // Failed to hand off torch, return it to inventory
+        var _torch_def = global.item_database.torch;
+        if (_torch_def != undefined) {
+            with (_player) {
+                inventory_add_item(_torch_def, 1);
+            }
+        }
+    }
+}

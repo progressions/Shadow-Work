@@ -72,7 +72,14 @@ global.item_database = {
     ),
     torch: new create_item_definition(
         11, "torch", "Torch", ItemType.tool, EquipSlot.left_hand,
-        {light_radius: 100, handedness: WeaponHandedness.one_handed, status_effects: [{effect: StatusEffectType.burning, chance: 0.2}], damage_type: DamageType.fire}
+        {
+            light_radius: 100,
+            handedness: WeaponHandedness.one_handed,
+            status_effects: [{effect: StatusEffectType.burning, chance: 0.2}],
+            damage_type: DamageType.fire,
+            stack_size: 99,
+            burn_time_seconds: 60
+        }
     ),
 
     // Row 3 - Chain armor set (frames 12-14) and Leather armor set (frames 15-17)

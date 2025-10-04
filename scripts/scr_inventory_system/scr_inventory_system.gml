@@ -68,6 +68,50 @@ function inventory_remove_item(_inventory_index, _count = 1) {
     }
 }
 
+function inventory_has_item_id(_item_id) {
+    return (inventory_find_item_id(_item_id) != -1);
+}
+
+function inventory_find_item_id(_item_id) {
+    if (_item_id == undefined) return -1;
+
+    for (var _i = 0; _i < array_length(inventory); _i++) {
+        var _entry = inventory[_i];
+        if (_entry == undefined) continue;
+        if (_entry.definition == undefined) continue;
+        if (_entry.definition.item_id == _item_id) {
+            return _i;
+        }
+    }
+
+    return -1;
+}
+
+function inventory_consume_item_id(_item_id, _count) {
+    if (_item_id == undefined) return false;
+    if (_count <= 0) return true;
+
+    var _remaining = _count;
+
+    for (var _i = array_length(inventory) - 1; _i >= 0 && _remaining > 0; _i--) {
+        var _entry = inventory[_i];
+        if (_entry == undefined) continue;
+        if (_entry.definition == undefined) continue;
+        if (_entry.definition.item_id != _item_id) continue;
+        if (_entry.definition.type == ItemType.quest_item) continue;
+
+        if (_entry.count > _remaining) {
+            _entry.count -= _remaining;
+            _remaining = 0;
+        } else {
+            _remaining -= _entry.count;
+            array_delete(inventory, _i, 1);
+        }
+    }
+
+    return (_remaining <= 0);
+}
+
 function drop_selected_item(_inventory_index, _amount = undefined) {
     if (_inventory_index < 0 || _inventory_index >= array_length(inventory)) return false;
 

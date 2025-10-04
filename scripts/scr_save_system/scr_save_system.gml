@@ -54,6 +54,8 @@ function serialize_player() {
         facing_dir: player.facing_dir,
         state: player.state,
         dash_cooldown: player.dash_cooldown,
+        torch_active: player.torch_active,
+        torch_time_remaining: player.torch_time_remaining,
         traits: traits_array,
         tags: player.tags,
         status_effects: status_effects_array
@@ -100,6 +102,8 @@ function serialize_companions() {
             quest_flags: quest_flags,
             dialogue_history: dialogue_history,
             relationship_stage: relationship_stage,
+            carrying_torch: carrying_torch,
+            torch_time_remaining: torch_time_remaining,
             triggers: triggers_data,
             auras: auras_data
         });
@@ -223,6 +227,25 @@ function deserialize_player(data) {
     player.state = data.state;
     player.dash_cooldown = data.dash_cooldown;
 
+    // Restore torch state (if present in save data)
+    if (variable_struct_exists(data, "torch_active")) {
+        player.torch_active = data.torch_active;
+    } else {
+        player.torch_active = false;
+    }
+
+    if (variable_struct_exists(data, "torch_time_remaining")) {
+        player.torch_time_remaining = clamp(data.torch_time_remaining, 0, player.torch_duration);
+    } else {
+        player.torch_time_remaining = 0;
+    }
+
+    player_stop_torch_loop();
+
+    if (!player.torch_active) {
+        player.torch_time_remaining = 0;
+    }
+
     // Restore tags
     player.tags = data.tags;
 
@@ -321,6 +344,30 @@ function deserialize_companions(data) {
 
             if (variable_struct_exists(companion.auras, aura_name)) {
                 companion.auras[$ aura_name].active = aura_data.active;
+            }
+        }
+
+        // Restore torch state
+        if (variable_struct_exists(comp_data, "carrying_torch") && comp_data.carrying_torch) {
+            companion.carrying_torch = true;
+            var _torch_time = companion.torch_duration;
+            if (variable_struct_exists(comp_data, "torch_time_remaining")) {
+                _torch_time = comp_data.torch_time_remaining;
+            }
+            companion.torch_time_remaining = clamp(_torch_time, 0, companion.torch_duration);
+
+            with (companion) {
+                companion_stop_torch_loop();
+                companion_start_torch_loop();
+                if (audio_emitter_exists(torch_sound_emitter)) {
+                    audio_emitter_position(torch_sound_emitter, x, y, 0);
+                }
+            }
+        } else {
+            companion.carrying_torch = false;
+            companion.torch_time_remaining = 0;
+            with (companion) {
+                companion_stop_torch_loop();
             }
         }
     }
@@ -815,6 +862,16 @@ function restore_save_data(save_data) {
     // Restore inventory
     deserialize_inventory(save_data.inventory);
     show_debug_message("Inventory restored");
+
+    with (obj_player) {
+        if (torch_active) {
+            player_stop_torch_loop();
+            player_start_torch_loop();
+            if (audio_emitter_exists(torch_sound_emitter)) {
+                audio_emitter_position(torch_sound_emitter, x, y, 0);
+            }
+        }
+    }
 
     // Restore quest data
     deserialize_quest_data(save_data.quest_data);

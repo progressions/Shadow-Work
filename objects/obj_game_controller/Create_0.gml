@@ -283,6 +283,7 @@ ChatterboxAddFunction("quest_accept", quest_accept);
 ChatterboxAddFunction("quest_is_active", quest_is_active);
 ChatterboxAddFunction("quest_is_complete", quest_is_complete);
 ChatterboxAddFunction("quest_can_accept", quest_can_accept);
+ChatterboxAddFunction("companion_take_torch", companion_take_torch_function);
 
 // Declare Chatterbox variables for companions
 ChatterboxVariableDefault("canopy_recruited", false);

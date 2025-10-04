@@ -96,3 +96,6 @@ if (_is_moving) {
 }
 
 // Animation will be handled in Draw event
+
+// Torch state update
+companion_update_torch_state();
