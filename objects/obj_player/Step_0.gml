@@ -346,22 +346,3 @@ if (keyboard_check_pressed(vk_f9)) {
 
     show_debug_message("Added " + string(array_length(inventory)) + " test items to inventory");
 }
-
-// F11 - Debug: Test quest system
-if (keyboard_check_pressed(vk_f11)) {
-    show_debug_message("=== QUEST SYSTEM TEST ===");
-
-    // Test accepting Hola's quest
-    if (!quest_is_active("hola_find_yorna") && !quest_is_complete("hola_find_yorna")) {
-        show_debug_message("Accepting quest: hola_find_yorna");
-        quest_accept("hola_find_yorna");
-    } else if (quest_is_active("hola_find_yorna")) {
-        show_debug_message("Quest hola_find_yorna is already active");
-        show_debug_message("Current progress: " + string(active_quests.hola_find_yorna.objectives[0].current) + "/" + string(active_quests.hola_find_yorna.objectives[0].count));
-    } else {
-        show_debug_message("Quest hola_find_yorna is already complete");
-    }
-
-    show_debug_message("Active quests: " + string(variable_struct_names_count(active_quests)));
-    show_debug_message("===================");
-}
