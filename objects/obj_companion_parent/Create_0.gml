@@ -271,17 +271,17 @@ function companion_give_torch_to_player() {
 }
 
 /// @function can_interact()
-/// @description Override - companion can be interacted with when not recruited or when player wants to talk
+/// @description Override - companion can only be interacted with when not recruited
 function can_interact() {
-    return true;  // Companions are always interactable (recruit or talk)
+    return !is_recruited;  // Only interactable when not recruited
 }
 
 /// @function on_interact()
-/// @description Override - start VN dialogue with companion
+/// @description Override - start VN dialogue with companion (recruitment only)
 function on_interact() {
-    // Trigger VN dialogue system
-    if (instance_exists(obj_player)) {
-        start_vn_conversation(id);
+    // Trigger VN dialogue system (only for recruitment)
+    if (instance_exists(obj_player) && !is_recruited) {
+        start_vn_dialogue(id, companion_id + ".yarn", "Start");
     }
 }
 

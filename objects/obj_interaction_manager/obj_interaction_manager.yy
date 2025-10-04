@@ -9,8 +9,8 @@
   "name":"obj_interaction_manager",
   "overriddenProperties":[],
   "parent":{
-    "name":"Objects",
-    "path":"folders/Objects.yy",
+    "name":"controllers",
+    "path":"folders/Objects/controllers.yy",
   },
   "parentObjectId":null,
   "persistent":true,

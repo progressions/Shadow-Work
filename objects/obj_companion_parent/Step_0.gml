@@ -100,8 +100,8 @@ if (_is_moving) {
 // Torch state update
 companion_update_torch_state();
 
-// Update interaction_action based on recruitment state
-interaction_action = is_recruited ? "Talk" : "Recruit";
+// Set interaction_action to Recruit (only shown when not recruited)
+interaction_action = "Recruit";
 
 // Handle interaction prompt display - only show if this is the active interactive
 if (global.active_interactive == id) {
