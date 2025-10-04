@@ -2,8 +2,8 @@
   "$GMSound":"",
   "%Name":"snd_vn_close",
   "audioGroupId":{
-    "name":"audiogroup_default",
-    "path":"audiogroups/audiogroup_default",
+    "name":"audiogroup_sfx_ui",
+    "path":"audiogroups/audiogroup_sfx_ui",
   },
   "bitDepth":1,
   "bitRate":128,

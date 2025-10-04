@@ -69,6 +69,7 @@ triggers = {
 
 // VN system
 vn_sprite = spr_vn_canopy_1; // Portrait sprite for VN dialogue
+theme_song = snd_canopy_theme; // Theme music for VN dialogue
 
 show_debug_message("=== CANOPY CREATE EVENT ===");
 show_debug_message("Shield trigger initialized: active=" + string(triggers.shield.active) + " cooldown=" + string(triggers.shield.cooldown));

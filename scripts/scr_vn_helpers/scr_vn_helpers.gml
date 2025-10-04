@@ -34,15 +34,31 @@ function start_vn_dialogue(_companion_instance, _yarn_file, _start_node) {
 	// Play VN open sound
 	play_sfx(snd_vn_open, 1);
 
+	// Save current song to restore later (only save on first VN open, not nested ones)
+	if (!variable_global_exists("vn_previous_song")) {
+		global.vn_previous_song = noone;
+	}
+
+	if (global.vn_previous_song == noone) {
+		global.vn_previous_song = obj_music_controller.song_asset;
+	}
+
+	// Play companion theme if they have one (always switch, even if reopening)
+	if (_companion_instance != noone && instance_exists(_companion_instance)) {
+		if (variable_instance_exists(_companion_instance, "theme_song")) {
+			// Switch to companion theme
+			set_song_ingame(_companion_instance.theme_song, 0, 0);
+		}
+	}
+
 	// Set global VN state
 	global.vn_active = true;
 	global.game_paused = true;
 	global.vn_companion = _companion_instance;
 	global.vn_yarn_file = _yarn_file;
 
-	// Save and disable SFX to stop all looped sounds
-	global.vn_saved_sfx_enabled = global.audio_config.sfx_enabled;
-	global.audio_config.sfx_enabled = false;
+	// Stop all currently playing looped sounds (footsteps, etc.)
+	stop_all_footstep_sounds();
 
 	// Always reload yarn file from disk to pick up changes
 	ChatterboxLoadFromFile(_yarn_file);
@@ -92,9 +108,14 @@ function stop_vn_dialogue() {
 	// Store whether we'll be reopening a VN
 	var will_reopen_vn = (return_to_menu == true) || (selected_companion != undefined && selected_companion != "");
 
-	// Play VN close sound only if not reopening another VN
+	// Play VN close sound and restore music only if not reopening another VN
 	if (!will_reopen_vn) {
 		play_sfx(snd_vn_close, 1);
+		// Restore previous music if we saved it
+		if (variable_global_exists("vn_previous_song") && global.vn_previous_song != noone) {
+			set_song_ingame(global.vn_previous_song, 0, 0);
+			global.vn_previous_song = noone;
+		}
 	}
 
 	global.vn_active = false;
@@ -102,11 +123,6 @@ function stop_vn_dialogue() {
 	global.vn_companion = undefined;
 	global.vn_chatterbox = undefined;
 	global.vn_yarn_file = "";
-
-	// Only restore SFX if we're NOT reopening another VN
-	if (!will_reopen_vn) {
-		global.audio_config.sfx_enabled = global.vn_saved_sfx_enabled;
-	}
 
 	// If returning to menu, reopen it
 	if (return_to_menu == true) {

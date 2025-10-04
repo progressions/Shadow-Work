@@ -57,6 +57,7 @@ triggers = {
 
 // VN system
 vn_sprite = spr_yorna_vn_intro; // Portrait sprite for VN dialogue
+theme_song = snd_yorna_theme; // Theme music for VN dialogue
 
 show_debug_message("=== YORNA CREATE EVENT ===");
 show_debug_message("On-Hit Strike trigger initialized: active=" + string(triggers.on_hit_strike.active) + " cooldown=" + string(triggers.on_hit_strike.cooldown));

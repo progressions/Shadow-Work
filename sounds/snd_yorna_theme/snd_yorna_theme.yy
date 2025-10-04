@@ -1,6 +1,6 @@
 {
   "$GMSound":"",
-  "%Name":"snd_shadow_kingdom_theme",
+  "%Name":"snd_yorna_theme",
   "audioGroupId":{
     "name":"audiogroup_default",
     "path":"audiogroups/audiogroup_default",
@@ -9,8 +9,8 @@
   "bitRate":128,
   "compression":3,
   "conversionMode":0,
-  "duration":264.0,
-  "name":"snd_shadow_kingdom_theme",
+  "duration":20.48338,
+  "name":"snd_yorna_theme",
   "parent":{
     "name":"music",
     "path":"folders/Sounds/music.yy",
@@ -19,7 +19,7 @@
   "resourceType":"GMSound",
   "resourceVersion":"2.0",
   "sampleRate":44100,
-  "soundFile":"snd_shadow_kingdom_theme.ogg",
+  "soundFile":"snd_yorna_theme.ogg",
   "type":0,
   "volume":1.0,
 }
