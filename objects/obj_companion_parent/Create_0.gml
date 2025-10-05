@@ -19,7 +19,7 @@ companion_name = "Companion"; // Override in child objects
 
 // Recruitment & State
 is_recruited = false;
-state = CompanionState.not_recruited;
+state = CompanionState.waiting;
 
 // Following behavior
 follow_target = noone;
@@ -102,19 +102,32 @@ image_index = 0;
 last_dir_index = 0; // 0=down, 1=right, 2=left, 3=up
 // Animation uses global.idle_bob_timer for synchronized bobbing (set in obj_game_controller)
 
-// Standard companion animation data (same for all companions)
+// Casting animation variables
+casting_frame_index = 0;        // Current frame in casting animation (0-2)
+casting_animation_speed = 21;   // Frames to hold each animation frame (200ms at 60fps)
+casting_timer = 0;              // Timer for frame advancement
+previous_state = CompanionState.waiting; // State to return to after casting
+
+// Standard companion animation data (18 frames - all companions use this structure)
+// Based on companions-casting.json frame tags
 anim_data = {
     // Idle animations (2 frames each)
-    idle_down: { start: 0, length: 2 },   // frames 0-1
-    idle_right: { start: 2, length: 2 },  // frames 2-3
-    idle_left: { start: 4, length: 2 },   // frames 4-5
-    idle_up: { start: 6, length: 2 },     // frames 6-7
+    idle_down: { start: 0, length: 2 },   // frames 0-1 (down-right)
+    idle_right: { start: 0, length: 2 },  // frames 0-1 (down-right, same as down)
+    idle_left: { start: 2, length: 2 },   // frames 2-3
+    idle_up: { start: 4, length: 2 },     // frames 4-5
 
-    // Walk animations
-    walk_down: { start: 8, length: 4 },   // frames 8-11 (4 frames)
-    walk_right: { start: 12, length: 5 }, // frames 12-16 (5 frames)
-    walk_left: { start: 17, length: 5 },  // frames 17-21 (5 frames)
-    walk_up: { start: 22, length: 4 }     // frames 22-25 (4 frames)
+    // Walk animations - no separate walk frames, use idle frames
+    walk_down: { start: 0, length: 2 },   // frames 0-1 (use idle)
+    walk_right: { start: 0, length: 2 },  // frames 0-1 (use idle)
+    walk_left: { start: 2, length: 2 },   // frames 2-3 (use idle)
+    walk_up: { start: 4, length: 2 },     // frames 4-5 (use idle)
+
+    // Casting animations (3 frames each)
+    casting_down: { start: 6, length: 3 },   // frames 6-8
+    casting_right: { start: 9, length: 3 },  // frames 9-11
+    casting_left: { start: 12, length: 3 },  // frames 12-14
+    casting_up: { start: 15, length: 3 }     // frames 15-17
 };
 
 // Movement tracking

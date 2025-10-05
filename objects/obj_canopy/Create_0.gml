@@ -71,8 +71,7 @@ triggers = {
     }
 };
 
-// Animation data inherited from obj_companion_parent
-// All companions use the same 26-frame structure
+// Animation data inherited from obj_companion_parent (18-frame structure)
 
 // VN system
 vn_sprite = spr_vn_canopy_1; // Portrait sprite for VN dialogue

@@ -20,8 +20,34 @@ if (variable_struct_exists(triggers, "guardian_veil")) triggers.guardian_veil.un
 if (variable_struct_exists(triggers, "slipstream_boost")) triggers.slipstream_boost.unlocked = (affinity >= 8.0);
 if (variable_struct_exists(triggers, "maelstrom")) triggers.maelstrom.unlocked = (affinity >= 10.0);
 
-// Following behavior
-if (is_recruited) {
+// Handle casting state
+if (state == CompanionState.casting) {
+    // Stop all movement during casting
+    move_dir_x = 0;
+    move_dir_y = 0;
+
+    // Advance animation timer
+    casting_timer++;
+
+    // Advance frame every casting_animation_speed frames
+    if (casting_timer >= casting_animation_speed) {
+        casting_frame_index++;
+        casting_timer = 0;
+
+        // Check if animation complete (3 frames total: 0, 1, 2)
+        if (casting_frame_index >= 3) {
+            // Return to previous state
+            state = previous_state;
+            casting_frame_index = 0;
+        }
+    }
+
+    // Exit early - don't process following logic while casting
+    exit;
+}
+
+// Following behavior (only when in following state, not casting)
+if (is_recruited && state == CompanionState.following) {
     if (instance_exists(follow_target)) {
         var dist_to_player = point_distance(x, y, follow_target.x, follow_target.y);
 
@@ -81,7 +107,7 @@ if (is_recruited) {
     // Not recruited, stand idle
     move_dir_x = 0;
     move_dir_y = 0;
-    state = CompanionState.not_recruited;
+    state = CompanionState.waiting;
 }
 
 // Determine facing direction based on movement

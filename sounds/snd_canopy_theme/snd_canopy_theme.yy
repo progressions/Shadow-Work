@@ -21,5 +21,5 @@
   "sampleRate":44100,
   "soundFile":"snd_canopy_theme.ogg",
   "type":0,
-  "volume":0.63,
+  "volume":0.38,
 }

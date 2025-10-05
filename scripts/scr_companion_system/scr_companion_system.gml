@@ -209,10 +209,21 @@ function evaluate_companion_triggers(player_instance) {
                 var hp_percent = player_instance.hp / player_instance.hp_total;
 
                 if (hp_percent <= companion.triggers.shield.hp_threshold) {
+                    // Enter casting state
+                    companion.previous_state = companion.state;
+                    companion.state = CompanionState.casting;
+                    companion.casting_frame_index = 0;
+                    companion.casting_timer = 0;
+
                     companion.triggers.shield.active = true;
                     companion.triggers.shield.cooldown = companion.triggers.shield.cooldown_max;
                     companion.shield_timer = companion.triggers.shield.duration;
-                    spawn_floating_text(player_instance.x, player_instance.bbox_top - 10, "Shield!", c_aqua, player_instance);
+
+                    // Visual impact effects
+                    spawn_floating_text(companion.x, companion.bbox_top - 10, "Shield!", c_aqua, companion);
+                    spawn_floating_text(companion.x - 10, companion.bbox_top - 22, "✦", c_yellow, companion);
+                    spawn_floating_text(companion.x + 10, companion.bbox_top - 22, "✦", c_yellow, companion);
+
                     companion_play_trigger_sfx(companion, "shield");
                 }
             }
@@ -240,6 +251,12 @@ function evaluate_companion_triggers(player_instance) {
                 }
 
                 if (nearby_enemies >= companion.triggers.guardian_veil.enemy_threshold) {
+                    // Enter casting state
+                    companion.previous_state = companion.state;
+                    companion.state = CompanionState.casting;
+                    companion.casting_frame_index = 0;
+                    companion.casting_timer = 0;
+
                     companion.triggers.guardian_veil.active = true;
                     companion.triggers.guardian_veil.cooldown = companion.triggers.guardian_veil.cooldown_max;
                     companion.guardian_veil_timer = companion.triggers.guardian_veil.duration;
@@ -270,6 +287,12 @@ function evaluate_companion_triggers(player_instance) {
                 }
 
                 if (nearby_enemies >= companion.triggers.gust.enemy_threshold) {
+                    // Enter casting state
+                    companion.previous_state = companion.state;
+                    companion.state = CompanionState.casting;
+                    companion.casting_frame_index = 0;
+                    companion.casting_timer = 0;
+
                     companion.triggers.gust.active = true;
                     companion.triggers.gust.cooldown = companion.triggers.gust.cooldown_max;
 

@@ -21,10 +21,9 @@ enum EnemyState {
 }
 
 enum CompanionState {
-	not_recruited,
-	idle,
-	following,
-	recruited
+	waiting,    // Not recruited, standing at spawn position
+	following,  // Recruited, following player
+	casting     // Performing trigger animation
 }
 
 enum StatusEffectType {
