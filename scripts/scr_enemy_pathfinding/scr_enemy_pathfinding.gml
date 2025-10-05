@@ -116,6 +116,18 @@ function enemy_update_path(target_x, target_y) {
         mp_grid_add_rectangle(_grid, _player_left, _player_top, _player_right, _player_bottom);
     }
 
+    // Mark companion positions as obstacles to prevent overlap and enable routing around them
+    with (obj_companion_parent) {
+        if (is_recruited && state != CompanionState.waiting) {
+            var _comp_left = clamp(floor(bbox_left / _cell_size), 0, _max_cell_x);
+            var _comp_right = clamp(floor((bbox_right - 1) / _cell_size), 0, _max_cell_x);
+            var _comp_top = clamp(floor(bbox_top / _cell_size), 0, _max_cell_y);
+            var _comp_bottom = clamp(floor((bbox_bottom - 1) / _cell_size), 0, _max_cell_y);
+
+            mp_grid_add_rectangle(_grid, _comp_left, _comp_top, _comp_right, _comp_bottom);
+        }
+    }
+
     // If the destination cell is blocked, search nearby cells for a walkable alternative
     if (mp_grid_get_cell(_grid, _target_cell_x, _target_cell_y)) {
         var _found_open = false;
