@@ -1,7 +1,7 @@
 {
   "$GMRoom":"v1",
   "%Name":"room_greenwood_forest_4",
-  "creationCodeFile":"",
+  "creationCodeFile":"rooms/room_greenwood_forest_4/RoomCreationCode.gml",
   "inheritCode":false,
   "inheritCreationOrder":false,
   "inheritLayers":false,
