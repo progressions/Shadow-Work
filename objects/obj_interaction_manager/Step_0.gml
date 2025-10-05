@@ -34,13 +34,13 @@ var _best_score = -999999;
 for (var i = 0; i < _found_count; i++) {
     var _obj = _interactive_list[| i];
 
-    // Skip if object can't be interacted with
-    var _can_interact_method = method(_obj, _obj.can_interact);
-    if (!_can_interact_method()) continue;
-
     // Skip if object is outside its interaction radius
     var _distance = point_distance(_player.x, _player.y, _obj.x, _obj.y);
     if (_distance > _obj.interaction_radius) continue;
+
+    // Skip if object can't be interacted with
+    var _can_interact_method = method(_obj, _obj.can_interact);
+    if (!_can_interact_method()) continue;
 
     // Calculate priority score: base_priority + (max_distance - distance)
     // This gives higher priority to objects with higher base priority,
