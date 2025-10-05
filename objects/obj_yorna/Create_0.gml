@@ -21,7 +21,12 @@ auras = {
     warriors_presence: {
         active: false, // Activated on recruitment
         attack_bonus: 1, // +1 attack damage
-        range_bonus: 8 // +8px attack range
+        multi_target_thresholds: [
+            { min_affinity: 3.0, max_targets: 2, chance: 0.25 },  // 10% chance for 2 targets
+            { min_affinity: 5.0, max_targets: 3, chance: 0.50 },  // 25% chance for 3 targets
+            { min_affinity: 8.0, max_targets: 4, chance: 1.0 },   // 100% chance for 4 targets
+            { min_affinity: 10.0, max_targets: 5, chance: 1.0 }   // 100% chance for 5 targets
+        ]
     }
 };
 
@@ -63,7 +68,7 @@ triggers = {
 
 // VN system
 vn_sprite = spr_yorna_vn_intro; // Portrait sprite for VN dialogue
-theme_song = snd_yorna_theme; // Theme music for VN dialogue
+// theme_song = snd_yorna_theme; // Theme music for VN dialogue
 
 // VN intro on first sight
 has_vn_intro = true;

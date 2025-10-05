@@ -39,6 +39,9 @@ function get_total_damage() {
         show_debug_message("Dash attack damage boost applied! Base: " + string(_base_damage / dash_attack_damage_multiplier) + " -> Boosted: " + string(_base_damage));
     }
 
+    // Add companion attack bonuses
+    _base_damage += get_companion_attack_bonus();
+
     return _base_damage;
 }
 
@@ -50,11 +53,14 @@ function get_attack_range() {
 
         // Check if using versatile weapon two-handed
         if (is_two_handing() && equipped.right_hand.definition.handedness == WeaponHandedness.versatile) {
-            return _weapon_stats[$ "two_handed_range"] ?? _weapon_stats.range;
+            _base_range = _weapon_stats[$ "two_handed_range"] ?? _weapon_stats.range;
         } else {
-            return _weapon_stats.range;
+            _base_range = _weapon_stats.range;
         }
     }
+
+    // Add companion range bonuses
+    _base_range += get_companion_range_bonus();
 
     return _base_range;
 }

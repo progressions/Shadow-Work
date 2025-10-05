@@ -25,6 +25,16 @@ with (creator) {
             other.knockback_force = _weapon_stats.knockback_force;
         }
     }
+
+    // Check for multi-target bonuses from companions (Yorna's aura)
+    var _multi_params = get_companion_multi_target_params();
+    if (_multi_params != undefined) {
+        // Roll for multi-target chance
+        if (random(1) < _multi_params.chance) {
+            other.max_hit_count = _multi_params.max_targets;
+            show_debug_message("Multi-target activated! Max targets: " + string(other.max_hit_count));
+        }
+    }
 }
 
 // Use the slash sprite for collision detection regardless of the visual weapon

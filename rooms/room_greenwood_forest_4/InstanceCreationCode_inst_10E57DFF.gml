@@ -1,10 +1,10 @@
 
 spawn_mode = SpawnerMode.continuous;
-spawn_period = 60;
+spawn_period = 120;
 max_total_spawns = -1;
-max_concurrent_enemies = 4;
+max_concurrent_enemies = 1;
 proximity_enabled = false;
 spawn_table = [
-    { enemy_object: obj_burglar, weight: 1 },
-	// { enemy_object: obj_fire_imp, weight: 10 },
+    // { enemy_object: obj_burglar, weight: 6 },
+	{ enemy_object: obj_greenwood_bandit, weight: 2 },
 ];

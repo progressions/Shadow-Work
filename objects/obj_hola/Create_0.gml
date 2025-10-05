@@ -82,7 +82,7 @@ triggers = {
 
 // VN system
 vn_sprite = spr_hola_vn_startled; // Portrait sprite for VN dialogue
-theme_song = snd_hola_theme; // Theme music for VN dialogue
+// theme_song = snd_hola_theme; // Theme music for VN dialogue
 
 // VN intro on first sight
 has_vn_intro = true;
@@ -95,3 +95,4 @@ vn_intro_sfx = snd_vn_intro_discovered;  // Sound to play when intro triggers
 
 show_debug_message("=== HOLA CREATE EVENT ===");
 show_debug_message("Gust trigger initialized: active=" + string(triggers.gust.active) + " cooldown=" + string(triggers.gust.cooldown));
+

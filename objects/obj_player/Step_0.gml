@@ -351,6 +351,22 @@ if (keyboard_check_pressed(ord("H"))) {
                 var base_ranged_dr = auras.wind_ward.ranged_damage_reduction;
                 show_debug_message("  Wind Ward DR: " + string(base_ranged_dr) + " -> " + string(base_ranged_dr * multiplier));
             }
+            if (variable_struct_exists(auras, "warriors_presence") && auras.warriors_presence.active) {
+                var base_attack = auras.warriors_presence.attack_bonus;
+                show_debug_message("  Warriors Presence Attack: " + string(base_attack) + " -> " + string(base_attack * multiplier));
+
+                // Show multi-target info based on affinity
+                var _affinity = affinity;
+                if (_affinity >= 10.0) {
+                    show_debug_message("  Multi-Target: 5 targets (100% chance)");
+                } else if (_affinity >= 8.0) {
+                    show_debug_message("  Multi-Target: 4 targets (100% chance)");
+                } else if (_affinity >= 5.0) {
+                    show_debug_message("  Multi-Target: 3 targets (25% chance)");
+                } else if (_affinity >= 3.0) {
+                    show_debug_message("  Multi-Target: 2 targets (10% chance)");
+                }
+            }
         }
     }
     show_debug_message("============================");

@@ -138,6 +138,108 @@ function get_companion_ranged_dr_bonus() {
     return total_dr;
 }
 
+/// @function get_companion_attack_bonus()
+/// @description Calculate total attack damage bonus from all active companions
+function get_companion_attack_bonus() {
+    var total_attack = 0;
+    var companions = get_active_companions();
+
+    for (var i = 0; i < array_length(companions); i++) {
+        var companion = companions[i];
+
+        // Get affinity multiplier for scaling aura values
+        var multiplier = get_affinity_aura_multiplier(companion.affinity);
+
+        // Check all auras for attack bonuses
+        var _aura_names = variable_struct_get_names(companion.auras);
+        for (var j = 0; j < array_length(_aura_names); j++) {
+            var _aura_name = _aura_names[j];
+            var _aura = companion.auras[$ _aura_name];
+
+            if (_aura.active) {
+                // Attack bonus (Yorna's warriors_presence uses this, scaled by affinity)
+                if (variable_struct_exists(_aura, "attack_bonus")) {
+                    total_attack += _aura.attack_bonus * multiplier;
+                }
+            }
+        }
+    }
+
+    return total_attack;
+}
+
+/// @function get_companion_range_bonus()
+/// @description Calculate total attack range bonus from all active companions
+function get_companion_range_bonus() {
+    var total_range = 0;
+    var companions = get_active_companions();
+
+    for (var i = 0; i < array_length(companions); i++) {
+        var companion = companions[i];
+
+        // Get affinity multiplier for scaling aura values
+        var multiplier = get_affinity_aura_multiplier(companion.affinity);
+
+        // Check all auras for range bonuses
+        var _aura_names = variable_struct_get_names(companion.auras);
+        for (var j = 0; j < array_length(_aura_names); j++) {
+            var _aura_name = _aura_names[j];
+            var _aura = companion.auras[$ _aura_name];
+
+            if (_aura.active) {
+                // Range bonus (Yorna's warriors_presence uses this, scaled by affinity)
+                if (variable_struct_exists(_aura, "range_bonus")) {
+                    total_range += _aura.range_bonus * multiplier;
+                }
+            }
+        }
+    }
+
+    return total_range;
+}
+
+/// @function get_companion_multi_target_params()
+/// @description Calculate multi-target attack parameters from companions (Yorna's aura)
+/// @return {struct} Returns {max_targets: number, chance: number} or undefined if no multi-target
+function get_companion_multi_target_params() {
+    var companions = get_active_companions();
+
+    for (var i = 0; i < array_length(companions); i++) {
+        var companion = companions[i];
+
+        // Check for multi-target auras (Yorna's warriors_presence)
+        var _aura_names = variable_struct_get_names(companion.auras);
+        for (var j = 0; j < array_length(_aura_names); j++) {
+            var _aura_name = _aura_names[j];
+            var _aura = companion.auras[$ _aura_name];
+
+            if (_aura.active && variable_struct_exists(_aura, "multi_target_thresholds")) {
+                var thresholds = _aura.multi_target_thresholds;
+                var affinity = companion.affinity;
+
+                // Find highest threshold that companion meets
+                var best_threshold = undefined;
+                for (var k = 0; k < array_length(thresholds); k++) {
+                    var threshold = thresholds[k];
+                    if (affinity >= threshold.min_affinity) {
+                        best_threshold = threshold;
+                    }
+                }
+
+                // Return the best threshold found
+                if (best_threshold != undefined) {
+                    return {
+                        max_targets: best_threshold.max_targets,
+                        chance: best_threshold.chance
+                    };
+                }
+            }
+        }
+    }
+
+    return undefined; // No multi-target auras active
+}
+
 /// @function apply_companion_regeneration_auras(player_instance)
 /// @description Apply HP regeneration from companion auras
 /// @param {instance} player_instance The player to heal

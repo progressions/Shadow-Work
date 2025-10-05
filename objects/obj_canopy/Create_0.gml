@@ -88,3 +88,4 @@ vn_intro_sfx = snd_vn_intro_discovered;  // Sound to play when intro triggers
 
 show_debug_message("=== CANOPY CREATE EVENT ===");
 show_debug_message("Shield trigger initialized: active=" + string(triggers.shield.active) + " cooldown=" + string(triggers.shield.cooldown));
+

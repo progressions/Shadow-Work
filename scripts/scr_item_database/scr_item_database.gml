@@ -170,7 +170,7 @@ global.item_database = {
     ),
     greatshield: new create_item_definition(
         19, "greatshield", "Greatshield", ItemType.armor, EquipSlot.left_hand,
-        {melee_damage_reduction: 5, ranged_damage_reduction: 12, speed_modifier: 0.85, trait_grants: [{trait: "physical_resistance", stacks: 1}]}
+        {melee_damage_reduction: 100, ranged_damage_reduction: 200, speed_modifier: 0.85, trait_grants: [{trait: "physical_resistance", stacks: 1}]}
     ),
     small_health_potion: new create_item_definition(
         20, "small_health_potion", "Small Health Potion", ItemType.consumable, EquipSlot.none,
