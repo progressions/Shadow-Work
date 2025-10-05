@@ -15,18 +15,33 @@ function enemy_calculate_target_position() {
 
     // Apply approach variation (flanking behavior)
     if (approach_mode == "flanking" && flank_offset_angle != 0) {
-        // Calculate base direction to player
-        var base_dir = point_direction(x, y, _player_x, _player_y);
+        var dist_to_player = point_distance(x, y, _player_x, _player_y);
 
-        // Apply perpendicular offset angle
-        var approach_dir = base_dir + flank_offset_angle;
+        // Use flanking offset until very close, then commit to direct attack
+        if (dist_to_player > attack_range + 4) {
+            // Calculate base direction to player
+            var base_dir = point_direction(x, y, _player_x, _player_y);
 
-        // Calculate target position at offset angle (32 pixels from player)
-        var approach_distance = 32;
-        var target_x = _player_x + lengthdir_x(approach_distance, approach_dir);
-        var target_y = _player_y + lengthdir_y(approach_distance, approach_dir);
+            // Apply behind-player offset angle
+            var approach_dir = base_dir + flank_offset_angle;
 
-        return { x: target_x, y: target_y };
+            // Dynamic arc approach: offset distance scales with distance to player
+            // Far away: large offset (wide arc to go around)
+            // Close: small offset (tighten the spiral)
+            var max_offset = 64;  // Maximum arc distance when far away
+            var min_offset = 4;   // Minimum arc distance when close
+            var offset_range = flank_trigger_distance - attack_range;
+
+            // Linear interpolation based on distance
+            var t = clamp((dist_to_player - attack_range) / offset_range, 0, 1);
+            var approach_distance = lerp(min_offset, max_offset, t);
+
+            var target_x = _player_x + lengthdir_x(approach_distance, approach_dir);
+            var target_y = _player_y + lengthdir_y(approach_distance, approach_dir);
+
+            return { x: target_x, y: target_y };
+        }
+        // Within attack range - path directly to player for final strike
     }
 
     // Direct approach: path directly to player position

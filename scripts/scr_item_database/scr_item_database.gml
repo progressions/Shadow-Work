@@ -174,27 +174,27 @@ global.item_database = {
     ),
     small_health_potion: new create_item_definition(
         20, "small_health_potion", "Small Health Potion", ItemType.consumable, EquipSlot.none,
-        {heal_amount: 5, stack_size: 10}
+        {heal_amount: 5, stack_size: 3}
     ),
     medium_health_potion: new create_item_definition(
         20, "medium_health_potion", "Medium Health Potion", ItemType.consumable, EquipSlot.none,
-        {heal_amount: 10, stack_size: 10}
+        {heal_amount: 10, stack_size: 3}
     ),
     large_health_potion: new create_item_definition(
         20, "large_health_potion", "Large Health Potion", ItemType.consumable, EquipSlot.none,
-        {heal_amount: 15, stack_size: 10}
+        {heal_amount: 15, stack_size: 3}
     ),
     water: new create_item_definition(
         21, "water", "Water", ItemType.consumable, EquipSlot.none,
-        {stamina_restore: 30, stack_size: 10}
+        {stack_size: 3}
     ),
     purple_potion: new create_item_definition(
         22, "purple_potion", "Purple Potion", ItemType.consumable, EquipSlot.none,
-        {mana_restore: 40, stack_size: 10}
+        {manstack_size: 3}
     ),
     red_potion: new create_item_definition(
         23, "red_potion", "Red Potion", ItemType.consumable, EquipSlot.none,
-        {damage_buff: 5, duration: 600, stack_size: 5}  // Strength/damage boost potion
+        { stack_size: 3}  // Strength/damage boost potion
     ),
 
     // Additional item (frame 24)
@@ -210,7 +210,8 @@ global.item_database = {
     ),
     plate_armor: new create_item_definition(
         26, "plate_armor", "Plate Armor", ItemType.armor, EquipSlot.armor,
-        {damage_reduction: 15, speed_modifier: 0.8, trait_grants: [{trait: "fire_resistance", stacks: 2}]}
+		{damage_reduction: 15, speed_modifier: 0.8, trait_grants: []}
+        //{damage_reduction: 15, speed_modifier: 0.8, trait_grants: [{trait: "fire_resistance", stacks: 2}]}
     ),
     plate_sabatons: new create_item_definition(
         27, "plate_sabatons", "Plate Sabatons", ItemType.armor, EquipSlot.boots,
