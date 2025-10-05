@@ -170,6 +170,8 @@ traits = [];
 function start_dash(_direction) {
     dash_timer = dash_duration;
     facing_dir = _direction;
+    last_dash_direction = _direction;
+    dash_attack_window = 0;
     dash_cooldown = dash_cooldown_time;
     play_sfx(snd_dash, 1, false);
 }

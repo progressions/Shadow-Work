@@ -96,8 +96,6 @@ if (state != PlayerState.dead) {
 
     // Handle dash attack window
     if (dash_attack_window > 0) {
-        dash_attack_window -= 1/room_speed; // Decrement by delta time
-
         // Check for direction change (cancels dash attack window)
         var _input_dir = "";
         if (keyboard_check(ord("W"))) _input_dir = "up";
@@ -108,12 +106,13 @@ if (state != PlayerState.dead) {
         if (_input_dir != "" && _input_dir != last_dash_direction) {
             dash_attack_window = 0; // Cancel window on direction change
             show_debug_message("Dash attack window CANCELLED - direction changed from " + last_dash_direction + " to " + _input_dir);
-        }
+        } else {
+            dash_attack_window -= 1 / room_speed; // Decrement by delta time
 
-        // Expire window
-        if (dash_attack_window > dash_attack_window_duration) {
-            dash_attack_window = 0;
-            show_debug_message("Dash attack window EXPIRED");
+            if (dash_attack_window <= 0) {
+                dash_attack_window = 0;
+                show_debug_message("Dash attack window EXPIRED");
+            }
         }
     }
 

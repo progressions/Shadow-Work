@@ -206,6 +206,9 @@ function start_vn_intro(_instance, _yarn_file, _start_node, _character_name = ""
 			}
 		}
 
+		// Ensure gameplay resumes if intro setup fails
+		global.game_paused = false;
+
 		// Pan camera back to player since intro failed
 		camera_pan_to_player(30);
 		return;

@@ -75,6 +75,11 @@ function check_vn_intro_triggers() {
 		// Play intro discovery sound effect
 		play_sfx(_intro_sfx, 1);
 
+		// Immediately pause gameplay so the player can't move during the camera pan
+		if (!global.game_paused) {
+			global.game_paused = true;
+		}
+
 		// Store intro data for callback
 		// IMPORTANT: Store the instance ID as a real number, not a reference
 		var _intro_instance_id = id;  // This captures the numeric ID
@@ -109,10 +114,16 @@ function check_vn_intro_triggers() {
 		show_debug_message("About to call camera_pan_to_target for instance at x=" + string(x) + " y=" + string(y));
 		camera_pan_to_target(id, 30, 60, _callback);
 
+		// Fallback: if camera pan failed to start, execute the VN intro right away
+		if (!global.camera_pan_state.active && is_method(_callback)) {
+			show_debug_message("Camera pan failed to start; executing VN intro callback immediately");
+			_callback();
+		}
+
 		// Only trigger one intro per frame
 		break;
+		}
 	}
-}
 
 /// @function draw_vn_intro_debug()
 /// @description Draw debug overlay showing camera bounds and VN intro flagged instances

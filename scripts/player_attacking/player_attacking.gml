@@ -24,10 +24,25 @@ function player_handle_attack_input() {
         can_attack = true;
     }
 
+    var _attack_pressed = keyboard_check_pressed(ord("J"));
+
     // Handle attack input - can be triggered from any state
-    if (keyboard_check_pressed(ord("J")) && can_attack) {
+    if (_attack_pressed && can_attack) {
+        var _was_dashing = (state == PlayerState.dashing);
+
+        if (_was_dashing) {
+            last_dash_direction = facing_dir;
+            dash_attack_window = dash_attack_window_duration;
+        }
+
+        var _dash_attack_ready = (dash_attack_window > 0 && facing_dir == last_dash_direction);
+
+        if (_was_dashing && facing_dir == last_dash_direction) {
+            _dash_attack_ready = true;
+        }
+
         // Check for dash attack
-        if (dash_attack_window > 0 && facing_dir == last_dash_direction) {
+        if (_dash_attack_ready) {
             is_dash_attacking = true;
             show_debug_message("DASH ATTACK TRIGGERED! Direction: " + facing_dir);
 
@@ -36,6 +51,8 @@ function player_handle_attack_input() {
         } else {
             is_dash_attacking = false;
         }
+
+        dash_attack_window = 0; // Any attack consumes the dash window
 
         var _is_ranged = false;
         var _attack_speed = 1.0; // Default unarmed speed
