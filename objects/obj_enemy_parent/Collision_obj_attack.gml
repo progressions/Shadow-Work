@@ -1,5 +1,7 @@
 show_debug_message("COLLISION DETECTED: enemy hit by attack!");
 
+var _attack_inst = other;
+
 if (state != EnemyState.dead) {
 show_debug_message("Enemy state check passed, alarm[1] = " + string(alarm[1]));
 if (alarm[1] < 0) {
@@ -143,4 +145,11 @@ if (alarm[1] < 0) {
 	 knockback_timer = max(8, round(_knockback_force));
 	 alarm[1] = knockback_timer;
 }
+}
+
+if (instance_exists(_attack_inst)) {
+	with (_attack_inst) {
+		show_debug_message("Destroying attack instance after hit to prevent multi-hit");
+		instance_destroy();
+	}
 }
