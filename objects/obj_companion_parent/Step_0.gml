@@ -168,9 +168,12 @@ interaction_action = "Recruit";
 if (global.active_interactive == id) {
     show_interaction_prompt(interaction_radius, 0, bbox_top - y - 12, interaction_key, interaction_action);
 
-    // Handle SPACE key press
-    if (keyboard_check_pressed(vk_space)) {
-        on_interact();
+    // Handle SPACE key press - verify player is still in range and can interact
+    if (keyboard_check_pressed(vk_space) && instance_exists(obj_player)) {
+        var _dist = point_distance(x, y, obj_player.x, obj_player.y);
+        if (_dist <= interaction_radius && can_interact()) {
+            on_interact();
+        }
     }
 }
 // Clean up prompt if we're no longer the active interactive

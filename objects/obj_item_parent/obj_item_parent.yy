@@ -14,8 +14,8 @@
     "path":"folders/Objects/items.yy",
   },
   "parentObjectId":{
-    "name":"obj_persistent_parent",
-    "path":"objects/obj_persistent_parent/obj_persistent_parent.yy",
+    "name":"obj_interactable_parent",
+    "path":"objects/obj_interactable_parent/obj_interactable_parent.yy",
   },
   "persistent":false,
   "physicsAngularDamping":0.1,

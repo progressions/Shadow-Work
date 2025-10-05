@@ -80,7 +80,8 @@ if (state != PlayerState.dead) {
     // ============================================
 
     #region Pickup items
-    player_handle_pickup();
+    // Auto-pickup disabled - items now use spacebar interaction system
+    // player_handle_pickup();
     #endregion
 
 

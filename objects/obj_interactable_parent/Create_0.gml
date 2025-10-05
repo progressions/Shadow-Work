@@ -1,11 +1,15 @@
 // Interactable Parent - Base object for all interactive objects
 // Provides standard interface for interaction manager system
 
+// Call parent create event (obj_persistent_parent)
+event_inherited();
+
 // Interaction properties
 interaction_radius = 32;           // Distance within which player can interact
 interaction_priority = 50;         // Priority for selection (higher = more important)
 interaction_key = "Space";         // Key name for display
 interaction_action = "Interact";   // Action text for display
+interaction_prompt = noone;        // Reference to active prompt instance
 
 // Base methods - override these in child objects
 
