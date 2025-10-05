@@ -61,33 +61,26 @@ hit_scale = clamp(hit_range / _base_visual_range, 0.8, 1.6);
 image_xscale = hit_scale;
 image_yscale = hit_scale;
 
-// Offset adjustments grow slightly with weapon reach
-var _range_bonus = (hit_range - _base_visual_range);
+// No position offsets - weapon sprites pivot from player center
+offset_x = 0;
+offset_y = 0;
 
 switch (creator.facing_dir) {
     case "right":
         start_angle = -45;
         base_angle = 0;    // For slash effect
-        offset_x = 8 + (_range_bonus * 0.35);
-        offset_y = -8;
         break;
     case "left":
         start_angle = 135;
         base_angle = 180;  // For slash effect
-        offset_x = -8 - (_range_bonus * 0.35);
-        offset_y = -8;
         break;
     case "up":
         start_angle = 45;
         base_angle = 90;   // For slash effect
-        offset_x = 0;
-        offset_y = -16 - (_range_bonus * 0.2);
         break;
     case "down":
         start_angle = 225;
         base_angle = 270;  // For slash effect
-        offset_x = 0;
-        offset_y = (_range_bonus * 0.15);
         break;
 }
 
