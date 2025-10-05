@@ -33,8 +33,8 @@
   "resourceVersion":"2.0",
   "solid":false,
   "spriteId":{
-    "name":"spr_wielded_master_sword",
-    "path":"sprites/spr_wielded_master_sword/spr_wielded_master_sword.yy",
+    "name":"spr_item_greatsword",
+    "path":"sprites/spr_item_greatsword/spr_item_greatsword.yy",
   },
   "spriteMaskId":null,
   "visible":true,

@@ -138,6 +138,7 @@
     {"id":{"name":"obj_item_plate_sabatons","path":"objects/obj_item_plate_sabatons/obj_item_plate_sabatons.yy",},},
     {"id":{"name":"obj_item_rusty_dagger","path":"objects/obj_item_rusty_dagger/obj_item_rusty_dagger.yy",},},
     {"id":{"name":"obj_item_shield","path":"objects/obj_item_shield/obj_item_shield.yy",},},
+    {"id":{"name":"obj_item_short_sword","path":"objects/obj_item_short_sword/obj_item_short_sword.yy",},},
     {"id":{"name":"obj_item_torch","path":"objects/obj_item_torch/obj_item_torch.yy",},},
     {"id":{"name":"obj_item_wooden_bow","path":"objects/obj_item_wooden_bow/obj_item_wooden_bow.yy",},},
     {"id":{"name":"obj_lamp_standing","path":"objects/obj_lamp_standing/obj_lamp_standing.yy",},},
