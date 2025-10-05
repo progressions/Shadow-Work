@@ -26,6 +26,17 @@ function player_handle_attack_input() {
 
     // Handle attack input - can be triggered from any state
     if (keyboard_check_pressed(ord("J")) && can_attack) {
+        // Check for dash attack
+        if (dash_attack_window > 0 && facing_dir == last_dash_direction) {
+            is_dash_attacking = true;
+            show_debug_message("DASH ATTACK TRIGGERED! Direction: " + facing_dir);
+
+            // Apply timed defense vulnerability (sundered defense)
+            apply_timed_trait("defense_vulnerability", 1.0); // 1 second of vulnerability
+        } else {
+            is_dash_attacking = false;
+        }
+
         var _is_ranged = false;
         var _attack_speed = 1.0; // Default unarmed speed
 
@@ -111,8 +122,10 @@ function player_handle_attack_input() {
             attack_cooldown = max(15, round(60 / _attack_speed));
             can_attack = false;
 
-            // Play attack sound based on weapon type
-            if (equipped.right_hand != undefined) {
+            // Play attack sound based on weapon type and dash attack status
+            if (is_dash_attacking) {
+                play_sfx(snd_dash_attack, 1, false);
+            } else if (equipped.right_hand != undefined) {
                 // Different sounds for different weapon types
                 switch(equipped.right_hand.definition.handedness) {
                     case WeaponHandedness.two_handed:

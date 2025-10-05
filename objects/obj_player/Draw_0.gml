@@ -67,10 +67,10 @@ function draw_torch_simple(_item, _facing, _player_x, _player_y) {
         if (floor(global.idle_bob_timer) % 2 == 1) {
             _ty += 1;
         }
-    } else if (!is_dashing) {
+    } else if (state != PlayerState.dashing) {
         var _bob = (floor(anim_frame) % 2) * 1;
         _ty += _bob;
-    
+
 	}
     
 	var _torch_frame = 0;
@@ -96,7 +96,7 @@ function draw_shield_simple(_item, _facing, _player_x, _player_y) {
         if (floor(global.idle_bob_timer) % 2 == 1) {
             _sy += 1;
         }
-    } else if (!is_dashing) {
+    } else if (state != PlayerState.dashing) {
         var _bob = (floor(anim_frame) % 2) * 1;
         _sy += _bob;
     }
@@ -126,7 +126,7 @@ function draw_weapon_simple(_item, _facing, _player_x, _player_y) {
         if (floor(global.idle_bob_timer) % 2 == 1) {
             _wy += 1;
         }
-    } else if (!is_dashing) {
+    } else if (state != PlayerState.dashing) {
         var _bob = (floor(anim_frame) % 2) * 1;
         _wy += _bob;
     }

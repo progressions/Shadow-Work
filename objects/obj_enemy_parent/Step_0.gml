@@ -17,6 +17,9 @@ if (variable_instance_exists(self, "saved_path_speed") && saved_path_speed != 0)
 // Tick status effects (runs even when dead)
 tick_status_effects();
 
+// Update timed traits
+update_timed_traits();
+
 // Handle knockback movement when recently hit
 if (knockback_timer > 0) {
     if (path_exists(path)) {

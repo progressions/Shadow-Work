@@ -196,6 +196,22 @@ global.trait_database = {
         name: "Heat Adapted",
         effect_type: "environmental",
         max_stacks: 1
+    },
+
+    // Defense traits (affect damage reduction, not damage type)
+    defense_resistance: {
+        name: "Bolstered Defense",
+        description: "Increases damage reduction",
+        defense_modifier: 1.33, // +33% damage reduction per stack
+        opposite_trait: "defense_vulnerability",
+        max_stacks: 5
+    },
+    defense_vulnerability: {
+        name: "Sundered Defense",
+        description: "Decreases damage reduction",
+        defense_modifier: 0.75, // -25% damage reduction per stack
+        opposite_trait: "defense_resistance",
+        max_stacks: 5
     }
 };
 

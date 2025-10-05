@@ -80,23 +80,23 @@ global.item_database = {
     // Row 1 - Bladed weapons (frames 0-5)
     rusty_dagger: new create_item_definition(
         0, "rusty_dagger", "Rusty Dagger", ItemType.weapon, EquipSlot.either_hand,
-        {damage: 2, attack_speed: 1.8, range: 30, handedness: WeaponHandedness.one_handed, damage_type: DamageType.physical, knockback_force: 4}
+        {damage: 2, attack_speed: 1.8, range: 30, handedness: WeaponHandedness.one_handed, damage_type: DamageType.physical, knockback_force: 2}
     ),
     short_sword: new create_item_definition(
         1, "short_sword", "Short Sword", ItemType.weapon, EquipSlot.either_hand,
-        {damage: 3, attack_speed: 1.6, range: 38, handedness: WeaponHandedness.one_handed, damage_type: DamageType.physical, knockback_force: 5}
+        {damage: 3, attack_speed: 1.6, range: 38, handedness: WeaponHandedness.one_handed, damage_type: DamageType.physical, knockback_force: 3}
     ),
     long_sword: new create_item_definition(
         2, "long_sword", "Long Sword", ItemType.weapon, EquipSlot.either_hand,
-        {damage: 4, attack_speed: 1.4, range: 46, handedness: WeaponHandedness.versatile, two_handed_damage: 5, two_handed_range: 40, damage_type: DamageType.physical, knockback_force: 6}
+        {damage: 4, attack_speed: 1.4, range: 46, handedness: WeaponHandedness.versatile, two_handed_damage: 5, two_handed_range: 40, damage_type: DamageType.physical, knockback_force: 4}
     ),
     master_sword: new create_item_definition(
         3, "master_sword", "Master Sword", ItemType.weapon, EquipSlot.either_hand,
-        {damage: 6, attack_speed: 1.5, range: 48, handedness: WeaponHandedness.versatile, two_handed_damage: 7, two_handed_range: 42, magic_power: 5, wielder_effects: [{effect: StatusEffectType.empowered}], damage_type: DamageType.holy, knockback_force: 7}
+        {damage: 6, attack_speed: 1.5, range: 48, handedness: WeaponHandedness.versatile, two_handed_damage: 7, two_handed_range: 42, magic_power: 5, wielder_effects: [{effect: StatusEffectType.empowered}], damage_type: DamageType.holy, knockback_force: 6}
     ),
     greatsword: new create_item_definition(
         4, "greatsword", "Greatsword", ItemType.weapon, EquipSlot.right_hand,
-        {damage: 8, attack_speed: 0.9, range: 55, handedness: WeaponHandedness.two_handed, large_sprite: true, damage_type: DamageType.physical, knockback_force: 9}
+        {damage: 8, attack_speed: 0.9, range: 55, handedness: WeaponHandedness.two_handed, large_sprite: true, damage_type: DamageType.physical, knockback_force: 7}
     ),
     spear: new create_item_definition(
         5, "spear", "Spear", ItemType.weapon, EquipSlot.right_hand,
@@ -106,7 +106,7 @@ global.item_database = {
     // Row 2 - Axe and bows (frames 6-11)
     axe: new create_item_definition(
         6, "axe", "Axe", ItemType.weapon, EquipSlot.either_hand,
-        {damage: 5, attack_speed: 0.8, range: 30, handedness: WeaponHandedness.versatile, two_handed_damage: 6, damage_type: DamageType.physical, knockback_force: 8}
+        {damage: 5, attack_speed: 0.8, range: 30, handedness: WeaponHandedness.versatile, two_handed_damage: 6, damage_type: DamageType.physical, knockback_force: 6}
     ),
     wooden_bow: new create_item_definition(
         7, "wooden_bow", "Wooden Bow", ItemType.weapon, EquipSlot.right_hand,

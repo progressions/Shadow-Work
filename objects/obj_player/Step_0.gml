@@ -66,6 +66,9 @@ switch (state) {
 // Tick status effects (runs even when dead)
 tick_status_effects();
 
+// Update timed traits
+update_timed_traits();
+
 tilemap = layer_tilemap_get_id("Tiles_Col");
 
 // Don't run other systems when dead
@@ -90,6 +93,29 @@ if (state != PlayerState.dead) {
 
     // Handle dash cooldown
     player_handle_dash_cooldown();
+
+    // Handle dash attack window
+    if (dash_attack_window > 0) {
+        dash_attack_window -= 1/room_speed; // Decrement by delta time
+
+        // Check for direction change (cancels dash attack window)
+        var _input_dir = "";
+        if (keyboard_check(ord("W"))) _input_dir = "up";
+        else if (keyboard_check(ord("S"))) _input_dir = "down";
+        else if (keyboard_check(ord("A"))) _input_dir = "left";
+        else if (keyboard_check(ord("D"))) _input_dir = "right";
+
+        if (_input_dir != "" && _input_dir != last_dash_direction) {
+            dash_attack_window = 0; // Cancel window on direction change
+            show_debug_message("Dash attack window CANCELLED - direction changed from " + last_dash_direction + " to " + _input_dir);
+        }
+
+        // Expire window
+        if (dash_attack_window > dash_attack_window_duration) {
+            dash_attack_window = 0;
+            show_debug_message("Dash attack window EXPIRED");
+        }
+    }
 
     if (keyboard_check_pressed(ord("Q"))) {
         var _swap_method = method(self, swap_active_loadout);

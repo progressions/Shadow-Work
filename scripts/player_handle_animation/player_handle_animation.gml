@@ -5,7 +5,7 @@ function player_handle_animation() {
         anim_key = "attack_" + facing_dir;
     } else if (move_dir == "idle") {
         anim_key = "idle_" + facing_dir;
-    } else if (is_dashing) {
+    } else if (state == PlayerState.dashing) {
         anim_key = "dash_" + facing_dir;
     } else {
         anim_key = "walk_" + facing_dir;

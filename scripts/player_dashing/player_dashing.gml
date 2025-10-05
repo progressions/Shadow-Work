@@ -2,7 +2,7 @@ function player_dashing(){
 // ============================================
     // CHECK FOR DOUBLE-TAP DASH (simplified)
     // ============================================
-    if (!is_dashing && dash_cooldown <= 0) {
+    if (state != PlayerState.dashing && dash_cooldown <= 0) {
         // W key double-tap
         if (keyboard_check_pressed(ord("W"))) {
             if (current_time - last_key_time_w < double_tap_time) {
@@ -39,13 +39,13 @@ function player_dashing(){
     // ============================================
     // MOVEMENT
     // ============================================
-    if (is_dashing) {
+    if (state == PlayerState.dashing) {
 		obj_sfx_controller.play_sfx("dash", snd_dash)
 		
         // Handle dash movement
         dash_timer--;
         if (dash_timer <= 0) {
-            is_dashing = false;
+            state = PlayerState.idle;
         }
         
         var dash_x = 0;

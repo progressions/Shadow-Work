@@ -1,6 +1,6 @@
 function player_handle_dash_input() {
     // Check for double-tap dash input
-    if (!is_dashing && dash_cooldown <= 0) {
+    if (state != PlayerState.dashing && dash_cooldown <= 0) {
         // W key double-tap
         if (keyboard_check_pressed(ord("W"))) {
             if (current_time - last_key_time_w < double_tap_time) {

@@ -92,13 +92,20 @@ last_key_time_s = -999;
 last_key_time_d = -999;
 
 // Dash state
-is_dashing = false;
 dash_duration = 8;  // frames
 dash_timer = 0;
 dash_speed = 6;
 
 dash_cooldown = 0;
 dash_cooldown_time = 30;
+
+// Dash attack system
+dash_attack_window = 0;
+dash_attack_window_duration = 0.4; // seconds
+dash_attack_damage_multiplier = 1.5; // +50% damage
+dash_attack_defense_penalty = 0.75; // -25% damage reduction
+last_dash_direction = "";
+is_dash_attacking = false;
 
 // Player animation data based on sprite frame tags
 anim_data = {
@@ -161,7 +168,6 @@ traits = [];
 
 // Add this function to your scripts or at the bottom of Create Event:
 function start_dash(_direction) {
-    is_dashing = true;
     dash_timer = dash_duration;
     facing_dir = _direction;
     dash_cooldown = dash_cooldown_time;

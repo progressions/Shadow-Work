@@ -69,6 +69,60 @@ function remove_temporary_trait(_trait_key) {
     }
 }
 
+/// @function apply_timed_trait(trait_key, duration_seconds)
+/// @description Apply a temporary trait that expires after a duration
+/// @param {string} trait_key The trait to apply
+/// @param {real} duration_seconds How long the trait lasts in seconds
+function apply_timed_trait(_trait_key, _duration_seconds) {
+    // Initialize timed traits tracking if needed
+    if (!variable_instance_exists(self, "timed_traits")) {
+        timed_traits = [];
+    }
+
+    // Add the temporary trait stack
+    add_temporary_trait(_trait_key);
+
+    // Track this timed trait for automatic removal
+    array_push(timed_traits, {
+        trait: _trait_key,
+        timer: _duration_seconds * room_speed, // Convert to frames
+        stacks_applied: 1
+    });
+
+    show_debug_message("Applied timed trait: " + _trait_key + " for " + string(_duration_seconds) + " seconds");
+}
+
+/// @function update_timed_traits()
+/// @description Update all timed trait timers and remove expired traits (call in Step event)
+function update_timed_traits() {
+    if (!variable_instance_exists(self, "timed_traits")) return;
+
+    var _traits_to_remove = [];
+
+    // Update timers
+    for (var i = 0; i < array_length(timed_traits); i++) {
+        timed_traits[i].timer--;
+
+        if (timed_traits[i].timer <= 0) {
+            // Timer expired - remove the trait
+            var _trait_key = timed_traits[i].trait;
+            var _stacks = timed_traits[i].stacks_applied;
+
+            for (var j = 0; j < _stacks; j++) {
+                remove_temporary_trait(_trait_key);
+            }
+
+            show_debug_message("Timed trait expired: " + _trait_key);
+            array_push(_traits_to_remove, i);
+        }
+    }
+
+    // Remove expired traits from tracking (reverse order to preserve indices)
+    for (var i = array_length(_traits_to_remove) - 1; i >= 0; i--) {
+        array_delete(timed_traits, _traits_to_remove[i], 1);
+    }
+}
+
 /// @function apply_tag_traits([tag_key])
 /// @description Apply all traits from a tag (or all tags array) as permanent traits
 /// @param {string} [tag_key] Optional - specific tag to apply. If omitted, applies all tags in tags array
@@ -101,6 +155,28 @@ function apply_tag_traits(_tag_key = undefined) {
 
     for (var i = 0; i < array_length(_traits); i++) {
         add_permanent_trait(_traits[i]);
+    }
+}
+
+/// @function get_defense_modifier()
+/// @description Calculate defense multiplier from defense traits (affects damage reduction)
+/// @return {Real} Defense multiplier (1.0 = normal, 1.33 = bolstered, 0.75 = sundered)
+function get_defense_modifier() {
+    var _resistance_stacks = get_total_trait_stacks("defense_resistance");
+    var _vulnerability_stacks = get_total_trait_stacks("defense_vulnerability");
+
+    // Calculate net stacks (resistance - vulnerability)
+    var _net_stacks = _resistance_stacks - _vulnerability_stacks;
+
+    if (_net_stacks > 0) {
+        // Net resistance (bolstered defense) - increases damage reduction
+        return power(1.33, _net_stacks); // Each stack adds +33% DR
+    } else if (_net_stacks < 0) {
+        // Net vulnerability (sundered defense) - decreases damage reduction
+        return power(0.75, abs(_net_stacks)); // Each stack reduces DR by 25%
+    } else {
+        // Perfect cancellation or no traits
+        return 1.0;
     }
 }
 

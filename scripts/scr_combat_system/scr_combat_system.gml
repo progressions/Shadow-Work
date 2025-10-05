@@ -33,6 +33,12 @@ function get_total_damage() {
     var damage_modifier = get_status_effect_modifier("damage");
     _base_damage *= damage_modifier;
 
+    // Apply dash attack damage boost
+    if (is_dash_attacking) {
+        _base_damage *= dash_attack_damage_multiplier;
+        show_debug_message("Dash attack damage boost applied! Base: " + string(_base_damage / dash_attack_damage_multiplier) + " -> Boosted: " + string(_base_damage));
+    }
+
     return _base_damage;
 }
 
@@ -144,8 +150,9 @@ function get_melee_damage_reduction() {
     // Companion DR bonuses
     _total_dr += get_companion_melee_dr_bonus();
 
-    // Trait modifiers (future)
-    // Status effect modifiers (future)
+    // Apply defense modifier from traits (bolstered/sundered defense)
+    var _defense_modifier = get_defense_modifier();
+    _total_dr *= _defense_modifier;
 
     return _total_dr;
 }
@@ -162,8 +169,9 @@ function get_ranged_damage_reduction() {
     // Companion DR bonuses
     _total_dr += get_companion_ranged_dr_bonus();
 
-    // Trait modifiers (future)
-    // Status effect modifiers (future)
+    // Apply defense modifier from traits (bolstered/sundered defense)
+    var _defense_modifier = get_defense_modifier();
+    _total_dr *= _defense_modifier;
 
     return _total_dr;
 }

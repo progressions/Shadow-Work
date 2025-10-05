@@ -5,9 +5,14 @@ function player_state_dashing() {
     // Handle dash movement
     dash_timer--;
     if (dash_timer <= 0) {
-        is_dashing = false;
         state = PlayerState.idle; // Return to idle when dash ends
         move_dir = "idle";
+
+        // Start dash attack window
+        dash_attack_window = dash_attack_window_duration;
+        last_dash_direction = facing_dir;
+        show_debug_message("Dash attack window started (" + string(dash_attack_window_duration) + "s) - direction: " + last_dash_direction);
+
         return;
     }
 
