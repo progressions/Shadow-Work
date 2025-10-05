@@ -64,7 +64,13 @@ if (state == CompanionState.casting) {
     draw_set_alpha(1);
 }
 
-draw_self();
+// Draw companion with visual feedback for evading state
+if (state == CompanionState.evading) {
+    // Draw with slight blue tint and reduced opacity to indicate evasion
+    draw_sprite_ext(sprite_index, image_index, x, y, image_xscale, image_yscale, image_angle, c_aqua, 0.7);
+} else {
+    draw_self();
+}
 
 // Optional: Draw affinity indicator when recruited (heart icon)
 if (is_recruited && affinity >= 5.0) {

@@ -45,6 +45,12 @@ if (alarm[1] < 0) {
 	 hp -= _final_damage;
 	 image_blend = c_red;
 
+	 // Reset player combat timer for companion evading behavior
+	 var attacker = other.creator;
+	 if (attacker != noone && instance_exists(attacker) && attacker.object_index == obj_player) {
+	     attacker.combat_timer = 0;
+	 }
+
 	 // Spawn damage number or immunity text
 	 if (_resistance_multiplier <= 0) {
 	     spawn_immune_text(x, y - 16, self);

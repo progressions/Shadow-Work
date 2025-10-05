@@ -27,6 +27,15 @@ follow_distance = 28; // Pixels to maintain from player
 follow_speed = 1.15; // Slightly slower than player base speed
 min_follow_distance = 16; // Don't get closer than this
 
+// Evading behavior (for combat evasion)
+evade_distance_min = 64; // Minimum distance from player/enemies when evading
+evade_distance_max = 128; // Maximum distance for visibility when evading
+evade_detection_radius = 200; // Range to detect enemies to avoid
+evade_recalc_timer = 0; // Timer for throttling pathfinding recalculation
+evade_recalc_interval = 20; // Frames between recalculations (20 frames = ~333ms at 60fps)
+evade_target_x = x; // Cached evasion target position
+evade_target_y = y;
+
 // Trigger sound defaults
 sfx_trigger_sound = noone;
 
@@ -295,6 +304,79 @@ function companion_give_torch_to_player() {
     set_torch_carrier("player");
 
     return true;
+}
+
+/// @function evade_from_combat()
+/// @description Calculate and move to evasion position during combat
+function evade_from_combat() {
+    if (!instance_exists(follow_target)) return;
+
+    // Throttle pathfinding recalculation
+    evade_recalc_timer++;
+
+    if (evade_recalc_timer >= evade_recalc_interval) {
+        evade_recalc_timer = 0;
+
+        // Calculate avoidance vector from player
+        var avoid_x = x - follow_target.x;
+        var avoid_y = y - follow_target.y;
+
+        // Find nearby enemies to avoid
+        var nearby_enemies = ds_list_create();
+        collision_circle_list(x, y, evade_detection_radius, obj_enemy_parent, false, true, nearby_enemies, false);
+
+        // Add enemy avoidance vectors
+        for (var i = 0; i < ds_list_size(nearby_enemies); i++) {
+            var enemy = nearby_enemies[| i];
+            if (instance_exists(enemy) && enemy.state != EnemyState.dead) {
+                var enemy_avoid_x = x - enemy.x;
+                var enemy_avoid_y = y - enemy.y;
+                avoid_x += enemy_avoid_x;
+                avoid_y += enemy_avoid_y;
+            }
+        }
+        ds_list_destroy(nearby_enemies);
+
+        // Calculate target evasion position
+        var avoid_dir = point_direction(0, 0, avoid_x, avoid_y);
+        var target_dist = evade_distance_min + ((evade_distance_max - evade_distance_min) / 2);
+
+        // Set cached target position
+        evade_target_x = follow_target.x + lengthdir_x(target_dist, avoid_dir);
+        evade_target_y = follow_target.y + lengthdir_y(target_dist, avoid_dir);
+    }
+
+    // Check current distance from player
+    var dist_from_player = point_distance(x, y, follow_target.x, follow_target.y);
+
+    // Move toward cached evasion position if not at proper distance
+    if (dist_from_player < evade_distance_min || dist_from_player > evade_distance_max) {
+        var move_dir = point_direction(x, y, evade_target_x, evade_target_y);
+        var move_x = lengthdir_x(follow_speed, move_dir);
+        var move_y = lengthdir_y(follow_speed, move_dir);
+
+        move_dir_x = move_x;
+        move_dir_y = move_y;
+
+        // Store position before move to detect if stuck
+        var old_x = x;
+        var old_y = y;
+
+        // Move with collision detection
+        move_and_collide(move_x, move_y, [tilemap, obj_rising_pillar, obj_companion_parent]);
+
+        // Edge case: If completely stuck (didn't move), try moving perpendicular
+        if (x == old_x && y == old_y && (abs(move_x) > 0.1 || abs(move_y) > 0.1)) {
+            var perp_dir = move_dir + 90;
+            var perp_x = lengthdir_x(follow_speed, perp_dir);
+            var perp_y = lengthdir_y(follow_speed, perp_dir);
+            move_and_collide(perp_x, perp_y, [tilemap, obj_rising_pillar, obj_companion_parent]);
+        }
+    } else {
+        // At proper distance, stay idle
+        move_dir_x = 0;
+        move_dir_y = 0;
+    }
 }
 
 /// @function can_interact()

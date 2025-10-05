@@ -17,6 +17,10 @@ tags = []; // Thematic descriptors (fireborne, venomous, etc.)
 permanent_traits = {}; // From tags, quests (permanent)
 temporary_traits = {};  // From equipment, companions, buffs (temporary)
 
+// Combat timer for companion evading behavior
+combat_timer = 999; // Start high so companions begin in following mode
+combat_cooldown = 3; // Seconds of no combat before evading ends
+
 #endregion Stats
 
 move_dir = "right";
@@ -174,6 +178,11 @@ function start_dash(_direction) {
     dash_attack_window = 0;
     dash_cooldown = dash_cooldown_time;
     play_sfx(snd_dash, 1, false);
+}
+
+// Check if player is in active combat (for companion evading behavior)
+function is_in_combat() {
+    return combat_timer < combat_cooldown;
 }
 
 

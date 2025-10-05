@@ -60,6 +60,7 @@ if (_hit_player != noone) {
 
             if (_impact_damage > 0) {
                 hp -= _impact_damage;
+                combat_timer = 0; // Reset combat timer for companion evading
 
                 image_blend = c_red;
                 alarm[0] = 10; // Flash briefly

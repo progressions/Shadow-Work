@@ -46,7 +46,42 @@ if (state == CompanionState.casting) {
     exit;
 }
 
-// Following behavior (only when in following state, not casting)
+// Combat evasion state transition (only when recruited)
+if (is_recruited && instance_exists(follow_target)) {
+    // Check player combat timer with hysteresis
+    var player_combat_timer = 999;
+    var player_combat_cooldown = 3;
+
+    with (follow_target) {
+        if (variable_instance_exists(self, "combat_timer")) {
+            player_combat_timer = combat_timer;
+            player_combat_cooldown = combat_cooldown;
+        }
+    }
+
+    // Hysteresis buffer to prevent rapid state switching
+    var evade_enter_threshold = player_combat_cooldown; // 3 seconds
+    var evade_exit_threshold = player_combat_cooldown + 0.5; // 3.5 seconds (buffer)
+
+    // Transition with hysteresis
+    if (player_combat_timer < evade_enter_threshold && state == CompanionState.following) {
+        state = CompanionState.evading;
+        evade_recalc_timer = 0; // Reset timer to recalculate immediately
+    } else if (player_combat_timer > evade_exit_threshold && state == CompanionState.evading) {
+        state = CompanionState.following;
+    }
+}
+
+// Evading behavior (maintaining distance from combat)
+if (state == CompanionState.evading && instance_exists(follow_target)) {
+    evade_from_combat();
+    // Don't process following logic below
+    var _skip_following = true;
+} else {
+    var _skip_following = false;
+}
+
+// Following behavior (only when in following state, not casting or evading)
 if (is_recruited && state == CompanionState.following) {
     if (instance_exists(follow_target)) {
         var dist_to_player = point_distance(x, y, follow_target.x, follow_target.y);

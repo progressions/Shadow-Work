@@ -23,6 +23,8 @@ if (instance_exists(obj_grid_controller)) {
     GRID_Y_OFFSET = obj_grid_controller.GRID_Y_OFFSET;
 }
 
+// Update combat timer for companion evading behavior
+combat_timer += delta_time / 1000000; // Convert microseconds to seconds
 
 #region Movement
 
@@ -286,60 +288,29 @@ if (keyboard_check_pressed(ord("O"))) {
     }
 }
 
-// Debug key for terrain/tile detection
+// Debug key for combat timer status (for companion evading system)
 if (keyboard_check_pressed(ord("P"))) {
-    show_debug_message("=== TILE DEBUG ===");
-    show_debug_message("Position: (" + string(x) + ", " + string(y) + ")");
+    show_debug_message("=== COMBAT TIMER DEBUG ===");
+    show_debug_message("Combat Timer: " + string(combat_timer) + "s");
+    show_debug_message("Combat Cooldown: " + string(combat_cooldown) + "s");
+    show_debug_message("Is In Combat: " + string(is_in_combat()));
 
-    // Check Tiles_Forest layer
-    var _forest_layer = layer_get_id("Tiles_Forest");
-    if (_forest_layer != -1) {
-        var _tilemap_forest = layer_tilemap_get_id(_forest_layer);
-        if (_tilemap_forest != -1) {
-            var _tile_data = tilemap_get_at_pixel(_tilemap_forest, x, y);
-            var _tile_index = tile_get_index(_tile_data);
-            show_debug_message("Tiles_Forest index: " + string(_tile_index));
+    // Show companion states and distances
+    var companions = get_active_companions();
+    for (var i = 0; i < array_length(companions); i++) {
+        var comp = companions[i];
+        var state_name = "";
+        switch (comp.state) {
+            case CompanionState.waiting: state_name = "waiting"; break;
+            case CompanionState.following: state_name = "following"; break;
+            case CompanionState.casting: state_name = "casting"; break;
+            case CompanionState.evading: state_name = "evading"; break;
+            default: state_name = "unknown"; break;
         }
+        var dist = point_distance(x, y, comp.x, comp.y);
+        show_debug_message(comp.companion_name + " state: " + state_name + " | distance: " + string(round(dist)) + "px");
     }
-
-    // Check Tiles_Path layer
-    var _path_layer = layer_get_id("Tiles_Path");
-    if (_path_layer != -1) {
-        var _tilemap_path = layer_tilemap_get_id(_path_layer);
-        if (_tilemap_path != -1) {
-            var _path_tile = tilemap_get_at_pixel(_tilemap_path, x, y);
-            var _path_index = tile_get_index(_path_tile);
-            show_debug_message("Tiles_Path index: " + string(_path_index) + " (0=no path)");
-        }
-    }
-
-    // Check Tiles_Water layer
-    var _water_layer = layer_get_id("Tiles_Water");
-    if (_water_layer != -1) {
-        var _tilemap_water = layer_tilemap_get_id(_water_layer);
-        if (_tilemap_water != -1) {
-            var _water_tile = tilemap_get_at_pixel(_tilemap_water, x, y);
-            var _water_index = tile_get_index(_water_tile);
-            show_debug_message("Tiles_Water index: " + string(_water_index) + " (0=no water)");
-        }
-    }
-
-    // Check Tiles_Water_Moving layer
-    var _water_moving_layer = layer_get_id("Tiles_Water_Moving");
-    if (_water_moving_layer != -1) {
-        var _tilemap_water_moving = layer_tilemap_get_id(_water_moving_layer);
-        if (_tilemap_water_moving != -1) {
-            var _water_moving_tile = tilemap_get_at_pixel(_tilemap_water_moving, x, y);
-            var _water_moving_index = tile_get_index(_water_moving_tile);
-            show_debug_message("Tiles_Water_Moving index: " + string(_water_moving_index));
-        }
-    }
-
-    show_debug_message("==================");
-
-    // Show current terrain type
-    var _current_terrain = get_terrain_at_position(x, y);
-    show_debug_message(">>> Current terrain: " + _current_terrain);
+    show_debug_message("==========================");
 }
 
 // ============================================
