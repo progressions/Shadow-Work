@@ -2,12 +2,27 @@
 // COMPANION SYSTEM - Helper functions for companion management
 // ============================================
 
+/// @function get_affinity_aura_multiplier(affinity)
+/// @description Calculate aura effectiveness multiplier based on affinity level
+/// @param {real} affinity The companion's affinity level (3.0 to 10.0)
+/// @return {real} Multiplier for aura effectiveness (0.6x at affinity 3.0, 3.0x at affinity 10.0)
+function get_affinity_aura_multiplier(affinity) {
+    // Normalized affinity from 0-1 based on range 3.0-10.0
+    var normalized = clamp((affinity - 3.0) / 7.0, 0, 1);
+
+    // Diminishing returns curve: 0.6 + (2.4 * sqrt(normalized))
+    // sqrt provides diminishing returns - early gains are stronger
+    var multiplier = 0.6 + (2.4 * sqrt(normalized));
+
+    return multiplier;
+}
+
 /// @function get_active_companions()
 /// @description Returns array of active companion instances
 function get_active_companions() {
     var companions = [];
     with (obj_companion_parent) {
-        if (is_recruited && state == CompanionState.following) {
+        if (is_recruited && (state == CompanionState.following || state == CompanionState.evading)) {
             array_push(companions, id);
         }
     }
@@ -24,6 +39,9 @@ function get_companion_melee_dr_bonus() {
     for (var i = 0; i < array_length(companions); i++) {
         var companion = companions[i];
 
+        // Get affinity multiplier for scaling aura values
+        var multiplier = get_affinity_aura_multiplier(companion.affinity);
+
         // Check all auras for melee DR bonuses
         var _aura_names = variable_struct_get_names(companion.auras);
         for (var j = 0; j < array_length(_aura_names); j++) {
@@ -31,18 +49,22 @@ function get_companion_melee_dr_bonus() {
             var _aura = companion.auras[$ _aura_name];
 
             if (_aura.active) {
-                // General DR applies to melee
-                if (variable_struct_exists(_aura, "damage_reduction")) {
-                    total_dr += _aura.damage_reduction;
+                // General DR bonus (scaled by affinity)
+                if (variable_struct_exists(_aura, "dr_bonus")) {
+                    total_dr += _aura.dr_bonus * multiplier;
                 }
-                // Melee-specific DR
+                // General DR applies to melee (scaled by affinity)
+                if (variable_struct_exists(_aura, "damage_reduction")) {
+                    total_dr += _aura.damage_reduction * multiplier;
+                }
+                // Melee-specific DR (scaled by affinity)
                 if (variable_struct_exists(_aura, "melee_damage_reduction")) {
-                    total_dr += _aura.melee_damage_reduction;
+                    total_dr += _aura.melee_damage_reduction * multiplier;
                 }
             }
         }
 
-        // Check triggers for melee DR bonuses
+        // Check triggers for melee DR bonuses (not scaled - triggers use affinity-based unlocks)
         var _trigger_names = variable_struct_get_names(companion.triggers);
         for (var j = 0; j < array_length(_trigger_names); j++) {
             var _trigger_name = _trigger_names[j];
@@ -71,6 +93,9 @@ function get_companion_ranged_dr_bonus() {
     for (var i = 0; i < array_length(companions); i++) {
         var companion = companions[i];
 
+        // Get affinity multiplier for scaling aura values
+        var multiplier = get_affinity_aura_multiplier(companion.affinity);
+
         // Check all auras for ranged DR bonuses
         var _aura_names = variable_struct_get_names(companion.auras);
         for (var j = 0; j < array_length(_aura_names); j++) {
@@ -78,18 +103,22 @@ function get_companion_ranged_dr_bonus() {
             var _aura = companion.auras[$ _aura_name];
 
             if (_aura.active) {
-                // General DR applies to ranged
-                if (variable_struct_exists(_aura, "damage_reduction")) {
-                    total_dr += _aura.damage_reduction;
+                // General DR bonus (scaled by affinity)
+                if (variable_struct_exists(_aura, "dr_bonus")) {
+                    total_dr += _aura.dr_bonus * multiplier;
                 }
-                // Ranged-specific DR (Hola's wind_ward uses this)
+                // General DR applies to ranged (scaled by affinity)
+                if (variable_struct_exists(_aura, "damage_reduction")) {
+                    total_dr += _aura.damage_reduction * multiplier;
+                }
+                // Ranged-specific DR (Hola's wind_ward uses this, scaled by affinity)
                 if (variable_struct_exists(_aura, "ranged_damage_reduction")) {
-                    total_dr += _aura.ranged_damage_reduction;
+                    total_dr += _aura.ranged_damage_reduction * multiplier;
                 }
             }
         }
 
-        // Check triggers for ranged DR bonuses
+        // Check triggers for ranged DR bonuses (not scaled - triggers use affinity-based unlocks)
         var _trigger_names = variable_struct_get_names(companion.triggers);
         for (var j = 0; j < array_length(_trigger_names); j++) {
             var _trigger_name = _trigger_names[j];
@@ -127,8 +156,13 @@ function apply_companion_regeneration_auras(player_instance) {
             player_instance.companion_regen_timer++;
 
             if (player_instance.companion_regen_timer >= companion.auras.regeneration.tick_interval) {
+                // Scale regeneration by affinity multiplier
+                var base_regen = companion.auras.regeneration.hp_per_tick;
+                var multiplier = get_affinity_aura_multiplier(companion.affinity);
+                var scaled_regen = base_regen * multiplier;
+
                 player_instance.hp = min(
-                    player_instance.hp + companion.auras.regeneration.hp_per_tick,
+                    player_instance.hp + scaled_regen,
                     player_instance.hp_total
                 );
                 player_instance.companion_regen_timer = 0;

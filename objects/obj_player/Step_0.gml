@@ -314,6 +314,48 @@ if (keyboard_check_pressed(ord("P"))) {
     show_debug_message("==========================");
 }
 
+// Debug key to boost Canopy affinity
+if (keyboard_check_pressed(ord("K"))) {
+    with (obj_canopy) {
+        affinity = min(affinity + 1, affinity_max);
+        show_debug_message("=== CANOPY AFFINITY ===");
+        show_debug_message("Affinity: " + string(affinity) + "/" + string(affinity_max));
+        show_debug_message("Triggers unlocked:");
+        show_debug_message("  Shield: " + string(triggers.shield.unlocked));
+        show_debug_message("  Dash Mend (5+): " + string(triggers.dash_mend.unlocked));
+        show_debug_message("  Aegis (8+): " + string(triggers.aegis.unlocked));
+        show_debug_message("  Guardian Veil (10): " + string(triggers.guardian_veil.unlocked));
+        show_debug_message("=======================");
+    }
+}
+
+// Debug key to show affinity aura multipliers for all companions
+if (keyboard_check_pressed(ord("H"))) {
+    show_debug_message("=== AFFINITY AURA SCALING ===");
+    with (obj_companion_parent) {
+        if (is_recruited) {
+            var multiplier = get_affinity_aura_multiplier(affinity);
+            show_debug_message(companion_name + " (Affinity " + string(affinity) + "):");
+            show_debug_message("  Multiplier: " + string(multiplier) + "x");
+
+            // Show scaled aura values
+            if (variable_struct_exists(auras, "regeneration") && auras.regeneration.active) {
+                var base_regen = auras.regeneration.hp_per_tick;
+                show_debug_message("  Regen: " + string(base_regen) + " -> " + string(base_regen * multiplier) + " HP/tick");
+            }
+            if (variable_struct_exists(auras, "protective") && auras.protective.active) {
+                var base_dr = auras.protective.dr_bonus;
+                show_debug_message("  Protective DR: " + string(base_dr) + " -> " + string(base_dr * multiplier));
+            }
+            if (variable_struct_exists(auras, "wind_ward") && auras.wind_ward.active) {
+                var base_ranged_dr = auras.wind_ward.ranged_damage_reduction;
+                show_debug_message("  Wind Ward DR: " + string(base_ranged_dr) + " -> " + string(base_ranged_dr * multiplier));
+            }
+        }
+    }
+    show_debug_message("============================");
+}
+
 // ============================================
 // DEBUG SAVE/LOAD KEYS
 // ============================================

@@ -39,8 +39,8 @@ evade_target_y = y;
 // Trigger sound defaults
 sfx_trigger_sound = noone;
 
-// Affinity system (1.0 to 10.0)
-affinity = 1.0;
+// Affinity system (3.0 to 10.0)
+affinity = 3.0;
 affinity_max = 10.0;
 
 // Quest flags for future story expansion

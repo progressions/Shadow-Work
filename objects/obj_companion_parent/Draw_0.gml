@@ -72,20 +72,5 @@ if (state == CompanionState.evading) {
     draw_self();
 }
 
-// Optional: Draw affinity indicator when recruited (heart icon)
-if (is_recruited && affinity >= 5.0) {
-    var heart_alpha = 0.6;
-    var heart_y = bbox_top - 10;
-
-    // Draw heart outline based on affinity level
-    if (affinity >= 10.0) {
-        draw_sprite_ext(spr_ui_heart, 0, x, heart_y, 0.5, 0.5, 0, c_red, heart_alpha);
-    } else if (affinity >= 8.0) {
-        draw_sprite_ext(spr_ui_heart, 0, x, heart_y, 0.5, 0.5, 0, c_orange, heart_alpha);
-    } else if (affinity >= 5.0) {
-        draw_sprite_ext(spr_ui_heart, 0, x, heart_y, 0.5, 0.5, 0, c_yellow, heart_alpha);
-    }
-}
-
 // Reset draw settings
 draw_set_alpha(1);
