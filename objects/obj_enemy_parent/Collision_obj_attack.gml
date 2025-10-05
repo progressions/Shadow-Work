@@ -8,11 +8,22 @@ if (ds_list_find_index(_attack_inst.hit_enemies, id) != -1) {
 	exit; // Already hit, skip damage
 }
 
+// Check if attack has reached its max hit count
+if (_attack_inst.current_hit_count >= _attack_inst.max_hit_count) {
+	show_debug_message("Attack has reached max hit count (" + string(_attack_inst.max_hit_count) + "), skipping damage");
+	exit; // Max hits reached, skip damage but animation continues
+}
+
 if (state != EnemyState.dead) {
 show_debug_message("Enemy state check passed, alarm[1] = " + string(alarm[1]));
 if (alarm[1] < 0) {
 	// Add this enemy to the hit list
 	ds_list_add(_attack_inst.hit_enemies, id);
+
+	// Increment attack hit count
+	_attack_inst.current_hit_count++;
+	show_debug_message("Attack hit count: " + string(_attack_inst.current_hit_count) + "/" + string(_attack_inst.max_hit_count));
+
 	 var old_hp = hp;
 
 	 // Get weapon damage type from attacker's equipped weapon

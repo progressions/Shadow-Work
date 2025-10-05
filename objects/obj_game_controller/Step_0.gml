@@ -51,6 +51,12 @@ if (keyboard_check_pressed(vk_f3)) {
 	show_debug_message("VN Intro Debug: " + (global.debug_vn_intro ? "ON" : "OFF"));
 }
 
+// F4 key to toggle enemy approach variation debug visualization
+if (keyboard_check_pressed(vk_f4)) {
+	global.debug_enemy_approach = !global.debug_enemy_approach;
+	show_debug_message("Enemy Approach Debug: " + (global.debug_enemy_approach ? "ON" : "OFF"));
+}
+
 // Update camera pan state (increment timer, detect completion)
 // IMPORTANT: This must run even when paused so VN intros work correctly
 if (global.camera_pan_state.active) {

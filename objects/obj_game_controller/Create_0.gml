@@ -360,6 +360,9 @@ global.picked_up_items = [];  // Array of picked-up item spawn IDs
 // Pathfinding debug visualization
 global.debug_pathfinding = false; // Set to false for production
 
+// Enemy approach variation debug visualization
+global.debug_enemy_approach = false; // Set to false for production
+
 // Debug mode for damage reduction display
 global.debug_mode = false;
 

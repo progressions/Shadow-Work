@@ -93,6 +93,13 @@ stuck_check_x = x;
 stuck_check_y = y;
 alarm[4] = 60; // Check if stuck every second
 
+// Approach variation system (flanking behavior)
+approach_mode = "direct";        // "direct" or "flanking" - chosen when entering trigger range
+approach_chosen = false;         // Set to true once approach angle selected (prevents re-selection)
+flank_offset_angle = 0;          // Perpendicular offset angle (±90 degrees) for flanking
+flank_trigger_distance = 120;    // Distance threshold to trigger approach selection
+flank_chance = 0.4;              // Probability of flanking vs direct approach (40% default)
+
 // Party controller system
 party_controller = noone;  // Reference to obj_enemy_party_controller if in a party
 current_objective = "attack"; // Current objective: "attack", "formation", or "flee"

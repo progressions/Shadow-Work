@@ -3,8 +3,12 @@ creator = obj_player;
 // Attack category for damage reduction calculations
 attack_category = AttackCategory.melee;
 
-// Track which enemies have been hit to prevent multi-hit
+// Track which enemies have been hit to prevent multi-hit on same enemy
 hit_enemies = ds_list_create();
+
+// Hit count limiting system (for multi-hit traits in future)
+max_hit_count = 1;        // Default: can only damage 1 enemy total
+current_hit_count = 0;    // Track how many enemies have been damaged
 
 // Default hit properties (updated after querying the creator)
 hit_range = 28;

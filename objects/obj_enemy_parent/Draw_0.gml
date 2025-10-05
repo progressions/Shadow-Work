@@ -39,6 +39,58 @@ if (global.debug_pathfinding) {
     draw_text(x, bbox_top - 30, _state_text);
 }
 
+// Debug: Draw approach variation visualization
+if (global.debug_enemy_approach && instance_exists(obj_player)) {
+    // Draw trigger distance circle
+    draw_set_color(c_yellow);
+    draw_set_alpha(0.2);
+    draw_circle(x, y, flank_trigger_distance, true);
+
+    // Draw approach mode and angle
+    var _approach_text = approach_mode == "flanking" ? "BEHIND" : "DIRECT";
+    if (approach_chosen && flank_offset_angle != 0) {
+        _approach_text += " (" + string(round(flank_offset_angle)) + "°)";
+    }
+    draw_set_color(approach_mode == "flanking" ? c_red : c_green);
+    draw_set_alpha(1);
+    draw_text(x, bbox_bottom + 4, _approach_text);
+
+    // Draw approach direction line if flanking
+    if (approach_mode == "flanking" && approach_chosen && flank_offset_angle != 0) {
+        var base_dir = point_direction(x, y, obj_player.x, obj_player.y);
+        var approach_dir = base_dir + flank_offset_angle;
+        var line_length = 40;
+        var line_end_x = x + lengthdir_x(line_length, approach_dir);
+        var line_end_y = y + lengthdir_y(line_length, approach_dir);
+
+        draw_set_color(c_red);
+        draw_set_alpha(0.7);
+        draw_line_width(x, y, line_end_x, line_end_y, 2);
+        draw_circle(line_end_x, line_end_y, 4, false);
+
+        // Draw player's facing direction indicator
+        var player_facing_angle = 0;
+        switch(obj_player.facing_dir) {
+            case "down":  player_facing_angle = 90;  break;
+            case "right": player_facing_angle = 0;   break;
+            case "left":  player_facing_angle = 180; break;
+            case "up":    player_facing_angle = 270; break;
+        }
+        var facing_line_length = 30;
+        var facing_end_x = obj_player.x + lengthdir_x(facing_line_length, player_facing_angle);
+        var facing_end_y = obj_player.y + lengthdir_y(facing_line_length, player_facing_angle);
+
+        draw_set_color(c_blue);
+        draw_set_alpha(0.8);
+        draw_line_width(obj_player.x, obj_player.y, facing_end_x, facing_end_y, 3);
+        draw_circle(facing_end_x, facing_end_y, 6, false);
+    }
+
+    // Reset draw settings
+    draw_set_color(c_white);
+    draw_set_alpha(1);
+}
+
 // Draw shadow first
 draw_sprite_ext(spr_shadow, image_index, x, y + 2, 1, 0.5, 0, c_black, 0.3);
 

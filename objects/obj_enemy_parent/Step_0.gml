@@ -20,6 +20,20 @@ tick_status_effects();
 // Update timed traits
 update_timed_traits();
 
+// Track state transitions for approach variation reset
+if (!variable_instance_exists(self, "previous_state")) {
+    previous_state = state;
+}
+
+var _entering_combat = ((state == EnemyState.targeting || state == EnemyState.ranged_attacking) &&
+                        (previous_state != EnemyState.targeting && previous_state != EnemyState.ranged_attacking));
+
+if (_entering_combat) {
+    approach_chosen = false;
+    approach_mode = "direct";
+    flank_offset_angle = 0;
+}
+
 // Handle knockback movement when recently hit
 if (knockback_timer > 0) {
     if (path_exists(path)) {
@@ -72,12 +86,55 @@ if ((state == EnemyState.targeting || state == EnemyState.ranged_attacking) && a
         target_x = x;
         target_y = y;
         alarm[0] = 0;
+
+        // Reset approach variation when losing aggro
+        approach_chosen = false;
+        approach_mode = "direct";
+        flank_offset_angle = 0;
     }
 }
 
 // Party controller weighted decision system
 if (instance_exists(party_controller)) {
     party_controller.calculate_decision_weights(id);
+}
+
+// Approach variation system - select flanking angle when entering close range
+if ((state == EnemyState.targeting || state == EnemyState.ranged_attacking) && instance_exists(obj_player)) {
+    var dist_to_player = point_distance(x, y, obj_player.x, obj_player.y);
+
+    // Trigger approach selection when entering close range (once per aggro)
+    if (!approach_chosen && dist_to_player <= flank_trigger_distance) {
+        approach_chosen = true;
+
+        // Random chance to select flanking approach
+        if (random(1) < flank_chance) {
+            approach_mode = "flanking";
+
+            // Convert player's facing_dir to angle
+            var player_facing_angle = 0;
+            switch(obj_player.facing_dir) {
+                case "down":  player_facing_angle = 90;  break;
+                case "right": player_facing_angle = 0;   break;
+                case "left":  player_facing_angle = 180; break;
+                case "up":    player_facing_angle = 270; break;
+            }
+
+            // Calculate angle to approach from behind (opposite of player's facing)
+            var behind_angle = player_facing_angle + 180;
+
+            // Calculate current direction from enemy to player
+            var current_dir = point_direction(x, y, obj_player.x, obj_player.y);
+
+            // Calculate offset needed to approach from behind
+            // Add random variation (±30°) to avoid perfect predictability
+            var target_approach_angle = behind_angle + random_range(-30, 30);
+            flank_offset_angle = angle_difference(target_approach_angle, current_dir);
+        } else {
+            approach_mode = "direct";
+            flank_offset_angle = 0;
+        }
+    }
 }
 
 // Dispatch to state-specific handlers
@@ -209,3 +266,6 @@ if (ranged_attack_cooldown > 0) {
 if (state == EnemyState.ranged_attacking && ranged_attack_cooldown <= 0) {
     state = EnemyState.targeting;
 }
+
+// Update previous state for next frame's transition detection
+previous_state = state;

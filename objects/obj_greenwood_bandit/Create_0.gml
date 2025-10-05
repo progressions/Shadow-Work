@@ -18,5 +18,9 @@ ranged_attack_speed = 0.8;   // Slower than melee (longer cooldown)
 // This allows them to maintain shooting distance while having room to maneuver
 ideal_range = 24;  // 75% of attack_range (128) - stays at bow range, circles/kites player
 
+// Approach variation - bandits are tactical archers (moderate flanking)
+flank_chance = 0.5;
+flank_trigger_distance = 160;  // Trigger beyond attack range to execute flank before shooting
+
 // Configure bow attack sound
 enemy_sounds.on_attack = snd_bow_attack;

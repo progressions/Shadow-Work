@@ -13,6 +13,9 @@ move_speed = 0.8;
 array_push(tags, "fireborne");
 apply_tag_traits();
 
+// Approach variation - orcs are brutish and charge directly (low flanking)
+flank_chance = 0.2;
+
 enemy_sounds.on_aggro = snd_orc_aggro;
 enemy_sounds.on_death = snd_orc_death;
 enemy_sounds.on_attack = snd_orc_attack;

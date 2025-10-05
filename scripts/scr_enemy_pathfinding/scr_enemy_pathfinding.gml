@@ -13,7 +13,23 @@ function enemy_calculate_target_position() {
     var _player_x = obj_player.x;
     var _player_y = obj_player.y;
 
-    // Simple: always path directly to player position
+    // Apply approach variation (flanking behavior)
+    if (approach_mode == "flanking" && flank_offset_angle != 0) {
+        // Calculate base direction to player
+        var base_dir = point_direction(x, y, _player_x, _player_y);
+
+        // Apply perpendicular offset angle
+        var approach_dir = base_dir + flank_offset_angle;
+
+        // Calculate target position at offset angle (32 pixels from player)
+        var approach_distance = 32;
+        var target_x = _player_x + lengthdir_x(approach_distance, approach_dir);
+        var target_y = _player_y + lengthdir_y(approach_distance, approach_dir);
+
+        return { x: target_x, y: target_y };
+    }
+
+    // Direct approach: path directly to player position
     // Pathfinding grid will route around obstacles automatically
     return { x: _player_x, y: _player_y };
 }
