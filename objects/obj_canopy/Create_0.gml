@@ -75,7 +75,7 @@ triggers = {
 
 // VN system
 vn_sprite = spr_vn_canopy_1; // Portrait sprite for VN dialogue
-theme_song = snd_canopy_theme; // Theme music for VN dialogue
+theme_song = noone; //snd_canopy_theme; // Theme music for VN dialogue
 
 // VN intro on first sight
 has_vn_intro = true;

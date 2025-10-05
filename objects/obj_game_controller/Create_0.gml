@@ -361,7 +361,7 @@ global.picked_up_items = [];  // Array of picked-up item spawn IDs
 global.debug_pathfinding = false; // Set to false for production
 
 // Debug mode for damage reduction display
-global.debug_mode = true;
+global.debug_mode = false;
 
 // Initialize formation database for party controller system
 global.formation_database = {

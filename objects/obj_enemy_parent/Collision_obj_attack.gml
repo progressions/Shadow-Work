@@ -2,9 +2,17 @@ show_debug_message("COLLISION DETECTED: enemy hit by attack!");
 
 var _attack_inst = other;
 
+// Check if this enemy has already been hit by this attack
+if (ds_list_find_index(_attack_inst.hit_enemies, id) != -1) {
+	show_debug_message("Enemy already hit by this attack, skipping damage");
+	exit; // Already hit, skip damage
+}
+
 if (state != EnemyState.dead) {
 show_debug_message("Enemy state check passed, alarm[1] = " + string(alarm[1]));
 if (alarm[1] < 0) {
+	// Add this enemy to the hit list
+	ds_list_add(_attack_inst.hit_enemies, id);
 	 var old_hp = hp;
 
 	 // Get weapon damage type from attacker's equipped weapon
@@ -153,9 +161,5 @@ if (alarm[1] < 0) {
 }
 }
 
-if (instance_exists(_attack_inst)) {
-	with (_attack_inst) {
-		show_debug_message("Destroying attack instance after hit to prevent multi-hit");
-		instance_destroy();
-	}
-}
+// Don't destroy attack instance - let it finish animation
+// The hit_enemies list prevents multi-hit

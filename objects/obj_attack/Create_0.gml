@@ -3,6 +3,9 @@ creator = obj_player;
 // Attack category for damage reduction calculations
 attack_category = AttackCategory.melee;
 
+// Track which enemies have been hit to prevent multi-hit
+hit_enemies = ds_list_create();
+
 // Default hit properties (updated after querying the creator)
 hit_range = 28;
 hit_scale = 1;
