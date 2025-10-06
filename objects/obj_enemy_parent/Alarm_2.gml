@@ -45,6 +45,9 @@ if (state == EnemyState.attacking) {
             // Deal damage to player
             _player.hp -= final_damage;
 
+            // Reset combat timer for companion evading behavior
+            _player.combat_timer = 0;
+
             // Spawn damage number or immunity text
             if (_resistance_multiplier <= 0) {
                 spawn_immune_text(_player.x, _player.y - 16, _player);
