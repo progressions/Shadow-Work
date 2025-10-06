@@ -420,9 +420,6 @@ if (!instance_exists(obj_interaction_manager)) {
 // Loot system debug testing
 global.debug_loot_system = false; // Set to true to test weighted selection
 
-// Initialize AI event bus system
-global.ai_event_bus = ds_list_create();
-
 // Initialize sound variant randomization system
 global.sound_variant_lookup = {};
 global.debug_sound_variants = false;

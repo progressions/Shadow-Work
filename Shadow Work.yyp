@@ -337,8 +337,6 @@
     {"id":{"name":"scr_sfx_functions","path":"scripts/scr_sfx_functions/scr_sfx_functions.yy",},},
     {"id":{"name":"scr_spawner_helpers","path":"scripts/scr_spawner_helpers/scr_spawner_helpers.yy",},},
     {"id":{"name":"scr_status_effects","path":"scripts/scr_status_effects/scr_status_effects.yy",},},
-    {"id":{"name":"scr_test_ai_event_bus","path":"scripts/scr_test_ai_event_bus/scr_test_ai_event_bus.yy",},},
-    {"id":{"name":"scr_test_ai_memory_system","path":"scripts/scr_test_ai_memory_system/scr_test_ai_memory_system.yy",},},
     {"id":{"name":"scr_test_death_event_broadcasting","path":"scripts/scr_test_death_event_broadcasting/scr_test_death_event_broadcasting.yy",},},
     {"id":{"name":"scr_test_party_memory_morale","path":"scripts/scr_test_party_memory_morale/scr_test_party_memory_morale.yy",},},
     {"id":{"name":"scr_test_sound_variants","path":"scripts/scr_test_sound_variants/scr_test_sound_variants.yy",},},
