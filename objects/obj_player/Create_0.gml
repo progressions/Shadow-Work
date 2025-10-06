@@ -1,4 +1,4 @@
-move_speed = 1.25;
+move_speed = 1.5;
 
 tilemap = layer_tilemap_get_id("Tiles_Col");
 
@@ -106,7 +106,7 @@ dash_timer = 0;
 dash_speed = 6;
 
 dash_cooldown = 0;
-dash_cooldown_time = 30;
+dash_cooldown_time = 45;
 
 // Dash attack system
 dash_attack_window = 0;
