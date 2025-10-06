@@ -39,7 +39,7 @@ triggers = {
         dr_bonus: 5,
         duration: 180, // 3 seconds
         hp_threshold: 0.3, // Activate at 30% HP
-        sfx_trigger_sound: snd_canopy_shield
+        sfx_trigger_sound: snd_canopy_shield_1
     },
     dash_mend: {
         unlocked: false, // Unlocks at affinity 5+

@@ -12,8 +12,8 @@
   "duration":3.75,
   "name":"snd_hola_gust",
   "parent":{
-    "name":"world",
-    "path":"folders/Sounds/sfx/world.yy",
+    "name":"companions",
+    "path":"folders/Sounds/sfx/world/companions.yy",
   },
   "preload":false,
   "resourceType":"GMSound",

@@ -12,8 +12,8 @@
   "duration":0.3958957,
   "name":"snd_companion_torch_receive",
   "parent":{
-    "name":"world",
-    "path":"folders/Sounds/sfx/world.yy",
+    "name":"companions",
+    "path":"folders/Sounds/sfx/world/companions.yy",
   },
   "preload":false,
   "resourceType":"GMSound",

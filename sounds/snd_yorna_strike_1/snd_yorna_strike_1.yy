@@ -1,6 +1,6 @@
 {
   "$GMSound":"",
-  "%Name":"snd_companion_recruited",
+  "%Name":"snd_yorna_strike_1",
   "audioGroupId":{
     "name":"audiogroup_sfx_world",
     "path":"audiogroups/audiogroup_sfx_world",
@@ -9,8 +9,8 @@
   "bitRate":128,
   "compression":0,
   "conversionMode":0,
-  "duration":6.857143,
-  "name":"snd_companion_recruited",
+  "duration":1.4109751,
+  "name":"snd_yorna_strike_1",
   "parent":{
     "name":"companions",
     "path":"folders/Sounds/sfx/world/companions.yy",
@@ -19,7 +19,7 @@
   "resourceType":"GMSound",
   "resourceVersion":"2.0",
   "sampleRate":44100,
-  "soundFile":"snd_companion_recruited.wav",
+  "soundFile":"snd_yorna_strike_1.wav",
   "type":0,
   "volume":1.0,
 }

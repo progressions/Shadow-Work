@@ -1,6 +1,6 @@
 {
   "$GMSound":"",
-  "%Name":"snd_canopy_shield",
+  "%Name":"snd_canopy_shield_1",
   "audioGroupId":{
     "name":"audiogroup_sfx_world",
     "path":"audiogroups/audiogroup_sfx_world",
@@ -9,17 +9,17 @@
   "bitRate":128,
   "compression":0,
   "conversionMode":0,
-  "duration":2.1421995,
-  "name":"snd_canopy_shield",
+  "duration":1.370975,
+  "name":"snd_canopy_shield_1",
   "parent":{
-    "name":"world",
-    "path":"folders/Sounds/sfx/world.yy",
+    "name":"companions",
+    "path":"folders/Sounds/sfx/world/companions.yy",
   },
   "preload":false,
   "resourceType":"GMSound",
   "resourceVersion":"2.0",
   "sampleRate":44100,
-  "soundFile":"snd_canopy_shield.wav",
+  "soundFile":"snd_canopy_shield_1.wav",
   "type":0,
   "volume":1.0,
 }

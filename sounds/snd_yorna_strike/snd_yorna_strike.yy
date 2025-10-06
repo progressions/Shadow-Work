@@ -12,8 +12,8 @@
   "duration":0.6000907,
   "name":"snd_yorna_strike",
   "parent":{
-    "name":"world",
-    "path":"folders/Sounds/sfx/world.yy",
+    "name":"companions",
+    "path":"folders/Sounds/sfx/world/companions.yy",
   },
   "preload":false,
   "resourceType":"GMSound",
