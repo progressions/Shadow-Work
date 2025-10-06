@@ -236,8 +236,9 @@ if (keyboard_check_pressed(ord("8"))) {
 
 // Debug key for adding arrows
 if (keyboard_check_pressed(ord("9"))) {
-    inventory_add_item(global.item_database.arrows, 10);
-    show_debug_message("Added 10 arrows to inventory");
+    var _to_add = min(10, arrow_max - arrow_count);
+    arrow_count += _to_add;
+    show_debug_message("Added " + string(_to_add) + " arrows to arrow_count (" + string(arrow_count) + "/" + string(arrow_max) + ")");
 }
 
 // Debug keys for testing trait system v2.0
