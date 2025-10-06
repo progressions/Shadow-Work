@@ -288,9 +288,9 @@ function companion_play_trigger_sfx(_companion_instance, _trigger_name) {
             return undefined;
         }
 
+        // Leave strings as-is so play_sfx() can handle variant randomization
         if (is_string(_candidate)) {
-            var _index = asset_get_index(_candidate);
-            return (_index != -1) ? _index : undefined;
+            return _candidate;
         }
 
         return _candidate;
