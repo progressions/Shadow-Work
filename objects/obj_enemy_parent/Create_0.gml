@@ -84,14 +84,15 @@ permanent_traits = {}; // From tags (applied at creation)
 temporary_traits = {};  // From buffs/debuffs (applied during combat)
 
 // Enemy sound configuration
-// Child enemies can override specific sounds: enemy_sounds.on_attack = snd_orc_roar;
+// Child enemies can override specific sounds: enemy_sounds.on_melee_attack = snd_orc_roar;
 enemy_sounds = {
-    on_attack: undefined,      // Default: snd_enemy_attack_generic
-    on_hit: undefined,         // Default: snd_enemy_hit_generic
-    on_death: undefined,       // Default: snd_enemy_death
-    on_aggro: undefined,       // Default: undefined (no sound)
-    on_footstep: undefined,    // Default: undefined (no sound)
-    on_status_effect: undefined // Default: snd_status_effect_generic
+    on_melee_attack: undefined,   // Default: snd_enemy_attack_generic
+    on_ranged_attack: undefined,  // Default: snd_bow_attack
+    on_hit: undefined,            // Default: snd_enemy_hit_generic
+    on_death: undefined,          // Default: snd_enemy_death
+    on_aggro: undefined,          // Default: undefined (no sound)
+    on_footstep: undefined,       // Default: undefined (no sound)
+    on_status_effect: undefined   // Default: snd_status_effect_generic
 };
 
 // Pathfinding system variables

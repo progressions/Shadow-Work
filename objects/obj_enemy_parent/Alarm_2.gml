@@ -2,8 +2,8 @@
 if (global.game_paused) exit;
 
 if (state == EnemyState.attacking) {
-    // Play enemy attack sound
-    play_enemy_sfx("on_attack");
+    // Play enemy melee attack sound
+    play_enemy_sfx("on_melee_attack");
 
     // Create visual attack effect
     var _attack = instance_create_layer(x, y, "Instances", obj_enemy_attack);

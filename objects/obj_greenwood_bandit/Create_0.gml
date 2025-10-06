@@ -29,8 +29,9 @@ retreat_when_close = true;         // Retreat to maintain bow range
 flank_chance = 0.95;
 flank_trigger_distance = 160;  // Trigger beyond attack range to execute flank before shooting
 
-// Configure bow attack sound
-enemy_sounds.on_attack = snd_bow_attack;
+// Configure attack sounds (archer with melee fallback)
+enemy_sounds.on_ranged_attack = snd_bow_attack;  // Primary bow attack sound
+enemy_sounds.on_melee_attack = snd_attack_sword; // Fallback dagger swipe
 
 // Ranged attack animation overrides (bow attacks)
 enemy_anim_overrides = {

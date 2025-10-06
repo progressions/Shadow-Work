@@ -87,8 +87,8 @@ function enemy_handle_ranged_attack() {
 
         // Keep path active - enemy can move while shooting
 
-        // Play sound effect
-        play_enemy_sfx("on_attack");
+        // Play ranged attack sound effect
+        play_enemy_sfx("on_ranged_attack");
 
         if (variable_global_exists("debug_mode") && global.debug_mode) {
             show_debug_message("Enemy fired ranged attack (" + object_get_name(_projectile_obj) + ") Damage: " + string(ranged_damage) + ", Direction: " + facing_dir);

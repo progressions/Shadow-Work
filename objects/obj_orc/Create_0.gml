@@ -37,7 +37,8 @@ enemy_anim_overrides = {
 
 enemy_sounds.on_aggro = snd_orc_aggro;
 enemy_sounds.on_death = snd_orc_death;
-enemy_sounds.on_attack = snd_orc_attack;
+enemy_sounds.on_melee_attack = snd_orc_attack;  // Brutal melee sound
+enemy_sounds.on_ranged_attack = snd_orc_attack; // Same sound for throwing axes
 enemy_sounds.on_hit = snd_orc_hit;
 
 // Orc loot table - higher drop chance for tougher enemy

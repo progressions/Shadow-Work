@@ -16,7 +16,7 @@ apply_tag_traits();
 flank_chance = 0.7;
 flank_trigger_distance = 100;  // Shorter range for aggressive close-quarters flanking
 
-enemy_sounds.on_attack = snd_burglar_attack;
+enemy_sounds.on_melee_attack = snd_burglar_attack;
 enemy_sounds.on_hit = snd_burglar_hit;
 enemy_sounds.on_death = snd_burglar_death;
 
