@@ -9,8 +9,8 @@
   "name":"obj_enemy_party_controller",
   "overriddenProperties":[],
   "parent":{
-    "name":"mobs",
-    "path":"folders/Objects/mobs.yy",
+    "name":"parties",
+    "path":"folders/Objects/mobs/parties.yy",
   },
   "parentObjectId":null,
   "persistent":false,

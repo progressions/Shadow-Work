@@ -34,10 +34,10 @@ function on_leader_death() {
 // Auto-spawn party members in wedge formation
 var enemies = [
     instance_create_layer(x, y - 48, layer, obj_orc),         // Front (leader)
-    instance_create_layer(x - 32, y - 16, layer, obj_orc),    // Left flank
-    instance_create_layer(x + 32, y - 16, layer, obj_orc),    // Right flank
-    instance_create_layer(x - 48, y + 16, layer, obj_orc),    // Left rear
-    instance_create_layer(x + 48, y + 16, layer, obj_orc)     // Right rear
+    instance_create_layer(x - 32, y - 16, layer, obj_burglar),    // Left flank
+    instance_create_layer(x + 32, y - 16, layer, obj_burglar),    // Right flank
+    instance_create_layer(x - 48, y + 16, layer, obj_burglar),    // Left rear
+    instance_create_layer(x + 48, y + 16, layer, obj_burglar)     // Right rear
 ];
 
 // Initialize the party

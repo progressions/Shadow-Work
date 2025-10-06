@@ -255,8 +255,8 @@ function update_party_state() {
     if (_recent_deaths >= array_length(party_members) * 0.5) {
         if (party_state != PartyState.cautious && party_state != PartyState.desperate) {
             transition_to_state(PartyState.cautious);
-            return; // Exit early after morale break
         }
+        return; // Stay in cautious/desperate while morale is broken
     }
 
     // Determine new state based on conditions
