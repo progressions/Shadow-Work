@@ -363,6 +363,8 @@
     {"id":{"name":"snd_burglar_death","path":"sounds/snd_burglar_death/snd_burglar_death.yy",},},
     {"id":{"name":"snd_burglar_hit","path":"sounds/snd_burglar_hit/snd_burglar_hit.yy",},},
     {"id":{"name":"snd_canopy_shield_1","path":"sounds/snd_canopy_shield_1/snd_canopy_shield_1.yy",},},
+    {"id":{"name":"snd_canopy_shield_2","path":"sounds/snd_canopy_shield_2/snd_canopy_shield_2.yy",},},
+    {"id":{"name":"snd_canopy_shield_3","path":"sounds/snd_canopy_shield_3/snd_canopy_shield_3.yy",},},
     {"id":{"name":"snd_canopy_theme","path":"sounds/snd_canopy_theme/snd_canopy_theme.yy",},},
     {"id":{"name":"snd_change_loadout","path":"sounds/snd_change_loadout/snd_change_loadout.yy",},},
     {"id":{"name":"snd_chest_open","path":"sounds/snd_chest_open/snd_chest_open.yy",},},

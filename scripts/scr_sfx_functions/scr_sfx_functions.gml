@@ -1,6 +1,50 @@
 
 function play_sfx(_sound, _volume=1, _priority=8, _loop=false, _fade_in_speed=0, _fade_out_speed=0) {
-	obj_sfx_controller.play_sfx(_sound, _volume, _priority, _loop, _fade_in_speed, _fade_out_speed);
+	var _sound_asset = _sound;
+	var _base_name = "";
+
+	// Handle both string and asset references
+	if (is_string(_sound)) {
+		_base_name = _sound;
+		_sound_asset = asset_get_index(_sound);
+	} else {
+		// Asset reference - get the name
+		_base_name = audio_get_name(_sound);
+	}
+
+	// Check for variants in cache
+	var _variant_count = global.sound_variant_lookup[$ _base_name] ?? 0;
+
+	if (_variant_count > 0) {
+		// Pick random variant
+		var _variant_num = irandom_range(1, _variant_count);
+		var _variant_name = _base_name + "_" + string(_variant_num);
+		_sound_asset = asset_get_index(_variant_name);
+
+		// Debug logging (optional, controlled by global flag)
+		if (global.debug_sound_variants) {
+			show_debug_message("Sound variant: " + _variant_name + " (picked " + string(_variant_num) + " of " + string(_variant_count) + ")");
+		}
+	} else {
+		// No variants, use original sound
+		if (global.debug_sound_variants && _base_name != "") {
+			show_debug_message("Sound (no variants): " + _base_name);
+		}
+	}
+
+	// Fallback: if sound asset is invalid, try base name one more time
+	if (_sound_asset == -1 && _base_name != "") {
+		_sound_asset = asset_get_index(_base_name);
+	}
+
+	// Final check: if sound doesn't exist, log warning and return
+	if (_sound_asset == -1) {
+		show_debug_message("⚠ WARNING: Sound asset not found: " + _base_name);
+		return;
+	}
+
+	// Call existing sfx controller logic
+	obj_sfx_controller.play_sfx(_sound_asset, _volume, _priority, _loop, _fade_in_speed, _fade_out_speed);
 }
 
 function stop_looped_sfx(_sound) {

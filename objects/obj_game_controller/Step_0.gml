@@ -69,6 +69,12 @@ if (keyboard_check_pressed(vk_f2)) {
 	test_sound_variants();
 }
 
+// F5 key to run play_sfx variant randomization test suite
+if (keyboard_check_pressed(vk_f5)) {
+	show_debug_message("Running play_sfx() Variant Randomization Test Suite (F5)...");
+	test_play_sfx_variants();
+}
+
 // F7 key to run AI event bus test suite
 if (keyboard_check_pressed(vk_f7)) {
 	show_debug_message("Running AI Event Bus Test Suite (F7)...");

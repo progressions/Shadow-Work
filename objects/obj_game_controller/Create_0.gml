@@ -442,7 +442,7 @@ var _sound_prefixes = [
     "snd_party_retreating",
     "snd_party_patrolling",
     "snd_party_protecting",
-    "snd_shield_trigger",
+    "snd_canopy_shield",
     "snd_hit",
     "snd_player_hit",
     "snd_orc_hit",

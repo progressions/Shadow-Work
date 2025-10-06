@@ -1,9 +1,9 @@
 {
   "$GMScript":"v1",
-  "%Name":"scr_test_sound_variants",
+  "%Name":"scr_test_play_sfx_variants",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"scr_test_sound_variants",
+  "name":"scr_test_play_sfx_variants",
   "parent":{
     "name":"Scripts",
     "path":"folders/Scripts.yy",

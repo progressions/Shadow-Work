@@ -22,6 +22,7 @@
     {"name":"inst_4B0CDE0F","path":"rooms/room_greenwood_forest_4/room_greenwood_forest_4.yy",},
     {"name":"inst_10E57DFF","path":"rooms/room_greenwood_forest_4/room_greenwood_forest_4.yy",},
     {"name":"inst_1E6816B9","path":"rooms/room_greenwood_forest_4/room_greenwood_forest_4.yy",},
+    {"name":"inst_4727DBE5","path":"rooms/room_greenwood_forest_4/room_greenwood_forest_4.yy",},
   ],
   "isDnd":false,
   "layers":[
@@ -65,6 +66,7 @@
         {"$GMRInstance":"v2","%Name":"inst_4270A9C8","colour":4294967295,"frozen":false,"hasCreationCode":false,"ignore":false,"imageIndex":0,"imageSpeed":1.0,"inheritCode":false,"inheritedItemId":null,"inheritItemSettings":false,"isDnd":false,"name":"inst_4270A9C8","objectId":{"name":"obj_yorna","path":"objects/obj_yorna/obj_yorna.yy",},"properties":[],"resourceType":"GMRInstance","resourceVersion":"2.0","rotation":0.0,"scaleX":1.0,"scaleY":1.0,"x":48.0,"y":176.0,},
         {"$GMRInstance":"v2","%Name":"inst_4B0CDE0F","colour":4294967295,"frozen":false,"hasCreationCode":false,"ignore":false,"imageIndex":0,"imageSpeed":1.0,"inheritCode":false,"inheritedItemId":null,"inheritItemSettings":false,"isDnd":false,"name":"inst_4B0CDE0F","objectId":{"name":"obj_item_greatshield","path":"objects/obj_item_greatshield/obj_item_greatshield.yy",},"properties":[],"resourceType":"GMRInstance","resourceVersion":"2.0","rotation":0.0,"scaleX":1.0,"scaleY":1.0,"x":144.0,"y":112.0,},
         {"$GMRInstance":"v2","%Name":"inst_1E6816B9","colour":4294967295,"frozen":false,"hasCreationCode":false,"ignore":false,"imageIndex":0,"imageSpeed":1.0,"inheritCode":false,"inheritedItemId":null,"inheritItemSettings":false,"isDnd":false,"name":"inst_1E6816B9","objectId":{"name":"obj_orc_raiding_party","path":"objects/obj_orc_raiding_party/obj_orc_raiding_party.yy",},"properties":[],"resourceType":"GMRInstance","resourceVersion":"2.0","rotation":0.0,"scaleX":1.0,"scaleY":1.0,"x":464.0,"y":64.0,},
+        {"$GMRInstance":"v2","%Name":"inst_4727DBE5","colour":4294967295,"frozen":false,"hasCreationCode":false,"ignore":false,"imageIndex":0,"imageSpeed":1.0,"inheritCode":false,"inheritedItemId":null,"inheritItemSettings":false,"isDnd":false,"name":"inst_4727DBE5","objectId":{"name":"obj_orc_raiding_party","path":"objects/obj_orc_raiding_party/obj_orc_raiding_party.yy",},"properties":[],"resourceType":"GMRInstance","resourceVersion":"2.0","rotation":0.0,"scaleX":1.0,"scaleY":1.0,"x":272.0,"y":288.0,},
       ],"layers":[],"name":"Instances","properties":[],"resourceType":"GMRInstanceLayer","resourceVersion":"2.0","userdefinedDepth":false,"visible":true,},
     {"$GMRTileLayer":"","%Name":"Tiles_Castle_3","depth":101,"effectEnabled":true,"effectType":null,"gridX":32,"gridY":32,"hierarchyFrozen":false,"inheritLayerDepth":false,"inheritLayerSettings":false,"inheritSubLayers":true,"inheritVisibility":true,"layers":[],"name":"Tiles_Castle_3","properties":[],"resourceType":"GMRTileLayer","resourceVersion":"2.0","tiles":{"SerialiseHeight":23,"SerialiseWidth":40,"TileCompressedData":[
           -384,-2147483648,15,127,128,127,128,127,128,127,128,127,128,127,128,127,0,0,-25,-2147483648,15,128,127,
