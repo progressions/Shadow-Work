@@ -4,6 +4,7 @@
 party_members = [];
 party_leader = noone;
 initial_party_size = 0;
+decision_update_index = 0;  // Tracks which party member updates next (for staggered updates)
 
 // Formation properties
 formation_template = "";

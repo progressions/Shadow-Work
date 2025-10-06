@@ -100,10 +100,21 @@ if (patrol_original_state == PartyState.patrolling || patrol_original_state == P
 // Update party state based on current conditions
 update_party_state();
 
-// Update decision weights for all party members
-for (var i = 0; i < array_length(party_members); i++) {
-    var _enemy = party_members[i];
-    if (instance_exists(_enemy)) {
-        calculate_decision_weights(_enemy);
+// Update decision weights for party members (staggered round-robin)
+if (array_length(party_members) > 0) {
+    // Calculate how many to update this frame (1-2 members)
+    var _updates_per_frame = min(2, array_length(party_members));
+
+    for (var i = 0; i < _updates_per_frame; i++) {
+        // Wrap index around party size
+        var _member_index = (decision_update_index + i) mod array_length(party_members);
+        var _enemy = party_members[_member_index];
+
+        if (instance_exists(_enemy)) {
+            calculate_decision_weights(_enemy);
+        }
     }
+
+    // Advance index for next frame
+    decision_update_index = (decision_update_index + _updates_per_frame) mod array_length(party_members);
 }
