@@ -20,8 +20,8 @@ sfx_trigger_sound = snd_dash;
 auras = {
     slowing: {
         active: false, // Activated on recruitment
-        slow_percent: 0.15, // 15% enemy slow
-        radius: 80 // Pixels around player
+        slow_percent: 0.50, // trying 50 15% enemy slow
+        radius: 120 // Pixels around player
     },
     wind_ward: {
         active: false, // Activated on recruitment
@@ -45,7 +45,7 @@ triggers = {
         active: false,
         cooldown: 0,
         cooldown_max: 480, // 8 seconds
-        knockback_distance: 24, // Pixels to push enemies
+        knockback_distance: 36, // Pixels to push enemies
         slow_percent: 0.30, // 30% slow
         slow_duration: 180, // 3 seconds
         trigger_distance: 40, // Activate when enemies within this distance
