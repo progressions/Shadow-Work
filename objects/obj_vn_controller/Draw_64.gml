@@ -55,7 +55,9 @@ if (_portrait_sprite != noone && sprite_exists(_portrait_sprite)) {
 
 // Draw name tag above dialogue box
 if (current_speaker != "") {
-	draw_set_font(fnt_arial);
+	//draw_set_font(fnt_arial);
+	draw_set_font(fnt_pixelify_sans);
+
 	var _name_width = string_width(current_speaker) + 60;
 
 	draw_set_color(c_dkgray);

@@ -348,18 +348,18 @@ function draw_armor_layers(_frame, _x, _y) {
 function get_equipped_sprite(_sprite_key) {
     var _sprite_name = "spr_wielded_" + _sprite_key;
     var _sprite = asset_get_index(_sprite_name);
-    
+
     if (sprite_exists(_sprite)) {
         return _sprite;
     }
-    
+
     _sprite_name = "spr_worn_" + _sprite_key;
     _sprite = asset_get_index(_sprite_name);
-    
+
     if (sprite_exists(_sprite)) {
         return _sprite;
     }
-    
+
     return -1;
 }
 
