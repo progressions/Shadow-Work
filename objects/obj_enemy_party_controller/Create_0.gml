@@ -112,6 +112,16 @@ function assign_formation_roles() {
 
         array_push(formation_data.assignments, _assignment);
 
+        // Assign formation role for dual-mode combat based on Y-offset
+        var _y_offset = _template.offsets[_offset_index].y;
+        if (_y_offset < -16) {
+            _enemy.formation_role = "rear";      // Negative Y = rear formation (ranged preference)
+        } else if (_y_offset > 16) {
+            _enemy.formation_role = "front";     // Positive Y = front formation (melee preference)
+        } else {
+            _enemy.formation_role = "support";   // Near zero = support (flexible)
+        }
+
         // Set leader reference
         if (i == 0) {
             party_leader = _enemy;

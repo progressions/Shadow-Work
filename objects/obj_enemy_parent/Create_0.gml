@@ -63,6 +63,18 @@ ranged_projectile_object = obj_enemy_arrow; // Default projectile for ranged ene
 melee_damage_resistance = 0;
 ranged_damage_resistance = 0;
 
+// Dual-mode combat system (context-based attack switching)
+enable_dual_mode = false;              // When true, enemy can switch between melee and ranged based on distance
+preferred_attack_mode = "none";        // Options: "none" (distance-based), "melee" (bias melee), "ranged" (bias ranged, retreat when close)
+melee_range_threshold = attack_range * 0.5;  // Distance below which melee is preferred (default 50% of attack_range)
+retreat_when_close = false;            // When true and preferred_attack_mode="ranged", enemy retreats if player breaches ideal_range
+attack_mode_cache = undefined;         // Cached attack mode decision (for performance optimization)
+cache_timer = 0;                       // Timer for attack mode cache refresh (frames)
+retreat_cooldown = 0;                  // Cooldown timer to prevent retreat pathfinding spam (60 frames = 1 second)
+
+// Party formation integration (optional, set by party controller)
+formation_role = undefined;            // Formation role: "rear", "front", "support" - influences attack mode selection
+
 // Status effects system
 init_status_effects();
 

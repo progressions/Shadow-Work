@@ -18,9 +18,24 @@ ranged_attack_speed = 0.5;   // Slower than melee (longer cooldown)
 // This allows them to maintain shooting distance while having room to maneuver
 ideal_range = 24;  // 75% of attack_range (128) - stays at bow range, circles/kites player
 
+// Dual-mode configuration (archer with melee fallback)
+enable_dual_mode = true;
+preferred_attack_mode = "ranged";  // Prefers bow attacks
+// attack_damage = 1 already set above (weak dagger swipe for melee fallback)
+melee_range_threshold = 24;        // Only use dagger when desperate/cornered
+retreat_when_close = true;         // Retreat to maintain bow range
+
 // Approach variation - bandits are tactical archers (moderate flanking)
 flank_chance = 0.95;
 flank_trigger_distance = 160;  // Trigger beyond attack range to execute flank before shooting
 
 // Configure bow attack sound
 enemy_sounds.on_attack = snd_bow_attack;
+
+// Ranged attack animation overrides (bow attacks)
+enemy_anim_overrides = {
+    ranged_attack_down: {start: 35, length: 3},
+    ranged_attack_right: {start: 38, length: 4},
+    ranged_attack_left: {start: 42, length: 4},
+    ranged_attack_up: {start: 46, length: 3}
+};

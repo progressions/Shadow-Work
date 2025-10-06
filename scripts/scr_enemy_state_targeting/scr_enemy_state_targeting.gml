@@ -50,7 +50,94 @@ function enemy_state_targeting() {
     }
     last_alarm_value = alarm[0];
 
-    if (is_ranged_attacker) {
+    // Dual-mode attack decision system
+    if (enable_dual_mode) {
+        // Determine which attack mode to use based on distance and preference
+        var _use_ranged = false;
+        var _use_melee = false;
+
+        // Distance-based decision
+        if (_dist_to_player > ideal_range) {
+            _use_ranged = true;  // Player is far, use ranged
+        } else if (_dist_to_player < melee_range_threshold) {
+            _use_melee = true;   // Player is close, use melee
+        } else {
+            // In the "flexible zone" - use preference
+            if (preferred_attack_mode == "ranged") {
+                _use_ranged = true;
+            } else if (preferred_attack_mode == "melee") {
+                _use_melee = true;
+            } else {
+                // No preference - default to closer range = melee
+                _use_melee = (_dist_to_player < ideal_range);
+                _use_ranged = !_use_melee;
+            }
+        }
+
+        // Check party formation influence
+        if (formation_role != undefined) {
+            if (formation_role == "rear" || formation_role == "support") {
+                _use_ranged = true;
+                _use_melee = false;
+            } else if (formation_role == "front" || formation_role == "vanguard") {
+                _use_melee = true;
+                _use_ranged = false;
+            }
+        }
+
+        // Cooldown gate to prevent mode abuse
+        if (_use_ranged && !can_ranged_attack) {
+            _use_ranged = false;
+            _use_melee = (_use_melee && can_attack);  // Fallback to melee if ready
+        }
+
+        if (_use_melee && !can_attack) {
+            _use_melee = false;
+            _use_ranged = (_use_ranged && can_ranged_attack);  // Fallback to ranged if ready
+        }
+
+        // Execute ranged attack if chosen and ready
+        if (_use_ranged && _dist_to_player <= attack_range && can_ranged_attack) {
+            var _has_los = enemy_has_line_of_sight(_player_x, _player_y);
+            if (_has_los) {
+                enemy_handle_ranged_attack();
+                return;
+            } else {
+                alarm[0] = 0;  // Force path recalc for LOS
+            }
+        }
+
+        // Execute melee attack if chosen and ready
+        if (_use_melee && _dist_to_player <= attack_range && can_attack) {
+            state = EnemyState.attacking;
+            attack_cooldown = round(90 / attack_speed);
+            can_attack = false;
+            alarm[2] = 15;  // Trigger melee execution
+            if (path_exists(path)) {
+                path_end();
+            }
+            return;
+        }
+
+        // Handle retreat for ranged-preferring enemies
+        if (retreat_when_close && preferred_attack_mode == "ranged" && _dist_to_player < ideal_range && retreat_cooldown <= 0) {
+            // Calculate retreat direction (away from player)
+            var _retreat_dir = point_direction(_player_x, _player_y, x, y);
+            var _retreat_distance = ideal_range + 32;  // Retreat beyond ideal_range
+
+            // Set retreat target
+            target_x = _player_x + lengthdir_x(_retreat_distance, _retreat_dir);
+            target_y = _player_y + lengthdir_y(_retreat_distance, _retreat_dir);
+
+            // Force immediate path recalc
+            alarm[0] = 0;
+
+            // Set retreat cooldown to prevent spam (60 frames = 1 second)
+            retreat_cooldown = 60;
+        }
+    }
+    // Legacy single-mode logic (fallback for enable_dual_mode = false)
+    else if (is_ranged_attacker) {
         if (_dist_to_player <= attack_range && can_ranged_attack) {
             var _has_los = enemy_has_line_of_sight(_player_x, _player_y);
             if (_has_los) {

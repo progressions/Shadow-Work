@@ -22,6 +22,7 @@
     {"name":"inst_4B0CDE0F","path":"rooms/room_greenwood_forest_4/room_greenwood_forest_4.yy",},
     {"name":"inst_2296167E","path":"rooms/room_greenwood_forest_4/room_greenwood_forest_4.yy",},
     {"name":"inst_62340523","path":"rooms/room_greenwood_forest_4/room_greenwood_forest_4.yy",},
+    {"name":"inst_6E349F91","path":"rooms/room_greenwood_forest_4/room_greenwood_forest_4.yy",},
   ],
   "isDnd":false,
   "layers":[
@@ -65,6 +66,7 @@
         {"$GMRInstance":"v2","%Name":"inst_4B0CDE0F","colour":4294967295,"frozen":false,"hasCreationCode":false,"ignore":false,"imageIndex":0,"imageSpeed":1.0,"inheritCode":false,"inheritedItemId":null,"inheritItemSettings":false,"isDnd":false,"name":"inst_4B0CDE0F","objectId":{"name":"obj_item_greatshield","path":"objects/obj_item_greatshield/obj_item_greatshield.yy",},"properties":[],"resourceType":"GMRInstance","resourceVersion":"2.0","rotation":0.0,"scaleX":1.0,"scaleY":1.0,"x":144.0,"y":112.0,},
         {"$GMRInstance":"v2","%Name":"inst_2296167E","colour":4294967295,"frozen":false,"hasCreationCode":false,"ignore":false,"imageIndex":0,"imageSpeed":1.0,"inheritCode":false,"inheritedItemId":null,"inheritItemSettings":false,"isDnd":false,"name":"inst_2296167E","objectId":{"name":"obj_orc","path":"objects/obj_orc/obj_orc.yy",},"properties":[],"resourceType":"GMRInstance","resourceVersion":"2.0","rotation":0.0,"scaleX":1.0,"scaleY":1.0,"x":336.0,"y":224.0,},
         {"$GMRInstance":"v2","%Name":"inst_62340523","colour":4294967295,"frozen":false,"hasCreationCode":false,"ignore":false,"imageIndex":0,"imageSpeed":1.0,"inheritCode":false,"inheritedItemId":null,"inheritItemSettings":false,"isDnd":false,"name":"inst_62340523","objectId":{"name":"obj_greenwood_bandit","path":"objects/obj_greenwood_bandit/obj_greenwood_bandit.yy",},"properties":[],"resourceType":"GMRInstance","resourceVersion":"2.0","rotation":0.0,"scaleX":1.0,"scaleY":1.0,"x":336.0,"y":176.0,},
+        {"$GMRInstance":"v2","%Name":"inst_6E349F91","colour":4294967295,"frozen":false,"hasCreationCode":false,"ignore":false,"imageIndex":0,"imageSpeed":1.0,"inheritCode":false,"inheritedItemId":null,"inheritItemSettings":false,"isDnd":false,"name":"inst_6E349F91","objectId":{"name":"obj_greenwood_bandit","path":"objects/obj_greenwood_bandit/obj_greenwood_bandit.yy",},"properties":[],"resourceType":"GMRInstance","resourceVersion":"2.0","rotation":0.0,"scaleX":1.0,"scaleY":1.0,"x":336.0,"y":256.0,},
       ],"layers":[],"name":"Instances","properties":[],"resourceType":"GMRInstanceLayer","resourceVersion":"2.0","userdefinedDepth":false,"visible":true,},
     {"$GMRTileLayer":"","%Name":"Tiles_Castle_3","depth":101,"effectEnabled":true,"effectType":null,"gridX":32,"gridY":32,"hierarchyFrozen":false,"inheritLayerDepth":false,"inheritLayerSettings":false,"inheritSubLayers":true,"inheritVisibility":true,"layers":[],"name":"Tiles_Castle_3","properties":[],"resourceType":"GMRTileLayer","resourceVersion":"2.0","tiles":{"SerialiseHeight":23,"SerialiseWidth":40,"TileCompressedData":[
           -384,-2147483648,15,127,128,127,128,127,128,127,128,127,128,127,128,127,0,0,-25,-2147483648,15,128,127,

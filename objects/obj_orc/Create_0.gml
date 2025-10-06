@@ -11,12 +11,29 @@ move_speed = 0.8;
 melee_damage_resistance = 2;
 ranged_damage_resistance = 2;
 
+// Dual-mode configuration (melee-preferring with throwing axes)
+enable_dual_mode = true;
+preferred_attack_mode = "melee";   // Prefers brutal melee combat
+ranged_damage = 3;                 // Throwing axe damage
+ranged_attack_speed = 0.6;         // Slower than melee
+ranged_projectile_object = obj_enemy_arrow;  // TODO: Create obj_throwing_axe for visual distinction
+melee_range_threshold = 48;        // Switch to melee at medium distance
+retreat_when_close = false;        // Orcs never retreat
+
 // Orc traits - fire-born warrior, immune to fire but weak to ice
 array_push(tags, "fireborne");
 apply_tag_traits();
 
 // Approach variation - orcs are brutish and charge directly (low flanking)
 flank_chance = 0.2;
+
+// Ranged attack animation overrides (throwing axes)
+enemy_anim_overrides = {
+    ranged_attack_down: {start: 35, length: 3},
+    ranged_attack_right: {start: 38, length: 4},
+    ranged_attack_left: {start: 42, length: 4},
+    ranged_attack_up: {start: 46, length: 3}
+};
 
 enemy_sounds.on_aggro = snd_orc_aggro;
 enemy_sounds.on_death = snd_orc_death;

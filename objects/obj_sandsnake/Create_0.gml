@@ -16,6 +16,12 @@ ranged_attack_speed = 0.75; // Slightly slower cadence than melee strikes
 ideal_range = 72;           // Maintain ~75% of attack range to kite the player
 ranged_damage_resistance = 3;
 
+// Dual-mode configuration (javelin warrior archetype)
+enable_dual_mode = true;
+preferred_attack_mode = "ranged";  // Prefers ranged javelin throws
+melee_range_threshold = 32;        // Only use melee when player is very close
+retreat_when_close = true;         // Kite away to maintain ideal range
+
 enemy_anim_overrides = {
     ranged_attack_down: {start: 35, length: 3},
     ranged_attack_right: {start: 38, length: 4},

@@ -277,5 +277,10 @@ if (state == EnemyState.ranged_attacking && ranged_attack_cooldown <= 0) {
     state = EnemyState.targeting;
 }
 
+// Retreat cooldown (for dual-mode enemies)
+if (retreat_cooldown > 0) {
+    retreat_cooldown--;
+}
+
 // Update previous state for next frame's transition detection
 previous_state = state;
