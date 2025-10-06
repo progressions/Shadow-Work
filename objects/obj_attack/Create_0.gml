@@ -10,19 +10,37 @@ hit_enemies = ds_list_create();
 max_hit_count = 1;        // Default: can only damage 1 enemy total
 current_hit_count = 0;    // Track how many enemies have been damaged
 
+// Critical hit flag (set from creator's last_attack_was_crit)
+is_crit = false;
+
 // Default hit properties (updated after querying the creator)
 hit_range = 28;
 hit_scale = 1;
 
 // Pull combat values from the player instance
 knockback_force = 6;
+shake_intensity = 2; // Default shake for unarmed/daggers
 with (creator) {
-    other.damage = get_total_damage();
+    other.damage = get_total_damage(); // This also rolls for crit and sets last_attack_was_crit
+    other.is_crit = last_attack_was_crit; // Read crit flag after damage calculation
     other.hit_range = get_attack_range();
     if (equipped.right_hand != undefined) {
         var _weapon_stats = equipped.right_hand.definition.stats;
         if (variable_struct_exists(_weapon_stats, "knockback_force")) {
             other.knockback_force = _weapon_stats.knockback_force;
+        }
+
+        // Set screen shake intensity based on weapon handedness
+        var _weapon_handedness = equipped.right_hand.definition.handedness;
+        if (_weapon_handedness == WeaponHandedness.two_handed) {
+            other.shake_intensity = 8; // Heavy weapons = big shake
+        } else if (_weapon_handedness == WeaponHandedness.versatile) {
+            // Versatile: 6 if two-handing, 4 if one-handing
+            other.shake_intensity = is_two_handing() ? 6 : 4;
+        } else if (_weapon_handedness == WeaponHandedness.one_handed) {
+            other.shake_intensity = 4; // Swords/maces = medium shake
+        } else {
+            other.shake_intensity = 2; // Daggers/light weapons = light shake
         }
     }
 

@@ -355,6 +355,9 @@ function evaluate_companion_triggers(player_instance) {
                     companion.triggers.shield.cooldown = companion.triggers.shield.cooldown_max;
                     companion.shield_timer = companion.triggers.shield.duration;
 
+                    // Slow-motion on trigger activation
+                    activate_slowmo(0.5);
+
                     // Visual impact effects
                     spawn_floating_text(companion.x, companion.bbox_top - 10, "Shield!", c_aqua, companion);
                     spawn_floating_text(companion.x - 10, companion.bbox_top - 22, "✦", c_yellow, companion);
@@ -396,6 +399,10 @@ function evaluate_companion_triggers(player_instance) {
                     companion.triggers.guardian_veil.active = true;
                     companion.triggers.guardian_veil.cooldown = companion.triggers.guardian_veil.cooldown_max;
                     companion.guardian_veil_timer = companion.triggers.guardian_veil.duration;
+
+                    // Slow-motion on trigger activation
+                    activate_slowmo(0.5);
+
                     companion_play_trigger_sfx(companion, "guardian_veil");
                 }
             }
@@ -431,6 +438,9 @@ function evaluate_companion_triggers(player_instance) {
 
                     companion.triggers.gust.active = true;
                     companion.triggers.gust.cooldown = companion.triggers.gust.cooldown_max;
+
+                    // Slow-motion on trigger activation
+                    activate_slowmo(0.5);
 
                     // Push back enemies
                     with (obj_enemy_parent) {

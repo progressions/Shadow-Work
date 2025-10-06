@@ -42,6 +42,14 @@ function get_total_damage() {
     // Add companion attack bonuses
     _base_damage += get_companion_attack_bonus();
 
+    // Roll for critical hit
+    last_attack_was_crit = false; // Reset crit flag
+    if (random(1) < crit_chance) {
+        last_attack_was_crit = true;
+        _base_damage *= crit_multiplier;
+        show_debug_message("CRITICAL HIT! Damage: " + string(_base_damage / crit_multiplier) + " -> " + string(_base_damage));
+    }
+
     return _base_damage;
 }
 
@@ -197,4 +205,79 @@ function get_speed_modifier() {
     }
 
     return _speed;
+}
+
+/// @function freeze_frame(duration)
+/// @description Activate a freeze frame effect for the specified number of frames
+/// @param {Real} duration Number of frames to freeze (2-4 recommended)
+function freeze_frame(_duration) {
+    if (!instance_exists(obj_game_controller)) return;
+
+    with (obj_game_controller) {
+        freeze_active = true;
+        freeze_timer = _duration;
+    }
+}
+
+/// @function enemy_flash(color, duration)
+/// @description Flash an enemy with a specific color for visual feedback
+/// @param {Constant.Color} color Color to flash (c_white for hit, c_red for crit)
+/// @param {Real} duration Number of frames to flash (6-10 recommended)
+function enemy_flash(_color, _duration) {
+    // Only works when called from an enemy instance
+    if (object_index == obj_enemy_parent || object_is_ancestor(object_index, obj_enemy_parent)) {
+        flash_color = _color;
+        flash_timer = _duration;
+    }
+}
+
+/// @function screen_shake(intensity)
+/// @description Trigger a screen shake effect with specified intensity
+/// @param {Real} intensity Shake magnitude in pixels (2-12 recommended)
+function screen_shake(_intensity) {
+    if (!instance_exists(obj_game_controller)) return;
+
+    with (obj_game_controller) {
+        // Set shake to the maximum of current or new intensity (don't interrupt bigger shakes)
+        shake_intensity = max(shake_intensity, _intensity);
+        shake_timer = 20; // Shake duration in frames
+    }
+}
+
+/// @function spawn_hit_effect(x, y, direction)
+/// @description Spawn a hit sparkle effect at the hit location
+/// @param {Real} x X position to spawn effect
+/// @param {Real} y Y position to spawn effect
+/// @param {Real} direction Direction away from attacker (degrees)
+function spawn_hit_effect(_x, _y, _direction) {
+    var _effect = instance_create_depth(_x, _y, -100, obj_hit_effect);
+
+    // Randomize angle slightly (±30 degrees from impact direction)
+    var _angle_variance = random_range(-30, 30);
+    _effect.direction = _direction + _angle_variance;
+
+    // Small outward movement for spray effect
+    _effect.speed = random_range(0.5, 1.5);
+    _effect.friction = 0.1; // Slow down quickly
+
+    // Random rotation for variety
+    _effect.image_angle = random(360);
+}
+
+/// @function activate_slowmo(duration_seconds)
+/// @description Activate slow-motion effect for companion triggers
+/// @param {Real} duration_seconds Duration in seconds (0.5 recommended)
+function activate_slowmo(_duration_seconds) {
+    if (!instance_exists(obj_game_controller)) return;
+
+    with (obj_game_controller) {
+        slowmo_active = true;
+        slowmo_timer = _duration_seconds * 60; // Convert to frames at 60fps
+        slowmo_recovery_timer = 15; // 0.25 seconds to recover to normal speed
+        slowmo_target_speed = 30; // 50% speed (30fps instead of 60fps)
+
+        // Immediately set game speed to slow-mo
+        game_set_speed(slowmo_target_speed, gamespeed_fps);
+        slowmo_current_speed = slowmo_target_speed;
+    }
 }

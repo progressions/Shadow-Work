@@ -518,3 +518,19 @@ if (global.debug_loot_system) {
     show_debug_message("greatsword (weight 1): " + string(results_weighted[$ "greatsword"] ?? 0) + "%");
     show_debug_message("=== END LOOT TEST ===");
 }
+
+// Initialize freeze frame system
+freeze_timer = 0;        // Countdown timer for freeze duration
+freeze_active = false;   // Is freeze currently active?
+
+// Initialize screen shake system
+shake_intensity = 0;     // Current shake magnitude in pixels
+shake_timer = 0;         // Countdown timer for shake duration
+shake_decay = 0.8;       // How fast shake intensity decays (0-1, higher = faster decay)
+
+// Initialize slow-motion system
+slowmo_active = false;   // Is slow-mo currently active?
+slowmo_timer = 0;        // Countdown timer for slow-mo duration (frames at 60fps)
+slowmo_recovery_timer = 0; // Timer for smooth speed-up back to normal
+slowmo_target_speed = 60;  // Target game speed (60 = normal)
+slowmo_current_speed = 60; // Current interpolated speed

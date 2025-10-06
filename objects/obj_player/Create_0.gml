@@ -21,6 +21,11 @@ temporary_traits = {};  // From equipment, companions, buffs (temporary)
 combat_timer = 999; // Start high so companions begin in following mode
 combat_cooldown = 3; // Seconds of no combat before evading ends
 
+// Critical hit system
+crit_chance = 0.1;      // 10% chance to crit
+crit_multiplier = 1.75; // 1.75x damage on crit
+last_attack_was_crit = false; // Set by get_total_damage(), read by obj_attack
+
 #endregion Stats
 
 move_dir = "right";

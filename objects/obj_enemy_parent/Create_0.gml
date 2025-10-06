@@ -142,6 +142,10 @@ loot_table = [
     {item_key: "arrows", weight: 1}
 ];
 
+// Flash effect system
+flash_timer = 0;         // Countdown timer for flash duration
+flash_color = c_white;   // Current flash color (c_white for normal hit, c_red for crit)
+
 // Override serialize method for enemy-specific data
 function serialize() {
     show_debug_message("SERIALIZING ENEMY: " + object_get_name(object_index) + " at position (" + string(x) + ", " + string(y) + ")");

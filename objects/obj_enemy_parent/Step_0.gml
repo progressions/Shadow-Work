@@ -14,6 +14,16 @@ if (variable_instance_exists(self, "saved_path_speed") && saved_path_speed != 0)
     saved_path_speed = 0;
 }
 
+// --- Flash Effect System ---
+// Handle flash countdown and apply image_blend
+if (flash_timer > 0) {
+    flash_timer--;
+    image_blend = flash_color;
+} else {
+    // Reset to normal color when flash expires
+    image_blend = c_white;
+}
+
 // --- AI Memory System: Perception ---
 // Perceive events from the global event bus
 var _bus_size = ds_list_size(global.ai_event_bus);

@@ -126,6 +126,71 @@ if (global.camera_pan_state.active) {
 	}
 }
 
+// Handle slow-motion effect
+if (slowmo_active) {
+    slowmo_timer--;
+
+    // When slowmo duration ends, start recovery
+    if (slowmo_timer <= 0) {
+        slowmo_active = false;
+        slowmo_timer = 0;
+    }
+}
+
+// Handle slow-motion recovery (smooth transition back to normal speed)
+if (!slowmo_active && slowmo_current_speed < 60) {
+    slowmo_recovery_timer--;
+
+    // Lerp back to normal speed over recovery period
+    var _recovery_progress = 1 - (slowmo_recovery_timer / 15);
+    slowmo_current_speed = lerp(30, 60, _recovery_progress);
+
+    // Apply interpolated speed
+    game_set_speed(slowmo_current_speed, gamespeed_fps);
+
+    // Reset when fully recovered
+    if (slowmo_recovery_timer <= 0) {
+        slowmo_current_speed = 60;
+        game_set_speed(60, gamespeed_fps);
+        slowmo_recovery_timer = 0;
+    }
+}
+
+// Handle screen shake (applies camera offset)
+if (shake_timer > 0) {
+    shake_timer--;
+
+    // Apply random offset to camera
+    var _cam = view_camera[0];
+    var _shake_x = random_range(-shake_intensity, shake_intensity);
+    var _shake_y = random_range(-shake_intensity, shake_intensity);
+
+    var _base_x = camera_get_view_x(_cam);
+    var _base_y = camera_get_view_y(_cam);
+
+    camera_set_view_pos(_cam, _base_x + _shake_x, _base_y + _shake_y);
+
+    // Decay shake intensity
+    shake_intensity *= shake_decay;
+
+    // Stop shaking when intensity is very low
+    if (shake_intensity < 0.5) {
+        shake_intensity = 0;
+        shake_timer = 0;
+    }
+}
+
+// Handle freeze frame countdown
+if (freeze_active) {
+    freeze_timer--;
+    if (freeze_timer <= 0) {
+        freeze_active = false;
+        freeze_timer = 0;
+    }
+    // While freeze is active, pause most game logic (but not camera or debug keys)
+    return;
+}
+
 if (global.game_paused) return;
 
 global.idle_bob_timer += 0.05;

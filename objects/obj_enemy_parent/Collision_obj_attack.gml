@@ -62,7 +62,24 @@ if (alarm[1] < 0) {
 	 var _final_damage = _base_damage * _resistance_multiplier;
 
 	 hp -= _final_damage;
-	 image_blend = c_red;
+
+	 // Flash and freeze based on crit status
+	 if (_attack_inst.is_crit) {
+	     // Critical hit: red flash + longer freeze
+	     enemy_flash(c_red, 10);
+	     freeze_frame(4);
+	 } else {
+	     // Normal hit: white flash + short freeze
+	     enemy_flash(c_white, 8);
+	     freeze_frame(2);
+	 }
+
+	 // Screen shake based on weapon type
+	 screen_shake(_attack_inst.shake_intensity);
+
+	 // Spawn hit effect (sparkle) spraying away from attack
+	 var _hit_direction = point_direction(_attack_inst.x, _attack_inst.y, x, y);
+	 spawn_hit_effect(x, y, _hit_direction);
 
 	 // Reset player combat timer for companion evading behavior
 	 var attacker = other.creator;
@@ -113,6 +130,13 @@ if (alarm[1] < 0) {
 
 	     // Set enemy death state immediately
 	     state = EnemyState.dead;
+
+	     // Extra long freeze on crit kill (6 frames), normal kill freeze (4 frames)
+	     if (_attack_inst.is_crit) {
+	         freeze_frame(6); // Crit kill gets extra impact
+	     } else {
+	         freeze_frame(4); // Normal kill
+	     }
 
 	     // Drop loot (rolls for drop chance and spawns item if successful)
 	     enemy_drop_loot(self);
