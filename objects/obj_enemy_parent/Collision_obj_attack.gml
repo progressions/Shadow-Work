@@ -59,7 +59,8 @@ if (alarm[1] < 0) {
 	 show_debug_message("Resistance multiplier: " + string(_resistance_multiplier));
 	 show_debug_message("==================");
 
-	 var _final_damage = _base_damage * _resistance_multiplier;
+	 // Apply damage type resistance, then subtract damage resistance
+	 var _final_damage = max(0, (_base_damage * _resistance_multiplier) - melee_damage_resistance);
 
 	 hp -= _final_damage;
 

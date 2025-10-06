@@ -14,6 +14,7 @@ is_ranged_attacker = true;
 ranged_damage = 3;          // Javelin strike damage
 ranged_attack_speed = 0.75; // Slightly slower cadence than melee strikes
 ideal_range = 72;           // Maintain ~75% of attack range to kite the player
+ranged_damage_resistance = 3;
 
 enemy_anim_overrides = {
     ranged_attack_down: {start: 35, length: 3},

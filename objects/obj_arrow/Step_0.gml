@@ -21,15 +21,16 @@ if (_hit_enemy != noone) {
 
     with (_hit_enemy) {
         if (state != EnemyState.dead && alarm[1] < 0) {
-            // Apply damage
-            hp -= other.damage;
+            // Apply damage with ranged damage resistance
+            var _final_damage = max(0, other.damage - ranged_damage_resistance);
+            hp -= _final_damage;
             image_blend = c_red;
 
             // Play enemy hit sound (same system as melee attacks)
             play_enemy_sfx("on_hit");
 
             // Spawn damage number
-            spawn_damage_number(x, y - 16, other.damage, other.__proj_damage_type, self);
+            spawn_damage_number(x, y - 16, _final_damage, other.__proj_damage_type, self);
 
             // Check if enemy died and award XP
             if (hp <= 0) {

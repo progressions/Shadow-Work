@@ -8,6 +8,8 @@ attack_range = 25;
 hp = 18;
 hp_total = hp;
 move_speed = 0.8;
+melee_damage_resistance = 2;
+ranged_damage_resistance = 2;
 
 // Orc traits - fire-born warrior, immune to fire but weak to ice
 array_push(tags, "fireborne");

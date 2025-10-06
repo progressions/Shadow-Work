@@ -60,6 +60,9 @@ ranged_damage_type = DamageType.physical; // Damage type for ranged projectiles
 ranged_status_effects = [];  // Optional status effects applied by ranged projectiles
 ranged_projectile_object = obj_enemy_arrow; // Default projectile for ranged enemies
 
+melee_damage_resistance = 0;
+ranged_damage_resistance = 0;
+
 // Status effects system
 init_status_effects();
 
