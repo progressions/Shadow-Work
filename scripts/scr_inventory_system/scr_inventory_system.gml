@@ -608,6 +608,12 @@ function is_dual_wielding() {
 
 // Check if player has ammo for ranged weapons
 function has_ammo(_ammo_type) {
+    // Check arrow_count for arrows (ammo stored separately)
+    if (_ammo_type == "arrows") {
+        return (arrow_count > 0);
+    }
+
+    // Check inventory for other ammo types
     for (var i = 0; i < array_length(inventory); i++) {
         var _item = inventory[i];
         if (_item.definition.item_id == _ammo_type && _item.count > 0) {
@@ -619,6 +625,16 @@ function has_ammo(_ammo_type) {
 
 // Consume ammo when firing ranged weapons
 function consume_ammo(_ammo_type, _amount = 1) {
+    // Consume from arrow_count for arrows
+    if (_ammo_type == "arrows") {
+        if (arrow_count >= _amount) {
+            arrow_count -= _amount;
+            return true;
+        }
+        return false;
+    }
+
+    // Consume from inventory for other ammo types
     for (var i = 0; i < array_length(inventory); i++) {
         var _item = inventory[i];
         if (_item.definition.item_id == _ammo_type) {
