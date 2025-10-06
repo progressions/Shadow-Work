@@ -63,6 +63,12 @@ if (keyboard_check_pressed(vk_f1)) {
 	test_death_event_broadcasting();
 }
 
+// F2 key to run sound variant detection test suite
+if (keyboard_check_pressed(vk_f2)) {
+	show_debug_message("Running Sound Variant Detection Test Suite (F2)...");
+	test_sound_variants();
+}
+
 // F7 key to run AI event bus test suite
 if (keyboard_check_pressed(vk_f7)) {
 	show_debug_message("Running AI Event Bus Test Suite (F7)...");

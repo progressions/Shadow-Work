@@ -340,6 +340,7 @@
     {"id":{"name":"scr_test_ai_memory_system","path":"scripts/scr_test_ai_memory_system/scr_test_ai_memory_system.yy",},},
     {"id":{"name":"scr_test_death_event_broadcasting","path":"scripts/scr_test_death_event_broadcasting/scr_test_death_event_broadcasting.yy",},},
     {"id":{"name":"scr_test_party_memory_morale","path":"scripts/scr_test_party_memory_morale/scr_test_party_memory_morale.yy",},},
+    {"id":{"name":"scr_test_sound_variants","path":"scripts/scr_test_sound_variants/scr_test_sound_variants.yy",},},
     {"id":{"name":"scr_testing_utilities","path":"scripts/scr_testing_utilities/scr_testing_utilities.yy",},},
     {"id":{"name":"scr_transitions","path":"scripts/scr_transitions/scr_transitions.yy",},},
     {"id":{"name":"scr_ui_functions","path":"scripts/scr_ui_functions/scr_ui_functions.yy",},},

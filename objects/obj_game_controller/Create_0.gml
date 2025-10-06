@@ -423,6 +423,62 @@ global.debug_loot_system = false; // Set to true to test weighted selection
 // Initialize AI event bus system
 global.ai_event_bus = ds_list_create();
 
+// Initialize sound variant randomization system
+global.sound_variant_lookup = {};
+global.debug_sound_variants = false;
+
+// Scan all sound assets and detect variants (sounds ending in _1, _2, _3, etc.)
+var _all_sounds = []; // We'll build this by iterating through audio resources
+
+// GameMaker doesn't have a built-in way to iterate all sounds, so we'll check known sounds
+// This will be populated dynamically by checking asset_get_index for common patterns
+// For now, we'll scan specific sound prefixes we know exist in the game
+
+// Known sound prefixes to check (add more as needed)
+var _sound_prefixes = [
+    "snd_party_aggressive",
+    "snd_party_cautious",
+    "snd_party_desperate",
+    "snd_party_retreating",
+    "snd_party_patrolling",
+    "snd_party_protecting",
+    "snd_shield_trigger",
+    "snd_hit",
+    "snd_player_hit",
+    "snd_orc_hit",
+    "snd_footsteps_grass",
+    "snd_footsteps_path"
+];
+
+// For each prefix, check if variants exist
+for (var i = 0; i < array_length(_sound_prefixes); i++) {
+    var _base_name = _sound_prefixes[i];
+    var _variant_count = 0;
+
+    // Check for _1, _2, _3, etc.
+    var _variant_num = 1;
+    while (true) {
+        var _variant_name = _base_name + "_" + string(_variant_num);
+        var _sound_index = asset_get_index(_variant_name);
+
+        if (_sound_index == -1) {
+            // Variant doesn't exist, stop counting
+            break;
+        } else {
+            _variant_count++;
+            _variant_num++;
+        }
+    }
+
+    // Store the count (0 if no variants, otherwise number of variants)
+    global.sound_variant_lookup[$ _base_name] = _variant_count;
+
+    // Debug logging
+    if (global.debug_sound_variants && _variant_count > 0) {
+        show_debug_message("Sound variants detected: " + _base_name + " has " + string(_variant_count) + " variants");
+    }
+}
+
 // Test loot system weighted selection (debug mode)
 if (global.debug_loot_system) {
     show_debug_message("=== LOOT SYSTEM TEST ===");
