@@ -608,15 +608,11 @@ function is_dual_wielding() {
 
 // Check if player has ammo for ranged weapons
 function has_ammo(_ammo_type) {
-    // Check arrow_count for arrows (ammo stored separately)
-    if (_ammo_type == "arrows") {
-        show_debug_message("[HAS_AMMO] Checking arrows - arrow_count: " + string(arrow_count));
-        return (arrow_count > 0);
-    }
+    if (!instance_exists(obj_player)) return false;
 
-    // Check inventory for other ammo types
-    for (var i = 0; i < array_length(inventory); i++) {
-        var _item = inventory[i];
+    // Check inventory for ammo
+    for (var i = 0; i < array_length(obj_player.inventory); i++) {
+        var _item = obj_player.inventory[i];
         if (_item.definition.item_id == _ammo_type && _item.count > 0) {
             return true;
         }
@@ -626,24 +622,16 @@ function has_ammo(_ammo_type) {
 
 // Consume ammo when firing ranged weapons
 function consume_ammo(_ammo_type, _amount = 1) {
-    // Consume from arrow_count for arrows
-    if (_ammo_type == "arrows") {
-        show_debug_message("[CONSUME_AMMO] Before: " + string(arrow_count) + " | Consuming: " + string(_amount));
-        if (arrow_count >= _amount) {
-            arrow_count -= _amount;
-            show_debug_message("[CONSUME_AMMO] After: " + string(arrow_count));
-            return true;
-        }
-        show_debug_message("[CONSUME_AMMO] Not enough arrows!");
-        return false;
-    }
+    if (!instance_exists(obj_player)) return false;
 
-    // Consume from inventory for other ammo types
-    for (var i = 0; i < array_length(inventory); i++) {
-        var _item = inventory[i];
+    // Consume from inventory
+    for (var i = 0; i < array_length(obj_player.inventory); i++) {
+        var _item = obj_player.inventory[i];
         if (_item.definition.item_id == _ammo_type) {
             if (_item.count >= _amount) {
-                inventory_remove_item(i, _amount);
+                with (obj_player) {
+                    inventory_remove_item(i, _amount);
+                }
                 return true;
             }
         }
