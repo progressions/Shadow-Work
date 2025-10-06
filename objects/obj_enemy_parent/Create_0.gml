@@ -110,6 +110,12 @@ formation_target_y = 0;  // Formation position y
 flee_target_x = 0;       // Flee destination x
 flee_target_y = 0;       // Flee destination y
 
+// AI Memory System
+my_memories = [];          // Array of perceived events stored as memories
+perception_radius = 250;   // Distance within which this enemy can "sense" events
+memory_ttl = 30000;        // Time-to-live for memories (30 seconds = 30000ms)
+memory_purge_timer = 60;   // Check to purge old memories every 60 frames
+
 // Loot drop system
 // drop_chance: Probability (0.0 to 1.0) that enemy drops loot on death
 // loot_table: Array of {item_key, weight} structs

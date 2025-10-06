@@ -48,6 +48,12 @@ weight_modifiers = {
     player_in_aggro_range: 5.0  // Multiplier to attack weight when player in aggro radius
 };
 
+// AI Memory System (same as individual enemies)
+my_memories = [];          // Array of perceived events stored as memories
+perception_radius = 250;   // Distance within which party controller can "sense" events
+memory_ttl = 30000;        // Time-to-live for memories (30 seconds = 30000ms)
+memory_purge_timer = 60;   // Check to purge old memories every 60 frames
+
 /// @function init_party(enemy_array, formation_template_key)
 /// @description Initialize party with enemies and formation template
 /// @param {array} enemy_array - Array of enemy instances to add to party
@@ -234,6 +240,25 @@ function update_party_state() {
         _player_hp_pct = obj_player.hp / obj_player.hp_total;
     }
 
+    // --- Memory-Based Morale Breaking ---
+    // Count recent death events from memory (within 15 second window)
+    var _recent_deaths = 0;
+    var _death_check_window = 15000; // 15 seconds
+    for (var i = 0; i < array_length(my_memories); i++) {
+        var _mem = my_memories[i];
+        if (_mem.type == "EnemyDeath" && (current_time - _mem.timestamp) < _death_check_window) {
+            _recent_deaths++;
+        }
+    }
+
+    // If 50% or more of the party has died recently, force cautious state (morale break)
+    if (_recent_deaths >= array_length(party_members) * 0.5) {
+        if (party_state != PartyState.cautious && party_state != PartyState.desperate) {
+            transition_to_state(PartyState.cautious);
+            return; // Exit early after morale break
+        }
+    }
+
     // Determine new state based on conditions
     var _new_state = party_state;
 
@@ -321,6 +346,42 @@ function calculate_decision_weights(_enemy) {
     var _w_attack = weight_attack;
     var _w_formation = weight_formation;
     var _w_flee = weight_flee;
+
+    // --- STATE-BASED BEHAVIORAL MODIFIERS ---
+    // Modify weights based on party state (morale, tactics, etc.)
+    switch (party_state) {
+        case PartyState.cautious:
+            // Morale broken - become defensive
+            _w_flee *= 2.5;        // Much more likely to flee or keep distance
+            _w_attack *= 0.4;      // Much less aggressive
+            _w_formation *= 1.8;   // Prioritize staying together
+            break;
+
+        case PartyState.desperate:
+            // Nearly wiped out - survival mode
+            _w_flee *= 4.0;        // Extremely high flee priority
+            _w_attack *= 0.2;      // Barely attack
+            _w_formation *= 0.5;   // Formation less important than survival
+            break;
+
+        case PartyState.emboldened:
+            // Player is weak - press the advantage
+            _w_attack *= 2.0;      // Very aggressive
+            _w_flee *= 0.3;        // Rarely flee
+            _w_formation *= 0.7;   // Formation less important than killing
+            break;
+
+        case PartyState.aggressive:
+            // Normal aggressive behavior (no modifiers needed)
+            break;
+
+        case PartyState.retreating:
+            // Ordered retreat
+            _w_flee *= 5.0;        // Maximum flee priority
+            _w_attack *= 0.1;      // Almost never attack
+            _w_formation *= 1.5;   // Maintain formation while retreating
+            break;
+    }
 
     // Calculate condition percentages
     var _party_survival = get_party_survival_percentage();

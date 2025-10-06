@@ -57,6 +57,30 @@ if (keyboard_check_pressed(vk_f4)) {
 	show_debug_message("Enemy Approach Debug: " + (global.debug_enemy_approach ? "ON" : "OFF"));
 }
 
+// F1 key to run death event broadcasting test suite
+if (keyboard_check_pressed(vk_f1)) {
+	show_debug_message("Running Death Event Broadcasting Test Suite (F1)...");
+	test_death_event_broadcasting();
+}
+
+// F7 key to run AI event bus test suite
+if (keyboard_check_pressed(vk_f7)) {
+	show_debug_message("Running AI Event Bus Test Suite (F7)...");
+	test_ai_event_bus();
+}
+
+// F11 key to run AI memory system test suite
+if (keyboard_check_pressed(vk_f11)) {
+	show_debug_message("Running AI Memory System Test Suite (F11)...");
+	test_ai_memory_system();
+}
+
+// F12 key to run party memory & morale test suite
+if (keyboard_check_pressed(vk_f12)) {
+	show_debug_message("Running Party Memory & Morale Test Suite (F12)...");
+	test_party_memory_morale();
+}
+
 // Update camera pan state (increment timer, detect completion)
 // IMPORTANT: This must run even when paused so VN intros work correctly
 if (global.camera_pan_state.active) {

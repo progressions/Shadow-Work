@@ -420,6 +420,9 @@ if (!instance_exists(obj_interaction_manager)) {
 // Loot system debug testing
 global.debug_loot_system = false; // Set to true to test weighted selection
 
+// Initialize AI event bus system
+global.ai_event_bus = ds_list_create();
+
 // Test loot system weighted selection (debug mode)
 if (global.debug_loot_system) {
     show_debug_message("=== LOOT SYSTEM TEST ===");

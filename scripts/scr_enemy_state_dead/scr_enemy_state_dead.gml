@@ -28,6 +28,9 @@ function enemy_state_dead() {
             _corpse.sprite_index = sprite_index;
             _corpse.image_index = image_index;
 
+            // Broadcast death event to AI memory system
+            scr_broadcast_ai_event("EnemyDeath", x, y);
+
             // Check quest objectives for enemy kills
             var _is_quest_enemy = variable_instance_exists(id, "quest_enemy") ? quest_enemy : false;
             var _quest_enemy_id = variable_instance_exists(id, "quest_enemy_id") ? quest_enemy_id : "";
