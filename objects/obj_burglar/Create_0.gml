@@ -3,9 +3,9 @@ event_inherited();
 
 // Burglar-specific stats (fast, low damage)
 attack_damage = 2;
-attack_speed = 1.4;
+attack_speed = 1.5;
 attack_range = 18;
-hp = 4;
+hp = 5;
 move_speed = 0.8;
 
 // Burglar traits - forest dweller, vulnerable to fire, resistant to poison

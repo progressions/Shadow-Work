@@ -24,7 +24,7 @@ auras = {
     },
     regeneration: {
         active: false, // Activated on recruitment
-        hp_per_tick: 0.5, // Slow but constant healing
+        hp_per_tick: 0.4, // Slow but constant healing
         tick_interval: 60 // Every 1 second at 60fps
     }
 };
@@ -35,9 +35,9 @@ triggers = {
         unlocked: true,  // Available from start
         active: false,
         cooldown: 0,
-        cooldown_max: 180, // 3 seconds
-        dr_bonus: 5,
-        duration: 180, // 3 seconds
+        cooldown_max: 240, // 3 seconds
+        dr_bonus: 6,
+        duration: 120, // 3 seconds
         hp_threshold: 0.3, // Activate at 30% HP
         sfx_trigger_sound: "snd_canopy_shield"
     },
