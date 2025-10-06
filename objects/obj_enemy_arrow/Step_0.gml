@@ -23,7 +23,17 @@ if (_hit_player != noone) {
         _status_modifier = method(creator, get_status_effect_modifier)("damage");
     }
 
-    var _base_damage = damage * _status_modifier;
+    // Roll for critical hit
+    var _is_crit = false;
+    var _crit_multiplier = 1.0;
+    if (instance_exists(creator)) {
+        if (random(1) < creator.crit_chance) {
+            _is_crit = true;
+            _crit_multiplier = creator.crit_multiplier;
+        }
+    }
+
+    var _base_damage = damage * _status_modifier * _crit_multiplier;
     var _resistance_multiplier = method(_hit_player, get_damage_modifier_for_type)(_damage_type);
     var _after_resistance = _base_damage * _resistance_multiplier;
 
@@ -52,18 +62,30 @@ if (_hit_player != noone) {
     __proj_res_multiplier = _resistance_multiplier;
     __proj_status_effects = _status_effects;
 
+    // Store crit flag for player visual feedback
+    __proj_is_crit = _is_crit;
+
     with (_hit_player) {
         if (state != PlayerState.dead) {
             var _impact_damage = other.__proj_final_damage;
             var _impact_type = other.__proj_damage_type;
             var _res_mult = other.__proj_res_multiplier;
+            var _was_crit = other.__proj_is_crit;
 
             if (_impact_damage > 0) {
                 hp -= _impact_damage;
                 combat_timer = 0; // Reset combat timer for companion evading
 
-                image_blend = c_red;
-                alarm[0] = 10; // Flash briefly
+                // Apply visual feedback (stronger for crits)
+                if (_was_crit) {
+                    image_blend = c_red;
+                    alarm[0] = 15; // Longer flash for crit
+                    freeze_frame(3); // Freeze on crit
+                } else {
+                    image_blend = c_red;
+                    alarm[0] = 10; // Normal flash
+                    freeze_frame(2); // Brief freeze
+                }
 
                 play_sfx(snd_player_hit, 1, false);
                 spawn_damage_number(x, y - 16, _impact_damage, _impact_type, self);
@@ -109,6 +131,7 @@ if (_hit_player != noone) {
     __proj_final_damage = undefined;
     __proj_res_multiplier = undefined;
     __proj_status_effects = undefined;
+    __proj_is_crit = undefined;
 
     instance_destroy();
     exit;

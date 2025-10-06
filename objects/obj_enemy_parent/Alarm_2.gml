@@ -13,9 +13,13 @@ if (state == EnemyState.attacking) {
     if (_player != noone) {
         var _dist = point_distance(x, y, _player.x, _player.y);
         if (_dist <= attack_range && _player.state != PlayerState.dead) {
+            // Roll for critical hit
+            var _is_crit = (random(1) < crit_chance);
+            var _crit_multiplier = _is_crit ? crit_multiplier : 1.0;
+
             // Apply status effect damage modifiers
             var damage_modifier = get_status_effect_modifier("damage");
-            var _status_modified_damage = attack_damage * damage_modifier;
+            var _status_modified_damage = attack_damage * damage_modifier * _crit_multiplier;
 
             // Apply damage type resistance multiplier using trait system v2.0
             var _resistance_multiplier = 1.0;
@@ -66,9 +70,16 @@ if (state == EnemyState.attacking) {
             _player.kb_x = lengthdir_x(3, _angle);
             _player.kb_y = lengthdir_y(3, _angle);
 
-            // Visual feedback
-            _player.image_blend = c_red;
-            _player.alarm[0] = 10; // Flash red briefly
+            // Visual feedback (stronger for crits)
+            if (_is_crit) {
+                _player.image_blend = c_red;
+                _player.alarm[0] = 15; // Longer flash for crit
+                freeze_frame(3); // Freeze on crit
+            } else {
+                _player.image_blend = c_red;
+                _player.alarm[0] = 10; // Normal flash
+                freeze_frame(2); // Brief freeze
+            }
 
             // Play hit confirmation sound (player got hit)
             play_sfx(snd_attack_hit, 1, false);

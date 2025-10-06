@@ -46,6 +46,10 @@ attack_range = 20; // Melee range
 attack_cooldown = 0;
 can_attack = true;
 
+// Critical hit system (configurable per enemy type/instance)
+crit_chance = 0.05;      // 5% base crit chance (lower than player)
+crit_multiplier = 1.5;   // 1.5x damage on crit (also lower than player)
+
 // Ranged attack system
 is_ranged_attacker = false;  // Set to true for enemies that use ranged attacks
 ranged_damage = 2;           // Default arrow damage (override in child enemies)
