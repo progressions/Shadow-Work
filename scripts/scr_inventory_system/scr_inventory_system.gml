@@ -610,6 +610,7 @@ function is_dual_wielding() {
 function has_ammo(_ammo_type) {
     // Check arrow_count for arrows (ammo stored separately)
     if (_ammo_type == "arrows") {
+        show_debug_message("[HAS_AMMO] Checking arrows - arrow_count: " + string(arrow_count));
         return (arrow_count > 0);
     }
 
@@ -627,10 +628,13 @@ function has_ammo(_ammo_type) {
 function consume_ammo(_ammo_type, _amount = 1) {
     // Consume from arrow_count for arrows
     if (_ammo_type == "arrows") {
+        show_debug_message("[CONSUME_AMMO] Before: " + string(arrow_count) + " | Consuming: " + string(_amount));
         if (arrow_count >= _amount) {
             arrow_count -= _amount;
+            show_debug_message("[CONSUME_AMMO] After: " + string(arrow_count));
             return true;
         }
+        show_debug_message("[CONSUME_AMMO] Not enough arrows!");
         return false;
     }
 

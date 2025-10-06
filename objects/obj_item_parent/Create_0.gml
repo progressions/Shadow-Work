@@ -51,10 +51,12 @@ function on_interact() {
             }
 
             var _taken = min(_space_available, other.count);
+            var _before = arrow_count;
             arrow_count += _taken;
+            var _after = arrow_count;
 
             play_sfx(snd_chest_open, 1, false);
-            show_debug_message("Picked up " + string(_taken) + " arrows (" + string(arrow_count) + "/" + string(_max_arrows) + ")");
+            show_debug_message("[ARROW PICKUP] Before: " + string(_before) + " | Taken: " + string(_taken) + " | After: " + string(_after) + " | Max: " + string(_max_arrows));
 
             increment_quest_counter("items_collected", _taken);
             increment_quest_counter("item_" + other.item_def.item_id, _taken);
