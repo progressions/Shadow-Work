@@ -21,3 +21,19 @@ image_speed = 0;
 
 // Set depth to draw above ground but below UI
 depth = -y;
+
+// Range profile tracking (updated by spawning code)
+projectile_range_profiles_init();
+range_profile_id = RangeProfile.generic_arrow;
+range_profile_id_cached = range_profile_id;
+range_profile = projectile_get_range_profile(range_profile_id);
+if (range_profile == undefined) {
+    range_profile = projectile_create_default_profile();
+}
+current_damage_multiplier = 1.0;
+previous_damage_multiplier = current_damage_multiplier;
+distance_travelled = 0;
+max_travel_distance = range_profile.max_distance + range_profile.overshoot_buffer;
+spawn_x = x;
+spawn_y = y;
+weapon_range_stat = 0;

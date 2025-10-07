@@ -183,6 +183,25 @@ function player_fire_ranged_projectile_local(_direction) {
         return false;
     }
 
+    if (equipped.right_hand == undefined || equipped.right_hand.definition == undefined) {
+        show_debug_message("No ranged weapon equipped");
+        return false;
+    }
+
+    var _weapon_definition = equipped.right_hand.definition;
+    var _weapon_stats = _weapon_definition.stats;
+    var _range_profile_id = RangeProfile.generic_arrow;
+
+    if (_weapon_definition.range_profile_override != undefined) {
+        _range_profile_id = _weapon_definition.range_profile_override;
+    } else if (variable_struct_exists(_weapon_stats, "range_profile_override")) {
+        _range_profile_id = _weapon_stats.range_profile_override;
+    } else if (_weapon_definition.range_profile != undefined) {
+        _range_profile_id = _weapon_definition.range_profile;
+    } else if (variable_struct_exists(_weapon_stats, "range_profile")) {
+        _range_profile_id = _weapon_stats.range_profile;
+    }
+
     var _original_facing = facing_dir;
     if (_direction != "") facing_dir = _direction;
 
@@ -213,6 +232,13 @@ function player_fire_ranged_projectile_local(_direction) {
     var _arrow = instance_create_layer(_arrow_x, _arrow_y, "Instances", obj_arrow);
     _arrow.creator = self;
     _arrow.damage = get_total_damage();
+    _arrow.range_profile_id = _range_profile_id;
+    _arrow.range_profile = projectile_get_range_profile(_range_profile_id);
+    _arrow.range_profile_id_cached = _range_profile_id;
+    _arrow.max_travel_distance = _arrow.range_profile.max_distance + _arrow.range_profile.overshoot_buffer;
+    _arrow.spawn_x = _arrow.x;
+    _arrow.spawn_y = _arrow.y;
+    _arrow.weapon_range_stat = _weapon_stats[$ "range"] ?? 0;
 
     switch (facing_dir) {
         case "right": _arrow.direction = 0; break;

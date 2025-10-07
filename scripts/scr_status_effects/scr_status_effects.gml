@@ -34,7 +34,8 @@ function status_effect_normalize_entry(_effect_entry) {
     var _result = {
         trait: _trait_key,
         chance: 1.0,
-        stacks: 1
+        stacks: 1,
+        duration: undefined
     };
 
     if (is_struct(_effect_entry)) {
