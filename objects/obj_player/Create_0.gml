@@ -57,9 +57,6 @@ loadouts = {
 inventory = [];
 max_inventory_size = 16;
 
-arrow_count = 0;
-arrow_max = 25;
-
 // Quest system
 active_quests = {};
 

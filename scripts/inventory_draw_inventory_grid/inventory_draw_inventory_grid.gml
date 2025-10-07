@@ -87,7 +87,19 @@ function inventory_draw_inventory_grid(_origin_x, _origin_y, _player) {
 	draw_set_valign(fa_top);
 	draw_text(_info_x, _info_y, _item_text);
 
-	var _arrow_text = "Arrows: " + string(_player.arrow_count) + "/" + string(_player.arrow_max);
+	var _arrow_count = 0;
+	if (_player != undefined) {
+		for (var _i = 0; _i < array_length(_player.inventory); _i++) {
+			var _entry = _player.inventory[_i];
+			if (_entry == undefined) continue;
+			if (_entry.definition == undefined) continue;
+			if (_entry.definition.item_id == "arrows") {
+				_arrow_count += _entry.count;
+			}
+		}
+	}
+
+	var _arrow_text = "Arrows: " + string(_arrow_count);
 	draw_set_halign(fa_left);
 	draw_set_valign(fa_top);
 	draw_text(_info_x, _info_y + 92, _arrow_text);
