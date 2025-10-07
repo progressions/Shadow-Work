@@ -185,7 +185,8 @@ global.trait_database = {
         max_stacks: 5,
         ui_color: make_color_rgb(128, 0, 128),
         show_feedback: true,
-        blocked_by: []
+        blocked_by: [],
+		opposite_trait: "blessed"
     },
     blessed: {
         name: "Blessed",
@@ -196,7 +197,8 @@ global.trait_database = {
         max_stacks: 5,
         ui_color: make_color_rgb(173, 216, 230), // Light blue
         show_feedback: true,
-        blocked_by: []
+        blocked_by: [],
+		opposite_trait: "cursed"
     },
     // Defense traits (affect damage reduction, not damage type)
     defense_resistance: {
