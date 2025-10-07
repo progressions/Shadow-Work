@@ -49,9 +49,9 @@ function player_state_dashing() {
         _dash_dir = dash_override_direction;
     }
 
-    // Apply status effect speed modifiers to dash
+    // Apply terrain and status effect speed modifiers to dash
     var speed_modifier = get_status_effect_modifier("speed");
-    var final_dash_speed = dash_speed * speed_modifier;
+    var final_dash_speed = dash_speed * terrain_speed_modifier * speed_modifier;
 
     switch(_dash_dir) {
         case "up":    dash_y = -final_dash_speed; break;

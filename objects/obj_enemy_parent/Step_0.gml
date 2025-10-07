@@ -27,6 +27,9 @@ if (flash_timer > 0) {
 // Tick trait-driven status effects (runs even when dead)
 tick_status_effects();
 
+// Apply terrain effects (traits and speed modifier)
+apply_terrain_effects();
+
 // Track state transitions for approach variation reset
 if (!variable_instance_exists(self, "previous_state")) {
     previous_state = state;

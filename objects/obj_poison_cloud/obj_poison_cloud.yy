@@ -1,19 +1,19 @@
 {
   "$GMObject":"",
-  "%Name":"obj_interactable_parent",
+  "%Name":"obj_poison_cloud",
   "eventList":[
     {"$GMEvent":"v1","%Name":"","collisionObjectId":null,"eventNum":0,"eventType":0,"isDnD":false,"name":"","resourceType":"GMEvent","resourceVersion":"2.0",},
   ],
   "managed":true,
-  "name":"obj_interactable_parent",
+  "name":"obj_poison_cloud",
   "overriddenProperties":[],
   "parent":{
-    "name":"ui",
-    "path":"folders/Objects/ui.yy",
+    "name":"environment",
+    "path":"folders/Objects/environment.yy",
   },
   "parentObjectId":{
-    "name":"obj_persistent_parent",
-    "path":"objects/obj_persistent_parent/obj_persistent_parent.yy",
+    "name":"obj_hazard_parent",
+    "path":"objects/obj_hazard_parent/obj_hazard_parent.yy",
   },
   "persistent":false,
   "physicsAngularDamping":0.1,
@@ -32,7 +32,10 @@
   "resourceType":"GMObject",
   "resourceVersion":"2.0",
   "solid":false,
-  "spriteId":null,
+  "spriteId":{
+    "name":"spr_poison_cloud",
+    "path":"sprites/spr_poison_cloud/spr_poison_cloud.yy",
+  },
   "spriteMaskId":null,
   "visible":true,
 }

@@ -3,9 +3,11 @@
 
 var player = other;
 
-// Check if player is already in the list
-var already_inside = (ds_list_find_index(entities_inside, player.id) != -1);
+// Check if player is in the list
+var player_index = ds_list_find_index(entities_inside, player.id);
+var already_inside = (player_index != -1);
 
+// Only process entry if not already inside
 if (!already_inside) {
     // Add player to tracking list
     ds_list_add(entities_inside, player.id);
@@ -80,7 +82,7 @@ if (!already_inside) {
     // ON-ENTER EFFECT APPLICATION
     // ==============================
 
-    if (!already_inside && effect_mode == "on_enter" && effect_to_apply != undefined) {
+    if (effect_mode == "on_enter" && effect_to_apply != undefined) {
         with (player) {
             if (other.effect_type == "trait") {
                 // Apply trait using existing trait system

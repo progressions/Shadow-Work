@@ -13,7 +13,7 @@ Follow the Ruby-inspired GML style already in place. Functions, variables, and e
 There is no automated harness, so validate changes by running affected rooms through the IDE. Exercise combat loops, grid puzzles, and inventory flows after every mechanic tweak. Use `show_debug_message()` sparingly, and gate temporary instrumentation behind `global.debug_mode` so it can be disabled quickly.
 
 ## Commit & Pull Request Guidelines
-Keep commits short and imperative (e.g., `Add plate armor`) and group related code, asset, and data changes together. PRs should describe gameplay impact, note impacted rooms or objects, and flag follow-up art or audio needs. Include repro steps for bug fixes and attach screenshots or GIFs whenever UI or VFX shift.
+Keep commits short and imperative (e.g., `Add plate armor`) and group related code, asset, and data changes together. Always write comprehensive, descriptive commit messages that summarize the change’s intent, major adjustments, and relevant systems touched—avoid vague placeholders like “misc updates” or “commit all changes”. PRs should describe gameplay impact, note impacted rooms or objects, and flag follow-up art or audio needs. Include repro steps for bug fixes and attach screenshots or GIFs whenever UI or VFX shift.
 
 ## Asset & Configuration Tips
 Place supplemental UI on `roomui/` layers to protect draw order. Balance texture and audio groups to avoid runtime spikes. Before merging, open the project in GameMaker to ensure folders and `Shadow Work.resource_order` stay in sync—manual edits to `.yy` files are brittle.

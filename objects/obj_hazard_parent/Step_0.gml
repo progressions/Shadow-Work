@@ -4,6 +4,20 @@
 if (global.game_paused) exit;
 
 // ==============================
+// CLEAN UP ENTITIES THAT LEFT
+// ==============================
+
+// Remove entities that are no longer colliding (handles cases where collision end doesn't fire)
+for (var i = ds_list_size(entities_inside) - 1; i >= 0; i--) {
+    var entity_id = entities_inside[| i];
+
+    if (!instance_exists(entity_id) || !place_meeting(x, y, entity_id)) {
+        ds_list_delete(entities_inside, i);
+        show_debug_message("[HAZARD CLEANUP] Removed entity from tracking (no longer colliding)");
+    }
+}
+
+// ==============================
 // UPDATE DAMAGE IMMUNITY TIMERS
 // ==============================
 

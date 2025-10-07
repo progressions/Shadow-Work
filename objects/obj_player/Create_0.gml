@@ -1,11 +1,11 @@
-move_speed = 1.5;
+move_speed = 1.0;
 
 // Momentum/velocity system
 velocity_x = 0;
 velocity_y = 0;
 acceleration = 0.3;         // How quickly we reach max speed (higher = snappier)
-friction_factor = 0.82;     // Deceleration when no input (higher = more slide)
-max_velocity = 2.0;         // Cap on velocity (slightly higher than move_speed for momentum feel)
+friction_factor = 0.9;     // Deceleration when no input (higher = more slide)
+max_velocity = 1.75;         // Cap on velocity (slightly higher than move_speed for momentum feel)
 
 tilemap = layer_tilemap_get_id("Tiles_Col");
 
@@ -23,6 +23,11 @@ xp_to_next = 25;
 tags = []; // Thematic descriptors (fireborne, venomous, etc.)
 permanent_traits = {}; // From tags, quests (permanent)
 temporary_traits = {};  // From equipment, companions, buffs (temporary)
+
+// Terrain effects system
+terrain_applied_traits = {};  // Struct: {trait_key: true/false} - tracks which terrain traits are active
+current_terrain = "grass";    // String: last detected terrain type
+terrain_speed_modifier = 1.0; // Real: speed multiplier from current terrain
 
 // Combat timer for companion evading behavior
 combat_timer = 999; // Start high so companions begin in following mode

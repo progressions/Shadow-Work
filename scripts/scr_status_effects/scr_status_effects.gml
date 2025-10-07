@@ -115,10 +115,6 @@ function status_effect_spawn_feedback(_trait_key, _stacks = 1) {
     }
 
     var _name = _trait_data.name ?? string_upper(_trait_key);
-    if (_stacks > 1) {
-        _name += " x" + string(_stacks);
-    }
-
     var _color = _trait_data.ui_color ?? c_white;
 
     if (is_undefined(spawn_floating_text)) return;

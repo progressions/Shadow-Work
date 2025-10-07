@@ -35,19 +35,13 @@ function player_state_walking() {
         if (_allow_focus_facing) facing_dir = "left";
     }
 
-    // Detect terrain at player position
+    // Detect terrain at player position (for footstep sounds)
     var _terrain = get_terrain_at_position(x, y);
 
-    // Set movement speed based on terrain
-    if (_terrain == "path") {
-        move_speed = 1.25; // Faster on path
-    } else {
-        move_speed = 1; // Normal speed on grass/other terrain
-    }
-
-    // Apply status effect speed modifiers
+    // Apply terrain speed modifier (set by apply_terrain_effects in Step event)
+    // and status effect speed modifiers
     var speed_modifier = get_status_effect_modifier("speed");
-    var final_move_speed = move_speed * speed_modifier;
+    var final_move_speed = move_speed * terrain_speed_modifier * speed_modifier;
 
     // Normalize diagonal input
     var _input_magnitude = sqrt(_hor * _hor + _ver * _ver);

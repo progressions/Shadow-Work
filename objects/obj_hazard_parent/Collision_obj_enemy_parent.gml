@@ -82,7 +82,7 @@ if (damage_mode == "on_enter" && damage_amount > 0) {
 // ON-ENTER EFFECT APPLICATION
 // ==============================
 
-if (!already_inside && effect_mode == "on_enter" && effect_to_apply != undefined) {
+if (effect_mode == "on_enter" && effect_to_apply != undefined) {
     with (enemy) {
         if (other.effect_type == "trait") {
             apply_timed_trait(other.effect_to_apply, other.effect_duration);

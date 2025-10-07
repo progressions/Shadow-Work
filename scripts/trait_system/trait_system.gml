@@ -495,8 +495,8 @@ function get_terrain_at_position(_x, _y) {
         return "grass"; // Default fallback
     }
 
-    // Check each layer in priority order (water > path > forest)
-    var _layers_to_check = ["Tiles_Water_Moving", "Tiles_Water", "Tiles_Path", "Tiles_Forest"];
+    // Check each layer in priority order (lava > water > path > forest)
+    var _layers_to_check = ["Tiles_Lava", "Tiles_Water_Moving", "Tiles_Water", "Tiles_Path", "Tiles_Forest"];
 
     for (var i = 0; i < array_length(_layers_to_check); i++) {
         var _layer_name = _layers_to_check[i];
@@ -593,4 +593,37 @@ function get_damage_type(_attacker) {
     }
 
     return _damage_type;
+}
+
+/// @function apply_terrain_effects()
+/// @description Apply terrain-based traits and speed modifiers (call in Step event)
+function apply_terrain_effects() {
+    var _terrain = get_terrain_at_position(x, y);
+    var _terrain_data = global.terrain_effects_map[$ _terrain];
+
+    if (_terrain_data == undefined) {
+        _terrain_data = global.terrain_effects_map[$ "grass"]; // Default
+    }
+
+    // Apply speed modifier (direct modification)
+    terrain_speed_modifier = _terrain_data.speed_modifier;
+
+    // Track terrain traits
+    var _new_terrain_traits = {};
+
+    // Apply traits from current terrain
+    var _traits_to_apply = _terrain_data.traits;
+    for (var i = 0; i < array_length(_traits_to_apply); i++) {
+        var _trait_key = _traits_to_apply[i];
+        _new_terrain_traits[$ _trait_key] = true;
+
+        // Only apply trait if we haven't already applied it from this terrain
+        if (!variable_struct_exists(terrain_applied_traits, _trait_key)) {
+            apply_status_effect(_trait_key); // Shows floating text feedback
+        }
+    }
+
+    // Terrain traits persist after leaving (expire naturally via timer)
+    terrain_applied_traits = _new_terrain_traits;
+    current_terrain = _terrain;
 }

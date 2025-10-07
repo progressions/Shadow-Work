@@ -29,6 +29,9 @@ player_focus_update(self);
 // Update combat timer for companion evading behavior
 combat_timer += delta_time / 1000000; // Convert microseconds to seconds
 
+// Apply terrain effects (traits and speed modifier)
+apply_terrain_effects();
+
 #region Movement
 
 // State machine for player movement

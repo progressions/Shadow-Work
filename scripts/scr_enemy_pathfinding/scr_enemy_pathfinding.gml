@@ -159,6 +159,9 @@ function enemy_update_path(target_x, target_y) {
         }
     }
 
+    // Mark hazardous terrain tiles as obstacles (unless entity has immunity)
+    mark_hazardous_terrain_in_grid();
+
     // If the destination cell is blocked, search nearby cells for a walkable alternative
     if (mp_grid_get_cell(_grid, _target_cell_x, _target_cell_y)) {
         var _found_open = false;
@@ -268,23 +271,55 @@ function enemy_has_line_of_sight(target_x, target_y) {
     return true; // Clear cardinal line of sight
 }
 
-/// @desc Determine movement speed bonus from terrain preferences
+/// @desc Get terrain-based speed modifier for enemy (uses unified terrain system)
 /// @return {real} Multiplier applied to base move speed
 function enemy_get_terrain_speed_modifier() {
-    if (array_length(tags) == 0) {
-        return 1.0;
+    return terrain_speed_modifier; // Set by apply_terrain_effects() in Step event
+}
+
+/// @function mark_hazardous_terrain_in_grid()
+/// @description Mark hazardous terrain tiles as obstacles in mp_grid (unless entity has immunity)
+function mark_hazardous_terrain_in_grid() {
+    if (!instance_exists(obj_pathfinding_controller)) {
+        return;
     }
 
-    var _terrain = get_terrain_at_position(x, y);
-    var _speed_mult = 1.0;
+    var _controller = obj_pathfinding_controller;
+    var _grid = _controller.grid;
 
-    if (_terrain == "water" && array_contains(tags, "aquatic")) {
-        _speed_mult = 1.5;
-    } else if (_terrain == "lava" && array_contains(tags, "fireborne")) {
-        _speed_mult = 1.5;
-    } else if (_terrain == "sand" && array_contains(tags, "sandcrawler")) {
-        _speed_mult = 1.25;
+    if (_grid == -1) {
+        return;
     }
 
-    return _speed_mult;
+    var _cell_size = _controller.cell_size;
+    var _grid_width = _controller.horizontal_cells;
+    var _grid_height = _controller.vertical_cells;
+
+    // Iterate through grid cells
+    for (var _gx = 0; _gx < _grid_width; _gx++) {
+        for (var _gy = 0; _gy < _grid_height; _gy++) {
+            var _world_x = _gx * _cell_size + _cell_size / 2;
+            var _world_y = _gy * _cell_size + _cell_size / 2;
+
+            var _terrain = get_terrain_at_position(_world_x, _world_y);
+            var _terrain_data = global.terrain_effects_map[$ _terrain];
+
+            if (_terrain_data != undefined && _terrain_data.is_hazard) {
+                // Check if entity has immunity
+                var _is_immune = false;
+                var _immunity_traits = _terrain_data.hazard_immunity_traits;
+                for (var i = 0; i < array_length(_immunity_traits); i++) {
+                    if (has_trait(_immunity_traits[i])) {
+                        _is_immune = true;
+                        break;
+                    }
+                }
+
+                // Mark as obstacle if not immune
+                if (!_is_immune) {
+                    mp_grid_add_cell(_grid, _gx, _gy);
+                }
+            }
+        }
+    }
 }

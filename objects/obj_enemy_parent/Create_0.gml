@@ -83,6 +83,11 @@ tags = []; // Thematic descriptors (fireborne, venomous, etc.) - set by child en
 permanent_traits = {}; // From tags (applied at creation)
 temporary_traits = {};  // From buffs/debuffs (applied during combat)
 
+// Terrain effects system
+terrain_applied_traits = {};  // Struct: {trait_key: true/false} - tracks which terrain traits are active
+current_terrain = "grass";    // String: last detected terrain type
+terrain_speed_modifier = 1.0; // Real: speed multiplier from current terrain
+
 // Enemy sound configuration
 // Child enemies can override specific sounds: enemy_sounds.on_melee_attack = snd_orc_roar;
 enemy_sounds = {
