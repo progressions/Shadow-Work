@@ -446,3 +446,8 @@ if (keyboard_check_pressed(vk_f9)) {
 
     show_debug_message("Added " + string(array_length(inventory)) + " test items to inventory");
 }
+
+// Debug key to run hazard tests
+if (keyboard_check_pressed(vk_f11)) {
+    run_all_hazard_tests();
+}

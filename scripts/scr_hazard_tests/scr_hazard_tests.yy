@@ -1,0 +1,14 @@
+{
+  "$GMScript":"",
+  "%Name":"scr_hazard_tests",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"scr_hazard_tests",
+  "parent":{
+    "name":"Scripts",
+    "path":"folders/Scripts.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+  "scriptType":1,
+}
