@@ -15,22 +15,24 @@ function player_state_walking() {
         return;
     }
 
+    var _allow_focus_facing = player_focus_allows_facing_updates(self);
+
     // Update facing direction and move_dir
     if (_ver > 0) {
         move_dir = "down";
-        facing_dir = "down";
+        if (_allow_focus_facing) facing_dir = "down";
     }
     else if (_ver < 0) {
         move_dir = "up";
-        facing_dir = "up";
+        if (_allow_focus_facing) facing_dir = "up";
     }
     else if (_hor > 0) {
         move_dir = "right";
-        facing_dir = "right";
+        if (_allow_focus_facing) facing_dir = "right";
     }
     else if (_hor < 0) {
         move_dir = "left";
-        facing_dir = "left";
+        if (_allow_focus_facing) facing_dir = "left";
     }
 
     // Detect terrain at player position
@@ -47,10 +49,35 @@ function player_state_walking() {
     var speed_modifier = get_status_effect_modifier("speed");
     var final_move_speed = move_speed * speed_modifier;
 
-    // Movement with collision
-    var _collided = move_and_collide(_hor * final_move_speed, _ver * final_move_speed, tilemap);
+    // Normalize diagonal input
+    var _input_magnitude = sqrt(_hor * _hor + _ver * _ver);
+    if (_input_magnitude > 0) {
+        _hor /= _input_magnitude;
+        _ver /= _input_magnitude;
+    }
+
+    // Acceleration-based movement (add to velocity instead of direct position change)
+    velocity_x += _hor * acceleration * final_move_speed;
+    velocity_y += _ver * acceleration * final_move_speed;
+
+    // Cap velocity at max_velocity
+    var _velocity_magnitude = sqrt(velocity_x * velocity_x + velocity_y * velocity_y);
+    if (_velocity_magnitude > max_velocity * final_move_speed) {
+        var _scale = (max_velocity * final_move_speed) / _velocity_magnitude;
+        velocity_x *= _scale;
+        velocity_y *= _scale;
+    }
+
+    // Apply velocity to position with collision
+    var _collided = move_and_collide(velocity_x, velocity_y, tilemap);
     if (array_length(_collided) > 0) {
-        // play_sfx(snd_bump, 1, false);
+        // On collision, kill velocity in that direction
+        for (var i = 0; i < array_length(_collided); i++) {
+            var _collision = _collided[i];
+            // Reduce velocity when hitting walls
+            if (abs(_collision.nx) > 0.5) velocity_x *= 0.3;
+            if (abs(_collision.ny) > 0.5) velocity_y *= 0.3;
+        }
     }
 
     // Get footstep sound for current terrain

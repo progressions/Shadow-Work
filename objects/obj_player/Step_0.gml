@@ -23,6 +23,9 @@ if (instance_exists(obj_grid_controller)) {
     GRID_Y_OFFSET = obj_grid_controller.GRID_Y_OFFSET;
 }
 
+// Update focus input state before processing movement/attacks
+player_focus_update(self);
+
 // Update combat timer for companion evading behavior
 combat_timer += delta_time / 1000000; // Convert microseconds to seconds
 
@@ -140,6 +143,18 @@ if (state != PlayerState.dead) {
         }
     }
 
+    // Process pending focus retreat dash (melee focus sequence)
+    var _focus_retreat = player_focus_peek_pending_retreat(self);
+    if (_focus_retreat != undefined) {
+        if (state != PlayerState.attacking && state != PlayerState.dashing && dash_cooldown <= 0) {
+            var _retreat_info = player_focus_consume_pending_retreat(self);
+            if (_retreat_info != undefined) {
+                start_dash(_retreat_info.direction, true);
+                state = PlayerState.dashing;
+            }
+        }
+    }
+
     #endregion Attack System
 
     #region Companion System
@@ -232,6 +247,11 @@ if (keyboard_check_pressed(ord("7"))) {
 if (keyboard_check_pressed(ord("9"))) {
     inventory_add_item(global.item_database.arrows, 10);
     show_debug_message("Added 10 arrows via debug key");
+}
+
+// Debug key to run focus state helper tests
+if (keyboard_check_pressed(ord("F"))) {
+    focus_state_run_tests();
 }
 
 // Debug keys for testing trait system v2.0

@@ -1,5 +1,12 @@
 move_speed = 1.5;
 
+// Momentum/velocity system
+velocity_x = 0;
+velocity_y = 0;
+acceleration = 0.3;         // How quickly we reach max speed (higher = snappier)
+friction_factor = 0.82;     // Deceleration when no input (higher = more slide)
+max_velocity = 2.0;         // Cap on velocity (slightly higher than move_speed for momentum feel)
+
 tilemap = layer_tilemap_get_id("Tiles_Col");
 
 #region Stats
@@ -57,6 +64,11 @@ loadouts = {
 inventory = [];
 max_inventory_size = 16;
 
+// Focus combat system configuration
+focus_hold_duration_ms = 275; // tweakable duration for aim/retreat buffers
+player_focus_init(self);
+focus_state.hold_duration_ms = focus_hold_duration_ms;
+
 // Quest system
 active_quests = {};
 
@@ -112,6 +124,7 @@ dash_attack_damage_multiplier = 1.5; // +50% damage
 dash_attack_defense_penalty = 0.75; // -25% damage reduction
 last_dash_direction = "";
 is_dash_attacking = false;
+dash_override_direction = "";
 
 // Player animation data based on sprite frame tags
 anim_data = {
@@ -173,12 +186,20 @@ init_status_effects();
 traits = [];
 
 // Add this function to your scripts or at the bottom of Create Event:
-function start_dash(_direction) {
+function start_dash(_direction, _preserve_facing) {
+    if (argument_count < 2) _preserve_facing = false;
     dash_timer = dash_duration;
-    facing_dir = _direction;
     last_dash_direction = _direction;
     dash_attack_window = 0;
     dash_cooldown = dash_cooldown_time;
+    dash_override_direction = "";
+
+    if (_preserve_facing) {
+        dash_override_direction = _direction;
+    } else {
+        facing_dir = _direction;
+    }
+
     play_sfx(snd_dash, 1, false);
     companion_on_player_dash(id);
 }

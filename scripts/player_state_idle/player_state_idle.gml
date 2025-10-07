@@ -19,6 +19,27 @@ function player_state_idle() {
     // Stay in idle
     move_dir = "idle";
 
+    // Apply friction to decelerate
+    velocity_x *= friction_factor;
+    velocity_y *= friction_factor;
+
+    // Stop completely if velocity is very small (prevents eternal drifting)
+    if (abs(velocity_x) < 0.01) velocity_x = 0;
+    if (abs(velocity_y) < 0.01) velocity_y = 0;
+
+    // Continue applying momentum even in idle state
+    if (velocity_x != 0 || velocity_y != 0) {
+        var _collided = move_and_collide(velocity_x, velocity_y, tilemap);
+        if (array_length(_collided) > 0) {
+            // On collision, kill velocity
+            for (var i = 0; i < array_length(_collided); i++) {
+                var _collision = _collided[i];
+                if (abs(_collision.nx) > 0.5) velocity_x = 0;
+                if (abs(_collision.ny) > 0.5) velocity_y = 0;
+            }
+        }
+    }
+
     // Handle knockback
     player_handle_knockback();
 }

@@ -110,6 +110,12 @@ switch (creator.facing_dir) {
         start_angle = 225;
         base_angle = 270;  // For slash effect
         break;
+    default:
+        // Fallback if facing_dir has unexpected value
+        show_debug_message("WARNING: Unexpected facing_dir: " + string(creator.facing_dir) + ", defaulting to down");
+        start_angle = 225;
+        base_angle = 270;
+        break;
 }
 
 image_angle = start_angle;
