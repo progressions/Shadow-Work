@@ -492,6 +492,24 @@ function evaluate_companion_triggers(player_instance) {
             }
         }
 
+        // HOLA: Slipstream Boost duration management
+        if (variable_struct_exists(companion.triggers, "slipstream_boost")) {
+            if (companion.triggers.slipstream_boost.active) {
+                if (!variable_instance_exists(companion, "slipstream_boost_timer")) companion.slipstream_boost_timer = 0;
+                companion.slipstream_boost_timer--;
+                if (companion.slipstream_boost_timer <= 0) companion.triggers.slipstream_boost.active = false;
+            }
+        }
+
+        // HOLA: Maelstrom deflection bonus duration management
+        if (variable_struct_exists(companion.triggers, "maelstrom")) {
+            if (companion.triggers.maelstrom.active) {
+                if (!variable_instance_exists(companion, "maelstrom_deflect_timer")) companion.maelstrom_deflect_timer = 0;
+                companion.maelstrom_deflect_timer--;
+                if (companion.maelstrom_deflect_timer <= 0) companion.triggers.maelstrom.active = false;
+            }
+        }
+
         // HOLA: Gust - Push back nearby enemies
         if (variable_struct_exists(companion.triggers, "gust")) {
             if (companion.triggers.gust.unlocked &&
@@ -530,6 +548,74 @@ function evaluate_companion_triggers(player_instance) {
                     }
                     spawn_floating_text(player_instance.x, player_instance.bbox_top - 10, "Gust!", c_white, player_instance);
                     companion_play_trigger_sfx(companion, "gust");
+                }
+            }
+        }
+
+        // HOLA: Maelstrom - Powerful AoE knockback, slow, and deflection boost (affinity 10)
+        if (variable_struct_exists(companion.triggers, "maelstrom")) {
+            if (companion.triggers.maelstrom.unlocked &&
+                companion.triggers.maelstrom.cooldown == 0 &&
+                companion.state != CompanionState.casting) {
+
+                // Capture trigger radius before with block
+                var _trigger_radius = companion.triggers.maelstrom.radius;
+
+                var nearby_enemies = 0;
+                with (obj_enemy_parent) {
+                    if (state != EnemyState.dead &&
+                        point_distance(x, y, player_instance.x, player_instance.y) < _trigger_radius) {
+                        nearby_enemies++;
+                    }
+                }
+
+                if (nearby_enemies >= companion.triggers.maelstrom.enemy_threshold) {
+                    // Enter casting state
+                    companion.previous_state = companion.state;
+                    companion.state = CompanionState.casting;
+                    companion.casting_frame_index = 0;
+                    companion.casting_timer = 0;
+
+                    companion.triggers.maelstrom.active = true;
+                    companion.triggers.maelstrom.cooldown = companion.triggers.maelstrom.cooldown_max;
+                    companion.maelstrom_deflect_timer = companion.triggers.maelstrom.deflect_duration;
+
+                    // Slow-motion on trigger activation
+                    activate_slowmo(0.5);
+
+                    // Capture trigger values before with block
+                    var _radius = companion.triggers.maelstrom.radius;
+                    var _knockback = companion.triggers.maelstrom.knockback_distance;
+                    var _enemies_affected = 0;
+
+                    // Apply knockback and slow to all nearby enemies
+                    with (obj_enemy_parent) {
+                        if (state != EnemyState.dead &&
+                            point_distance(x, y, player_instance.x, player_instance.y) < _radius) {
+                            // Knockback
+                            var push_dir = point_direction(player_instance.x, player_instance.y, x, y);
+                            x += lengthdir_x(_knockback, push_dir);
+                            y += lengthdir_y(_knockback, push_dir);
+
+                            // Apply slow status effect
+                            apply_status_effect(StatusEffectType.slowed);
+
+                            _enemies_affected++;
+
+                            // Visual feedback on enemy
+                            spawn_floating_text(x, bbox_top - 16, "Slowed!", c_purple, id);
+                        }
+                    }
+
+                    // Visual feedback
+                    spawn_floating_text(companion.x, companion.bbox_top - 10, "Maelstrom!", c_aqua, companion);
+                    spawn_floating_text(player_instance.x, player_instance.bbox_top - 20, string(_enemies_affected) + " swept!", c_aqua, player_instance);
+
+                    companion_play_trigger_sfx(companion, "maelstrom");
+
+                    show_debug_message("=== MAELSTROM ACTIVATED ===");
+                    show_debug_message("Enemies affected: " + string(_enemies_affected));
+                    show_debug_message("Deflection boost duration: " + string(companion.triggers.maelstrom.deflect_duration) + " frames");
                 }
             }
         }
@@ -703,6 +789,33 @@ function companion_on_player_dash(player_instance) {
                 show_debug_message("Duration: " + string(trigger.duration) + " frames");
                 show_debug_message("Damage multiplier: " + string(trigger.damage_multiplier));
                 show_debug_message("Armor pierce: " + string(trigger.armor_pierce));
+            }
+        }
+
+        // HOLA: Slipstream Boost trigger (affinity 8+)
+        if (variable_struct_exists(companion.triggers, "slipstream_boost")) {
+            var trigger = companion.triggers.slipstream_boost;
+
+            if (trigger.unlocked && trigger.cooldown == 0 && companion.state != CompanionState.casting) {
+                // Enter casting state
+                companion.previous_state = companion.state;
+                companion.state = CompanionState.casting;
+                companion.casting_frame_index = 0;
+                companion.casting_timer = 0;
+
+                trigger.cooldown = trigger.cooldown_max;
+                trigger.active = true;
+                companion.slipstream_boost_timer = trigger.duration;
+
+                // Visual feedback
+                spawn_floating_text(companion.x, companion.bbox_top - 10, "Slipstream!", c_aqua, companion);
+                spawn_floating_text(player_instance.x, player_instance.bbox_top - 20, "Tailwind!", c_aqua, player_instance);
+
+                companion_play_trigger_sfx(companion, "slipstream_boost");
+
+                show_debug_message("=== SLIPSTREAM BOOST ACTIVATED ===");
+                show_debug_message("Duration: " + string(trigger.duration) + " frames");
+                show_debug_message("Dash CD boost: " + string(trigger.dash_cd_boost * 100) + "%");
             }
         }
     }

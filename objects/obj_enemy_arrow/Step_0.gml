@@ -1,3 +1,42 @@
+// Check for Hola's wind deflection aura (passive trajectory alteration)
+if (instance_exists(obj_player)) {
+    var companions = get_active_companions();
+    for (var i = 0; i < array_length(companions); i++) {
+        var companion = companions[i];
+
+        // Check for Hola with affinity 5+
+        if (companion.companion_id == "hola" && companion.affinity >= 5.0) {
+            if (variable_struct_exists(companion.auras, "wind_deflection") && companion.auras.wind_deflection.active) {
+                var aura = companion.auras.wind_deflection;
+                var dist_to_player = point_distance(x, y, obj_player.x, obj_player.y);
+
+                // Only deflect if within radius
+                if (dist_to_player <= aura.radius) {
+                    // Calculate deflection strength based on distance (stronger closer to player)
+                    var proximity_factor = 1 - (dist_to_player / aura.radius); // 1.0 at player, 0.0 at edge
+
+                    // Scale deflection by affinity (affinity 5 = weak, affinity 10 = strong)
+                    var affinity_scale = (companion.affinity - 5.0) / 5.0; // 0.0 at affinity 5, 1.0 at affinity 10
+
+                    // Calculate angle away from player
+                    var angle_to_player = point_direction(x, y, obj_player.x, obj_player.y);
+                    var angle_away = angle_to_player + 180;
+
+                    // Deflection strength (max 15 degrees per frame when very close at high affinity)
+                    var max_deflection = 15 * proximity_factor * affinity_scale;
+
+                    // Bend trajectory away from player
+                    var current_dir = direction;
+                    var angle_diff = angle_difference(angle_away, current_dir);
+
+                    // Apply gradual deflection
+                    direction += sign(angle_diff) * min(abs(angle_diff), max_deflection);
+                }
+            }
+        }
+    }
+}
+
 // Check for collision with Tiles_Col layer
 var _tilemap_col = layer_tilemap_get_id("Tiles_Col");
 if (_tilemap_col != -1) {
