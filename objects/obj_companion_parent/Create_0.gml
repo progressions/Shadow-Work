@@ -36,6 +36,14 @@ evade_recalc_interval = 20; // Frames between recalculations (20 frames = ~333ms
 evade_target_x = x; // Cached evasion target position
 evade_target_y = y;
 
+// Pathfinding (for following behavior that avoids hazards)
+companion_path = path_add();
+current_waypoint = 0;
+path_recalc_timer = 0;
+path_recalc_interval = 60; // Frames between path updates (1 second)
+last_target_x = 0;
+last_target_y = 0;
+
 // Trigger sound defaults
 sfx_trigger_sound = noone;
 
@@ -377,6 +385,54 @@ function evade_from_combat() {
         move_dir_x = 0;
         move_dir_y = 0;
     }
+}
+
+/// @function companion_update_path()
+/// @description Calculate pathfinding path that avoids hazardous terrain
+function companion_update_path() {
+    if (!instance_exists(follow_target)) return false;
+    if (!instance_exists(obj_pathfinding_controller)) return false;
+
+    var _controller = obj_pathfinding_controller;
+    var _grid = _controller.grid;
+    if (_grid == -1) return false;
+
+    // Clear grid to base state (obstacles only, no hazards yet)
+    mp_grid_clear_all(_grid);
+
+    // Add collision obstacles
+    mp_grid_add_instances(_grid, tilemap, true);
+    mp_grid_add_instances(_grid, obj_rising_pillar, true);
+
+    // Mark hazardous terrain as obstacles (companions always avoid hazards, no immunity)
+    var _cell_size = _controller.cell_size;
+    var _grid_width = _controller.horizontal_cells;
+    var _grid_height = _controller.vertical_cells;
+
+    for (var _gx = 0; _gx < _grid_width; _gx++) {
+        for (var _gy = 0; _gy < _grid_height; _gy++) {
+            var _world_x = _gx * _cell_size + _cell_size / 2;
+            var _world_y = _gy * _cell_size + _cell_size / 2;
+
+            var _terrain = get_terrain_at_position(_world_x, _world_y);
+            var _terrain_data = global.terrain_effects_map[$ _terrain];
+
+            if (_terrain_data != undefined && _terrain_data.is_hazard) {
+                mp_grid_add_cell(_grid, _gx, _gy);
+            }
+        }
+    }
+
+    // Calculate path from companion to player
+    path_clear_points(companion_path);
+    var _path_found = mp_grid_path(_grid, companion_path, x, y, follow_target.x, follow_target.y, false);
+
+    if (_path_found) {
+        current_waypoint = 0;
+        return true;
+    }
+
+    return false;
 }
 
 /// @function can_interact()

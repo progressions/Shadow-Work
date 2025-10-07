@@ -128,17 +128,53 @@ if (is_recruited && state == CompanionState.following) {
 
         // Only move if beyond follow distance
         if (dist_to_player > follow_distance) {
-            // Calculate direction to player
-            var dir_to_player = point_direction(x, y, follow_target.x, follow_target.y);
-            var move_x = lengthdir_x(follow_speed, dir_to_player);
-            var move_y = lengthdir_y(follow_speed, dir_to_player);
+            // Pathfinding update throttling
+            path_recalc_timer++;
 
-            // Store movement direction for animation
-            move_dir_x = move_x;
-            move_dir_y = move_y;
+            // Recalculate path periodically or when player moves significantly
+            var player_moved_far = point_distance(last_target_x, last_target_y, follow_target.x, follow_target.y) > 32;
 
-            // Move with collision detection (including other companions)
-            move_and_collide(move_x, move_y, [tilemap, obj_rising_pillar, obj_companion_parent]);
+            if (path_recalc_timer >= path_recalc_interval || player_moved_far) {
+                path_recalc_timer = 0;
+                last_target_x = follow_target.x;
+                last_target_y = follow_target.y;
+
+                // Update pathfinding (avoids hazards)
+                companion_update_path();
+            }
+
+            // Follow the path if we have one
+            if (path_get_number(companion_path) > 0 && current_waypoint < path_get_number(companion_path)) {
+                var target_x = path_get_point_x(companion_path, current_waypoint);
+                var target_y = path_get_point_y(companion_path, current_waypoint);
+
+                var dist_to_waypoint = point_distance(x, y, target_x, target_y);
+
+                // Move toward current waypoint
+                if (dist_to_waypoint > 4) {
+                    var move_dir = point_direction(x, y, target_x, target_y);
+                    var move_x = lengthdir_x(follow_speed, move_dir);
+                    var move_y = lengthdir_y(follow_speed, move_dir);
+
+                    move_dir_x = move_x;
+                    move_dir_y = move_y;
+
+                    move_and_collide(move_x, move_y, [tilemap, obj_rising_pillar, obj_companion_parent]);
+                } else {
+                    // Reached waypoint, move to next
+                    current_waypoint++;
+                }
+            } else {
+                // No path or reached end - try direct movement as fallback
+                var dir_to_player = point_direction(x, y, follow_target.x, follow_target.y);
+                var move_x = lengthdir_x(follow_speed, dir_to_player);
+                var move_y = lengthdir_y(follow_speed, dir_to_player);
+
+                move_dir_x = move_x;
+                move_dir_y = move_y;
+
+                move_and_collide(move_x, move_y, [tilemap, obj_rising_pillar, obj_companion_parent]);
+            }
         } else {
             // Within follow range, stay idle
             move_dir_x = 0;
