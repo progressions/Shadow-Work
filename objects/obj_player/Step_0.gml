@@ -74,6 +74,7 @@ switch (state) {
 // Tick trait-driven status effects (runs even when dead)
 tick_status_effects();
 
+
 tilemap = layer_tilemap_get_id("Tiles_Col");
 
 // Don't run other systems when dead
@@ -204,32 +205,6 @@ if (state != PlayerState.dead) {
     #endregion Torch Lighting
 
     #endregion Companion System
-}
-
-// Debug keys for testing status effects (remove in final version)
-if (keyboard_check_pressed(ord("1"))) {
-    apply_status_effect("burning");
-    show_debug_message("Applied burning effect");
-}
-if (keyboard_check_pressed(ord("2"))) {
-    apply_status_effect("wet");
-    show_debug_message("Applied wet effect");
-}
-if (keyboard_check_pressed(ord("3"))) {
-    apply_status_effect("empowered");
-    show_debug_message("Applied empowered effect");
-}
-if (keyboard_check_pressed(ord("4"))) {
-    apply_status_effect("weakened");
-    show_debug_message("Applied weakened effect");
-}
-if (keyboard_check_pressed(ord("5"))) {
-    apply_status_effect("swift");
-    show_debug_message("Applied swift effect");
-}
-if (keyboard_check_pressed(ord("6"))) {
-    apply_status_effect("slowed");
-    show_debug_message("Applied slowed effect");
 }
 
 // Apply status effects to nearest enemy

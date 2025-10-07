@@ -16,7 +16,7 @@ damage_interval = 1;
 damage_immunity_duration = 1;
 
 effect_type = "status";
-effect_to_apply = { trait: "poisoned" };
+effect_to_apply = "poisoned";
 effect_duration = -1;                // Use trait default duration
 effect_mode = "on_enter";
 

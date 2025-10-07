@@ -176,6 +176,7 @@ function apply_status_effect(_effect_entry, _duration_override = -1, _is_permane
     if (_is_permanent) {
         add_permanent_trait(_trait_key, _stacks);
     } else if (_duration_seconds != undefined) {
+        show_debug_message("Applying timed trait: " + _trait_key + " for " + string(_duration_seconds) + "s with " + string(_stacks) + " stacks");
         apply_timed_trait(_trait_key, _duration_seconds, _stacks);
     } else {
         add_temporary_trait(_trait_key, _stacks);

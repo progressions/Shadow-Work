@@ -1,9 +1,9 @@
 {
   "$GMScript":"v1",
-  "%Name":"scr_test_sound_variants",
+  "%Name":"scr_trait_database",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"scr_test_sound_variants",
+  "name":"scr_trait_database",
   "parent":{
     "name":"Scripts",
     "path":"folders/Scripts.yy",

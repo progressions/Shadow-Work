@@ -1,27 +1,26 @@
-/// obj_poison : Create Event
-/// Poison hazard configuration - continuous poison damage
+/// obj_curse : Create Event
+/// Curse hazard configuration - applies unholy-damage DoT
 
 // Inherit parent initialization
 event_inherited();
 
 // ==============================
-// POISON HAZARD CONFIGURATION
+// CURSE HAZARD CONFIGURATION
 // ==============================
 
-// Poison hazard applies a DoT identical to burning but themed as poison
+// Curse hazard applies a DoT similar to burning but themed as unholy damage
 damage_mode = "none";              // No direct damage ticks
 damage_amount = 0;
-damage_type = DamageType.poison;
+damage_type = DamageType.unholy;
 damage_interval = 1;
 damage_immunity_duration = 1;
 
 effect_type = "status";
-effect_to_apply = "poisoned";
+effect_to_apply = "cursed";
 effect_duration = -1;                // Use trait default duration
 effect_mode = "on_enter";
 
 // Visual/Animation
-sprite_index = spr_poison_pool;     // Poison pool animation
 image_speed = 0.2;                  // Animation speed (slower than fire)
 
 // Audio configuration (optional - uncomment and set sounds)

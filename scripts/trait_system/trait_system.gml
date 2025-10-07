@@ -216,6 +216,8 @@ function update_timed_traits() {
     if (!variable_instance_exists(self, "timed_traits")) return;
 
     var _traits_to_remove = [];
+	
+	show_debug_message("Timed traits " + string(timed_traits));
 
     // Update timers
     for (var i = 0; i < array_length(timed_traits); i++) {
@@ -561,6 +563,8 @@ function get_damage_type(_attacker) {
                     return "ice";
                 case "poisoned":
                     return "poison";
+                case "cursed":
+                    return "unholy";
             }
         }
 
@@ -588,6 +592,8 @@ function get_damage_type(_attacker) {
                     return "ice";
                 case "poisoned":
                     return "poison";
+                case "cursed":
+                    return "unholy";
             }
         }
     }
