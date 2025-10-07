@@ -328,19 +328,25 @@ if (keyboard_check_pressed(ord("P"))) {
     show_debug_message("==========================");
 }
 
-// Debug key to boost Canopy affinity
+// Debug key to boost affinity for all recruited companions
 if (keyboard_check_pressed(ord("K"))) {
-    with (obj_canopy) {
-        affinity = min(affinity + 1, affinity_max);
-        show_debug_message("=== CANOPY AFFINITY ===");
-        show_debug_message("Affinity: " + string(affinity) + "/" + string(affinity_max));
-        show_debug_message("Triggers unlocked:");
-        show_debug_message("  Shield: " + string(triggers.shield.unlocked));
-        show_debug_message("  Dash Mend (5+): " + string(triggers.dash_mend.unlocked));
-        show_debug_message("  Aegis (8+): " + string(triggers.aegis.unlocked));
-        show_debug_message("  Guardian Veil (10): " + string(triggers.guardian_veil.unlocked));
-        show_debug_message("=======================");
+    var companions = get_active_companions();
+    show_debug_message("=== AFFINITY DEBUG (K) ===");
+
+    if (array_length(companions) == 0) {
+        show_debug_message("No companions recruited");
+    } else {
+        for (var i = 0; i < array_length(companions); i++) {
+            var companion = companions[i];
+            companion.affinity = min(companion.affinity + 1, companion.affinity_max);
+
+            show_debug_message(companion.companion_name + " affinity: " + string(companion.affinity) + "/" + string(companion.affinity_max));
+            spawn_floating_text(companion.x, companion.bbox_top - 16,
+                "Affinity: " + string(companion.affinity), c_yellow, companion);
+        }
     }
+
+    show_debug_message("=======================");
 }
 
 // Debug key to show affinity aura multipliers for all companions

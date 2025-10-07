@@ -59,8 +59,16 @@ if (alarm[1] < 0) {
 	 show_debug_message("Resistance multiplier: " + string(_resistance_multiplier));
 	 show_debug_message("==================");
 
-	 // Apply damage type resistance, then subtract damage resistance
-	 var _final_damage = max(0, (_base_damage * _resistance_multiplier) - melee_damage_resistance);
+	 // Apply armor pierce from Execution Window (reduces enemy DR)
+	 var _armor_pierce = get_execution_window_armor_pierce();
+	 var _effective_dr = max(0, melee_damage_resistance - _armor_pierce);
+
+	 // Apply damage type resistance, then subtract damage resistance (with armor pierce)
+	 var _final_damage = max(0, (_base_damage * _resistance_multiplier) - _effective_dr);
+
+	 // Notify companions of hit (adds on_hit_strike bonus damage)
+	 var _bonus_damage = companion_on_player_hit(other.creator, id, _final_damage);
+	 _final_damage += _bonus_damage;
 
 	 hp -= _final_damage;
 

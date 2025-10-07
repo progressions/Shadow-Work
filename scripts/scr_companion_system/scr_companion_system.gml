@@ -204,6 +204,50 @@ function get_companion_range_bonus() {
     return total_range;
 }
 
+/// @function get_execution_window_multiplier()
+/// @description Check if any companion has Execution Window active and return damage multiplier
+/// @return {real} Damage multiplier (1.0 if not active, 2.0 if active)
+function get_execution_window_multiplier() {
+    var companions = get_active_companions();
+
+    for (var i = 0; i < array_length(companions); i++) {
+        var companion = companions[i];
+
+        // Check for Execution Window trigger (Yorna affinity 10)
+        if (variable_struct_exists(companion.triggers, "execution_window")) {
+            var trigger = companion.triggers.execution_window;
+
+            if (trigger.active && variable_instance_exists(companion, "execution_window_timer") && companion.execution_window_timer > 0) {
+                return trigger.damage_multiplier; // Should be 2.0
+            }
+        }
+    }
+
+    return 1.0; // No execution window active
+}
+
+/// @function get_execution_window_armor_pierce()
+/// @description Check if any companion has Execution Window active and return armor pierce amount
+/// @return {real} Armor pierce amount (0 if not active, 3 if active)
+function get_execution_window_armor_pierce() {
+    var companions = get_active_companions();
+
+    for (var i = 0; i < array_length(companions); i++) {
+        var companion = companions[i];
+
+        // Check for Execution Window trigger (Yorna affinity 10)
+        if (variable_struct_exists(companion.triggers, "execution_window")) {
+            var trigger = companion.triggers.execution_window;
+
+            if (trigger.active && variable_instance_exists(companion, "execution_window_timer") && companion.execution_window_timer > 0) {
+                return trigger.armor_pierce; // Should be 3
+            }
+        }
+    }
+
+    return 0; // No execution window active
+}
+
 /// @function get_companion_multi_target_params()
 /// @description Calculate multi-target attack parameters from companions (Yorna's aura)
 /// @return {struct} Returns {max_targets: number, chance: number} or undefined if no multi-target
@@ -439,6 +483,15 @@ function evaluate_companion_triggers(player_instance) {
             }
         }
 
+        // YORNA: Execution Window duration management
+        if (variable_struct_exists(companion.triggers, "execution_window")) {
+            if (companion.triggers.execution_window.active) {
+                if (!variable_instance_exists(companion, "execution_window_timer")) companion.execution_window_timer = 0;
+                companion.execution_window_timer--;
+                if (companion.execution_window_timer <= 0) companion.triggers.execution_window.active = false;
+            }
+        }
+
         // HOLA: Gust - Push back nearby enemies
         if (variable_struct_exists(companion.triggers, "gust")) {
             if (companion.triggers.gust.unlocked &&
@@ -483,8 +536,59 @@ function evaluate_companion_triggers(player_instance) {
     }
 }
 
+/// @function companion_on_player_hit(player_instance, enemy_instance, base_damage)
+/// @description Notify companions that the player hit an enemy (used for On-Hit Strike trigger)
+/// @param {instance} player_instance The player who landed the hit
+/// @param {instance} enemy_instance The enemy that was hit
+/// @param {real} base_damage The base damage before companion bonuses
+/// @return {real} Bonus damage to add to the hit
+function companion_on_player_hit(player_instance, enemy_instance, base_damage) {
+    if (player_instance == undefined || player_instance == noone) {
+        return 0;
+    }
+
+    if (enemy_instance == undefined || enemy_instance == noone) {
+        return 0;
+    }
+
+    var total_bonus_damage = 0;
+    var companions = get_active_companions();
+
+    for (var i = 0; i < array_length(companions); i++) {
+        var companion = companions[i];
+
+        // Check for On-Hit Strike trigger (Yorna)
+        if (variable_struct_exists(companion.triggers, "on_hit_strike")) {
+            var trigger = companion.triggers.on_hit_strike;
+
+            if (trigger.unlocked && trigger.active && trigger.cooldown == 0) {
+                // Add bonus damage
+                var bonus = trigger.bonus_damage;
+                total_bonus_damage += bonus;
+
+                // Set cooldown
+                trigger.cooldown = trigger.cooldown_max;
+
+                // Visual feedback
+                spawn_floating_text(companion.x, companion.bbox_top - 10, "Strike!", c_orange, companion);
+                spawn_floating_text(enemy_instance.x + 8, enemy_instance.bbox_top - 20, "+" + string(bonus), c_orange, enemy_instance);
+
+                // Play trigger sound
+                companion_play_trigger_sfx(companion, "on_hit_strike");
+
+                show_debug_message("=== ON-HIT STRIKE ACTIVATED ===");
+                show_debug_message("Companion: " + companion.companion_name);
+                show_debug_message("Bonus damage: " + string(bonus));
+                show_debug_message("Cooldown set to: " + string(trigger.cooldown_max));
+            }
+        }
+    }
+
+    return total_bonus_damage;
+}
+
 /// @function companion_on_player_dash(player_instance)
-/// @description Notify companions that the player started a dash (used for Dash Mend trigger)
+/// @description Notify companions that the player started a dash (used for Dash Mend, Expose Weakness, and Execution Window triggers)
 /// @param {instance} player_instance The player who dashed
 function companion_on_player_dash(player_instance) {
     if (player_instance == undefined || player_instance == noone) {
@@ -496,36 +600,111 @@ function companion_on_player_dash(player_instance) {
     for (var i = 0; i < array_length(companions); i++) {
         var companion = companions[i];
 
-        if (!variable_struct_exists(companion.triggers, "dash_mend")) {
-            continue;
+        // CANOPY: Dash Mend trigger
+        if (variable_struct_exists(companion.triggers, "dash_mend")) {
+            var trigger = companion.triggers.dash_mend;
+
+            if (trigger.unlocked && trigger.cooldown == 0 && companion.state != CompanionState.casting) {
+                // Apply heal scaled by affinity
+                var heal_base = (trigger.heal_amount != undefined) ? trigger.heal_amount : 0;
+                var multiplier = get_affinity_aura_multiplier(companion.affinity);
+                var heal_amount = heal_base * multiplier;
+
+                var previous_hp = player_instance.hp;
+                player_instance.hp = min(player_instance.hp_total, player_instance.hp + heal_amount);
+
+                // Visual feedback
+                spawn_floating_text(companion.x, companion.bbox_top - 10, "Mend!", c_lime, companion);
+                if (player_instance.hp > previous_hp) {
+                    var healed = player_instance.hp - previous_hp;
+                    spawn_floating_text(player_instance.x, player_instance.bbox_top - 12, "+ " + string_format(healed, 1, 1), c_lime, player_instance);
+                }
+
+                trigger.cooldown = trigger.cooldown_max;
+                trigger.active = true;
+                companion.dash_mend_timer = 12; // brief window for potential VFX
+
+                companion_play_trigger_sfx(companion, "dash_mend");
+            }
         }
 
-        var trigger = companion.triggers.dash_mend;
+        // YORNA: Expose Weakness trigger (affinity 8+)
+        if (variable_struct_exists(companion.triggers, "expose_weakness")) {
+            var trigger = companion.triggers.expose_weakness;
 
-        if (!trigger.unlocked || trigger.cooldown > 0) {
-            continue;
+            if (trigger.unlocked && trigger.cooldown == 0 && companion.state != CompanionState.casting) {
+                // Enter casting state
+                companion.previous_state = companion.state;
+                companion.state = CompanionState.casting;
+                companion.casting_frame_index = 0;
+                companion.casting_timer = 0;
+
+                trigger.cooldown = trigger.cooldown_max;
+
+                // Capture trigger radius before with block
+                var _trigger_radius = trigger.radius;
+
+                // Apply defense vulnerability trait to all nearby enemies
+                var _enemies_affected = 0;
+                with (obj_enemy_parent) {
+                    if (state != EnemyState.dead &&
+                        point_distance(x, y, player_instance.x, player_instance.y) < _trigger_radius) {
+
+                        // Apply timed trait (automatic timer management via trait system)
+                        apply_timed_trait("defense_vulnerability", 3.0);
+
+                        _enemies_affected++;
+
+                        // Visual feedback on enemy
+                        spawn_floating_text(x, bbox_top - 16, "Weakness!", c_purple, id);
+                    }
+                }
+
+                // Slow-motion on trigger activation
+                activate_slowmo(0.5);
+
+                // Visual feedback
+                spawn_floating_text(companion.x, companion.bbox_top - 10, "Expose Weakness!", c_purple, companion);
+                spawn_floating_text(player_instance.x, player_instance.bbox_top - 20, string(_enemies_affected) + " weakened", c_purple, player_instance);
+
+                companion_play_trigger_sfx(companion, "expose_weakness");
+
+                show_debug_message("=== EXPOSE WEAKNESS ACTIVATED ===");
+                show_debug_message("Enemies affected: " + string(_enemies_affected));
+                show_debug_message("Duration: 3.0 seconds (trait system managed)");
+            }
         }
 
-        // Apply heal scaled by affinity
-        var heal_base = (trigger.heal_amount != undefined) ? trigger.heal_amount : 0;
-        var multiplier = get_affinity_aura_multiplier(companion.affinity);
-        var heal_amount = heal_base * multiplier;
+        // YORNA: Execution Window trigger (affinity 10)
+        if (variable_struct_exists(companion.triggers, "execution_window")) {
+            var trigger = companion.triggers.execution_window;
 
-        var previous_hp = player_instance.hp;
-        player_instance.hp = min(player_instance.hp_total, player_instance.hp + heal_amount);
+            if (trigger.unlocked && trigger.cooldown == 0 && companion.state != CompanionState.casting) {
+                // Enter casting state
+                companion.previous_state = companion.state;
+                companion.state = CompanionState.casting;
+                companion.casting_frame_index = 0;
+                companion.casting_timer = 0;
 
-        // Visual feedback
-        spawn_floating_text(companion.x, companion.bbox_top - 10, "Mend!", c_lime, companion);
-        if (player_instance.hp > previous_hp) {
-            var healed = player_instance.hp - previous_hp;
-            spawn_floating_text(player_instance.x, player_instance.bbox_top - 12, "+ " + string_format(healed, 1, 1), c_lime, player_instance);
+                trigger.cooldown = trigger.cooldown_max;
+                trigger.active = true; // Keep this for duration tracking
+                companion.execution_window_timer = trigger.duration;
+
+                // Slow-motion on trigger activation
+                activate_slowmo(0.5);
+
+                // Visual feedback
+                spawn_floating_text(companion.x, companion.bbox_top - 10, "Execution!", c_red, companion);
+                spawn_floating_text(player_instance.x, player_instance.bbox_top - 20, "Power Surge!", c_red, player_instance);
+
+                companion_play_trigger_sfx(companion, "execution_window");
+
+                show_debug_message("=== EXECUTION WINDOW ACTIVATED ===");
+                show_debug_message("Duration: " + string(trigger.duration) + " frames");
+                show_debug_message("Damage multiplier: " + string(trigger.damage_multiplier));
+                show_debug_message("Armor pierce: " + string(trigger.armor_pierce));
+            }
         }
-
-        trigger.cooldown = trigger.cooldown_max;
-        trigger.active = true;
-        companion.dash_mend_timer = 12; // brief window for potential VFX
-
-        companion_play_trigger_sfx(companion, "dash_mend");
     }
 }
 

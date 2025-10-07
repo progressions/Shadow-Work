@@ -42,6 +42,13 @@ function get_total_damage() {
     // Add companion attack bonuses
     _base_damage += get_companion_attack_bonus();
 
+    // Apply Execution Window damage multiplier (Yorna affinity 10 trigger)
+    var _execution_multiplier = get_execution_window_multiplier();
+    if (_execution_multiplier > 1.0) {
+        _base_damage *= _execution_multiplier;
+        show_debug_message("EXECUTION WINDOW ACTIVE! Damage boosted: " + string(_base_damage / _execution_multiplier) + " -> " + string(_base_damage));
+    }
+
     // Roll for critical hit
     last_attack_was_crit = false; // Reset crit flag
     if (random(1) < crit_chance) {

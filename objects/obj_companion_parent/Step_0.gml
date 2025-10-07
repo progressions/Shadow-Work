@@ -12,6 +12,10 @@ if (variable_struct_exists(triggers, "guardian_veil") && triggers.guardian_veil.
 if (variable_struct_exists(triggers, "gust") && triggers.gust.cooldown > 0) triggers.gust.cooldown--;
 if (variable_struct_exists(triggers, "slipstream_boost") && triggers.slipstream_boost.cooldown > 0) triggers.slipstream_boost.cooldown--;
 if (variable_struct_exists(triggers, "maelstrom") && triggers.maelstrom.cooldown > 0) triggers.maelstrom.cooldown--;
+// Yorna's triggers
+if (variable_struct_exists(triggers, "on_hit_strike") && triggers.on_hit_strike.cooldown > 0) triggers.on_hit_strike.cooldown--;
+if (variable_struct_exists(triggers, "expose_weakness") && triggers.expose_weakness.cooldown > 0) triggers.expose_weakness.cooldown--;
+if (variable_struct_exists(triggers, "execution_window") && triggers.execution_window.cooldown > 0) triggers.execution_window.cooldown--;
 
 // Unlock triggers based on affinity (check if they exist first)
 if (variable_struct_exists(triggers, "dash_mend")) triggers.dash_mend.unlocked = (affinity >= 5.0);
@@ -19,6 +23,9 @@ if (variable_struct_exists(triggers, "aegis")) triggers.aegis.unlocked = (affini
 if (variable_struct_exists(triggers, "guardian_veil")) triggers.guardian_veil.unlocked = (affinity >= 10.0);
 if (variable_struct_exists(triggers, "slipstream_boost")) triggers.slipstream_boost.unlocked = (affinity >= 8.0);
 if (variable_struct_exists(triggers, "maelstrom")) triggers.maelstrom.unlocked = (affinity >= 10.0);
+// Yorna's triggers (on_hit_strike is unlocked by default)
+if (variable_struct_exists(triggers, "expose_weakness")) triggers.expose_weakness.unlocked = (affinity >= 8.0);
+if (variable_struct_exists(triggers, "execution_window")) triggers.execution_window.unlocked = (affinity >= 10.0);
 
 // Handle casting state
 if (state == CompanionState.casting) {
