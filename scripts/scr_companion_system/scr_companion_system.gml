@@ -598,7 +598,7 @@ function evaluate_companion_triggers(player_instance) {
                             y += lengthdir_y(_knockback, push_dir);
 
                             // Apply slow status effect
-                            apply_status_effect(StatusEffectType.slowed);
+                            apply_status_effect("slowed");
 
                             _enemies_affected++;
 

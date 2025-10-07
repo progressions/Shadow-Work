@@ -10,6 +10,7 @@ The trait system provides damage type resistances and vulnerabilities through a 
 - **Stacking Mechanics**: Traits stack up to 5 times with multiplicative effects
 - **Opposite Cancellation**: Immunity vs vulnerability and resistance vs vulnerability cancel stack-by-stack
 - **Permanent vs Temporary**: Permanent traits from tags/quests, temporary traits from equipment/buffs
+- **Status Effects as Traits**: Burning, wet, empowered, and similar effects are defined as timed traits in `global.trait_database`
 - **Single Source of Truth**: All damage modifiers flow through trait system
 
 ## Architecture
@@ -416,7 +417,7 @@ apply_tag_traits("fireborne");
 
 // Fire imp attacks cause burning
 attack_status_effects = [
-    {effect: StatusEffectType.burning, chance: 0.5} // 50% chance to burn on hit
+    {trait: "burning", chance: 0.5} // 50% chance to burn on hit
 ];
 ```
 
@@ -545,7 +546,7 @@ if (companion_nearby(obj_fire_mage)) {
 
 ## Related Systems
 
-- **Status Effects**: Burning, freezing, poisoned (see `status-effects-system.md`)
+- **Status Effects**: Burning, wet, empowered, weakened, swift, slowed, poisoned (see `status-effects-system.md`)
 - **Armor Defense**: Physical damage reduction (see `ARMOR_DEFENSE_SYSTEM.md`)
 - **Item System**: Equipment granting traits (see `scr_item_database.gml`)
 - **Combat System**: Damage calculation flow (see `scr_combat_system.gml`)

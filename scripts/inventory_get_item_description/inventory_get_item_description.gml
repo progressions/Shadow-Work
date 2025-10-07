@@ -77,15 +77,7 @@ function inventory_get_item_description(
 	};
 
 	var _status_effect_to_text = function(_effect) {
-		switch (_effect) {
-			case StatusEffectType.burning: return "Burning";
-			case StatusEffectType.wet: return "Wet";
-			case StatusEffectType.empowered: return "Empowered";
-			case StatusEffectType.weakened: return "Weakened";
-			case StatusEffectType.swift: return "Swift";
-			case StatusEffectType.slowed: return "Slowed";
-		}
-		return "Status";
+		return get_status_effect_name(_effect);
 	};
 
 	var _to_number_text = function(_value) {
@@ -308,7 +300,7 @@ function inventory_get_item_description(
 							for (var _si = 0; _si < array_length(_status_effects); _si++) {
 								var _status_entry = _status_effects[_si];
 								if (is_struct(_status_entry)) {
-									var _status_name = variable_struct_exists(_status_entry, "effect") ? _status_effect_to_text(_status_entry.effect) : "Status";
+                                    var _status_name = _status_effect_to_text(_status_entry);
 									var _status_chance = variable_struct_exists(_status_entry, "chance") ? _status_entry.chance : undefined;
 									var _status_text = "Applies " + _status_name;
 									if (_status_chance != undefined) {
@@ -335,7 +327,7 @@ function inventory_get_item_description(
 					for (var _wi = 0; _wi < array_length(_wielder_effects); _wi++) {
 						var _effect_entry = _wielder_effects[_wi];
 						if (is_struct(_effect_entry)) {
-							var _effect_name = variable_struct_exists(_effect_entry, "effect") ? _status_effect_to_text(_effect_entry.effect) : "Effect";
+                        var _effect_name = _status_effect_to_text(_effect_entry);
 							array_push(_stat_parts, "Wielder: " + _effect_name);
 						}
 					}

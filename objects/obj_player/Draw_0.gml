@@ -397,72 +397,53 @@ if (hp < hp_total) { // Only show when damaged
 }
 
 // Status effect duration bars above player (no icons)
-if (array_length(status_effects) > 0) {
-    var bar_width = 20;
-    var bar_height = 3;
-    var bar_spacing = 2;
+var _timed_traits = get_active_timed_trait_data();
+if (array_length(_timed_traits) > 0) {
+    var _bar_width = 20;
+    var _bar_height = 3;
+    var _bar_spacing = 2;
+    var _visible_traits = [];
 
-    // Count non-permanent effects for positioning
-    var non_permanent_count = 0;
-    for (var i = 0; i < array_length(status_effects); i++) {
-        if (!status_effects[i].is_permanent) {
-            non_permanent_count++;
-        }
+    for (var _i = 0; _i < array_length(_timed_traits); _i++) {
+        var _entry = _timed_traits[_i];
+        if (_entry.total <= 0) continue;
+
+        var _trait_info = status_effect_get_trait_data(_entry.trait);
+        if (_trait_info == undefined) continue;
+
+        if (_entry.effective_stacks <= 0) continue;
+
+        array_push(_visible_traits, {
+            trait: _entry.trait,
+            remaining: _entry.remaining,
+            total: _entry.total,
+            stacks: _entry.effective_stacks,
+            color: _trait_info.ui_color ?? c_white
+        });
     }
 
-    if (non_permanent_count > 0) {
-        var total_height = (non_permanent_count * (bar_height + bar_spacing)) - bar_spacing;
-        var start_y = bbox_top - 15 - total_height;
-        var bar_index = 0;
+    if (array_length(_visible_traits) > 0) {
+        var _total_height = (array_length(_visible_traits) * (_bar_height + _bar_spacing)) - _bar_spacing;
+        var _start_y = bbox_top - 15 - _total_height;
 
-        for (var i = 0; i < array_length(status_effects); i++) {
-            var effect = status_effects[i];
+        for (var _j = 0; _j < array_length(_visible_traits); _j++) {
+            var _effect = _visible_traits[_j];
+            var _bar_y = _start_y + (_j * (_bar_height + _bar_spacing));
+            var _bar_x1 = x - _bar_width / 2;
+            var _bar_x2 = x + _bar_width / 2;
+            var _percent = clamp(_effect.remaining / max(1, _effect.total), 0, 1);
 
-            // Skip permanent effects
-            if (effect.is_permanent) {
-                continue;
-            }
-
-            var bar_y = start_y + (bar_index * (bar_height + bar_spacing));
-            var bar_x1 = x - bar_width / 2;
-            var bar_x2 = x + bar_width / 2;
-            var bar_y1 = bar_y;
-            var bar_y2 = bar_y + bar_height;
-
-            // Determine color for each effect type
-            var bar_color = c_white;
-            switch(effect.type) {
-                case StatusEffectType.burning:
-                    bar_color = c_red;
-                    break;
-                case StatusEffectType.wet:
-                    bar_color = c_blue;
-                    break;
-                case StatusEffectType.empowered:
-                    bar_color = c_yellow;
-                    break;
-                case StatusEffectType.weakened:
-                    bar_color = c_gray;
-                    break;
-                case StatusEffectType.swift:
-                    bar_color = c_green;
-                    break;
-                case StatusEffectType.slowed:
-                    bar_color = c_purple;
-                    break;
-            }
-
-            // Draw duration bar
-            var duration_percent = effect.remaining_duration / effect.data.duration;
             draw_set_color(c_black);
-            draw_rectangle(bar_x1, bar_y1, bar_x2, bar_y2, false);
-            draw_set_color(bar_color);
-            draw_rectangle(bar_x1, bar_y1, bar_x1 + (bar_width * duration_percent), bar_y2, false);
+            draw_rectangle(_bar_x1, _bar_y, _bar_x2, _bar_y + _bar_height, false);
+            draw_set_color(_effect.color);
+            draw_rectangle(_bar_x1, _bar_y, _bar_x1 + (_bar_width * _percent), _bar_y + _bar_height, false);
 
-            bar_index++;
+            if (_effect.stacks > 1) {
+                draw_set_color(_effect.color);
+                draw_text(_bar_x2 + 2, _bar_y - 2, "x" + string(_effect.stacks));
+            }
         }
 
-        // Reset draw settings
         draw_set_color(c_white);
         draw_set_alpha(1);
     }

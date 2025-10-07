@@ -82,18 +82,14 @@ if (damage_mode == "on_enter" && damage_amount > 0) {
 // ON-ENTER EFFECT APPLICATION
 // ==============================
 
-if (effect_mode == "on_enter" && effect_to_apply != undefined) {
+if (!already_inside && effect_mode == "on_enter" && effect_to_apply != undefined) {
     with (enemy) {
         if (other.effect_type == "trait") {
-            // Apply trait using existing trait system
-            // The trait system handles duration, stacking, and refreshing
             apply_timed_trait(other.effect_to_apply, other.effect_duration);
             show_debug_message("Hazard applied trait: " + other.effect_to_apply + " to " + object_get_name(object_index));
         } else if (other.effect_type == "status") {
-            // Apply status effect (burning, wet, slowed, etc.)
-            // Status effects have their own built-in durations
-            apply_status_effect(other.effect_to_apply);
-            show_debug_message("Hazard applied status effect: " + string(other.effect_to_apply) + " to " + object_get_name(object_index));
+            apply_status_effect(other.effect_to_apply, other.effect_duration);
+            show_debug_message("Hazard applied status trait: " + string(status_effect_resolve_trait(other.effect_to_apply)) + " to " + object_get_name(object_index));
         }
     }
 }

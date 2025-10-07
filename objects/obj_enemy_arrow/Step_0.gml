@@ -145,9 +145,9 @@ if (_hit_player != noone) {
                     for (var i = 0; i < array_length(_effects); i++) {
                         var effect_data = _effects[i];
                         if (random(1) < effect_data.chance) {
-                            apply_status_effect(effect_data.effect);
+                            apply_status_effect(effect_data);
                             if (variable_global_exists("debug_mode") && global.debug_mode) {
-                                show_debug_message("Projectile applied status effect: " + string(effect_data.effect));
+                                show_debug_message("Projectile applied trait effect: " + string(status_effect_resolve_trait(effect_data)));
                             }
                         }
                     }

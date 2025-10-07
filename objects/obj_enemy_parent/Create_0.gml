@@ -175,7 +175,7 @@ function serialize() {
         facing_dir: variable_instance_exists(id, "facing_dir") ? facing_dir : "down",
         tags: tags,
         traits: [], // Will be populated below
-        status_effects: [] // Will be populated below
+        timed_traits: [] // Captures in-flight timed traits
     };
 
     // Serialize traits (from both permanent and temporary)
@@ -196,16 +196,17 @@ function serialize() {
         });
     }
 
-    // Serialize status effects
-    for (var i = 0; i < array_length(status_effects); i++) {
-        var effect = status_effects[i];
-        array_push(data.status_effects, {
-            type: effect.type,
-            remaining_duration: effect.remaining_duration,
-            tick_timer: effect.tick_timer,
-            is_permanent: effect.is_permanent,
-            neutralized: effect.neutralized
-        });
+    // Serialize timed traits
+    if (variable_instance_exists(self, "timed_traits")) {
+        for (var t = 0; t < array_length(timed_traits); t++) {
+            var _entry = timed_traits[t];
+            array_push(data.timed_traits, {
+                trait: _entry.trait,
+                remaining_seconds: (_entry.timer ?? 0) / room_speed,
+                total_seconds: (_entry.total_duration ?? _entry.timer ?? 0) / room_speed,
+                stacks: _entry.stacks_applied
+            });
+        }
     }
 
     return data;
@@ -231,18 +232,26 @@ function deserialize(data) {
         permanent_traits[$ trait_data.trait_name] = trait_data.stacks;
     }
 
-    // Restore status effects
-    status_effects = [];
-    for (var i = 0; i < array_length(data.status_effects); i++) {
-        var effect_data = data.status_effects[i];
-        var effect_definition = get_status_effect_data(effect_data.type);
-        array_push(status_effects, {
-            type: effect_data.type,
-            remaining_duration: effect_data.remaining_duration,
-            tick_timer: effect_data.tick_timer,
-            data: effect_definition, // Restore the data property from global definitions
-            is_permanent: effect_data.is_permanent,
-            neutralized: effect_data.neutralized
-        });
+    // Restore timed traits (reapply stacks and timers)
+    timed_traits = [];
+    if (array_length(data.timed_traits) > 0) {
+        for (var tt = 0; tt < array_length(data.timed_traits); tt++) {
+            var _saved = data.timed_traits[tt];
+            var _trait_key = _saved.trait;
+            var _stacks = _saved.stacks ?? 1;
+            var _total_seconds = _saved.total_seconds ?? _saved.remaining_seconds ?? 0;
+            var _remaining_seconds = _saved.remaining_seconds ?? _total_seconds;
+
+            if (_trait_key == undefined || _trait_key == "") continue;
+            if (_total_seconds <= 0) continue;
+
+            apply_timed_trait(_trait_key, _total_seconds, _stacks);
+
+            var _last_index = array_length(timed_traits) - 1;
+            if (_last_index >= 0) {
+                timed_traits[_last_index].timer = round(max(0, _remaining_seconds) * room_speed);
+                timed_traits[_last_index].total_duration = round(max(0, _total_seconds) * room_speed);
+            }
+        }
     }
 }

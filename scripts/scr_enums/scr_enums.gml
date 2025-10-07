@@ -27,16 +27,6 @@ enum CompanionState {
 	evading     // Evading from combat, maintaining distance from player and enemies
 }
 
-enum StatusEffectType {
-	burning,
-	wet,
-	empowered,
-	weakened,
-	swift,
-	slowed,
-	poisoned,
-}
-
 enum Direction {
 	down,
 	right,

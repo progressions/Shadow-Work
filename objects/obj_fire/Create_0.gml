@@ -17,7 +17,7 @@ damage_immunity_duration = 0.5;     // 0.5s immunity between ticks
 
 // Effect configuration
 effect_type = "status";                      // Apply status effect
-effect_to_apply = StatusEffectType.burning;  // Burning status effect
+effect_to_apply = "burning";  // Burning trait effect
 effect_mode = "on_enter";                    // Apply when entering fire
 
 // Visual/Animation

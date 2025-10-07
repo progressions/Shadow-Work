@@ -32,7 +32,7 @@ effect_type = "none";  // "none", "trait", "status"
 
 /// Effect to apply
 // For traits: string key like "fire_resistance"
-// For status effects: StatusEffectType enum like StatusEffectType.burning
+// For status effects: provide trait key like "burning"
 effect_to_apply = undefined;
 
 /// Duration in seconds for timed traits (ignored for status effects which have their own duration)

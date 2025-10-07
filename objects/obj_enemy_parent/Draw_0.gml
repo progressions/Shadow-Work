@@ -107,72 +107,48 @@ if (hp < hp_total && state != EnemyState.dead) { // Only show when damaged and a
 }
 
 // Status effect duration bars above enemy (no icons)
-if (array_length(status_effects) > 0 && state != EnemyState.dead) {
-    var bar_width = 16;
-    var bar_height = 2;
-    var bar_spacing = 1;
+var _enemy_timed_traits = get_active_timed_trait_data();
+if (state != EnemyState.dead && array_length(_enemy_timed_traits) > 0) {
+    var _bar_width = 16;
+    var _bar_height = 2;
+    var _bar_spacing = 1;
+    var _visible_enemy_traits = [];
 
-    // Count non-permanent effects for positioning
-    var non_permanent_count = 0;
-    for (var i = 0; i < array_length(status_effects); i++) {
-        if (!status_effects[i].is_permanent) {
-            non_permanent_count++;
-        }
+    for (var _k = 0; _k < array_length(_enemy_timed_traits); _k++) {
+        var _entry = _enemy_timed_traits[_k];
+        if (_entry.total <= 0) continue;
+
+        var _trait_info = status_effect_get_trait_data(_entry.trait);
+        if (_trait_info == undefined) continue;
+
+        if (_entry.effective_stacks <= 0) continue;
+
+        array_push(_visible_enemy_traits, {
+            trait: _entry.trait,
+            remaining: _entry.remaining,
+            total: _entry.total,
+            stacks: _entry.effective_stacks,
+            color: _trait_info.ui_color ?? c_white
+        });
     }
 
-    if (non_permanent_count > 0) {
-        var total_height = (non_permanent_count * (bar_height + bar_spacing)) - bar_spacing;
-        var start_y = bbox_top - 12 - total_height;
-        var bar_index = 0;
+    if (array_length(_visible_enemy_traits) > 0) {
+        var _total_height_enemy = (array_length(_visible_enemy_traits) * (_bar_height + _bar_spacing)) - _bar_spacing;
+        var _start_y_enemy = bbox_top - 12 - _total_height_enemy;
 
-        for (var i = 0; i < array_length(status_effects); i++) {
-            var effect = status_effects[i];
+        for (var _m = 0; _m < array_length(_visible_enemy_traits); _m++) {
+            var _enemy_effect = _visible_enemy_traits[_m];
+            var _bar_y_enemy = _start_y_enemy + (_m * (_bar_height + _bar_spacing));
+            var _bar_x1_enemy = x - _bar_width / 2;
+            var _bar_x2_enemy = x + _bar_width / 2;
+            var _percent_enemy = clamp(_enemy_effect.remaining / max(1, _enemy_effect.total), 0, 1);
 
-            // Skip permanent effects
-            if (effect.is_permanent) {
-                continue;
-            }
-
-            var bar_y = start_y + (bar_index * (bar_height + bar_spacing));
-            var bar_x1 = x - bar_width / 2;
-            var bar_x2 = x + bar_width / 2;
-            var bar_y1 = bar_y;
-            var bar_y2 = bar_y + bar_height;
-
-            // Determine color for each effect type
-            var bar_color = c_white;
-            switch(effect.type) {
-                case StatusEffectType.burning:
-                    bar_color = c_red;
-                    break;
-                case StatusEffectType.wet:
-                    bar_color = c_blue;
-                    break;
-                case StatusEffectType.empowered:
-                    bar_color = c_yellow;
-                    break;
-                case StatusEffectType.weakened:
-                    bar_color = c_gray;
-                    break;
-                case StatusEffectType.swift:
-                    bar_color = c_green;
-                    break;
-                case StatusEffectType.slowed:
-                    bar_color = c_purple;
-                    break;
-            }
-
-            // Draw duration bar
-            var duration_percent = effect.remaining_duration / effect.data.duration;
             draw_set_color(c_black);
-            draw_rectangle(bar_x1, bar_y1, bar_x2, bar_y2, false);
-            draw_set_color(bar_color);
-            draw_rectangle(bar_x1, bar_y1, bar_x1 + (bar_width * duration_percent), bar_y2, false);
-
-            bar_index++;
+            draw_rectangle(_bar_x1_enemy, _bar_y_enemy, _bar_x2_enemy, _bar_y_enemy + _bar_height, false);
+            draw_set_color(_enemy_effect.color);
+            draw_rectangle(_bar_x1_enemy, _bar_y_enemy, _bar_x1_enemy + (_bar_width * _percent_enemy), _bar_y_enemy + _bar_height, false);
         }
 
-        // Reset draw settings
         draw_set_color(c_white);
         draw_set_alpha(1);
     }

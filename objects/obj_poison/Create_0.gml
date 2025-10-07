@@ -8,17 +8,17 @@ event_inherited();
 // POISON HAZARD CONFIGURATION
 // ==============================
 
-// Damage configuration
-damage_mode = "continuous";         // Damage while standing in poison
-damage_amount = 1;                  // 1 damage per tick
-damage_type = DamageType.poison;    // Poison damage type
-damage_interval = 0.67;             // Damage every ~0.67 seconds
-damage_immunity_duration = 0.67;    // 0.67s immunity between ticks
+// Poison hazard applies a DoT identical to burning but themed as poison
+damage_mode = "none";              // No direct damage ticks
+damage_amount = 0;
+damage_type = DamageType.poison;
+damage_interval = 1;
+damage_immunity_duration = 1;
 
-// Effect configuration
-effect_type = "status";                      // Apply status effect
-effect_to_apply = StatusEffectType.poisoned; // Poisoned status effect
-effect_mode = "on_enter";                    // Apply when entering poison
+effect_type = "status";
+effect_to_apply = { trait: "poisoned" };
+effect_duration = -1;                // Use trait default duration
+effect_mode = "on_enter";
 
 // Visual/Animation
 sprite_index = spr_poison_pool;     // Poison pool animation

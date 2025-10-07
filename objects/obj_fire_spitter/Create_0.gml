@@ -14,7 +14,7 @@ apply_tag_traits("fireborne");
 
 // Fire spitter attacks cause burning
 attack_status_effects = [
-    {effect: StatusEffectType.burning, chance: 0.35} // 35% chance to burn on hit
+    {trait: "burning", chance: 0.35} // 35% chance to burn on hit
 ];
 
 // Ranged attack configuration (mirrors Greenwood Bandit behavior)
@@ -25,7 +25,7 @@ ideal_range = 72;           // Maintain ~75% of attack range to kite the player
 ranged_projectile_object = obj_fireball;
 ranged_damage_type = DamageType.fire;
 ranged_status_effects = [
-    {effect: StatusEffectType.burning, chance: 0.35}
+    {trait: "burning", chance: 0.35}
 ];
 
 // Fire spitter loot table - ranged items and fire gear

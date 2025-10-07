@@ -68,11 +68,8 @@ switch (state) {
 
 #endregion Movement
 
-// Tick status effects (runs even when dead)
+// Tick trait-driven status effects (runs even when dead)
 tick_status_effects();
-
-// Update timed traits
-update_timed_traits();
 
 tilemap = layer_tilemap_get_id("Tiles_Col");
 
@@ -208,27 +205,27 @@ if (state != PlayerState.dead) {
 
 // Debug keys for testing status effects (remove in final version)
 if (keyboard_check_pressed(ord("1"))) {
-    apply_status_effect(StatusEffectType.burning);
+    apply_status_effect("burning");
     show_debug_message("Applied burning effect");
 }
 if (keyboard_check_pressed(ord("2"))) {
-    apply_status_effect(StatusEffectType.wet);
+    apply_status_effect("wet");
     show_debug_message("Applied wet effect");
 }
 if (keyboard_check_pressed(ord("3"))) {
-    apply_status_effect(StatusEffectType.empowered);
+    apply_status_effect("empowered");
     show_debug_message("Applied empowered effect");
 }
 if (keyboard_check_pressed(ord("4"))) {
-    apply_status_effect(StatusEffectType.weakened);
+    apply_status_effect("weakened");
     show_debug_message("Applied weakened effect");
 }
 if (keyboard_check_pressed(ord("5"))) {
-    apply_status_effect(StatusEffectType.swift);
+    apply_status_effect("swift");
     show_debug_message("Applied swift effect");
 }
 if (keyboard_check_pressed(ord("6"))) {
-    apply_status_effect(StatusEffectType.slowed);
+    apply_status_effect("slowed");
     show_debug_message("Applied slowed effect");
 }
 
@@ -237,7 +234,7 @@ if (keyboard_check_pressed(ord("7"))) {
     var nearest_enemy = instance_nearest(x, y, obj_enemy_parent);
     if (nearest_enemy != noone && point_distance(x, y, nearest_enemy.x, nearest_enemy.y) < 50) {
         with (nearest_enemy) {
-            apply_status_effect(StatusEffectType.burning);
+            apply_status_effect("burning");
         }
         show_debug_message("Applied burning to enemy");
     }

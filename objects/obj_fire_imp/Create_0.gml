@@ -14,7 +14,7 @@ apply_tag_traits("fireborne");
 
 // Fire imp attacks cause burning
 attack_status_effects = [
-    {effect: StatusEffectType.burning, chance: 0.5} // 50% chance to burn on hit
+    {trait: "burning", chance: 0.5} // 50% chance to burn on hit
 ];
 
 enemy_sounds = {

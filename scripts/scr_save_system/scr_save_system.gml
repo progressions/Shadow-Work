@@ -31,17 +31,18 @@ function serialize_player() {
         });
     }
 
-    // Serialize status effects
-    var status_effects_array = [];
-    for (var i = 0; i < array_length(player.status_effects); i++) {
-        var effect = player.status_effects[i];
-        array_push(status_effects_array, {
-            type: effect.type,
-            remaining_duration: effect.remaining_duration,
-            tick_timer: effect.tick_timer,
-            is_permanent: effect.is_permanent,
-            neutralized: effect.neutralized
-        });
+    // Serialize timed traits (status-style effects)
+    var timed_traits_array = [];
+    if (variable_instance_exists(player, "timed_traits")) {
+        for (var i = 0; i < array_length(player.timed_traits); i++) {
+            var timed_entry = player.timed_traits[i];
+            array_push(timed_traits_array, {
+                trait: timed_entry.trait,
+                remaining_seconds: (timed_entry.timer ?? 0) / room_speed,
+                total_seconds: (timed_entry.total_duration ?? timed_entry.timer ?? 0) / room_speed,
+                stacks: timed_entry.stacks_applied
+            });
+        }
     }
 
     return {
@@ -58,7 +59,7 @@ function serialize_player() {
         torch_time_remaining: player.torch_time_remaining,
         traits: traits_array,
         tags: player.tags,
-        status_effects: status_effects_array
+        timed_traits: timed_traits_array
     };
 }
 
@@ -163,27 +164,38 @@ function serialize_enemies() {
 
         // Serialize traits with stacks
         var traits_array = [];
-        if (variable_instance_exists(id, "traits") && is_array(traits)) {
-            for (var i = 0; i < array_length(traits); i++) {
-                var trait = traits[i];
+        if (variable_instance_exists(id, "permanent_traits")) {
+            var _perm_names = variable_struct_get_names(permanent_traits);
+            for (var i = 0; i < array_length(_perm_names); i++) {
+                var _trait_name = _perm_names[i];
                 array_push(traits_array, {
-                    trait_name: trait.name,
-                    stacks: trait.stacks
+                    trait_name: _trait_name,
+                    stacks: permanent_traits[$ _trait_name]
+                });
+            }
+        }
+        if (variable_instance_exists(id, "temporary_traits")) {
+            var _temp_names = variable_struct_get_names(temporary_traits);
+            for (var i = 0; i < array_length(_temp_names); i++) {
+                var _trait_name = _temp_names[i];
+                array_push(traits_array, {
+                    trait_name: _trait_name,
+                    stacks: temporary_traits[$ _trait_name],
+                    is_temporary: true
                 });
             }
         }
 
-        // Serialize status effects
-        var status_effects_array = [];
-        if (variable_instance_exists(id, "status_effects") && is_array(status_effects)) {
-            for (var i = 0; i < array_length(status_effects); i++) {
-                var effect = status_effects[i];
-                array_push(status_effects_array, {
-                    type: effect.type,
-                    remaining_duration: effect.remaining_duration,
-                    tick_timer: effect.tick_timer,
-                    is_permanent: effect.is_permanent,
-                    neutralized: effect.neutralized
+        // Serialize timed traits
+        var timed_traits_array = [];
+        if (variable_instance_exists(id, "timed_traits") && is_array(timed_traits)) {
+            for (var i = 0; i < array_length(timed_traits); i++) {
+                var timed_entry = timed_traits[i];
+                array_push(timed_traits_array, {
+                    trait: timed_entry.trait,
+                    remaining_seconds: (timed_entry.timer ?? 0) / room_speed,
+                    total_seconds: (timed_entry.total_duration ?? timed_entry.timer ?? 0) / room_speed,
+                    stacks: timed_entry.stacks_applied
                 });
             }
         }
@@ -204,7 +216,7 @@ function serialize_enemies() {
             facing_dir: variable_instance_exists(id, "facing_dir") ? facing_dir : "down",
             traits: traits_array,
             tags: tags_array,
-            status_effects: status_effects_array
+            timed_traits: timed_traits_array
         });
     }
 
@@ -270,21 +282,26 @@ function deserialize_player(data) {
         }
     }
 
-    // Restore status effects
-    player.status_effects = [];
-    for (var i = 0; i < array_length(data.status_effects); i++) {
-        var effect_data = data.status_effects[i];
+    // Restore timed traits
+    player.timed_traits = [];
+    if (variable_struct_exists(data, "timed_traits")) {
+        for (var tt = 0; tt < array_length(data.timed_traits); tt++) {
+            var saved_trait = data.timed_traits[tt];
+            var trait_key = saved_trait.trait;
+            var stacks = saved_trait.stacks ?? 1;
+            var total_seconds = saved_trait.total_seconds ?? saved_trait.remaining_seconds ?? 0;
+            var remaining_seconds = saved_trait.remaining_seconds ?? total_seconds;
 
-        // Apply the status effect in player context
-        with (player) {
-            apply_status_effect(effect_data.type, effect_data.remaining_duration, effect_data.is_permanent);
-        }
+            if (trait_key == undefined || trait_key == "") continue;
+            if (total_seconds <= 0) continue;
 
-        // Manually set tick_timer and neutralized state
-        var effect_index = array_length(player.status_effects) - 1;
-        if (effect_index >= 0) {
-            player.status_effects[effect_index].tick_timer = effect_data.tick_timer;
-            player.status_effects[effect_index].neutralized = effect_data.neutralized;
+            apply_timed_trait(trait_key, total_seconds, stacks);
+
+            var _last_idx = array_length(player.timed_traits) - 1;
+            if (_last_idx >= 0) {
+                player.timed_traits[_last_idx].timer = round(max(0, remaining_seconds) * room_speed);
+                player.timed_traits[_last_idx].total_duration = round(max(0, total_seconds) * room_speed);
+            }
         }
     }
 }
@@ -444,7 +461,7 @@ function deserialize_inventory(data) {
                 };
                 player.equipped[$ slot] = item_instance;
 
-                // DON'T call apply_wielder_effects() here - status effects already restored!
+                // DON'T call apply_wielder_effects() here - traits/timed effects already restored!
             }
         }
     }
@@ -486,29 +503,39 @@ function deserialize_enemies(data) {
         enemy.tags = enemy_data.tags;
 
         // Restore traits
-        enemy.traits = [];
+        enemy.permanent_traits = {};
+        enemy.temporary_traits = {};
         for (var j = 0; j < array_length(enemy_data.traits); j++) {
             var trait_data = enemy_data.traits[j];
-            // Add trait the appropriate number of times for stacks
-            for (var k = 0; k < trait_data.stacks; k++) {
-                add_trait(trait_data.trait_name);
+            var is_temp = trait_data[$ "is_temporary"] ?? false;
+
+            if (is_temp) {
+                enemy.temporary_traits[$ trait_data.trait_name] = trait_data.stacks;
+            } else {
+                enemy.permanent_traits[$ trait_data.trait_name] = trait_data.stacks;
             }
         }
 
-        // Restore status effects
-        enemy.status_effects = [];
-        for (var j = 0; j < array_length(enemy_data.status_effects); j++) {
-            var effect_data = enemy_data.status_effects[j];
+        // Restore timed traits
+        enemy.timed_traits = [];
+        if (variable_struct_exists(enemy_data, "timed_traits")) {
+            for (var j = 0; j < array_length(enemy_data.timed_traits); j++) {
+                var saved = enemy_data.timed_traits[j];
+                var trait_key = saved.trait;
+                var stacks = saved.stacks ?? 1;
+                var total_seconds = saved.total_seconds ?? saved.remaining_seconds ?? 0;
+                var remaining_seconds = saved.remaining_seconds ?? total_seconds;
 
-            // Apply the status effect
-            with (enemy) {
-                apply_status_effect(effect_data.type, effect_data.remaining_duration, effect_data.is_permanent);
+                if (trait_key == undefined || trait_key == "") continue;
+                if (total_seconds <= 0) continue;
 
-                // Manually set tick_timer and neutralized state
-                var effect_index = array_length(status_effects) - 1;
-                if (effect_index >= 0) {
-                    status_effects[effect_index].tick_timer = effect_data.tick_timer;
-                    status_effects[effect_index].neutralized = effect_data.neutralized;
+                with (enemy) {
+                    apply_timed_trait(trait_key, total_seconds, stacks);
+                    var _idx = array_length(timed_traits) - 1;
+                    if (_idx >= 0) {
+                        timed_traits[_idx].timer = round(max(0, remaining_seconds) * room_speed);
+                        timed_traits[_idx].total_duration = round(max(0, total_seconds) * room_speed);
+                    }
                 }
             }
         }

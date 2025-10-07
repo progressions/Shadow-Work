@@ -177,7 +177,7 @@ enum DamageType {
 Equipment can apply permanent status effects while equipped:
 ```gml
 wielder_effects: [
-    {effect: StatusEffectType.empowered}
+    {trait: "empowered"}
 ]
 ```
 

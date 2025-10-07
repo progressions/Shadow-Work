@@ -168,13 +168,13 @@ if (alarm[1] < 0) {
 	         var status_effects_array = get_weapon_status_effects(weapon_stats);
 
 	         // Apply each status effect with its own chance
-	         for (var i = 0; i < array_length(status_effects_array); i++) {
-	             var effect_data = status_effects_array[i];
-	             if (random(1) < effect_data.chance) {
-	                 apply_status_effect(effect_data.effect);
-	                 show_debug_message("Right hand weapon applied status effect: " + string(effect_data.effect));
-	             }
-	         }
+         for (var i = 0; i < array_length(status_effects_array); i++) {
+             var effect_data = status_effects_array[i];
+             if (random(1) < effect_data.chance) {
+                 apply_status_effect(effect_data);
+                 show_debug_message("Right hand weapon applied trait effect: " + string(status_effect_resolve_trait(effect_data)));
+             }
+         }
 	     }
 
 	     // Check left hand weapon/tool (like torch)
@@ -183,13 +183,13 @@ if (alarm[1] < 0) {
 	         var left_status_effects = get_weapon_status_effects(left_item_stats);
 
 	         // Apply each status effect with its own chance
-	         for (var i = 0; i < array_length(left_status_effects); i++) {
-	             var effect_data = left_status_effects[i];
-	             if (random(1) < effect_data.chance) {
-	                 apply_status_effect(effect_data.effect);
-	                 show_debug_message("Left hand item applied status effect: " + string(effect_data.effect));
-	             }
-	         }
+         for (var i = 0; i < array_length(left_status_effects); i++) {
+             var effect_data = left_status_effects[i];
+             if (random(1) < effect_data.chance) {
+                 apply_status_effect(effect_data);
+                 show_debug_message("Left hand item applied trait effect: " + string(status_effect_resolve_trait(effect_data)));
+             }
+         }
 	     }
 	 }
 

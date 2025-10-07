@@ -198,6 +198,75 @@ global.trait_database = {
         max_stacks: 1
     },
 
+    // Status traits (timed effects)
+    burning: {
+        name: "Burning",
+        default_duration: 3,
+        tick_damage: 1,
+        tick_rate_seconds: 0.5,
+        damage_type: DamageType.fire,
+        opposite_trait: "wet",
+        max_stacks: 5,
+        ui_color: c_red,
+        show_feedback: true,
+        blocked_by: ["fire_immunity"]
+    },
+    wet: {
+        name: "Wet",
+        default_duration: 5,
+        modifiers: {speed: 0.9},
+        opposite_trait: "burning",
+        max_stacks: 5,
+        ui_color: c_blue,
+        show_feedback: true
+    },
+    empowered: {
+        name: "Empowered",
+        default_duration: 10,
+        modifiers: {damage: 1.5},
+        opposite_trait: "weakened",
+        max_stacks: 5,
+        ui_color: c_yellow,
+        show_feedback: true
+    },
+    weakened: {
+        name: "Weakened",
+        default_duration: 10,
+        modifiers: {damage: 0.7},
+        opposite_trait: "empowered",
+        max_stacks: 5,
+        ui_color: c_gray,
+        show_feedback: true
+    },
+    swift: {
+        name: "Swift",
+        default_duration: 8,
+        modifiers: {speed: 1.3},
+        opposite_trait: "slowed",
+        max_stacks: 5,
+        ui_color: c_green,
+        show_feedback: true
+    },
+    slowed: {
+        name: "Slowed",
+        default_duration: 5,
+        modifiers: {speed: 0.6},
+        opposite_trait: "swift",
+        max_stacks: 5,
+        ui_color: c_purple,
+        show_feedback: true
+    },
+    poisoned: {
+        name: "Poisoned",
+        default_duration: 3,
+        tick_damage: 1,
+        tick_rate_seconds: 0.5,
+        damage_type: DamageType.poison,
+        max_stacks: 5,
+        ui_color: make_color_rgb(0, 255, 0),
+        show_feedback: true,
+        blocked_by: ["poison_immunity"]
+    },
     // Defense traits (affect damage reduction, not damage type)
     defense_resistance: {
         name: "Bolstered Defense",

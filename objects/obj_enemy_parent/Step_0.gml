@@ -24,11 +24,8 @@ if (flash_timer > 0) {
     image_blend = c_white;
 }
 
-// Tick status effects (runs even when dead)
+// Tick trait-driven status effects (runs even when dead)
 tick_status_effects();
-
-// Update timed traits
-update_timed_traits();
 
 // Track state transitions for approach variation reset
 if (!variable_instance_exists(self, "previous_state")) {

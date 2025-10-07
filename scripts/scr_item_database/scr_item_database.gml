@@ -92,7 +92,7 @@ global.item_database = {
     ),
     master_sword: new create_item_definition(
         3, "master_sword", "Master Sword", ItemType.weapon, EquipSlot.either_hand,
-        {damage: 6, attack_speed: 1.5, range: 48, handedness: WeaponHandedness.versatile, two_handed_damage: 7, two_handed_range: 42, magic_power: 5, wielder_effects: [{effect: StatusEffectType.empowered}], damage_type: DamageType.holy, knockback_force: 6}
+        {damage: 6, attack_speed: 1.5, range: 48, handedness: WeaponHandedness.versatile, two_handed_damage: 7, two_handed_range: 42, magic_power: 5, wielder_effects: [{trait: "empowered"}], damage_type: DamageType.holy, knockback_force: 6}
     ),
     greatsword: new create_item_definition(
         4, "greatsword", "Greatsword", ItemType.weapon, EquipSlot.right_hand,
@@ -129,7 +129,7 @@ global.item_database = {
         {
             light_radius: 125,
             handedness: WeaponHandedness.one_handed,
-            status_effects: [{effect: StatusEffectType.burning, chance: 0.2}],
+            status_effects: [{trait: "burning", chance: 0.2}],
             damage_type: DamageType.fire,
             stack_size: 99,
             burn_time_seconds: 60,

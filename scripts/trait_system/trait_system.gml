@@ -28,68 +28,186 @@ function get_total_trait_stacks(_trait_key) {
     return min(_perm_stacks + _temp_stacks, 5); // Cap at 5 stacks
 }
 
-/// @function add_permanent_trait(trait_key)
-/// @description Add a permanent trait stack (from tags, quest rewards)
+/// @function add_permanent_trait(trait_key, [stacks])
+/// @description Add permanent trait stacks (from tags, quest rewards)
 /// @param {string} trait_key The trait to add
-function add_permanent_trait(_trait_key) {
+/// @param {real} [stacks] Number of stacks to add (default 1)
+/// @return {real} Actual stacks added
+function add_permanent_trait(_trait_key, _stacks = 1) {
     if (!variable_instance_exists(self, "permanent_traits")) {
         permanent_traits = {};
     }
 
+    if (_stacks <= 0) {
+        return 0;
+    }
+
     var _current = variable_struct_exists(permanent_traits, _trait_key) ? permanent_traits[$ _trait_key] : 0;
-    permanent_traits[$ _trait_key] = min(_current + 1, 5); // Cap at 5 stacks
+    var _trait_data = undefined;
+    if (variable_global_exists("trait_database") && variable_struct_exists(global.trait_database, _trait_key)) {
+        _trait_data = global.trait_database[$ _trait_key];
+    }
+    var _max_stacks = (_trait_data != undefined && variable_struct_exists(_trait_data, "max_stacks"))
+        ? _trait_data.max_stacks
+        : 5;
+
+    var _space = max(0, _max_stacks - min(_current, _max_stacks));
+    var _stacks_to_add = min(_stacks, _space);
+
+    if (_stacks_to_add <= 0) {
+        return 0;
+    }
+
+    permanent_traits[$ _trait_key] = _current + _stacks_to_add;
+    return _stacks_to_add;
 }
 
-/// @function add_temporary_trait(trait_key)
-/// @description Add a temporary trait stack (from equipment, companions, buffs)
+/// @function add_temporary_trait(trait_key, [stacks])
+/// @description Add temporary trait stacks (from equipment, companions, buffs)
 /// @param {string} trait_key The trait to add
-function add_temporary_trait(_trait_key) {
+/// @param {real} [stacks] Number of stacks to add (default 1)
+/// @return {real} Actual stacks added (0 if none)
+function add_temporary_trait(_trait_key, _stacks = 1) {
     if (!variable_instance_exists(self, "temporary_traits")) {
         temporary_traits = {};
     }
 
-    var _current = variable_struct_exists(temporary_traits, _trait_key) ? temporary_traits[$ _trait_key] : 0;
-    temporary_traits[$ _trait_key] = min(_current + 1, 5); // Cap at 5 stacks
+    if (_stacks <= 0) {
+        return 0;
+    }
+
+    var _current_temp = variable_struct_exists(temporary_traits, _trait_key) ? temporary_traits[$ _trait_key] : 0;
+    var _current_perm = 0;
+
+    if (variable_instance_exists(self, "permanent_traits") && variable_struct_exists(permanent_traits, _trait_key)) {
+        _current_perm = permanent_traits[$ _trait_key];
+    }
+
+    var _trait_data = undefined;
+    if (variable_global_exists("trait_database") && variable_struct_exists(global.trait_database, _trait_key)) {
+        _trait_data = global.trait_database[$ _trait_key];
+    }
+    var _max_stacks = (_trait_data != undefined && variable_struct_exists(_trait_data, "max_stacks"))
+        ? _trait_data.max_stacks
+        : 5;
+
+    var _current_total = min(_current_perm + _current_temp, _max_stacks);
+    var _space = max(0, _max_stacks - _current_total);
+    var _stacks_to_add = min(_stacks, _space);
+
+    if (_stacks_to_add <= 0) {
+        return 0;
+    }
+
+    temporary_traits[$ _trait_key] = _current_temp + _stacks_to_add;
+    return _stacks_to_add;
 }
 
-/// @function remove_temporary_trait(trait_key)
-/// @description Remove a temporary trait stack (when unequipping, buff expires)
+/// @function remove_temporary_trait(trait_key, [stacks])
+/// @description Remove temporary trait stacks (when unequipping, buff expires)
 /// @param {string} trait_key The trait to remove
-function remove_temporary_trait(_trait_key) {
-    if (!variable_instance_exists(self, "temporary_traits")) return;
-    if (!variable_struct_exists(temporary_traits, _trait_key)) return;
+/// @param {real} [stacks] Number of stacks to remove (default 1)
+/// @return {real} Actual stacks removed
+function remove_temporary_trait(_trait_key, _stacks = 1) {
+    if (!variable_instance_exists(self, "temporary_traits")) return 0;
+    if (!variable_struct_exists(temporary_traits, _trait_key)) return 0;
+
+    if (_stacks <= 0) {
+        return 0;
+    }
 
     var _current = temporary_traits[$ _trait_key];
-    _current--;
+    var _removed = min(_current, _stacks);
+    _current -= _removed;
 
     if (_current <= 0) {
         variable_struct_remove(temporary_traits, _trait_key);
     } else {
         temporary_traits[$ _trait_key] = _current;
     }
+
+    return _removed;
 }
 
-/// @function apply_timed_trait(trait_key, duration_seconds)
+/// @function apply_timed_trait(trait_key, duration_seconds, [stacks], [options])
 /// @description Apply a temporary trait that expires after a duration
 /// @param {string} trait_key The trait to apply
 /// @param {real} duration_seconds How long the trait lasts in seconds
-function apply_timed_trait(_trait_key, _duration_seconds) {
+/// @param {real} [stacks] Number of stacks to apply (default 1)
+/// @param {struct} [options] Optional settings {refresh:true, use_frames:true}
+/// @return {real} Actual stacks applied (0 if blocked)
+function apply_timed_trait(_trait_key, _duration_seconds, _stacks = 1, _options = undefined) {
     // Initialize timed traits tracking if needed
     if (!variable_instance_exists(self, "timed_traits")) {
         timed_traits = [];
     }
 
-    // Add the temporary trait stack
-    add_temporary_trait(_trait_key);
+    var _trait_data = undefined;
+    if (variable_global_exists("trait_database") && variable_struct_exists(global.trait_database, _trait_key)) {
+        _trait_data = global.trait_database[$ _trait_key];
+    }
+    if (_trait_data == undefined) {
+        return 0;
+    }
 
-    // Track this timed trait for automatic removal
-    array_push(timed_traits, {
-        trait: _trait_key,
-        timer: _duration_seconds * room_speed, // Convert to frames
-        stacks_applied: 1
-    });
+    var _blocked_by = (variable_struct_exists(_trait_data, "blocked_by")) ? _trait_data.blocked_by : undefined;
+    if (is_array(_blocked_by)) {
+        for (var b = 0; b < array_length(_blocked_by); b++) {
+            if (has_trait(_blocked_by[b])) {
+                show_debug_message("Timed trait blocked by: " + _blocked_by[b]);
+                return 0;
+            }
+        }
+    }
 
-    show_debug_message("Applied timed trait: " + _trait_key + " for " + string(_duration_seconds) + " seconds");
+    var _duration_frames;
+    if (_options != undefined && variable_struct_exists(_options, "use_frames") && _options.use_frames) {
+        _duration_frames = max(1, round(_duration_seconds));
+    } else {
+        _duration_frames = max(1, round(_duration_seconds * room_speed));
+    }
+
+    var _stacks_added = add_temporary_trait(_trait_key, _stacks);
+    if (_stacks_added <= 0) {
+        return 0;
+    }
+
+    var _existing_index = -1;
+    for (var i = 0; i < array_length(timed_traits); i++) {
+        if (timed_traits[i].trait == _trait_key) {
+            _existing_index = i;
+            break;
+        }
+    }
+
+    var _max_stacks = (variable_struct_exists(_trait_data, "max_stacks")) ? _trait_data.max_stacks : 5;
+    var _refresh_existing = true;
+    if (_options != undefined && variable_struct_exists(_options, "refresh")) {
+        _refresh_existing = _options.refresh;
+    }
+
+    if (_existing_index == -1) {
+        array_push(timed_traits, {
+            trait: _trait_key,
+            timer: _duration_frames,
+            total_duration: _duration_frames,
+            stacks_applied: _stacks_added,
+            tick_timer: 0
+        });
+    } else {
+        var _entry = timed_traits[_existing_index];
+        _entry.stacks_applied = min(_entry.stacks_applied + _stacks_added, _max_stacks);
+
+        if (_refresh_existing) {
+            _entry.timer = max(_entry.timer, _duration_frames);
+            _entry.total_duration = max(_entry.total_duration, _duration_frames);
+        }
+
+        timed_traits[_existing_index] = _entry;
+    }
+
+    show_debug_message("Applied timed trait: " + _trait_key + " +" + string(_stacks_added) + " for " + string(_duration_seconds) + " seconds");
+    return _stacks_added;
 }
 
 /// @function update_timed_traits()
@@ -101,20 +219,61 @@ function update_timed_traits() {
 
     // Update timers
     for (var i = 0; i < array_length(timed_traits); i++) {
-        timed_traits[i].timer--;
+        var _entry = timed_traits[i];
+        var _trait_key = _entry.trait;
+        var _trait_data = global.trait_database[$ _trait_key];
 
-        if (timed_traits[i].timer <= 0) {
-            // Timer expired - remove the trait
-            var _trait_key = timed_traits[i].trait;
-            var _stacks = timed_traits[i].stacks_applied;
+        _entry.timer--;
 
-            for (var j = 0; j < _stacks; j++) {
-                remove_temporary_trait(_trait_key);
+        if (_entry.timer <= 0) {
+            _entry.timer = 0;
+            timed_traits[i] = _entry;
+
+            var _removed = remove_temporary_trait(_trait_key, _entry.stacks_applied);
+            show_debug_message("Timed trait expired: " + _trait_key + " (-" + string(_removed) + ")");
+            array_push(_traits_to_remove, i);
+            continue;
+        }
+
+        if (_trait_data != undefined && variable_struct_exists(_trait_data, "tick_damage")) {
+            if (!variable_struct_exists(_entry, "tick_timer")) {
+                _entry.tick_timer = 0;
             }
 
-            show_debug_message("Timed trait expired: " + _trait_key);
-            array_push(_traits_to_remove, i);
+            _entry.tick_timer++;
+
+            var _tick_rate = room_speed;
+            if (variable_struct_exists(_trait_data, "tick_rate_seconds")) {
+                _tick_rate = max(1, round(_trait_data.tick_rate_seconds * room_speed));
+            } else if (variable_struct_exists(_trait_data, "tick_rate")) {
+                _tick_rate = _trait_data.tick_rate;
+            }
+
+            if (_entry.timer > 0 && _entry.tick_timer >= _tick_rate) {
+                var _net_stacks = get_effective_trait_stacks(_trait_key);
+                if (_net_stacks > 0) {
+                    var _damage = _trait_data.tick_damage * _net_stacks;
+                    hp -= _damage;
+
+                    spawn_damage_number(x, y - 16, _damage, _trait_data.damage_type, self);
+
+                    if (hp <= 0) {
+                        if (object_index == obj_player) {
+                            state = PlayerState.dead;
+                            show_debug_message("Player died from " + _trait_data.name);
+                        } else if (object_is_ancestor(object_index, obj_enemy_parent)) {
+                            state = EnemyState.dead;
+                            show_debug_message("Enemy died from " + _trait_data.name);
+                        }
+                    }
+                }
+                _entry.tick_timer = 0;
+            }
         }
+
+        timed_traits[i] = _entry;
+
+        // Timer already handled above; any entry reaching zero has been queued for removal
     }
 
     // Remove expired traits from tracking (reverse order to preserve indices)
@@ -235,6 +394,96 @@ function get_damage_modifier_for_type(_damage_type) {
     return 1.0;
 }
 
+/// @function get_effective_trait_stacks(trait_key)
+/// @description Net positive stacks after cancelling opposing trait stacks
+/// @param {string} trait_key
+/// @return {real} Net stacks (0 if fully cancelled)
+function get_effective_trait_stacks(_trait_key) {
+    var _stacks = get_total_trait_stacks(_trait_key);
+    if (_stacks <= 0) {
+        return 0;
+    }
+
+    var _trait_data = global.trait_database[$ _trait_key];
+    if (_trait_data != undefined && variable_struct_exists(_trait_data, "opposite_trait")) {
+        var _opposite = _trait_data.opposite_trait;
+        if (_opposite != undefined) {
+            var _opp_stacks = get_total_trait_stacks(_opposite);
+            _stacks = max(0, _stacks - _opp_stacks);
+        }
+    }
+
+    return _stacks;
+}
+
+/// @function get_trait_modifier(modifier_key)
+/// @description Aggregate multiplicative modifier from active traits
+/// @param {string} modifier_key ("speed", "damage", etc.)
+/// @return {real} Multiplier (1.0 = unchanged)
+function get_trait_modifier(_modifier_key) {
+    var _modifier = 1.0;
+
+    if (!variable_global_exists("trait_database")) {
+        return _modifier;
+    }
+
+    var _trait_keys = variable_struct_get_names(global.trait_database);
+    for (var i = 0; i < array_length(_trait_keys); i++) {
+        var _trait_key = _trait_keys[i];
+        var _trait_data = global.trait_database[$ _trait_key];
+
+        if (_trait_data == undefined) continue;
+        if (!variable_struct_exists(_trait_data, "modifiers")) continue;
+        if (!variable_struct_exists(_trait_data.modifiers, _modifier_key)) continue;
+
+        var _net_stacks = get_effective_trait_stacks(_trait_key);
+        if (_net_stacks <= 0) continue;
+
+        var _per_stack = _trait_data.modifiers[$ _modifier_key];
+        if (_per_stack == undefined) continue;
+
+        _modifier *= power(_per_stack, _net_stacks);
+    }
+
+    return _modifier;
+}
+
+/// @function get_active_timed_trait_data()
+/// @description Get array of active timed trait info for UI display
+/// @return {array} [{trait, remaining, total, stacks, effective_stacks}]
+function get_active_timed_trait_data() {
+    if (!variable_instance_exists(self, "timed_traits")) {
+        return [];
+    }
+
+    var _results = [];
+
+    for (var i = 0; i < array_length(timed_traits); i++) {
+        var _entry = timed_traits[i];
+        var _trait_key = _entry.trait;
+        var _trait_data = global.trait_database[$ _trait_key];
+        if (_trait_data == undefined) continue;
+
+        var _show = !variable_struct_exists(_trait_data, "show_timer") || _trait_data.show_timer;
+        if (!_show) continue;
+
+        var _remaining = max(0, _entry.timer);
+        var _total = max(_remaining, _entry.total_duration ?? _remaining);
+        var _effective = get_effective_trait_stacks(_trait_key);
+        var _total_stacks = get_total_trait_stacks(_trait_key);
+
+        array_push(_results, {
+            trait: _trait_key,
+            remaining: _remaining,
+            total: _total,
+            stacks: _total_stacks,
+            effective_stacks: _effective
+        });
+    }
+
+    return _results;
+}
+
 /// @function get_terrain_at_position(x, y)
 /// @description Get terrain type at position by checking all tile layers
 /// @param {real} x X position
@@ -304,13 +553,14 @@ function get_damage_type(_attacker) {
         // Infer damage type from status effects on right hand weapon
         var _status_effects = get_weapon_status_effects(_weapon_stats);
         if (array_length(_status_effects) > 0) {
-            // Use first status effect to determine damage type
-            switch (_status_effects[0].effect) {
-                case StatusEffectType.burning:
+            var _trait_key = status_effect_resolve_trait(_status_effects[0]);
+            switch (_trait_key) {
+                case "burning":
                     return "fire";
-                case StatusEffectType.wet:
+                case "wet":
                     return "ice";
-                // Add more status effect -> damage type mappings as needed
+                case "poisoned":
+                    return "poison";
             }
         }
 
@@ -330,11 +580,14 @@ function get_damage_type(_attacker) {
         // Infer from left hand status effects
         var _left_status_effects = get_weapon_status_effects(_left_stats);
         if (array_length(_left_status_effects) > 0) {
-            switch (_left_status_effects[0].effect) {
-                case StatusEffectType.burning:
+            var _left_trait = status_effect_resolve_trait(_left_status_effects[0]);
+            switch (_left_trait) {
+                case "burning":
                     return "fire";
-                case StatusEffectType.wet:
+                case "wet":
                     return "ice";
+                case "poisoned":
+                    return "poison";
             }
         }
     }

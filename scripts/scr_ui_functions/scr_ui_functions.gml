@@ -130,50 +130,70 @@ function ui_draw_xp_bar(_player, _x, _y, _w, _h, _label_x = undefined, _label_y 
 }
 
 function ui_get_status_effect_color(_effect_type) {
-    switch(_effect_type) {
-        case StatusEffectType.burning: return c_red;
-        case StatusEffectType.wet: return c_blue;
-        case StatusEffectType.empowered: return c_yellow;
-        case StatusEffectType.weakened: return c_gray;
-        case StatusEffectType.swift: return c_green;
-        case StatusEffectType.slowed: return c_purple;
-        case StatusEffectType.poisoned: return make_color_rgb(100, 180, 50); // Poison green
-        default: return c_white;
+    var _trait_key = status_effect_resolve_trait(_effect_type);
+    var _trait_data = status_effect_get_trait_data(_trait_key);
+    if (_trait_data != undefined && variable_struct_exists(_trait_data, "ui_color")) {
+        return _trait_data.ui_color;
     }
+    return c_white;
 }
 
 function ui_draw_status_effects(_player, _x, _y, _icon_size, _spacing) {
-    if (!variable_instance_exists(_player, "status_effects")) return;
+    if (!instance_exists(_player)) return;
 
-    var _effects = _player.status_effects;
-    if (array_length(_effects) == 0) return;
+    var _get_traits = method(_player, get_active_timed_trait_data);
+    if (_get_traits == undefined) return;
+
+    var _effects = _get_traits();
+    if (!is_array(_effects) || array_length(_effects) == 0) return;
+
+    var _visible = [];
 
     for (var i = 0; i < array_length(_effects); i++) {
         var _effect = _effects[i];
-        var _icon_x = _x + (i * (_icon_size + _spacing));
-        var _icon_y = _y;
-        var _icon_sprite = -1;
+        if (_effect.total <= 0) continue;
+        if (_effect.effective_stacks <= 0) continue;
 
-        if (is_struct(_effect.data) && variable_struct_exists(_effect.data, "icon_sprite")) {
-            _icon_sprite = _effect.data.icon_sprite;
+        var _trait_data = status_effect_get_trait_data(_effect.trait);
+        if (_trait_data == undefined) continue;
+
+        var _icon_sprite = -1;
+        if (variable_struct_exists(_trait_data, "icon_sprite")) {
+            _icon_sprite = _trait_data.icon_sprite;
         }
 
-        if (_icon_sprite != -1 && sprite_exists(_icon_sprite)) {
-            draw_sprite(_icon_sprite, 0, _icon_x, _icon_y);
+        array_push(_visible, {
+            trait: _effect.trait,
+            remaining: _effect.remaining,
+            total: _effect.total,
+            stacks: _effect.effective_stacks,
+            color: _trait_data.ui_color ?? c_white,
+            icon: _icon_sprite
+        });
+    }
+
+    for (var j = 0; j < array_length(_visible); j++) {
+        var _entry = _visible[j];
+        var _icon_x = _x + (j * (_icon_size + _spacing));
+        var _icon_y = _y;
+
+        if (_entry.icon != -1 && sprite_exists(_entry.icon)) {
+            draw_sprite_ext(_entry.icon, 0, _icon_x, _icon_y, 1, 1, 0, c_white, 1);
         } else {
-            draw_set_color(ui_get_status_effect_color(_effect.type));
+            draw_set_color(_entry.color);
             draw_rectangle(_icon_x, _icon_y, _icon_x + _icon_size, _icon_y + _icon_size, false);
         }
 
-        var _duration_pct = 0;
-        if (is_struct(_effect) && variable_struct_exists(_effect, "remaining_duration") && variable_struct_exists(_effect.data, "duration")) {
-            _duration_pct = clamp(_effect.remaining_duration / max(1, _effect.data.duration), 0, 1);
-        }
-
+        var _duration_pct = clamp(_entry.remaining / max(1, _entry.total), 0, 1);
         draw_set_color(c_black);
         draw_rectangle(_icon_x, _icon_y + _icon_size + 1, _icon_x + _icon_size, _icon_y + _icon_size + 3, false);
-        draw_set_color(ui_get_status_effect_color(_effect.type));
+        draw_set_color(_entry.color);
         draw_rectangle(_icon_x, _icon_y + _icon_size + 1, _icon_x + (_icon_size * _duration_pct), _icon_y + _icon_size + 3, false);
+
+        if (_entry.stacks > 1) {
+            draw_set_color(_entry.color);
+            draw_text(_icon_x + _icon_size + 2, _icon_y, "x" + string(_entry.stacks));
+        }
     }
 
     draw_set_color(c_white);

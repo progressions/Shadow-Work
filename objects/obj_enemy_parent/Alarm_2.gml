@@ -91,9 +91,9 @@ if (state == EnemyState.attacking) {
                     var effect_data = attack_status_effects[i];
                     if (random(1) < effect_data.chance) {
                         with (_player) {
-                            apply_status_effect(effect_data.effect);
+                            apply_status_effect(effect_data);
                         }
-                        show_debug_message("Enemy applied status effect: " + string(effect_data.effect));
+                        show_debug_message("Enemy applied trait effect: " + string(status_effect_resolve_trait(effect_data)));
                     }
                 }
             }
