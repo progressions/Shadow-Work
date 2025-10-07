@@ -56,6 +56,9 @@ global.Items = {
     wolf_pelt: "wolf_pelt",
 };
 
+// Ensure projectile range profiles are loaded before referencing RangeProfile enums
+projectile_range_profiles_init();
+
 // Item definition constructor
 function create_item_definition(_frame, _id, _name, _type, _slot, _stats) constructor {
     item_id = _id;

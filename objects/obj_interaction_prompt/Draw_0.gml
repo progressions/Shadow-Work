@@ -12,15 +12,17 @@ draw_set_halign(fa_center);
 draw_set_valign(fa_middle);
 
 // Draw black outline (4-way) with scaling
-draw_set_color(c_black);
-draw_text_transformed(x - 1, y, text, text_scale, text_scale, 0);
-draw_text_transformed(x + 1, y, text, text_scale, text_scale, 0);
-draw_text_transformed(x, y - 1, text, text_scale, text_scale, 0);
-draw_text_transformed(x, y + 1, text, text_scale, text_scale, 0);
+// draw_set_color(c_black);
+// draw_text_transformed(x - 1, y, text, text_scale, text_scale, 0);
+// draw_text_transformed(x + 1, y, text, text_scale, text_scale, 0);
+// draw_text_transformed(x, y - 1, text, text_scale, text_scale, 0);
+// draw_text_transformed(x, y + 1, text, text_scale, text_scale, 0);
 
 // Draw main text with scaling
 draw_set_color(text_color);
-draw_text_transformed(x, y, text, text_scale, text_scale, 0);
+// draw_text_transformed(x, y, text, text_scale, text_scale, 0);
+
+draw_text_scribble(x, y, text);
 
 // Restore previous draw settings
 draw_set_font(_prev_font);

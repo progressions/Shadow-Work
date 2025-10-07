@@ -123,12 +123,16 @@ if (state != EnemyState.dead && array_length(_enemy_timed_traits) > 0) {
 
         if (_entry.effective_stacks <= 0) continue;
 
+        var _trait_color = (variable_struct_exists(_trait_info, "ui_color") && _trait_info.ui_color != undefined)
+            ? _trait_info.ui_color
+            : c_white;
+
         array_push(_visible_enemy_traits, {
             trait: _entry.trait,
             remaining: _entry.remaining,
             total: _entry.total,
             stacks: _entry.effective_stacks,
-            color: _trait_info.ui_color ?? c_white
+            color: _trait_color
         });
     }
 
