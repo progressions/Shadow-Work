@@ -413,12 +413,17 @@ if (array_length(_timed_traits) > 0) {
 
         if (_entry.effective_stacks <= 0) continue;
 
+        var _color = c_white;
+        if (variable_struct_exists(_trait_info, "ui_color")) {
+            _color = _trait_info.ui_color;
+        }
+
         array_push(_visible_traits, {
             trait: _entry.trait,
             remaining: _entry.remaining,
             total: _entry.total,
             stacks: _entry.effective_stacks,
-            color: _trait_info.ui_color ?? c_white
+            color: _color
         });
     }
 
