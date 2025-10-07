@@ -55,8 +55,9 @@ global.status_effect_data = {
     },
     poisoned: {
         duration: 300,     // 5 seconds at 60fps
-        tick_rate: 60,     // Damage every 1 seconds
-        damage: 0.5,
+        tick_rate: 40,     // Damage every ~0.67 seconds
+        damage: 1,
+        speed_modifier: 0.9, // 10% speed reduction
         opposing: undefined // No opposing effect
     }
 };

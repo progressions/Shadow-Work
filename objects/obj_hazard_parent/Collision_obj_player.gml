@@ -81,8 +81,7 @@ if (damage_mode == "on_enter" && damage_amount > 0) {
 // ON-ENTER EFFECT APPLICATION
 // ==============================
 
-// Only apply effect on first entry, not every frame
-if (effect_mode == "on_enter" && effect_to_apply != undefined && !already_inside) {
+if (effect_mode == "on_enter" && effect_to_apply != undefined) {
     with (player) {
         if (other.effect_type == "trait") {
             // Apply trait using existing trait system
