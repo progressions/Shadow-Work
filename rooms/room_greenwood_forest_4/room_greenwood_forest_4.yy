@@ -28,6 +28,7 @@
     {"name":"inst_7561736E","path":"rooms/room_greenwood_forest_4/room_greenwood_forest_4.yy",},
     {"name":"inst_270542EA","path":"rooms/room_greenwood_forest_4/room_greenwood_forest_4.yy",},
     {"name":"inst_7F94C91E","path":"rooms/room_greenwood_forest_4/room_greenwood_forest_4.yy",},
+    {"name":"inst_5D74BEA8","path":"rooms/room_greenwood_forest_4/room_greenwood_forest_4.yy",},
   ],
   "isDnd":false,
   "layers":[
@@ -77,6 +78,7 @@
         {"$GMRInstance":"v2","%Name":"inst_7561736E","colour":4294967295,"frozen":false,"hasCreationCode":false,"ignore":false,"imageIndex":0,"imageSpeed":1.0,"inheritCode":false,"inheritedItemId":null,"inheritItemSettings":false,"isDnd":false,"name":"inst_7561736E","objectId":{"name":"obj_item_crossbow","path":"objects/obj_item_crossbow/obj_item_crossbow.yy",},"properties":[],"resourceType":"GMRInstance","resourceVersion":"2.0","rotation":0.0,"scaleX":1.0,"scaleY":1.0,"x":176.0,"y":80.0,},
         {"$GMRInstance":"v2","%Name":"inst_270542EA","colour":4294967295,"frozen":false,"hasCreationCode":false,"ignore":false,"imageIndex":0,"imageSpeed":1.0,"inheritCode":false,"inheritedItemId":null,"inheritItemSettings":false,"isDnd":false,"name":"inst_270542EA","objectId":{"name":"obj_spawner_bandit_ambush","path":"objects/obj_spawner_bandit_ambush/obj_spawner_bandit_ambush.yy",},"properties":[],"resourceType":"GMRInstance","resourceVersion":"2.0","rotation":0.0,"scaleX":1.0,"scaleY":1.0,"x":304.0,"y":304.0,},
         {"$GMRInstance":"v2","%Name":"inst_7F94C91E","colour":4294967295,"frozen":false,"hasCreationCode":false,"ignore":false,"imageIndex":0,"imageSpeed":1.0,"inheritCode":false,"inheritedItemId":null,"inheritItemSettings":false,"isDnd":false,"name":"inst_7F94C91E","objectId":{"name":"obj_fire","path":"objects/obj_fire/obj_fire.yy",},"properties":[],"resourceType":"GMRInstance","resourceVersion":"2.0","rotation":0.0,"scaleX":1.0,"scaleY":1.0,"x":112.0,"y":160.0,},
+        {"$GMRInstance":"v2","%Name":"inst_5D74BEA8","colour":4294967295,"frozen":false,"hasCreationCode":false,"ignore":false,"imageIndex":0,"imageSpeed":1.0,"inheritCode":false,"inheritedItemId":null,"inheritItemSettings":false,"isDnd":false,"name":"inst_5D74BEA8","objectId":{"name":"obj_poison","path":"objects/obj_poison/obj_poison.yy",},"properties":[],"resourceType":"GMRInstance","resourceVersion":"2.0","rotation":0.0,"scaleX":1.0,"scaleY":1.0,"x":112.0,"y":192.0,},
       ],"layers":[],"name":"Instances","properties":[],"resourceType":"GMRInstanceLayer","resourceVersion":"2.0","userdefinedDepth":false,"visible":true,},
     {"$GMRTileLayer":"","%Name":"Tiles_Castle_3","depth":101,"effectEnabled":true,"effectType":null,"gridX":32,"gridY":32,"hierarchyFrozen":false,"inheritLayerDepth":false,"inheritLayerSettings":false,"inheritSubLayers":true,"inheritVisibility":true,"layers":[],"name":"Tiles_Castle_3","properties":[],"resourceType":"GMRTileLayer","resourceVersion":"2.0","tiles":{"SerialiseHeight":23,"SerialiseWidth":40,"TileCompressedData":[
           -384,-2147483648,15,127,128,127,128,127,128,127,128,127,128,127,128,127,0,0,-25,-2147483648,15,128,127,

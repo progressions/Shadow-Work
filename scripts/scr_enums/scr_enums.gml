@@ -34,6 +34,7 @@ enum StatusEffectType {
 	weakened,
 	swift,
 	slowed,
+	poisoned,
 }
 
 enum Direction {

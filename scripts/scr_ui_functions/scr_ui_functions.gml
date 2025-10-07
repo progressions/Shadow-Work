@@ -137,6 +137,7 @@ function ui_get_status_effect_color(_effect_type) {
         case StatusEffectType.weakened: return c_gray;
         case StatusEffectType.swift: return c_green;
         case StatusEffectType.slowed: return c_purple;
+        case StatusEffectType.poisoned: return make_color_rgb(100, 180, 50); // Poison green
         default: return c_white;
     }
 }

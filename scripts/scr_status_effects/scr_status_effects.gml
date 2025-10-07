@@ -52,6 +52,13 @@ global.status_effect_data = {
         duration: 300,     // 5 seconds at 60fps
         speed_modifier: 0.6, // 40% speed reduction
         opposing: StatusEffectType.swift
+    },
+    poisoned: {
+        duration: 300,     // 5 seconds at 60fps
+        tick_rate: 40,     // Damage every ~0.67 seconds
+        damage: 1,
+        speed_modifier: 0.9, // 10% speed reduction
+        opposing: undefined // No opposing effect
     }
 };
 
@@ -64,6 +71,7 @@ function get_status_effect_data(_effect_type) {
         case StatusEffectType.weakened: return global.status_effect_data.weakened;
         case StatusEffectType.swift: return global.status_effect_data.swift;
         case StatusEffectType.slowed: return global.status_effect_data.slowed;
+        case StatusEffectType.poisoned: return global.status_effect_data.poisoned;
         default: return undefined;
     }
 }
@@ -88,6 +96,9 @@ function apply_status_effect(_effect_type, _duration_override = -1, _is_permanen
             break;
         case StatusEffectType.slowed:
             _immunity_name = "slow_immunity";
+            break;
+        case StatusEffectType.poisoned:
+            _immunity_name = "poison_immunity";
             break;
         // Add more immunity checks as needed
     }
@@ -190,31 +201,34 @@ function tick_status_effects() {
         }
 
         // Handle damage over time effects
-        if (effect.type == StatusEffectType.burning) {
+        if (effect.type == StatusEffectType.burning || effect.type == StatusEffectType.poisoned) {
             effect.tick_timer++;
             if (effect.tick_timer >= effect.data.tick_rate) {
-                var _burn_damage = effect.data.damage;
-                hp -= _burn_damage;
+                var _dot_damage = effect.data.damage;
+                var _damage_type = (effect.type == StatusEffectType.burning) ? DamageType.fire : DamageType.poison;
+                var _death_message = (effect.type == StatusEffectType.burning) ? "burning" : "poison";
+
+                hp -= _dot_damage;
                 if (object_index == obj_player) {
-                    companion_on_player_damaged(id, _burn_damage, DamageType.fire);
+                    companion_on_player_damaged(id, _dot_damage, _damage_type);
                 }
 
-                // Check if entity died from burning
+                // Check if entity died from DoT
                 if (hp <= 0) {
                     if (object_index == obj_player) {
                         state = PlayerState.dead;
-                        show_debug_message("Player died from burning");
+                        show_debug_message("Player died from " + _death_message);
                     } else if (object_is_ancestor(object_index, obj_enemy_parent)) {
                         state = EnemyState.dead;
-                        show_debug_message("Enemy died from burning");
+                        show_debug_message("Enemy died from " + _death_message);
 
-                        // Award XP to player for burning kill
+                        // Award XP to player for DoT kill
                         if (instance_exists(obj_player)) {
                             var xp_reward = 5;
                             with (obj_player) {
                                 gain_xp(xp_reward);
                             }
-                            show_debug_message("Enemy burned to death! Player gained " + string(xp_reward) + " XP");
+                            show_debug_message("Enemy died from " + _death_message + "! Player gained " + string(xp_reward) + " XP");
                         }
                     }
                 }
@@ -313,6 +327,7 @@ function get_status_effect_name(_effect_type) {
         case StatusEffectType.weakened: return "Weakened";
         case StatusEffectType.swift: return "Swift";
         case StatusEffectType.slowed: return "Slowed";
+        case StatusEffectType.poisoned: return "Poisoned";
         default: return "Unknown";
     }
 }

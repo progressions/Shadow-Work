@@ -1,11 +1,11 @@
 {
   "$GMObject":"",
-  "%Name":"obj_fire",
+  "%Name":"obj_poison",
   "eventList":[
     {"$GMEvent":"v1","%Name":"","collisionObjectId":null,"eventNum":0,"eventType":0,"isDnD":false,"name":"","resourceType":"GMEvent","resourceVersion":"2.0",},
   ],
   "managed":true,
-  "name":"obj_fire",
+  "name":"obj_poison",
   "overriddenProperties":[],
   "parent":{
     "name":"environment",
@@ -33,8 +33,8 @@
   "resourceVersion":"2.0",
   "solid":false,
   "spriteId":{
-    "name":"spr_fire",
-    "path":"sprites/spr_fire/spr_fire.yy",
+    "name":"spr_poison_pool",
+    "path":"sprites/spr_poison_pool/spr_poison_pool.yy",
   },
   "spriteMaskId":null,
   "visible":true,
