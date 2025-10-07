@@ -110,7 +110,7 @@
     "9647":{"character":9647,"h":39,"offset":3,"shift":11,"w":22,"x":81,"y":207,},
   },
   "hinting":0,
-  "includeTTF":false,
+  "includeTTF":true,
   "interpreter":0,
   "italic":false,
   "kerningPairs":[],
@@ -135,6 +135,6 @@
   "size":14.0,
   "styleName":"Regular",
   "textureGroupId":null,
-  "TTFName":"",
+  "TTFName":"/Users/isaacpriestley/GameMakerProjects/Shadow Work/fonts/fnt_determination_large/determination.ttf",
   "usesSDF":true,
 }

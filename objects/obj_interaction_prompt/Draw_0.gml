@@ -6,23 +6,14 @@ var _prev_valign = draw_get_valign();
 var _prev_color = draw_get_color();
 var _prev_font = draw_get_font();
 
-// Set font and alignment
-draw_set_font(font);
-draw_set_halign(fa_center);
-draw_set_valign(fa_middle);
-
-// Draw black outline (4-way) with scaling
-// draw_set_color(c_black);
-// draw_text_transformed(x - 1, y, text, text_scale, text_scale, 0);
-// draw_text_transformed(x + 1, y, text, text_scale, text_scale, 0);
-// draw_text_transformed(x, y - 1, text, text_scale, text_scale, 0);
-// draw_text_transformed(x, y + 1, text, text_scale, text_scale, 0);
-
-// Draw main text with scaling
-draw_set_color(text_color);
-// draw_text_transformed(x, y, text, text_scale, text_scale, 0);
-
-draw_text_scribble(x, y, text);
+// Draw text with baked outline font
+scribble(text)
+	.starting_format("fnt_ui", text_color)
+	.scale(text_scale)
+	.align(fa_center, fa_bottom)
+	.sdf_outline(c_black, 1)
+	.sdf_shadow(c_black, 0.3, -2, 2, 0.1)
+	.draw(x, y - 6);
 
 // Restore previous draw settings
 draw_set_font(_prev_font);

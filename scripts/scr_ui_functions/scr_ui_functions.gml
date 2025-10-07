@@ -224,7 +224,8 @@ function show_interaction_prompt(_radius, _offset_x, _offset_y, _key, _action) {
     var _in_range = (_dist <= _radius);
 
     // Build prompt text: "[Key] Action"
-    var _text = "[" + _key + "] " + _action;
+    // In Scribble, [[ = literal [
+    var _text = "[[" + _key + "] " + _action;
 
     // Create or update prompt if in range
     if (_in_range) {

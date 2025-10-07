@@ -125,7 +125,7 @@ if (global.vn_chatterbox != undefined) {
 			draw_set_halign(fa_right);
 			draw_set_valign(fa_bottom);
 			draw_set_font(fnt_determination_normal);
-			draw_text(dialogue_box_x + dialogue_box_width - 20, dialogue_box_y + dialogue_box_height - 10, "[ENTER/E]");
+			draw_text(dialogue_box_x + dialogue_box_width - 20, dialogue_box_y + dialogue_box_height - 10, "[[ENTER/E]");
 		}
 	}
 }
