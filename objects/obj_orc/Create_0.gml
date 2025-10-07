@@ -3,13 +3,13 @@ event_inherited();
 
 // Orc-specific stats (stronger, slower)
 attack_damage = 12;
-attack_speed = 0.7;
+attack_speed = 0.5;
 attack_range = 25;
 hp = 18;
 hp_total = hp;
-move_speed = 0.8;
+move_speed = 0.5;
 melee_damage_resistance = 2;
-ranged_damage_resistance = 2;
+ranged_damage_resistance = 0;
 
 // Dual-mode configuration (melee-preferring with throwing axes)
 enable_dual_mode = true;

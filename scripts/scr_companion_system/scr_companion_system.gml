@@ -77,6 +77,9 @@ function get_companion_melee_dr_bonus() {
                 if (variable_struct_exists(_trigger, "melee_damage_reduction")) {
                     total_dr += _trigger.melee_damage_reduction;
                 }
+                if (variable_struct_exists(_trigger, "dr_bonus")) {
+                    total_dr += _trigger.dr_bonus;
+                }
             }
         }
     }
@@ -130,6 +133,9 @@ function get_companion_ranged_dr_bonus() {
                 }
                 if (variable_struct_exists(_trigger, "ranged_damage_reduction")) {
                     total_dr += _trigger.ranged_damage_reduction;
+                }
+                if (variable_struct_exists(_trigger, "dr_bonus")) {
+                    total_dr += _trigger.dr_bonus;
                 }
             }
         }
@@ -415,6 +421,24 @@ function evaluate_companion_triggers(player_instance) {
             }
         }
 
+        // CANOPY: Aegis duration management
+        if (variable_struct_exists(companion.triggers, "aegis")) {
+            if (companion.triggers.aegis.active) {
+                if (!variable_instance_exists(companion, "aegis_timer")) companion.aegis_timer = 0;
+                companion.aegis_timer--;
+                if (companion.aegis_timer <= 0) companion.triggers.aegis.active = false;
+            }
+        }
+
+        // CANOPY: Dash Mend short-lived state
+        if (variable_struct_exists(companion.triggers, "dash_mend")) {
+            if (companion.triggers.dash_mend.active) {
+                if (!variable_instance_exists(companion, "dash_mend_timer")) companion.dash_mend_timer = 0;
+                companion.dash_mend_timer--;
+                if (companion.dash_mend_timer <= 0) companion.triggers.dash_mend.active = false;
+            }
+        }
+
         // HOLA: Gust - Push back nearby enemies
         if (variable_struct_exists(companion.triggers, "gust")) {
             if (companion.triggers.gust.unlocked &&
@@ -456,6 +480,105 @@ function evaluate_companion_triggers(player_instance) {
                 }
             }
         }
+    }
+}
+
+/// @function companion_on_player_dash(player_instance)
+/// @description Notify companions that the player started a dash (used for Dash Mend trigger)
+/// @param {instance} player_instance The player who dashed
+function companion_on_player_dash(player_instance) {
+    if (player_instance == undefined || player_instance == noone) {
+        return;
+    }
+
+    var companions = get_active_companions();
+
+    for (var i = 0; i < array_length(companions); i++) {
+        var companion = companions[i];
+
+        if (!variable_struct_exists(companion.triggers, "dash_mend")) {
+            continue;
+        }
+
+        var trigger = companion.triggers.dash_mend;
+
+        if (!trigger.unlocked || trigger.cooldown > 0) {
+            continue;
+        }
+
+        // Apply heal scaled by affinity
+        var heal_base = (trigger.heal_amount != undefined) ? trigger.heal_amount : 0;
+        var multiplier = get_affinity_aura_multiplier(companion.affinity);
+        var heal_amount = heal_base * multiplier;
+
+        var previous_hp = player_instance.hp;
+        player_instance.hp = min(player_instance.hp_total, player_instance.hp + heal_amount);
+
+        // Visual feedback
+        spawn_floating_text(companion.x, companion.bbox_top - 10, "Mend!", c_lime, companion);
+        if (player_instance.hp > previous_hp) {
+            var healed = player_instance.hp - previous_hp;
+            spawn_floating_text(player_instance.x, player_instance.bbox_top - 12, "+ " + string_format(healed, 1, 1), c_lime, player_instance);
+        }
+
+        trigger.cooldown = trigger.cooldown_max;
+        trigger.active = true;
+        companion.dash_mend_timer = 12; // brief window for potential VFX
+
+        companion_play_trigger_sfx(companion, "dash_mend");
+    }
+}
+
+/// @function companion_on_player_damaged(player_instance, damage_amount, damage_type)
+/// @description Notify companions that the player has taken damage (used for Aegis trigger)
+/// @param {instance} player_instance The player who was damaged
+/// @param {real} damage_amount The amount of damage taken
+/// @param {real} damage_type Optional damage type enum
+function companion_on_player_damaged(player_instance, damage_amount, damage_type = undefined) {
+    if (player_instance == undefined || player_instance == noone) {
+        return;
+    }
+
+    if (damage_amount == undefined || damage_amount <= 0) {
+        return;
+    }
+
+    var companions = get_active_companions();
+
+    for (var i = 0; i < array_length(companions); i++) {
+        var companion = companions[i];
+
+        if (!variable_struct_exists(companion.triggers, "aegis")) {
+            continue;
+        }
+
+        var trigger = companion.triggers.aegis;
+
+        if (!trigger.unlocked || trigger.cooldown > 0 || trigger.active) {
+            continue;
+        }
+
+        trigger.active = true;
+        trigger.cooldown = trigger.cooldown_max;
+        var _duration = (trigger.duration != undefined) ? trigger.duration : 0;
+        companion.aegis_timer = max(1, _duration);
+
+        // Heal based on affinity scaling
+        var heal_base = (trigger.heal_amount != undefined) ? trigger.heal_amount : 0;
+        var multiplier = get_affinity_aura_multiplier(companion.affinity);
+        var heal_amount = heal_base * multiplier;
+
+        var previous_hp = player_instance.hp;
+        player_instance.hp = min(player_instance.hp_total, player_instance.hp + heal_amount);
+        var healed = player_instance.hp - previous_hp;
+
+        spawn_floating_text(companion.x, companion.bbox_top - 12, "Aegis!", c_aqua, companion);
+        if (healed > 0) {
+            spawn_floating_text(player_instance.x, player_instance.bbox_top - 16, "+ " + string_format(healed, 1, 1), c_aqua, player_instance);
+        }
+
+        activate_slowmo(0.4);
+        companion_play_trigger_sfx(companion, "aegis");
     }
 }
 

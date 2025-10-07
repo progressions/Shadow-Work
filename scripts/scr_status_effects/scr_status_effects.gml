@@ -193,7 +193,11 @@ function tick_status_effects() {
         if (effect.type == StatusEffectType.burning) {
             effect.tick_timer++;
             if (effect.tick_timer >= effect.data.tick_rate) {
-                hp -= effect.data.damage;
+                var _burn_damage = effect.data.damage;
+                hp -= _burn_damage;
+                if (object_index == obj_player) {
+                    companion_on_player_damaged(id, _burn_damage, DamageType.fire);
+                }
 
                 // Check if entity died from burning
                 if (hp <= 0) {

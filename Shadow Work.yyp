@@ -95,6 +95,8 @@
   "name":"Shadow Work",
   "resources":[
     {"id":{"name":"fnt_arial","path":"fonts/fnt_arial/fnt_arial.yy",},},
+    {"id":{"name":"fnt_determination_large","path":"fonts/fnt_determination_large/fnt_determination_large.yy",},},
+    {"id":{"name":"fnt_determination_normal","path":"fonts/fnt_determination_normal/fnt_determination_normal.yy",},},
     {"id":{"name":"fnt_pixelify_sans_lg","path":"fonts/fnt_pixelify_sans_lg/fnt_pixelify_sans_lg.yy",},},
     {"id":{"name":"fnt_pixelify_sans","path":"fonts/fnt_pixelify_sans/fnt_pixelify_sans.yy",},},
     {"id":{"name":"fnt_ui","path":"fonts/fnt_ui/fnt_ui.yy",},},

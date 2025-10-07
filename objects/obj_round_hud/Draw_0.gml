@@ -49,11 +49,11 @@ draw_sprite(round_hud_level, 0, x+20, y+106);
 
 // Draw player level
 if (instance_exists(obj_player)) {
-    draw_set_font(fnt_pixelify_sans_lg);
+    draw_set_font(fnt_determination_large);
     draw_set_color(c_black);
 
     // Draw text at normal size (create a larger font resource if you need bigger text)
-    draw_text(x + 32, y + _sprite_height - 12, string(obj_player.level));
+    draw_text(x + 32, y + _sprite_height - 12, "99"); // string(obj_player.level));
 
     // Reset font settings
     draw_set_color(c_white);

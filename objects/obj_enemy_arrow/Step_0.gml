@@ -74,6 +74,7 @@ if (_hit_player != noone) {
 
             if (_impact_damage > 0) {
                 hp -= _impact_damage;
+                companion_on_player_damaged(id, _impact_damage, _impact_type);
                 combat_timer = 0; // Reset combat timer for companion evading
 
                 // Apply visual feedback (stronger for crits)

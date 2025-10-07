@@ -7,9 +7,9 @@
 event_inherited();
 
 // Override configuration for ambush behavior
-spawn_mode = SpawnerMode.finite;
-max_total_spawns = 6;            // Spawn 6 enemies total
-max_concurrent_enemies = 3;       // Max 3 enemies alive at once
+spawn_mode = SpawnerMode.continuous;
+// max_total_spawns = 6;            // Spawn 6 enemies total
+max_concurrent_enemies = 9;       // Max 3 enemies alive at once
 spawn_period = 90;                // 1.5 seconds between spawns (at 60 FPS)
 
 // Weighted spawn table - more burglars than orcs

@@ -56,7 +56,7 @@ if (_portrait_sprite != noone && sprite_exists(_portrait_sprite)) {
 // Draw name tag above dialogue box
 if (current_speaker != "") {
 	//draw_set_font(fnt_arial);
-	draw_set_font(fnt_pixelify_sans);
+	draw_set_font(fnt_determination_normal) // fnt_pixelify_sans);
 
 	var _name_width = string_width(current_speaker) + 60;
 
@@ -73,7 +73,8 @@ if (current_speaker != "") {
 }
 
 // Draw dialogue text
-draw_set_font(fnt_arial);
+//draw_set_font(fnt_arial);
+draw_set_font(fnt_determination_normal);
 draw_set_color(c_white);
 draw_set_halign(fa_left);
 draw_set_valign(fa_top);
@@ -114,7 +115,7 @@ if (global.vn_chatterbox != undefined) {
 			}
 			draw_set_halign(fa_left);
 			draw_set_valign(fa_middle);
-			draw_set_font(fnt_arial);
+			draw_set_font(fnt_determination_normal);
 			draw_text(choice_x + 20, _choice_y + choice_height / 2, _option_text);
 		}
 	} else {
@@ -123,7 +124,7 @@ if (global.vn_chatterbox != undefined) {
 			draw_set_color(c_white);
 			draw_set_halign(fa_right);
 			draw_set_valign(fa_bottom);
-			draw_set_font(fnt_arial);
+			draw_set_font(fnt_determination_normal);
 			draw_text(dialogue_box_x + dialogue_box_width - 20, dialogue_box_y + dialogue_box_height - 10, "[ENTER/E]");
 		}
 	}

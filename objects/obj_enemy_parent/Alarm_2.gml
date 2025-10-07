@@ -48,6 +48,7 @@ if (state == EnemyState.attacking) {
 
             // Deal damage to player
             _player.hp -= final_damage;
+            companion_on_player_damaged(_player, final_damage, attack_damage_type);
 
             // Reset combat timer for companion evading behavior
             _player.combat_timer = 0;

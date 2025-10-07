@@ -183,6 +183,7 @@ function start_dash(_direction) {
     dash_attack_window = 0;
     dash_cooldown = dash_cooldown_time;
     play_sfx(snd_dash, 1, false);
+    companion_on_player_dash(id);
 }
 
 // Check if player is in active combat (for companion evading behavior)
