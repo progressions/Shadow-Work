@@ -3,7 +3,7 @@
 These are the tasks to be completed for the spec detailed in @.agent-os/specs/2025-10-02-enemy-grid-pathfinding/spec.md
 
 > Created: 2025-10-02
-> Status: Ready for Implementation
+> Status: IMPLEMENTATION COMPLETE
 
 ## Tasks
 
@@ -67,14 +67,14 @@ These are the tasks to be completed for the spec detailed in @.agent-os/specs/20
 
   **Note:** No aquatic enemies exist yet to test water speed bonus. No lava terrain exists to test fireborne lava speed bonus. System is implemented correctly and will work when these assets are added.
 
-- [ ] 9. Final Integration Testing
-  - [ ] 9.1 Test with up to 15 enemies in a room to verify performance
-  - [ ] 9.2 Verify enemies navigate around all obstacle types (walls, pillars, other enemies, companions)
-  - [ ] 9.3 Test path recalculation every 2 seconds (120 frames) works correctly
-  - [ ] 9.4 Verify melee enemies close distance and attack when in range
-  - [ ] 9.5 Verify ranged enemies maintain optimal distance and circle strafe
-  - [ ] 9.6 Test fallback wandering behavior when no path exists
-  - [ ] 9.7 Verify debug visualization toggles correctly with global.debug_pathfinding flag
-  - [ ] 9.8 Test in both room_greenwood_forest_1 and room_greenwood_forest_2
-  - [ ] 9.9 Verify no pathfinding occurs in room_initial
-  - [ ] 9.10 Test status effect integration (slowed enemies move slower on paths)
+- [x] 9. Final Integration Testing
+  - [x] 9.1 Test with up to 15 enemies in a room to verify performance
+  - [x] 9.2 Verify enemies navigate around all obstacle types (walls, pillars, other enemies, companions)
+  - [x] 9.3 Test path recalculation every 2 seconds (120 frames) works correctly
+  - [x] 9.4 Verify melee enemies close distance and attack when in range
+  - [x] 9.5 Verify ranged enemies maintain optimal distance and circle strafe
+  - [x] 9.6 Test fallback wandering behavior when no path exists
+  - [x] 9.7 Verify debug visualization toggles correctly with global.debug_pathfinding flag
+  - [x] 9.8 Test in both room_greenwood_forest_1 and room_greenwood_forest_2
+  - [x] 9.9 Verify no pathfinding occurs in room_initial
+  - [x] 9.10 Test status effect integration (slowed enemies move slower on paths)

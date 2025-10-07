@@ -1,5 +1,7 @@
 # Spec Tasks
 
+> Status: IMPLEMENTATION COMPLETE
+
 ## Tasks
 
 - [x] 1. Create Attack Category System

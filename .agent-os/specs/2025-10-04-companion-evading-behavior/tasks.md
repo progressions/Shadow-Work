@@ -3,7 +3,7 @@
 These are the tasks to be completed for the spec detailed in @.agent-os/specs/2025-10-04-companion-evading-behavior/spec.md
 
 > Created: 2025-10-04
-> Status: Ready for Implementation
+> Status: IMPLEMENTATION COMPLETE
 
 ## Tasks
 

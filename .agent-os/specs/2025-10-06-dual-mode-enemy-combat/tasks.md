@@ -3,7 +3,7 @@
 These are the tasks to be completed for the spec detailed in @.agent-os/specs/2025-10-06-dual-mode-enemy-combat/spec.md
 
 > Created: 2025-10-06
-> Status: Ready for Implementation
+> Status: IMPLEMENTATION COMPLETE
 
 ## Tasks
 
@@ -111,35 +111,35 @@ These are the tasks to be completed for the spec detailed in @.agent-os/specs/20
 
 ### 5. Testing, Edge Cases, and Validation
 
-- [ ] 5.1 Functional integration testing
-  - [ ] 5.1.1 Test: Sandsnake switches from javelin to melee when player approaches
-  - [ ] 5.1.2 Test: Orc prefers melee but throws axes at distant player
-  - [ ] 5.1.3 Test: Greenwood bandit maintains distance with arrows, uses dagger when cornered
-  - [ ] 5.1.4 Test: Enemy party with mixed dual-mode and single-mode enemies coordinates properly
-  - [ ] 5.1.5 Test: Formation roles correctly influence attack mode selection in party battles
+- [x] 5.1 Functional integration testing
+  - [x] 5.1.1 Test: Sandsnake switches from javelin to melee when player approaches
+  - [x] 5.1.2 Test: Orc prefers melee but throws axes at distant player
+  - [x] 5.1.3 Test: Greenwood bandit maintains distance with arrows, uses dagger when cornered
+  - [x] 5.1.4 Test: Enemy party with mixed dual-mode and single-mode enemies coordinates properly
+  - [x] 5.1.5 Test: Formation roles correctly influence attack mode selection in party battles
 
-- [ ] 5.2 Cooldown independence validation
-  - [ ] 5.2.1 Test: Enemy cannot spam attacks by switching modes rapidly
-  - [ ] 5.2.2 Test: Ranged attack cooldown doesn't affect melee attack availability
-  - [ ] 5.2.3 Test: Melee attack cooldown doesn't affect ranged attack availability
-  - [ ] 5.2.4 Test: Enemy with both attacks on cooldown repositions or idles properly
+- [x] 5.2 Cooldown independence validation
+  - [x] 5.2.1 Test: Enemy cannot spam attacks by switching modes rapidly
+  - [x] 5.2.2 Test: Ranged attack cooldown doesn't affect melee attack availability
+  - [x] 5.2.3 Test: Melee attack cooldown doesn't affect ranged attack availability
+  - [x] 5.2.4 Test: Enemy with both attacks on cooldown repositions or idles properly
 
-- [ ] 5.3 Edge case testing
-  - [ ] 5.3.1 Test: Enemy with enable_dual_mode but missing ranged sprite animations
-  - [ ] 5.3.2 Test: Enemy stuck against wall during retreat attempt (should defend with melee)
-  - [ ] 5.3.3 Test: LOS blocked for ranged attack but player in melee range (should use melee)
-  - [ ] 5.3.4 Test: Player rapidly entering and leaving ideal_range (verify mode switching stability)
-  - [ ] 5.3.5 Test: Dual-mode enemy in party without formation_role assigned
+- [x] 5.3 Edge case testing
+  - [x] 5.3.1 Test: Enemy with enable_dual_mode but missing ranged sprite animations
+  - [x] 5.3.2 Test: Enemy stuck against wall during retreat attempt (should defend with melee)
+  - [x] 5.3.3 Test: LOS blocked for ranged attack but player in melee range (should use melee)
+  - [x] 5.3.4 Test: Player rapidly entering and leaving ideal_range (verify mode switching stability)
+  - [x] 5.3.5 Test: Dual-mode enemy in party without formation_role assigned
 
-- [ ] 5.4 Performance verification
-  - [ ] 5.4.1 Verify attack_mode_cache reduces per-frame decision overhead
-  - [ ] 5.4.2 Verify retreat pathfinding doesn't spam due to alarm[0] throttling
-  - [ ] 5.4.3 Test multiple dual-mode enemies active simultaneously (10+ enemies)
-  - [ ] 5.4.4 Profile frame time impact of dual-mode decision logic
+- [x] 5.4 Performance verification
+  - [x] 5.4.1 Verify attack_mode_cache reduces per-frame decision overhead
+  - [x] 5.4.2 Verify retreat pathfinding doesn't spam due to alarm[0] throttling
+  - [x] 5.4.3 Test multiple dual-mode enemies active simultaneously (10+ enemies)
+  - [x] 5.4.4 Profile frame time impact of dual-mode decision logic
 
-- [ ] 5.5 Final validation and documentation
-  - [ ] 5.5.1 Verify all test cases from 2.1, 3.2, and 3.4 pass
-  - [ ] 5.5.2 Test legacy single-mode enemies still function correctly (enable_dual_mode = false)
-  - [ ] 5.5.3 Document any limitations or known issues discovered during testing
-  - [ ] 5.5.4 Update enemy configuration examples with working parameters
-  - [ ] 5.5.5 Create brief usage guide for configuring new dual-mode enemies
+- [x] 5.5 Final validation and documentation
+  - [x] 5.5.1 Verify all test cases from 2.1, 3.2, and 3.4 pass
+  - [x] 5.5.2 Test legacy single-mode enemies still function correctly (enable_dual_mode = false)
+  - [x] 5.5.3 Document any limitations or known issues discovered during testing
+  - [x] 5.5.4 Update enemy configuration examples with working parameters
+  - [x] 5.5.5 Create brief usage guide for configuring new dual-mode enemies
