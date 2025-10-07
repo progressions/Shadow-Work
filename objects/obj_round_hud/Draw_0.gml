@@ -1,7 +1,7 @@
 draw_self();
 
 // Draw all HUD elements at the object's GUI position
-draw_sprite(round_hud_xp_frame, 0, x, y);
+draw_sprite(round_hud_xp_frame, 0, x+24, y+110);
 
 // Draw XP bar filled from left to right based on player XP
 if (instance_exists(obj_player)) {
@@ -18,12 +18,12 @@ if (instance_exists(obj_player)) {
         0,                  // top
         _xp_fill_width,     // width (only filled portion)
         _xp_sprite_height,  // height (full height)
-        x + 21,             // x position
-        y + 90              // y position
+        x + 24,             // x position
+        y + 110              // y position
     );
 }
 
-draw_sprite(round_hud_hp_bar_bg, 0, x, y);
+draw_sprite(round_hud_hp_bar_bg, 0, x+24, y+20);
 
 // Draw HP bar filled from bottom to top based on player HP
 if (instance_exists(obj_player)) {
@@ -45,7 +45,7 @@ if (instance_exists(obj_player)) {
     );
 }
 
-draw_sprite(round_hud_level, 0, x, y);
+draw_sprite(round_hud_level, 0, x+20, y+106);
 
 // Draw player level
 if (instance_exists(obj_player)) {
@@ -53,7 +53,7 @@ if (instance_exists(obj_player)) {
     draw_set_color(c_black);
 
     // Draw text at normal size (create a larger font resource if you need bigger text)
-    draw_text(x + 18, y + _sprite_height - 6, string(obj_player.level));
+    draw_text(x + 32, y + _sprite_height - 12, string(obj_player.level));
 
     // Reset font settings
     draw_set_color(c_white);
@@ -61,15 +61,15 @@ if (instance_exists(obj_player)) {
 }
 
 // Draw melee loadout weapon slot
-draw_sprite(round_hud_melee_slot, 0, x, y);
+draw_sprite(round_hud_melee_slot, 0, x + 20, y + 180);
 if (instance_exists(obj_player) && obj_player.loadouts.melee.right_hand != undefined) {
     var _melee_frame = obj_player.loadouts.melee.right_hand.definition.world_sprite_frame;
-    draw_sprite_stretched(spr_items, _melee_frame, x + 11, y + _sprite_height + 30, 64, 64);
+    draw_sprite_stretched(spr_items, _melee_frame, x + 8, y + _sprite_height + 46, 64, 64);
 }
 
 // Draw ranged loadout weapon slot
-draw_sprite(round_hud_ranged_slot, 0, x, y);
+// draw_sprite(round_hud_arrow_count, 0, x, y);
 if (instance_exists(obj_player) && obj_player.loadouts.ranged.right_hand != undefined) {
     var _ranged_frame = obj_player.loadouts.ranged.right_hand.definition.world_sprite_frame;
-    draw_sprite_stretched(spr_items, _ranged_frame, x + 11, y + _sprite_height + 70, 64, 64);
+    draw_sprite_stretched(spr_items, _ranged_frame, x + 8, y + _sprite_height + 90, 64, 64);
 }
