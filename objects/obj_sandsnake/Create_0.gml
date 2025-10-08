@@ -30,3 +30,15 @@ enemy_anim_overrides = {
 };
 
 traits = ["sandcrawler"];
+
+// Slither dash configuration
+slither_dash_speed = 3.4;
+slither_dash_duration = 18;
+slither_dash_cooldown_min = 150;
+slither_dash_cooldown_max = 240;
+slither_dash_trigger_range = 200;
+slither_dash_cooldown = irandom_range(slither_dash_cooldown_min, slither_dash_cooldown_max);
+slither_dash_active = false;
+slither_dash_timer = 0;
+slither_dash_direction = 0;
+slither_dash_saved_path_speed = 0;
