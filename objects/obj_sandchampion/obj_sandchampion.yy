@@ -34,8 +34,8 @@
   "resourceVersion":"2.0",
   "solid":false,
   "spriteId":{
-    "name":"spr_sandsnake",
-    "path":"sprites/spr_sandsnake/spr_sandsnake.yy",
+    "name":"spr_sandchampion",
+    "path":"sprites/spr_sandchampion/spr_sandchampion.yy",
   },
   "spriteMaskId":null,
   "visible":true,

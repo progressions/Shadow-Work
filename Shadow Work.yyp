@@ -652,6 +652,7 @@
     {"id":{"name":"spr_poison_cloud","path":"sprites/spr_poison_cloud/spr_poison_cloud.yy",},},
     {"id":{"name":"spr_poison_pool","path":"sprites/spr_poison_pool/spr_poison_pool.yy",},},
     {"id":{"name":"spr_rising_pillar","path":"sprites/spr_rising_pillar/spr_rising_pillar.yy",},},
+    {"id":{"name":"spr_sandchampion","path":"sprites/spr_sandchampion/spr_sandchampion.yy",},},
     {"id":{"name":"spr_sandsnake","path":"sprites/spr_sandsnake/spr_sandsnake.yy",},},
     {"id":{"name":"spr_shadow","path":"sprites/spr_shadow/spr_shadow.yy",},},
     {"id":{"name":"spr_slash","path":"sprites/spr_slash/spr_slash.yy",},},

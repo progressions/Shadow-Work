@@ -16,12 +16,51 @@ if (slither_dash_active) {
 	var _next_x = x + _dx;
 	var _next_y = y + _dy;
 
+	// Manually advance slither animation while dash bypasses parent logic
+	var _dir_names = ["down", "right", "left", "up"];
+	var _dir_index;
+
+	if (abs(_dy) > abs(_dx)) {
+		_dir_index = (_dy < 0) ? 3 : 0;
+	} else {
+		_dir_index = (_dx < 0) ? 2 : 1;
+	}
+
+	last_dir_index = _dir_index;
+	facing_dir = _dir_names[_dir_index];
+
+	var _anim_key = "slither_" + _dir_names[_dir_index];
+	var _anim_info = enemy_anim_lookup(_anim_key);
+
+	if (_anim_info != undefined) {
+		if (slither_prev_start_index != _anim_info.start) {
+			slither_anim_timer = 0;
+			slither_prev_start_index = _anim_info.start;
+		}
+
+		var _anim_speed = variable_instance_exists(self, "anim_speed") ? anim_speed : 0.18;
+		slither_anim_timer += _anim_speed * 1.5;
+
+		var _frames = max(1, _anim_info.length);
+		var _frame_offset = floor(slither_anim_timer) mod _frames;
+		var _idx = _anim_info.start + _frame_offset;
+		var _max_idx = sprite_get_number(sprite_index) - 1;
+		if (_idx > _max_idx) _idx = _max_idx;
+		if (_idx < 0) _idx = 0;
+
+		image_index = _idx;
+		image_speed = 0;
+		prev_start_index = _anim_info.start;
+	}
+
 	// Abort if dash would cross a hazard tile
 	if (collision_line(x, y, _next_x, _next_y, obj_hazard_parent, false, true)) {
 		slither_dash_active = false;
 		slither_dash_timer = 0;
 		path_speed = slither_dash_saved_path_speed;
 		slither_dash_cooldown = irandom_range(slither_dash_cooldown_min, slither_dash_cooldown_max);
+		slither_anim_timer = 0;
+		slither_prev_start_index = -1;
 	} else {
 		move_and_collide(_dx, _dy, [
 			tilemap,
@@ -39,6 +78,8 @@ if (slither_dash_active) {
 		if (slither_dash_timer <= 0) {
 			slither_dash_active = false;
 			path_speed = slither_dash_saved_path_speed;
+			slither_anim_timer = 0;
+			slither_prev_start_index = -1;
 		}
 	}
 

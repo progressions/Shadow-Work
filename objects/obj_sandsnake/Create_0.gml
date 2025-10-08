@@ -26,7 +26,11 @@ enemy_anim_overrides = {
     ranged_attack_down: {start: 35, length: 3},
     ranged_attack_right: {start: 38, length: 4},
     ranged_attack_left: {start: 42, length: 4},
-    ranged_attack_up: {start: 46, length: 3}
+    ranged_attack_up: {start: 46, length: 3},
+    slither_down: {start: 49, length: 4},
+    slither_right: {start: 53, length: 4},
+    slither_left: {start: 57, length: 4},
+    slither_up: {start: 61, length: 4}
 };
 
 traits = ["sandcrawler"];
@@ -42,3 +46,6 @@ slither_dash_active = false;
 slither_dash_timer = 0;
 slither_dash_direction = 0;
 slither_dash_saved_path_speed = 0;
+
+slither_anim_timer = 0;
+slither_prev_start_index = -1;
