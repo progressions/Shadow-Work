@@ -1,16 +1,16 @@
 {
   "$GMSound":"",
-  "%Name":"Voice_Female_V2_Reflexion_Mouth_Close_Mono_01",
+  "%Name":"snd_vn_typing_2",
   "audioGroupId":{
-    "name":"audiogroup_default",
-    "path":"audiogroups/audiogroup_default",
+    "name":"audiogroup_sfx_ui",
+    "path":"audiogroups/audiogroup_sfx_ui",
   },
   "bitDepth":1,
   "bitRate":128,
   "compression":0,
   "conversionMode":0,
-  "duration":0.45968255,
-  "name":"Voice_Female_V2_Reflexion_Mouth_Close_Mono_01",
+  "duration":0.35,
+  "name":"snd_vn_typing_2",
   "parent":{
     "name":"ui",
     "path":"folders/Sounds/sfx/ui.yy",
@@ -19,7 +19,7 @@
   "resourceType":"GMSound",
   "resourceVersion":"2.0",
   "sampleRate":44100,
-  "soundFile":"Voice_Female_V2_Reflexion_Mouth_Close_Mono_01.wav",
+  "soundFile":"snd_vn_typing_2.wav",
   "type":0,
   "volume":1.0,
 }

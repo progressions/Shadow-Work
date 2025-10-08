@@ -56,7 +56,7 @@ if (_portrait_sprite != noone && sprite_exists(_portrait_sprite)) {
 // Draw name tag above dialogue box
 if (current_speaker != "") {
 	//draw_set_font(fnt_arial);
-	draw_set_font(fnt_determination_normal) // fnt_pixelify_sans);
+	draw_set_font(fnt_vn) // fnt_pixelify_sans);
 
 	var _name_width = string_width(current_speaker) + 60;
 
@@ -69,16 +69,28 @@ if (current_speaker != "") {
 	draw_set_color(c_white);
 	draw_set_halign(fa_center);
 	draw_set_valign(fa_middle);
-	draw_text(name_tag_x + _name_width / 2, name_tag_y + name_tag_height / 2, current_speaker);
+	
+	scribble(current_speaker)
+		.starting_format("fnt_vn", c_white)
+		.scale(0.5)
+		.draw(name_tag_x, name_tag_y)
 }
 
-// Draw dialogue text
-//draw_set_font(fnt_arial);
-draw_set_font(fnt_determination_normal);
+// Draw dialogue text with Scribble + typist animation
+var _dialogue_element = scribble(current_text, dialogue_text_cache_key)
+	.starting_format("fnt_vn", c_white)
+	.wrap(text_width)
+	.align(fa_left, fa_top)
+	.line_spacing("120%")
+	.scale(0.5)
+	.pre_update_typist(dialogue_typist)
+	.draw(text_x, text_y, dialogue_typist);
+
+// Reset draw state for subsequent elements
 draw_set_color(c_white);
+draw_set_font(fnt_vn);
 draw_set_halign(fa_left);
 draw_set_valign(fa_top);
-draw_text_ext(text_x, text_y, current_text, 20, text_width);
 
 // Draw choices if available (stacked above dialogue box on right side)
 if (global.vn_chatterbox != undefined) {
@@ -107,25 +119,38 @@ if (global.vn_chatterbox != undefined) {
 			draw_set_color(c_white);
 			draw_rectangle(choice_x, _choice_y, choice_x + choice_width, _choice_y + choice_height, true);
 
+			var _text_color;
 			// Draw choice text (black if highlighted, white if not)
 			if (i == selected_choice) {
-				draw_set_color(c_black);
+				
+				_text_color = c_black;
 			} else {
-				draw_set_color(c_white);
+				
+				_text_color = c_white;
 			}
 			draw_set_halign(fa_left);
 			draw_set_valign(fa_middle);
-			draw_set_font(fnt_determination_normal);
-			draw_text(choice_x + 20, _choice_y + choice_height / 2, _option_text);
+			draw_set_font(fnt_vn);
+			
+			scribble(_option_text)
+				.starting_format("fnt_vn", _text_color)
+				.align(fa_left, fa_middle)
+				.scale(0.5)
+				.draw(choice_x + 20, _choice_y + choice_height / 2);
 		}
 	} else {
 		// Show "continue" indicator
-		if (ChatterboxIsWaiting(global.vn_chatterbox)) {
+		if (ChatterboxIsWaiting(global.vn_chatterbox) && (dialogue_typist == undefined || dialogue_typist.get_state() >= 1)) {
 			draw_set_color(c_white);
 			draw_set_halign(fa_right);
 			draw_set_valign(fa_bottom);
-			draw_set_font(fnt_determination_normal);
-			draw_text(dialogue_box_x + dialogue_box_width - 20, dialogue_box_y + dialogue_box_height - 10, "[[ENTER/E]");
+			draw_set_font(fnt_vn);
+			
+			scribble("[[ENTER/E]]")
+				.starting_format("fnt_vn", c_white)
+				.align(fa_right, fa_bottom)
+				.scale(0.5)
+				.draw(dialogue_box_x + dialogue_box_width - 20, dialogue_box_y + dialogue_box_height - 10);
 		}
 	}
 }

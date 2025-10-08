@@ -4,6 +4,22 @@ if (!global.vn_active) exit;
 // Determine if this is a companion dialogue or generic intro
 var _is_intro = (global.vn_intro_instance != undefined);
 
+if (is_struct(dialogue_typist) && variable_global_exists("audio_config")) {
+	var _audio_cfg = global.audio_config;
+	var _has_sounds = array_length(dialogue_typist_sound_bank) > 0;
+	var _final_volume = clamp(_audio_cfg.master_volume, 0, 1) * clamp(_audio_cfg.sfx_volume, 0, 1);
+	var _should_enable = _audio_cfg.sfx_enabled && (_final_volume > 0) && _has_sounds;
+
+	if (_should_enable) {
+		dialogue_typist_sound_active = true;
+		dialogue_typist_gain = dialogue_typist_base_volume * _final_volume;
+	} else if (dialogue_typist_sound_active || (dialogue_typist_gain != 0)) {
+		dialogue_typist_sound_active = false;
+		dialogue_typist_gain = 0;
+		dialogue_typist_sound_last_index = -1;
+	}
+}
+
 // ESC key cancels VN dialogue at any point
 if (keyboard_check_pressed(vk_escape)) {
 	if (_is_intro) {
@@ -29,19 +45,30 @@ if (global.vn_chatterbox != undefined) {
 		exit;
 	}
 
-	// Parse current text for speaker name
+	// Extract structured speaker/text data from Chatterbox
 	var _content = ChatterboxGetContent(_chatterbox, 0);
+	var _speaker = ChatterboxGetContentSpeaker(_chatterbox, 0, "");
+	var _speech = ChatterboxGetContentSpeech(_chatterbox, 0, "");
+	current_line_metadata = ChatterboxGetContentMetadata(_chatterbox, 0);
 
-	// Extract speaker name (format: "Name: Text")
-	if (string_pos(":", _content) > 0) {
-		var _colon_pos = string_pos(":", _content);
-		current_speaker = string_copy(_content, 1, _colon_pos - 1);
-		current_text = string_delete(_content, 1, _colon_pos + 1);
-		current_text = string_trim(current_text);
-	} else {
-		current_speaker = "";
-		current_text = _content;
+	if (_content == undefined) {
+		_content = "";
+		_speaker = "";
+		_speech = "";
 	}
+
+	if (_content != current_raw_content) {
+		current_raw_content = _content;
+		dialogue_text_uid++;
+		dialogue_text_cache_key = "vn_line:" + string(dialogue_text_uid);
+
+		dialogue_typist.reset();
+		dialogue_typist.in(dialogue_typist_speed, dialogue_typist_smoothness);
+		dialogue_typist.ignore_delay(false);
+	}
+
+	current_speaker = _speaker;
+	current_text = _speech;
 
 	// For VN intros, override speaker name if vn_intro_character_name is set
 	if (_is_intro && variable_global_exists("vn_intro_character_name") && global.vn_intro_character_name != "") {
@@ -52,6 +79,10 @@ if (global.vn_chatterbox != undefined) {
 
 	// Handle input
 	if (_option_count > 0) {
+		if (dialogue_typist != undefined && dialogue_typist.get_state() < 1) {
+			dialogue_typist.skip();
+		}
+
 		// Choices available - navigate and select
 		// Up = decrease index (move up the list)
 		if (keyboard_check_pressed(vk_up) || keyboard_check_pressed(ord("W"))) {
@@ -73,14 +104,25 @@ if (global.vn_chatterbox != undefined) {
 		if (keyboard_check_pressed(vk_enter) || keyboard_check_pressed(ord("E"))) {
 			show_debug_message("Selecting choice: " + string(selected_choice));
 			play_sfx(snd_vn_option_select, 1);
+			current_raw_content = "";
+			current_line_metadata = undefined;
 			ChatterboxSelect(_chatterbox, selected_choice);
 			selected_choice = 0;
 		}
 	} else {
 		// No choices - advance dialogue
 		if (keyboard_check_pressed(vk_enter) || keyboard_check_pressed(ord("E"))) {
-			if (ChatterboxIsWaiting(_chatterbox)) {
+			var _typist_ready = true;
+
+			if (dialogue_typist != undefined && dialogue_typist.get_state() < 1) {
+				dialogue_typist.skip();
+				_typist_ready = false;
+			}
+
+			if (_typist_ready && ChatterboxIsWaiting(_chatterbox)) {
 				show_debug_message("Continuing dialogue");
+				current_raw_content = "";
+				current_line_metadata = undefined;
 				ChatterboxContinue(_chatterbox);
 
 				// Check if companion was recruited AFTER continuing (so the <<set>> command has executed)
@@ -135,7 +177,7 @@ if (global.vn_chatterbox != undefined) {
 						}
 					}
 				}
-			} else {
+			} else if (_typist_ready) {
 				// Check if we've reached the end
 				var _current_node = ChatterboxGetCurrent(_chatterbox);
 				show_debug_message("Current node: " + _current_node);

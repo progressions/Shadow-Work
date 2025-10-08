@@ -29,6 +29,26 @@ function chatterbox_update() {
 	text = ChatterboxGetContent(chatterbox, 0);
 }
 
+function vn_reset_typist_state() {
+	if (instance_exists(obj_vn_controller)) {
+		with (obj_vn_controller) {
+			current_speaker = "";
+			current_text = "";
+			current_raw_content = "";
+			current_line_metadata = undefined;
+			selected_choice = 0;
+			dialogue_text_uid = 0;
+			dialogue_text_cache_key = "vn_line:0";
+
+			if (is_struct(dialogue_typist)) {
+				dialogue_typist.reset();
+				dialogue_typist.in(dialogue_typist_speed, dialogue_typist_smoothness);
+				dialogue_typist.ignore_delay(false);
+			}
+		}
+	}
+}
+
 // Start VN dialogue mode with a specific companion and yarn file
 function start_vn_dialogue(_companion_instance, _yarn_file, _start_node) {
 	// Play VN open sound
@@ -56,9 +76,11 @@ function start_vn_dialogue(_companion_instance, _yarn_file, _start_node) {
 	global.game_paused = true;
 	global.vn_companion = _companion_instance;
 	global.vn_yarn_file = _yarn_file;
+	vn_reset_typist_state();
 
 	// Stop all currently playing looped sounds (footsteps, etc.)
 	stop_all_footstep_sounds();
+	audio_group_set_gain(audiogroup_sfx_world, 0, 0);
 
 	// Always reload yarn file from disk to pick up changes
 	ChatterboxLoadFromFile(_yarn_file);
@@ -132,6 +154,7 @@ function stop_vn_dialogue() {
 	global.vn_companion = undefined;
 	global.vn_chatterbox = undefined;
 	global.vn_yarn_file = "";
+	audio_group_set_gain(audiogroup_sfx_world, 1, 0);
 
 	// If returning to menu, reopen it
 	if (return_to_menu == true) {
@@ -222,6 +245,7 @@ function start_vn_intro(_instance, _yarn_file, _start_node, _character_name = ""
 	global.game_paused = true;
 	global.vn_intro_instance = _instance;
 	global.vn_yarn_file = _yarn_file;
+	vn_reset_typist_state();
 
 	// Store character name and portrait for VN controller to use
 	global.vn_intro_character_name = _character_name;
@@ -229,6 +253,7 @@ function start_vn_intro(_instance, _yarn_file, _start_node, _character_name = ""
 
 	// Stop all currently playing looped sounds (footsteps, etc.)
 	stop_all_footstep_sounds();
+	audio_group_set_gain(audiogroup_sfx_world, 0, 0);
 
 	// Create chatterbox instance
 	// IMPORTANT: Pass obj_game_controller as scope to avoid scope issues with callbacks
@@ -261,6 +286,7 @@ function stop_vn_intro() {
 	global.vn_yarn_file = "";
 	global.vn_intro_character_name = "";
 	global.vn_intro_portrait_sprite = noone;
+	audio_group_set_gain(audiogroup_sfx_world, 1, 0);
 
 	// Trigger camera pan back to player (this will keep game paused during pan)
 	// We need to unpause AFTER the pan completes

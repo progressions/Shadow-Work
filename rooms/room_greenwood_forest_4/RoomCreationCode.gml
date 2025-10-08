@@ -1,1 +1,1 @@
-quick_recruit_all_companions();
+// quick_recruit_all_companions();
