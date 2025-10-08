@@ -134,6 +134,11 @@ if (_hit_enemy != noone) {
     __proj_debug_target_name = undefined;
     __proj_debug_before_dr = undefined;
     __proj_debug_ranged_dr = undefined;
+    
+    if (creator != noone && instance_exists(creator) && creator.object_index == obj_player) {
+        creator.combat_timer = 0;
+    }
+
     instance_destroy();
     exit;
 }
