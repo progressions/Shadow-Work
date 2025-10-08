@@ -156,6 +156,11 @@ if (!slowmo_active && slowmo_current_speed < 60) {
     }
 }
 
+// Tick slow-motion cooldown so repeated triggers space out
+if (slowmo_cooldown_timer > 0) {
+    slowmo_cooldown_timer--;
+}
+
 // Handle screen shake (applies camera offset)
 if (shake_timer > 0) {
     shake_timer--;

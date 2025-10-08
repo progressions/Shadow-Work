@@ -352,3 +352,5 @@ slowmo_timer = 0;        // Countdown timer for slow-mo duration (frames at 60fp
 slowmo_recovery_timer = 0; // Timer for smooth speed-up back to normal
 slowmo_target_speed = 60;  // Target game speed (60 = normal)
 slowmo_current_speed = 60; // Current interpolated speed
+slowmo_cooldown_timer = 0;   // Frames remaining until slow-mo can trigger again
+slowmo_cooldown_duration = 180; // 3 seconds at 60fps

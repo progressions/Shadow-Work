@@ -68,9 +68,19 @@ function player_state_walking() {
         // On collision, kill velocity in that direction
         for (var i = 0; i < array_length(_collided); i++) {
             var _collision = _collided[i];
+            var _has_struct = is_struct(_collision);
+            var _has_nx = _has_struct && variable_struct_exists(_collision, "nx");
+            var _has_ny = _has_struct && variable_struct_exists(_collision, "ny");
+
             // Reduce velocity when hitting walls
-            if (abs(_collision.nx) > 0.5) velocity_x *= 0.3;
-            if (abs(_collision.ny) > 0.5) velocity_y *= 0.3;
+            if (_has_nx && abs(_collision.nx) > 0.5) velocity_x *= 0.3;
+            if (_has_ny && abs(_collision.ny) > 0.5) velocity_y *= 0.3;
+
+            // Fallback dampening when no normal data is provided (e.g. dynamic bodies)
+            if (!_has_struct || (!_has_nx && !_has_ny)) {
+                velocity_x *= 0.3;
+                velocity_y *= 0.3;
+            }
         }
     }
 

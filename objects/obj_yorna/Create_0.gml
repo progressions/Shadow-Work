@@ -36,7 +36,7 @@ triggers = {
         unlocked: true,  // Available from start
         active: true, // Always checking for player hits
         cooldown: 0,
-        cooldown_max: 30, // 0.5 seconds between procs
+        cooldown_max: 60, // doubled to ~1 second between procs
         bonus_damage: 2, // Bonus damage added per hit
         sfx_trigger_sound: snd_yorna_strike
     },
@@ -44,7 +44,7 @@ triggers = {
         unlocked: false, // Unlocks at affinity 8+
         active: false,
         cooldown: 0,
-        cooldown_max: 300, // 5 seconds
+        cooldown_max: 600, // doubled to ~10 seconds
         armor_reduction: 2, // -2 armor to nearby enemies
         duration: 180, // 3 seconds
         radius: 64,
@@ -54,7 +54,7 @@ triggers = {
         unlocked: false, // Unlocks at affinity 10
         active: false,
         cooldown: 0,
-        cooldown_max: 600, // 10 seconds
+        cooldown_max: 1200, // doubled to ~20 seconds
         damage_multiplier: 2.0, // 2x damage during window
         armor_pierce: 3, // Ignore 3 armor
         duration: 120, // 2 seconds

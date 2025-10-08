@@ -44,7 +44,7 @@ triggers = {
         unlocked: true,  // Available from start
         active: false,
         cooldown: 0,
-        cooldown_max: 480, // 8 seconds
+        cooldown_max: 960, // doubled to ~16 seconds
         knockback_distance: 36, // Pixels to push enemies
         slow_percent: 0.30, // 30% slow
         slow_duration: 180, // 3 seconds
@@ -56,7 +56,7 @@ triggers = {
         unlocked: false, // Unlocks at affinity 8+
         active: false,
         cooldown: 0,
-        cooldown_max: 60, // 1 second
+        cooldown_max: 120, // doubled to ~2 seconds
         dash_cd_boost: 0.35, // 35% temp boost to dash CD recovery
         duration: 120, // 2 seconds
         sfx_trigger_sound: noone
@@ -65,7 +65,7 @@ triggers = {
         unlocked: false, // Unlocks at affinity 10
         active: false,
         cooldown: 0,
-        cooldown_max: 1800, // 30 seconds
+        cooldown_max: 3600, // doubled to ~60 seconds
         knockback_distance: 40, // Heavy knockback
         slow_percent: 0.50, // 50% heavy slow
         slow_duration: 240, // 4 seconds
@@ -95,4 +95,3 @@ vn_intro_sfx = snd_vn_intro_discovered;  // Sound to play when intro triggers
 
 show_debug_message("=== HOLA CREATE EVENT ===");
 show_debug_message("Gust trigger initialized: active=" + string(triggers.gust.active) + " cooldown=" + string(triggers.gust.cooldown));
-

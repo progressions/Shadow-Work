@@ -35,7 +35,7 @@ triggers = {
         unlocked: true,  // Available from start
         active: false,
         cooldown: 0,
-        cooldown_max: 240, // 3 seconds
+        cooldown_max: 480, // doubled to ~6 seconds
         dr_bonus: 6,
         duration: 120, // 3 seconds
         hp_threshold: 0.3, // Activate at 30% HP
@@ -45,7 +45,7 @@ triggers = {
         unlocked: false, // Unlocks at affinity 5+
         active: false,
         cooldown: 0,
-        cooldown_max: 60,
+        cooldown_max: 120, // doubled
         heal_amount: 1,
         sfx_trigger_sound: noone
     },
@@ -53,7 +53,7 @@ triggers = {
         unlocked: false, // Unlocks at affinity 8+
         active: false,
         cooldown: 0,
-        cooldown_max: 300, // 5 seconds
+        cooldown_max: 600, // doubled to ~10 seconds
         dr_bonus: 2,
         duration: 120, // 2 seconds
         heal_amount: 2,
@@ -63,7 +63,7 @@ triggers = {
         unlocked: false, // Unlocks at affinity 10
         active: false,
         cooldown: 0,
-        cooldown_max: 2400, // 40 seconds
+        cooldown_max: 4800, // doubled to ~80 seconds
         duration: 90, // 1.5 seconds
         dr_bonus: 5,
         enemy_threshold: 3, // Need 3+ nearby enemies
@@ -88,4 +88,3 @@ vn_intro_sfx = snd_vn_intro_discovered;  // Sound to play when intro triggers
 
 show_debug_message("=== CANOPY CREATE EVENT ===");
 show_debug_message("Shield trigger initialized: active=" + string(triggers.shield.active) + " cooldown=" + string(triggers.shield.cooldown));
-

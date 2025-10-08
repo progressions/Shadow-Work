@@ -77,7 +77,7 @@ triggers = {
         unlocked: true,  // Unlocked at affinity 0+
         active: false,
         cooldown: 0,
-        cooldown_max: 600, // 10 seconds at 60fps
+        cooldown_max: 1200, // 20 seconds at 60fps (doubled)
         dr_bonus: 3,
         duration: 180, // 3 seconds
         hp_threshold: 0.3, // Activate at 30% HP
@@ -87,7 +87,7 @@ triggers = {
         unlocked: false, // Unlocks at affinity 5+
         active: false,
         cooldown: 0,
-        cooldown_max: 60,
+        cooldown_max: 120, // doubled to 2 seconds
         heal_amount: 1,
         sfx_trigger_sound: noone
     },
@@ -95,7 +95,7 @@ triggers = {
         unlocked: false, // Unlocks at affinity 8+
         active: false,
         cooldown: 0,
-        cooldown_max: 300,
+        cooldown_max: 600, // doubled to 10 seconds
         dr_bonus: 2,
         duration: 120,
         heal_amount: 2,
@@ -105,7 +105,7 @@ triggers = {
         unlocked: false, // Unlocks at affinity 10
         active: false,
         cooldown: 0,
-        cooldown_max: 2400, // 40 seconds
+        cooldown_max: 4800, // 80 seconds (doubled)
         duration: 90,
         dr_bonus: 5,
         enemy_threshold: 3,

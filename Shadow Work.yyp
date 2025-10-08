@@ -195,6 +195,7 @@
     {"id":{"name":"obj_rising_pillar","path":"objects/obj_rising_pillar/obj_rising_pillar.yy",},},
     {"id":{"name":"obj_room_transition","path":"objects/obj_room_transition/obj_room_transition.yy",},},
     {"id":{"name":"obj_round_hud","path":"objects/obj_round_hud/obj_round_hud.yy",},},
+    {"id":{"name":"obj_sandchampion","path":"objects/obj_sandchampion/obj_sandchampion.yy",},},
     {"id":{"name":"obj_sandsnake","path":"objects/obj_sandsnake/obj_sandsnake.yy",},},
     {"id":{"name":"obj_sfx_controller","path":"objects/obj_sfx_controller/obj_sfx_controller.yy",},},
     {"id":{"name":"obj_sfx_trigger","path":"objects/obj_sfx_trigger/obj_sfx_trigger.yy",},},

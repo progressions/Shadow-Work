@@ -278,6 +278,10 @@ function activate_slowmo(_duration_seconds) {
     if (!instance_exists(obj_game_controller)) return;
 
     with (obj_game_controller) {
+        if (slowmo_cooldown_timer > 0 || slowmo_active) {
+            return; // Slow-mo recently triggered; skip effect but allow trigger logic to proceed
+        }
+
         slowmo_active = true;
         slowmo_timer = _duration_seconds * 60; // Convert to frames at 60fps
         slowmo_recovery_timer = 15; // 0.25 seconds to recover to normal speed
@@ -286,5 +290,6 @@ function activate_slowmo(_duration_seconds) {
         // Immediately set game speed to slow-mo
         game_set_speed(slowmo_target_speed, gamespeed_fps);
         slowmo_current_speed = slowmo_target_speed;
+        slowmo_cooldown_timer = slowmo_cooldown_duration;
     }
 }

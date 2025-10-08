@@ -34,8 +34,17 @@ function player_state_idle() {
             // On collision, kill velocity
             for (var i = 0; i < array_length(_collided); i++) {
                 var _collision = _collided[i];
-                if (abs(_collision.nx) > 0.5) velocity_x = 0;
-                if (abs(_collision.ny) > 0.5) velocity_y = 0;
+                var _has_struct = is_struct(_collision);
+                var _has_nx = _has_struct && variable_struct_exists(_collision, "nx");
+                var _has_ny = _has_struct && variable_struct_exists(_collision, "ny");
+
+                if (_has_nx && abs(_collision.nx) > 0.5) velocity_x = 0;
+                if (_has_ny && abs(_collision.ny) > 0.5) velocity_y = 0;
+
+                if (!_has_struct || (!_has_nx && !_has_ny)) {
+                    velocity_x = 0;
+                    velocity_y = 0;
+                }
             }
         }
     }
