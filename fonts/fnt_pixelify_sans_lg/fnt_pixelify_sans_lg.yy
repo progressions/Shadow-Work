@@ -134,10 +134,7 @@
   "sdfSpread":8,
   "size":18.0,
   "styleName":"Regular",
-  "textureGroupId":{
-    "name":"Default",
-    "path":"texturegroups/Default",
-  },
+  "textureGroupId":null,
   "TTFName":"/Users/isaacpriestley/GameMakerProjects/Shadow Work/fonts/Font3/PixelifySans-VariableFont_wght.ttf",
   "usesSDF":true,
 }

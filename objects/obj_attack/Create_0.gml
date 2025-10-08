@@ -5,6 +5,7 @@ attack_category = AttackCategory.melee;
 
 // Track which enemies have been hit to prevent multi-hit on same enemy
 hit_enemies = ds_list_create();
+hit_breakables = ds_list_create();
 
 // Hit count limiting system (for multi-hit traits in future)
 max_hit_count = 1;        // Default: can only damage 1 enemy total

@@ -107,6 +107,36 @@ global.idle_bob_timer = 0;  // Global timer that everyone uses
 // Initialize companion system
 init_companion_global_data();
 
+// Environmental debris particle system (leaves/wood chunks)
+if (!variable_global_exists("debris_system")) {
+    global.debris_system = part_system_create();
+    part_system_depth(global.debris_system, -100);
+    part_system_automatic_update(global.debris_system, true);
+    part_system_automatic_draw(global.debris_system, true);
+
+    global.part_leaf = part_type_create();
+    part_type_sprite(global.part_leaf, spr_leaves, true, true, false);
+    part_type_size(global.part_leaf, 1, 1, 0, 0);
+    part_type_speed(global.part_leaf, 1, 3, -0.05, 0);
+    part_type_direction(global.part_leaf, 0, 360, 0, 0);
+    part_type_gravity(global.part_leaf, 0.15, 270);
+    part_type_orientation(global.part_leaf, 0, 360, 2, 0, 0);
+    part_type_life(global.part_leaf, 40, 80);
+    part_type_alpha2(global.part_leaf, 1, 0);
+
+    global.part_wood = undefined;
+    if (asset_get_index("spr_planks") != -1) {
+        global.part_wood = part_type_create();
+        part_type_sprite(global.part_wood, spr_planks, true, true, false);
+        part_type_size(global.part_wood, 1, 1, 0, 0);
+        part_type_speed(global.part_wood, 2, 4, -0.1, 0);
+        part_type_direction(global.part_wood, 0, 360, 0, 0);
+        part_type_gravity(global.part_wood, 0.2, 270);
+        part_type_life(global.part_wood, 30, 60);
+        part_type_alpha2(global.part_wood, 1, 0);
+    }
+}
+
 // Initialize VN system state
 global.vn_active = false;           // Is VN mode currently active?
 global.vn_chatterbox = undefined;   // Current Chatterbox instance

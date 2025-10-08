@@ -134,10 +134,7 @@
   "sdfSpread":8,
   "size":14.0,
   "styleName":"Regular",
-  "textureGroupId":{
-    "name":"Default",
-    "path":"texturegroups/Default",
-  },
+  "textureGroupId":null,
   "TTFName":"/Users/isaacpriestley/GameMakerProjects/Shadow Work/fonts/fnt_determination_large/determination.ttf",
   "usesSDF":true,
 }

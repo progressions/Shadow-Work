@@ -1,0 +1,25 @@
+{
+  "$GMSound":"",
+  "%Name":"snd_breakable",
+  "audioGroupId":{
+    "name":"audiogroup_sfx_world",
+    "path":"audiogroups/audiogroup_sfx_world",
+  },
+  "bitDepth":1,
+  "bitRate":128,
+  "compression":0,
+  "conversionMode":0,
+  "duration":0.45834467,
+  "name":"snd_breakable",
+  "parent":{
+    "name":"world",
+    "path":"folders/Sounds/sfx/world.yy",
+  },
+  "preload":false,
+  "resourceType":"GMSound",
+  "resourceVersion":"2.0",
+  "sampleRate":44100,
+  "soundFile":"snd_breakable.wav",
+  "type":0,
+  "volume":1.0,
+}

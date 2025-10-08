@@ -104,3 +104,9 @@ enum PartyState {
     retreating,   // Flee as a group
     patrolling    // Follow a defined path, engage when player detected
 }
+
+enum BreakableState {
+    idle,
+    breaking,
+    broken
+}
