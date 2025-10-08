@@ -217,7 +217,7 @@ function update_timed_traits() {
 
     var _traits_to_remove = [];
 	
-	show_debug_message("Timed traits " + string(timed_traits));
+	//show_debug_message("Timed traits " + string(timed_traits));
 
     // Update timers
     for (var i = 0; i < array_length(timed_traits); i++) {

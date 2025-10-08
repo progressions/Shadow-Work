@@ -21,7 +21,7 @@ if (flash_timer > 0) {
     image_blend = flash_color;
 } else {
     // Reset to normal color when flash expires
-    image_blend = c_white;
+    // image_blend = c_white;
 }
 
 // Tick trait-driven status effects (runs even when dead)
