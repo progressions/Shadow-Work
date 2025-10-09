@@ -20,10 +20,8 @@ image_speed = 0;
 break_sfx = undefined;
 break_sfx_volume = 1;
 
-break_particle_leaf_count = 0;
-break_particle_leaf_type = undefined;
-break_particle_wood_count = 0;
-break_particle_wood_type = undefined;
+break_particle_sprite = undefined;
+break_particle_count = 0;
 
 record_persistence = true;
 is_destroyed = false;
@@ -42,26 +40,20 @@ begin_break = function(_attack_instance) {
 		play_sfx(break_sfx, break_sfx_volume);
 	}
 
-	if (variable_global_exists("debris_system")) {
-		if (break_particle_leaf_count > 0) {
-			var _leaf_type = break_particle_leaf_type;
-			if (is_undefined(_leaf_type) && variable_global_exists("part_leaf")) {
-				_leaf_type = global.part_leaf;
-			}
-			if (!is_undefined(_leaf_type)) {
-				part_particles_create(global.debris_system, x, y, _leaf_type, break_particle_leaf_count);
-			}
-		}
+	if (variable_global_exists("debris_system") && break_particle_count > 0 && !is_undefined(break_particle_sprite)) {
+		// Create a temporary particle type from the sprite
+		var _particle_type = part_type_create();
+		part_type_sprite(_particle_type, break_particle_sprite, false, false, true);
+		part_type_speed(_particle_type, 1, 3, -0.1, 0);
+		part_type_direction(_particle_type, 0, 360, 0, 0);
+		part_type_gravity(_particle_type, 0.2, 270);
+		part_type_life(_particle_type, 30, 60);
+		part_type_alpha2(_particle_type, 1, 0);
 
-		if (break_particle_wood_count > 0) {
-			var _wood_type = break_particle_wood_type;
-			if (is_undefined(_wood_type) && variable_global_exists("part_wood")) {
-				_wood_type = global.part_wood;
-			}
-			if (!is_undefined(_wood_type)) {
-				part_particles_create(global.debris_system, x, y, _wood_type, break_particle_wood_count);
-			}
-		}
+		part_particles_create(global.debris_system, x, y, _particle_type, break_particle_count);
+
+		// Clean up temporary particle type
+		part_type_destroy(_particle_type);
 	}
 };
 
