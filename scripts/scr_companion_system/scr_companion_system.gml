@@ -290,6 +290,130 @@ function get_companion_multi_target_params() {
     return undefined; // No multi-target auras active
 }
 
+/// @function get_companion_enemy_slow(enemy_x, enemy_y)
+/// @description Get enemy speed slow multiplier from companion auras (e.g., Hola's slowing aura)
+/// @param {real} enemy_x Enemy x position
+/// @param {real} enemy_y Enemy y position
+/// @return {real} Speed multiplier (0.0-1.0, where 0.5 = 50% slow, 1.0 = normal speed)
+function get_companion_enemy_slow(enemy_x, enemy_y) {
+    var total_slow = 0;
+    var companions = get_active_companions();
+
+    for (var i = 0; i < array_length(companions); i++) {
+        var companion = companions[i];
+
+        // Get affinity multiplier for scaling aura values
+        var multiplier = get_affinity_aura_multiplier(companion.affinity);
+
+        // Check all auras for slowing effects
+        var _aura_names = variable_struct_get_names(companion.auras);
+        for (var j = 0; j < array_length(_aura_names); j++) {
+            var _aura = companion.auras[$ _aura_names[j]];
+
+            if (_aura.active && variable_struct_exists(_aura, "slow_percent")) {
+                // Check radius if defined (otherwise apply globally)
+                if (variable_struct_exists(_aura, "radius")) {
+                    var dist = point_distance(enemy_x, enemy_y, obj_player.x, obj_player.y);
+                    if (dist > _aura.radius) continue; // Outside radius, skip this aura
+                }
+
+                // Apply scaled slow percentage
+                total_slow += _aura.slow_percent * multiplier;
+            }
+        }
+    }
+
+    // Return speed multiplier (clamped to prevent negative or zero speed)
+    // total_slow of 0.5 = 50% slow = speed multiplier 0.5
+    return clamp(1.0 - total_slow, 0.1, 1.0);
+}
+
+/// @function get_companion_dash_cd_reduction()
+/// @description Get total dash cooldown reduction from companion auras and triggers
+/// @return {real} Cooldown reduction multiplier (additive, e.g., 0.2 = 20% faster recovery)
+function get_companion_dash_cd_reduction() {
+    var total_reduction = 0;
+    var companions = get_active_companions();
+
+    for (var i = 0; i < array_length(companions); i++) {
+        var companion = companions[i];
+
+        // Get affinity multiplier for scaling aura values
+        var multiplier = get_affinity_aura_multiplier(companion.affinity);
+
+        // Check all auras for dash cooldown reduction
+        var _aura_names = variable_struct_get_names(companion.auras);
+        for (var j = 0; j < array_length(_aura_names); j++) {
+            var _aura = companion.auras[$ _aura_names[j]];
+
+            if (_aura.active && variable_struct_exists(_aura, "dash_cd_reduction")) {
+                // Passive auras scale with affinity
+                total_reduction += _aura.dash_cd_reduction * multiplier;
+            }
+        }
+
+        // Also check triggers for active dash CD boosts (triggers don't scale with affinity)
+        var _trigger_names = variable_struct_get_names(companion.triggers);
+        for (var j = 0; j < array_length(_trigger_names); j++) {
+            var _trigger = companion.triggers[$ _trigger_names[j]];
+
+            if (_trigger.active && variable_struct_exists(_trigger, "dash_cd_boost")) {
+                // Check if there's a timer variable for this trigger
+                var timer_var = _trigger_names[j] + "_timer";
+                if (variable_instance_exists(companion, timer_var)) {
+                    if (companion[$ timer_var] > 0) {
+                        total_reduction += _trigger.dash_cd_boost;
+                    }
+                } else {
+                    // No timer check needed, trigger is just active
+                    total_reduction += _trigger.dash_cd_boost;
+                }
+            }
+        }
+    }
+
+    return total_reduction;
+}
+
+/// @function get_companion_deflection_bonus(companion_id)
+/// @description Get total projectile deflection bonus from companion triggers
+/// @param {string} companion_id Optional: specific companion to check (e.g., "hola"), or undefined for all
+/// @return {real} Deflection chance bonus (0.0-1.0, e.g., 0.25 = +25% deflection)
+function get_companion_deflection_bonus(companion_id = undefined) {
+    var total_deflection = 0;
+    var companions = get_active_companions();
+
+    for (var i = 0; i < array_length(companions); i++) {
+        var companion = companions[i];
+
+        // Filter by companion_id if specified
+        if (companion_id != undefined && companion.companion_id != companion_id) {
+            continue;
+        }
+
+        // Check for active deflection bonuses from triggers (e.g., Hola's Maelstrom)
+        var _trigger_names = variable_struct_get_names(companion.triggers);
+        for (var j = 0; j < array_length(_trigger_names); j++) {
+            var _trigger = companion.triggers[$ _trigger_names[j]];
+
+            if (_trigger.active && variable_struct_exists(_trigger, "deflect_bonus")) {
+                // Check for corresponding timer variable (e.g., maelstrom_deflect_timer)
+                var timer_var = _trigger_names[j] + "_deflect_timer";
+                if (variable_instance_exists(companion, timer_var)) {
+                    if (companion[$ timer_var] > 0) {
+                        total_deflection += _trigger.deflect_bonus;
+                    }
+                } else {
+                    // No timer, just check if trigger is active
+                    total_deflection += _trigger.deflect_bonus;
+                }
+            }
+        }
+    }
+
+    return total_deflection;
+}
+
 /// @function apply_companion_regeneration_auras(player_instance)
 /// @description Apply HP regeneration from companion auras
 /// @param {instance} player_instance The player to heal
