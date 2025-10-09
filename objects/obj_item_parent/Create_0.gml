@@ -45,7 +45,7 @@ function on_interact() {
 
     if (_added_to_inventory) {
         // Play pickup sound
-        play_sfx(snd_chest_open, 1, false);
+        play_sfx(snd_item_pickup, 1, false);
 
         show_debug_message("Picked up " + string(count) + " " + item_def.name);
 

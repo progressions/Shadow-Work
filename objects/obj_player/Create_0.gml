@@ -120,7 +120,7 @@ dash_timer = 0;
 dash_speed = 6;
 
 dash_cooldown = 0;
-dash_cooldown_time = 45;
+dash_cooldown_time = 75;
 
 // Dash attack system
 dash_attack_window = 0;
