@@ -152,6 +152,11 @@ if (_hit_player != noone) {
                         }
                     }
                 }
+
+                // Apply stun/stagger from enemy ranged attack
+                if (instance_exists(other.creator) && variable_instance_exists(other.creator, "ranged_attack")) {
+                    process_attack_cc_effects(other.creator, self, other.creator.ranged_attack);
+                }
             }
 
             // Check if player died

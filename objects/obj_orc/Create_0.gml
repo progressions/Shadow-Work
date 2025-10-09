@@ -5,9 +5,9 @@ event_inherited();
 attack_damage = 12;
 attack_speed = 0.5;
 attack_range = 25;
-hp = 18;
+hp = 28;
 hp_total = hp;
-move_speed = 0.5;
+move_speed = 0.65;
 melee_damage_resistance = 2;
 ranged_damage_resistance = 0;
 

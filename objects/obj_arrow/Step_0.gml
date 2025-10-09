@@ -69,6 +69,25 @@ if (_hit_enemy != noone) {
             // Spawn damage number
             spawn_damage_number(x, y - 16, _final_damage, other.__proj_damage_type, self);
 
+            // Apply stun/stagger from weapon if enemy didn't die and damage was dealt
+            if (hp > 0 && _final_damage > 0) {
+                var attacker = other.creator;
+                if (attacker != noone && instance_exists(attacker)) {
+                    // Get weapon stats from attacker
+                    var _weapon_stats = undefined;
+                    if (attacker.equipped.right_hand != undefined) {
+                        _weapon_stats = attacker.equipped.right_hand.definition.stats;
+                    } else if (attacker.equipped.left_hand != undefined) {
+                        _weapon_stats = attacker.equipped.left_hand.definition.stats;
+                    }
+
+                    // Process stun/stagger effects
+                    if (_weapon_stats != undefined) {
+                        process_attack_cc_effects(attacker, self, _weapon_stats);
+                    }
+                }
+            }
+
             // Check if enemy died and award XP
             if (hp <= 0) {
                 var attacker = other.creator;

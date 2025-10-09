@@ -117,6 +117,25 @@ if (state != EnemyState.dead) {
 
 		 show_debug_message("Enemy hit! HP: " + string(old_hp) + " -> " + string(hp));
 
+		 // Apply stun/stagger from weapon if enemy didn't die and damage was dealt
+		 if (hp > 0 && _final_damage > 0 && _resistance_multiplier > 0) {
+		     var attacker = other.creator;
+		     if (attacker != noone && instance_exists(attacker)) {
+		         // Get weapon stats from attacker
+		         var _weapon_stats = undefined;
+		         if (attacker.equipped.right_hand != undefined) {
+		             _weapon_stats = attacker.equipped.right_hand.definition.stats;
+		         } else if (attacker.equipped.left_hand != undefined) {
+		             _weapon_stats = attacker.equipped.left_hand.definition.stats;
+		         }
+
+		         // Process stun/stagger effects
+		         if (_weapon_stats != undefined) {
+		             process_attack_cc_effects(attacker, self, _weapon_stats);
+		         }
+		     }
+		 }
+
 		 // Check if enemy died and award XP
 		 if (hp <= 0) {
 		     var attacker = other.creator;

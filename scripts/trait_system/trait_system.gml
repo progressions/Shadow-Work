@@ -343,11 +343,11 @@ function get_defense_modifier() {
 
 /// @function get_damage_modifier_for_type(damage_type)
 /// @description Calculate final damage modifier for a damage type with opposite trait cancellation
-/// @param {Real} damage_type The DamageType enum value
+/// @param {Real|String} damage_type The DamageType enum value or string type name (e.g., "stun", "stagger")
 /// @return {Real} Final damage multiplier (0.0 = immune, 1.0 = normal, etc.)
 function get_damage_modifier_for_type(_damage_type) {
-    // Convert DamageType enum to string
-    var _type_str = damage_type_to_string(_damage_type);
+    // Convert DamageType enum to string, or use string directly if already a string
+    var _type_str = is_string(_damage_type) ? _damage_type : damage_type_to_string(_damage_type);
 
     // Build trait names for this damage type
     var _immunity_trait = _type_str + "_immunity";

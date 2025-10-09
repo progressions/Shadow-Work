@@ -4,3 +4,6 @@
 if (path_exists(path)) {
     path_delete(path);
 }
+
+// Clean up stun particles
+destroy_stun_particles(self);

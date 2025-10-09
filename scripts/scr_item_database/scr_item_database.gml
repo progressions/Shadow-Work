@@ -86,49 +86,49 @@ global.item_database = {
     // Row 1 - Bladed weapons (frames 0-5)
     rusty_dagger: new create_item_definition(
         0, "rusty_dagger", "Rusty Dagger", ItemType.weapon, EquipSlot.either_hand,
-        {damage: 2, attack_speed: 1.8, range: 30, handedness: WeaponHandedness.one_handed, damage_type: DamageType.physical, knockback_force: 2}
+        {damage: 2, attack_speed: 1.8, range: 30, handedness: WeaponHandedness.one_handed, damage_type: DamageType.physical, knockback_force: 2, chance_to_stun: 0.03, chance_to_stagger: 0.08, stun_duration: 1.0, stagger_duration: 0.8}
     ),
     short_sword: new create_item_definition(
         1, "short_sword", "Short Sword", ItemType.weapon, EquipSlot.either_hand,
-        {damage: 3, attack_speed: 1.6, range: 38, handedness: WeaponHandedness.one_handed, damage_type: DamageType.physical, knockback_force: 3}
+        {damage: 3, attack_speed: 1.6, range: 38, handedness: WeaponHandedness.one_handed, damage_type: DamageType.physical, knockback_force: 3, chance_to_stun: 0.05, chance_to_stagger: 0.10, stun_duration: 1.5, stagger_duration: 1.0}
     ),
     long_sword: new create_item_definition(
         2, "long_sword", "Long Sword", ItemType.weapon, EquipSlot.either_hand,
-        {damage: 4, attack_speed: 1.4, range: 46, handedness: WeaponHandedness.versatile, two_handed_damage: 5, two_handed_range: 40, damage_type: DamageType.physical, knockback_force: 4}
+        {damage: 4, attack_speed: 1.4, range: 46, handedness: WeaponHandedness.versatile, two_handed_damage: 5, two_handed_range: 40, damage_type: DamageType.physical, knockback_force: 4, chance_to_stun: 0.07, chance_to_stagger: 0.12, stun_duration: 1.8, stagger_duration: 1.2}
     ),
     master_sword: new create_item_definition(
         3, "master_sword", "Master Sword", ItemType.weapon, EquipSlot.either_hand,
-        {damage: 6, attack_speed: 1.5, range: 48, handedness: WeaponHandedness.versatile, two_handed_damage: 7, two_handed_range: 42, magic_power: 5, wielder_effects: [{trait: "empowered"}], damage_type: DamageType.holy, knockback_force: 6}
+        {damage: 6, attack_speed: 1.5, range: 48, handedness: WeaponHandedness.versatile, two_handed_damage: 7, two_handed_range: 42, magic_power: 5, wielder_effects: [{trait: "empowered"}], damage_type: DamageType.holy, knockback_force: 6, chance_to_stun: 0.08, chance_to_stagger: 0.13, stun_duration: 2.0, stagger_duration: 1.3}
     ),
     greatsword: new create_item_definition(
         4, "greatsword", "Greatsword", ItemType.weapon, EquipSlot.right_hand,
-        {damage: 8, attack_speed: 0.9, range: 55, handedness: WeaponHandedness.two_handed, large_sprite: true, damage_type: DamageType.physical, knockback_force: 7}
+        {damage: 8, attack_speed: 0.9, range: 55, handedness: WeaponHandedness.two_handed, large_sprite: true, damage_type: DamageType.physical, knockback_force: 7, chance_to_stun: 0.10, chance_to_stagger: 0.15, stun_duration: 2.0, stagger_duration: 1.5}
     ),
     spear: new create_item_definition(
         5, "spear", "Spear", ItemType.weapon, EquipSlot.right_hand,
-        {damage: 4, attack_speed: 1.1, range: 60, handedness: WeaponHandedness.versatile, two_handed_damage: 5, two_handed_range: 55, damage_type: DamageType.physical, knockback_force: 6}
+        {damage: 4, attack_speed: 1.1, range: 60, handedness: WeaponHandedness.versatile, two_handed_damage: 5, two_handed_range: 55, damage_type: DamageType.physical, knockback_force: 6, chance_to_stun: 0.06, chance_to_stagger: 0.14, stun_duration: 1.5, stagger_duration: 1.3}
     ),
 
     // Row 2 - Axe and bows (frames 6-11)
     axe: new create_item_definition(
         6, "axe", "Axe", ItemType.weapon, EquipSlot.either_hand,
-        {damage: 5, attack_speed: 0.8, range: 30, handedness: WeaponHandedness.versatile, two_handed_damage: 6, damage_type: DamageType.physical, knockback_force: 6}
+        {damage: 5, attack_speed: 0.8, range: 30, handedness: WeaponHandedness.versatile, two_handed_damage: 6, damage_type: DamageType.physical, knockback_force: 6, chance_to_stun: 0.10, chance_to_stagger: 0.15, stun_duration: 2.0, stagger_duration: 1.5}
     ),
     wooden_bow: new create_item_definition(
         7, "wooden_bow", "Wooden Bow", ItemType.weapon, EquipSlot.right_hand,
-        {damage: 2, attack_speed: 1.2, range: 120, handedness: WeaponHandedness.two_handed, requires_ammo: "arrows", large_sprite: true, damage_type: DamageType.physical, range_profile: RangeProfile.wooden_bow}
+        {damage: 2, attack_speed: 1.2, range: 120, handedness: WeaponHandedness.two_handed, requires_ammo: "arrows", large_sprite: true, damage_type: DamageType.physical, range_profile: RangeProfile.wooden_bow, chance_to_stun: 0.02, chance_to_stagger: 0.05, stun_duration: 1.0, stagger_duration: 0.8}
     ),
     longbow: new create_item_definition(
         8, "longbow", "Longbow", ItemType.weapon, EquipSlot.right_hand,
-        {damage: 5, attack_speed: 1.0, range: 150, handedness: WeaponHandedness.two_handed, requires_ammo: "arrows", large_sprite: true, damage_type: DamageType.physical, range_profile: RangeProfile.longbow}
+        {damage: 5, attack_speed: 1.0, range: 150, handedness: WeaponHandedness.two_handed, requires_ammo: "arrows", large_sprite: true, damage_type: DamageType.physical, range_profile: RangeProfile.longbow, chance_to_stun: 0.03, chance_to_stagger: 0.06, stun_duration: 1.2, stagger_duration: 0.9}
     ),
     crossbow: new create_item_definition(
         9, "crossbow", "Crossbow", ItemType.weapon, EquipSlot.right_hand,
-        {damage: 3, attack_speed: 0.6, range: 140, handedness: WeaponHandedness.one_handed, requires_ammo: "arrows", large_sprite: true, damage_type: DamageType.physical, range_profile: RangeProfile.crossbow}
+        {damage: 3, attack_speed: 0.6, range: 140, handedness: WeaponHandedness.one_handed, requires_ammo: "arrows", large_sprite: true, damage_type: DamageType.physical, range_profile: RangeProfile.crossbow, chance_to_stun: 0.04, chance_to_stagger: 0.08, stun_duration: 1.3, stagger_duration: 1.0}
     ),
     heavy_crossbow: new create_item_definition(
         10, "heavy_crossbow", "Heavy Crossbow", ItemType.weapon, EquipSlot.right_hand,
-        {damage: 6, attack_speed: 0.4, range: 160, armor_penetration: 0.3, handedness: WeaponHandedness.two_handed, requires_ammo: "arrows", large_sprite: true, damage_type: DamageType.physical, range_profile: RangeProfile.heavy_crossbow}
+        {damage: 6, attack_speed: 0.4, range: 160, armor_penetration: 0.3, handedness: WeaponHandedness.two_handed, requires_ammo: "arrows", large_sprite: true, damage_type: DamageType.physical, range_profile: RangeProfile.heavy_crossbow, chance_to_stun: 0.05, chance_to_stagger: 0.10, stun_duration: 1.5, stagger_duration: 1.2}
     ),
     torch: new create_item_definition(
         11, "torch", "Torch", ItemType.tool, EquipSlot.left_hand,

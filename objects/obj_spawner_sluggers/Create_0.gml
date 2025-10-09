@@ -14,8 +14,9 @@ spawn_period = 90;                // 1.5 seconds between spawns (at 60 FPS)
 
 // Weighted spawn table - more burglars than orcs
 spawn_table = [
-	{enemy_object: obj_slugger, weight: 80},
-    {enemy_object: obj_water_bouncer, weight: 30}
+	{enemy_object: obj_slugger, weight: 20},
+    {enemy_object: obj_water_bouncer, weight: 30},
+	{enemy_object: obj_orc, weight: 90}
 ];
 
 // Proximity activation - ambush triggers when player gets close

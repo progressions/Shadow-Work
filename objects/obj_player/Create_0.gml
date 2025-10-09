@@ -38,6 +38,19 @@ crit_chance = 0.1;      // 10% chance to crit
 crit_multiplier = 1.75; // 1.75x damage on crit
 last_attack_was_crit = false; // Set by get_total_damage(), read by obj_attack
 
+// Stun/Stagger system (crowd control)
+is_stunned = false;      // Can't attack or take actions
+is_staggered = false;    // Can't move
+stun_timer = 0;          // Countdown in frames
+stagger_timer = 0;       // Countdown in frames
+stun_resistance = 0;     // 0.0 to 1.0 (can be modified by traits)
+stagger_resistance = 0;  // 0.0 to 1.0 (can be modified by traits)
+
+// Stun particle system
+stun_particle_system = -1;
+stun_particle_type = -1;
+stun_particle_emitter = -1;
+
 #endregion Stats
 
 move_dir = "right";

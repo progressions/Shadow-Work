@@ -2,6 +2,14 @@
 
 if (global.game_paused) exit;
 
+// Update stun/stagger timers
+update_stun_stagger_timers(self);
+
+// Update stun particle position if stunned
+if (is_stunned) {
+    update_stun_particles(self);
+}
+
 // Make pillars slightly behind player at same position
 depth = -bbox_bottom;
 
@@ -207,14 +215,14 @@ if (state != PlayerState.dead) {
     #endregion Companion System
 }
 
-// Apply status effects to nearest enemy
+// DEBUG: Stun nearest enemy (7 key)
 if (keyboard_check_pressed(ord("7"))) {
     var nearest_enemy = instance_nearest(x, y, obj_enemy_parent);
-    if (nearest_enemy != noone && point_distance(x, y, nearest_enemy.x, nearest_enemy.y) < 50) {
-        with (nearest_enemy) {
-            apply_status_effect("burning");
-        }
-        show_debug_message("Applied burning to enemy");
+    if (nearest_enemy != noone && point_distance(x, y, nearest_enemy.x, nearest_enemy.y) < 200) {
+        apply_stun(nearest_enemy, 3.0, self); // 3 second stun
+        show_debug_message("Applied 3 second stun to enemy at distance: " + string(point_distance(x, y, nearest_enemy.x, nearest_enemy.y)));
+    } else {
+        show_debug_message("No enemy within 200 pixels to stun");
     }
 }
 

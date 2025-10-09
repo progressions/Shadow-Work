@@ -14,6 +14,14 @@ if (variable_instance_exists(self, "saved_path_speed") && saved_path_speed != 0)
     saved_path_speed = 0;
 }
 
+// Update stun/stagger timers
+update_stun_stagger_timers(self);
+
+// Update stun particle position if stunned
+if (is_stunned) {
+    update_stun_particles(self);
+}
+
 // --- Flash Effect System ---
 // Handle flash countdown and apply image_blend
 if (flash_timer > 0) {
@@ -147,32 +155,71 @@ if ((state == EnemyState.targeting || state == EnemyState.ranged_attacking) && i
     }
 }
 
-// Dispatch to state-specific handlers
-switch (state) {
-    case EnemyState.targeting:
-        enemy_state_targeting();
-        break;
+// Stun/Stagger restrictions
+// If staggered, stop all movement
+if (is_staggered) {
+    if (path_exists(path)) {
+        path_end();
+    }
+    path_speed = 0;
+}
 
-    case EnemyState.attacking:
-        enemy_state_attacking();
-        break;
+// If fully immobilized (stunned + staggered), skip state processing
+if (is_stunned && is_staggered) {
+    // Just do animation update, no state logic
+    enemy_state_idle();
+} else {
+    // Dispatch to state-specific handlers
+    switch (state) {
+        case EnemyState.targeting:
+            // If staggered, can't move to target
+            if (!is_staggered) {
+                enemy_state_targeting();
+            } else {
+                enemy_state_idle();
+            }
+            break;
 
-    case EnemyState.ranged_attacking:
-        enemy_state_ranged_attacking();
-        break;
+        case EnemyState.attacking:
+            // If stunned, can't attack
+            if (!is_stunned) {
+                enemy_state_attacking();
+            } else {
+                enemy_state_idle();
+            }
+            break;
 
-    case EnemyState.wander:
-        enemy_state_wander();
-        break;
+        case EnemyState.ranged_attacking:
+            // If stunned, can't attack (but ranged can move while attacking if not staggered)
+            if (!is_stunned) {
+                enemy_state_ranged_attacking();
+            } else {
+                enemy_state_idle();
+            }
+            break;
 
-    case EnemyState.idle:
-        enemy_state_idle();
-        break;
+        case EnemyState.wander:
+            // If staggered, can't wander
+            if (!is_staggered) {
+                enemy_state_wander();
+            } else {
+                enemy_state_idle();
+            }
+            break;
 
-    default:
-        state = EnemyState.targeting;
-        enemy_state_targeting();
-        break;
+        case EnemyState.idle:
+            enemy_state_idle();
+            break;
+
+        default:
+            state = EnemyState.targeting;
+            if (!is_staggered) {
+                enemy_state_targeting();
+            } else {
+                enemy_state_idle();
+            }
+            break;
+    }
 }
 
 // Movement delta after state logic (supports path-based motion)

@@ -214,5 +214,50 @@ global.trait_database = {
         defense_modifier: 0.75, // -25% damage reduction per stack
         opposite_trait: "defense_resistance",
         max_stacks: 5
+    },
+
+    // Crowd control resistance traits
+    stun_immunity: {
+        name: "Stun Immunity",
+        description: "Complete immunity to stun effects",
+        damage_modifier: 0.0, // Treated as immunity
+        opposite_trait: "stun_vulnerability",
+        max_stacks: 5
+    },
+    stun_resistance: {
+        name: "Stun Resistance",
+        description: "Reduces stun chance and duration",
+        damage_modifier: 0.75, // 25% reduction per stack
+        opposite_trait: "stun_vulnerability",
+        max_stacks: 5
+    },
+    stun_vulnerability: {
+        name: "Stun Vulnerability",
+        description: "Increases stun chance and duration",
+        damage_modifier: 1.5, // 50% increase per stack
+        opposite_trait: "stun_resistance",
+        max_stacks: 5
+    },
+
+    stagger_immunity: {
+        name: "Stagger Immunity",
+        description: "Complete immunity to stagger effects",
+        damage_modifier: 0.0, // Treated as immunity
+        opposite_trait: "stagger_vulnerability",
+        max_stacks: 5
+    },
+    stagger_resistance: {
+        name: "Stagger Resistance",
+        description: "Reduces stagger chance and duration",
+        damage_modifier: 0.75, // 25% reduction per stack
+        opposite_trait: "stagger_vulnerability",
+        max_stacks: 5
+    },
+    stagger_vulnerability: {
+        name: "Stagger Vulnerability",
+        description: "Increases stagger chance and duration",
+        damage_modifier: 1.5, // 50% increase per stack
+        opposite_trait: "stagger_resistance",
+        max_stacks: 5
     }
 };

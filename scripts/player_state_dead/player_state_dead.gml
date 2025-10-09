@@ -6,6 +6,9 @@ function player_state_dead(){
     if (!variable_instance_exists(self, "death_anim_complete")) {
         death_anim_complete = false;
         death_anim_timer = 0;
+
+        // Clean up stun particles immediately on death
+        destroy_stun_particles(self);
     }
 
     if (!death_anim_complete) {

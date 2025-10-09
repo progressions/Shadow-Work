@@ -16,6 +16,12 @@ function player_state_attacking() {
 }
 
 function player_handle_attack_input() {
+    // Can't attack when stunned
+    if (is_stunned) {
+        can_attack = false;
+        return;
+    }
+
     if (attack_cooldown > 0) {
         attack_cooldown--;
         can_attack = false;

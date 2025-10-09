@@ -63,6 +63,26 @@ ranged_projectile_object = obj_enemy_arrow; // Default projectile for ranged ene
 melee_damage_resistance = 0;
 ranged_damage_resistance = 0;
 
+// Attack structs for melee and ranged (includes stun/stagger properties)
+// Child enemies can override these to customize stun/stagger chances per enemy type
+melee_attack = {
+    damage: attack_damage,
+    damage_type: attack_damage_type,
+    chance_to_stun: 0.05,       // 5% default stun chance
+    chance_to_stagger: 0.10,    // 10% default stagger chance
+    stun_duration: 1.5,         // 1.5 seconds default
+    stagger_duration: 1.0       // 1.0 seconds default
+};
+
+ranged_attack = {
+    damage: ranged_damage,
+    damage_type: ranged_damage_type,
+    chance_to_stun: 0.03,       // 3% default (lower for ranged)
+    chance_to_stagger: 0.08,    // 8% default (lower for ranged)
+    stun_duration: 1.2,         // 1.2 seconds default
+    stagger_duration: 0.8       // 0.8 seconds default
+};
+
 // Dual-mode combat system (context-based attack switching)
 enable_dual_mode = false;              // When true, enemy can switch between melee and ranged based on distance
 preferred_attack_mode = "none";        // Options: "none" (distance-based), "melee" (bias melee), "ranged" (bias ranged, retreat when close)
@@ -77,6 +97,19 @@ formation_role = undefined;            // Formation role: "rear", "front", "supp
 
 // Status effects system
 init_status_effects();
+
+// Stun/Stagger system (crowd control)
+is_stunned = false;      // Can't attack or take actions
+is_staggered = false;    // Can't move
+stun_timer = 0;          // Countdown in frames
+stagger_timer = 0;       // Countdown in frames
+stun_resistance = 0;     // 0.0 to 1.0 (can be modified by traits)
+stagger_resistance = 0;  // 0.0 to 1.0 (can be modified by traits)
+
+// Stun particle system
+stun_particle_system = -1;
+stun_particle_type = -1;
+stun_particle_emitter = -1;
 
 // Trait system v2.0 - Stacking traits
 tags = []; // Thematic descriptors (fireborne, venomous, etc.) - set by child enemies
