@@ -224,11 +224,6 @@ if (keyboard_check_pressed(ord("9"))) {
     show_debug_message("Added 10 arrows via debug key");
 }
 
-// Debug key to run focus state helper tests
-if (keyboard_check_pressed(ord("F"))) {
-    focus_state_run_tests();
-}
-
 // Debug keys for testing trait system v2.0
 if (keyboard_check_pressed(ord("T"))) {
     // Add fire_resistance trait (3 stacks)
