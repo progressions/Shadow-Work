@@ -49,6 +49,41 @@ if (_tilemap_col != -1) {
     }
 }
 
+// Check for chance-based deflection before collision
+if (instance_exists(obj_player)) {
+    var companions = get_active_companions();
+    for (var i = 0; i < array_length(companions); i++) {
+        var companion = companions[i];
+
+        if (companion.companion_id == "hola") {
+            // Base deflection from wind deflection aura
+            var base_deflect_chance = 0;
+            if (variable_struct_exists(companion.auras, "wind_deflection") && companion.auras.wind_deflection.active) {
+                var dist_to_player = point_distance(x, y, obj_player.x, obj_player.y);
+                if (dist_to_player <= companion.auras.wind_deflection.radius) {
+                    base_deflect_chance = companion.auras.wind_deflection.deflect_chance;
+
+                    // Scale by affinity
+                    var multiplier = get_affinity_aura_multiplier(companion.affinity);
+                    base_deflect_chance *= multiplier;
+                }
+            }
+
+            // Add maelstrom deflection bonus (from trigger)
+            var deflect_bonus = get_companion_deflection_bonus("hola");
+            var total_deflect_chance = base_deflect_chance + deflect_bonus;
+
+            // Roll for deflection
+            if (total_deflect_chance > 0 && random(1) < total_deflect_chance) {
+                // Arrow deflected - destroy it
+                play_sfx(snd_dash, 0.6, false); // Using dash whoosh sound for deflection
+                instance_destroy();
+                exit;
+            }
+        }
+    }
+}
+
 // Check for collision with player
 var _hit_player = instance_place(x, y, obj_player);
 if (_hit_player != noone) {
