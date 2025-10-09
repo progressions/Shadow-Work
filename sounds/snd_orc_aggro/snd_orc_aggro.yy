@@ -12,8 +12,8 @@
   "duration":1.3392744,
   "name":"snd_orc_aggro",
   "parent":{
-    "name":"world",
-    "path":"folders/Sounds/sfx/world.yy",
+    "name":"enemies",
+    "path":"folders/Sounds/sfx/world/enemies.yy",
   },
   "preload":false,
   "resourceType":"GMSound",

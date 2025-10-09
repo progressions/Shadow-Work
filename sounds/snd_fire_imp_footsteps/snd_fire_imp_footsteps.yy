@@ -12,8 +12,8 @@
   "duration":0.7544671,
   "name":"snd_fire_imp_footsteps",
   "parent":{
-    "name":"world",
-    "path":"folders/Sounds/sfx/world.yy",
+    "name":"enemies",
+    "path":"folders/Sounds/sfx/world/enemies.yy",
   },
   "preload":false,
   "resourceType":"GMSound",

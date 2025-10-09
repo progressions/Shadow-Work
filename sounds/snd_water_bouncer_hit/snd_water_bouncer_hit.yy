@@ -1,0 +1,25 @@
+{
+  "$GMSound":"",
+  "%Name":"snd_water_bouncer_hit",
+  "audioGroupId":{
+    "name":"audiogroup_default",
+    "path":"audiogroups/audiogroup_default",
+  },
+  "bitDepth":1,
+  "bitRate":128,
+  "compression":0,
+  "conversionMode":0,
+  "duration":4.306576,
+  "name":"snd_water_bouncer_hit",
+  "parent":{
+    "name":"enemies",
+    "path":"folders/Sounds/sfx/world/enemies.yy",
+  },
+  "preload":false,
+  "resourceType":"GMSound",
+  "resourceVersion":"2.0",
+  "sampleRate":44100,
+  "soundFile":"snd_water_bouncer_hit.wav",
+  "type":0,
+  "volume":0.66,
+}

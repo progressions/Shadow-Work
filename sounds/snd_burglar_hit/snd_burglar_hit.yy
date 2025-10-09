@@ -12,8 +12,8 @@
   "duration":0.23553288,
   "name":"snd_burglar_hit",
   "parent":{
-    "name":"world",
-    "path":"folders/Sounds/sfx/world.yy",
+    "name":"enemies",
+    "path":"folders/Sounds/sfx/world/enemies.yy",
   },
   "preload":false,
   "resourceType":"GMSound",

@@ -12,8 +12,8 @@
   "duration":0.98213154,
   "name":"snd_orc_attack",
   "parent":{
-    "name":"world",
-    "path":"folders/Sounds/sfx/world.yy",
+    "name":"enemies",
+    "path":"folders/Sounds/sfx/world/enemies.yy",
   },
   "preload":false,
   "resourceType":"GMSound",
