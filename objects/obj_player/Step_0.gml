@@ -251,13 +251,11 @@ if (keyboard_check_pressed(ord("U"))) {
     show_debug_message("Cleared all temporary traits from player");
 }
 
-if (keyboard_check_pressed(ord("I"))) {
-    // Add fireborne tag (grants fire immunity)
-    if (!array_contains(tags, "fireborne")) {
-        array_push(tags, "fireborne");
-        apply_tag_traits();
-        show_debug_message("Added fireborne tag to player (grants fire_immunity)");
-    }
+if (keyboard_check_pressed(ord("P"))) {
+    // Clear all tags and permanent traits
+    tags = [];
+    permanent_traits = {};
+    show_debug_message("Cleared all tags and permanent traits from player");
 }
 
 if (keyboard_check_pressed(ord("O"))) {

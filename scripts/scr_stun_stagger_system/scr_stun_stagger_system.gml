@@ -21,27 +21,36 @@ function create_stun_particles(target) {
     // Create particle type
     var _pt = part_type_create();
     part_type_sprite(_pt, spr_stars, true, false, false);
-    part_type_size(_pt, 0.8, 1.2, 0, 0);
-    part_type_alpha3(_pt, 0.8, 1, 0);
-    part_type_life(_pt, 30, 50); // Particles last 0.5-0.8 seconds
-    part_type_speed(_pt, 0.3, 0.6, -0.01, 0);
-    part_type_direction(_pt, 60, 120, 0, 5); // Upward and slightly outward
-    part_type_gravity(_pt, 0.01, 270); // Slight downward drift
+    part_type_size(_pt, 0.9, 1.1, 0, 0);
+    part_type_alpha2(_pt, 1.0, 0.9); // Stay fully visible, slight fade at very end
+    part_type_life(_pt, 9999, 9999); // Very long lifetime - destroyed manually when stun ends
+    part_type_speed(_pt, 0, 0, 0, 0); // No movement - stay in place
+    part_type_direction(_pt, 0, 360, 0, 0); // Direction doesn't matter since speed is 0
+    part_type_gravity(_pt, 0, 270); // No gravity
+
+    // Add gentle floating animation
+    part_type_orientation(_pt, 0, 360, 0.5, 0, false); // Slow rotation
 
     // Create emitter above target's head
     var _em = part_emitter_create(_ps);
     var _head_y = target.y - target.sprite_height * 0.75; // Above head
-    part_emitter_region(_ps, _em, target.x - 4, target.x + 4, _head_y - 4, _head_y + 4, ps_shape_ellipse, ps_distr_gaussian);
-    part_emitter_stream(_ps, _em, _pt, -40); // Emit 1 star every 40 frames (~1.5 per second)
+    part_emitter_region(_ps, _em, target.x - 8, target.x + 8, _head_y - 8, _head_y + 8, ps_shape_ellipse, ps_distr_gaussian);
+
+    // Emit 3-5 stars in a burst (one-time emission)
+    part_emitter_burst(_ps, _em, _pt, irandom_range(3, 5));
 
     // Store in target instance
     target.stun_particle_system = _ps;
     target.stun_particle_type = _pt;
     target.stun_particle_emitter = _em;
+
+    // Initialize position tracking for movement detection
+    target.stun_particle_last_x = target.x;
+    target.stun_particle_last_y = target.y;
 }
 
 /// @function update_stun_particles(target)
-/// @description Update particle emitter position to follow target
+/// @description Update particle system position to follow target
 /// @param {Id.Instance} target - The instance with stun particles
 function update_stun_particles(target) {
     if (!instance_exists(target)) return;
@@ -58,11 +67,22 @@ function update_stun_particles(target) {
         return;
     }
 
-    // Update emitter position to follow target
-    var _head_y = target.y - target.sprite_height * 0.75;
-    part_emitter_region(target.stun_particle_system, target.stun_particle_emitter,
-                       target.x - 4, target.x + 4, _head_y - 4, _head_y + 4,
-                       ps_shape_ellipse, ps_distr_gaussian);
+    // Safety check: make sure position tracking exists
+    if (!variable_instance_exists(target, "stun_particle_last_x") ||
+        !variable_instance_exists(target, "stun_particle_last_y")) {
+        target.stun_particle_last_x = target.x;
+        target.stun_particle_last_y = target.y;
+        return;
+    }
+
+    // Check if character has moved significantly (more than 2 pixels)
+    var _moved = point_distance(target.x, target.y, target.stun_particle_last_x, target.stun_particle_last_y) > 2;
+
+    if (_moved) {
+        // Recreate particles at new position
+        destroy_stun_particles(target);
+        create_stun_particles(target);
+    }
 }
 
 /// @function destroy_stun_particles(target)
@@ -96,6 +116,12 @@ function destroy_stun_particles(target) {
         target.stun_particle_system = -1;
         target.stun_particle_type = -1;
         target.stun_particle_emitter = -1;
+    }
+
+    // Clean up position tracking variables
+    if (variable_instance_exists(target, "stun_particle_last_x")) {
+        target.stun_particle_last_x = undefined;
+        target.stun_particle_last_y = undefined;
     }
 }
 
@@ -189,6 +215,14 @@ function clear_stun(target) {
     target.is_stunned = false;
     target.stun_timer = 0;
 
+    // Reset flash color/timer to clear yellow tint
+    if (variable_instance_exists(target, "flash_timer")) {
+        target.flash_timer = 0;
+    }
+    if (variable_instance_exists(target, "image_blend")) {
+        target.image_blend = c_white;
+    }
+
     // Destroy stun particles
     destroy_stun_particles(target);
 }
@@ -201,6 +235,14 @@ function clear_stagger(target) {
 
     target.is_staggered = false;
     target.stagger_timer = 0;
+
+    // Reset flash color/timer to clear orange tint
+    if (variable_instance_exists(target, "flash_timer")) {
+        target.flash_timer = 0;
+    }
+    if (variable_instance_exists(target, "image_blend")) {
+        target.image_blend = c_white;
+    }
 }
 
 /// @function clear_all_cc(target)
