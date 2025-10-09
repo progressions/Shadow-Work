@@ -22,7 +22,8 @@ function enemy_state_targeting() {
 
         var _speed_modifier = get_status_effect_modifier("speed");
         var _terrain_speed = enemy_get_terrain_speed_modifier();
-        var _move_speed = move_speed * _speed_modifier * _terrain_speed * 2.0; // Move faster when unsticking
+        var _companion_slow = get_companion_enemy_slow(x, y);
+        var _move_speed = move_speed * _speed_modifier * _terrain_speed * _companion_slow * 2.0; // Move faster when unsticking
 
         if (_move_speed <= 0) {
             _move_speed = max(move_speed, 0.1);
@@ -201,7 +202,8 @@ function enemy_state_targeting() {
             // Path failed - move directly toward player using simple movement
             var _speed_modifier = get_status_effect_modifier("speed");
             var _terrain_speed = enemy_get_terrain_speed_modifier();
-            var _final_speed = move_speed * _speed_modifier * _terrain_speed;
+            var _companion_slow = get_companion_enemy_slow(x, y);
+            var _final_speed = move_speed * _speed_modifier * _terrain_speed * _companion_slow;
 
             if (_final_speed <= 0) {
                 _final_speed = max(move_speed, 0.1);

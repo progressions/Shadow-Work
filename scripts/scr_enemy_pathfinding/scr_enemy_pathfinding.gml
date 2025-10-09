@@ -207,7 +207,8 @@ function enemy_update_path(target_x, target_y) {
 
         var _speed_modifier = get_status_effect_modifier("speed");
         var _terrain_speed = enemy_get_terrain_speed_modifier();
-        var _final_speed = move_speed * _speed_modifier * _terrain_speed;
+        var _companion_slow = get_companion_enemy_slow(x, y);
+        var _final_speed = move_speed * _speed_modifier * _terrain_speed * _companion_slow;
 
         if (_final_speed <= 0) {
             _final_speed = max(move_speed, 0.1);
