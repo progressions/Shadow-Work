@@ -261,6 +261,52 @@ if (keyboard_check_pressed(ord("O"))) {
     show_debug_message("Fire Vulnerability Stacks: " + string(get_total_trait_stacks("fire_vulnerability")));
     show_debug_message("Fire Damage Modifier: " + string(get_damage_modifier_for_type(DamageType.fire)));
 
+    // Check for Hola-specific aura debug output
+    var companions = get_active_companions();
+    for (var i = 0; i < array_length(companions); i++) {
+        var companion = companions[i];
+        if (companion.companion_id == "hola") {
+            show_debug_message("=== HOLA AURA STATUS ===");
+            show_debug_message("Affinity: " + string(companion.affinity) + "/10.0");
+            var multiplier = get_affinity_aura_multiplier(companion.affinity);
+            show_debug_message("Aura Multiplier: " + string(multiplier) + "x");
+
+            // Slowing aura
+            if (variable_struct_exists(companion.auras, "slowing") && companion.auras.slowing.active) {
+                var base_slow = companion.auras.slowing.slow_percent;
+                var scaled_slow = base_slow * multiplier;
+                show_debug_message("Slowing Aura: " + string(base_slow * 100) + "% → " + string(scaled_slow * 100) + "% (radius: " + string(companion.auras.slowing.radius) + "px)");
+                show_debug_message("  Enemy Speed Multiplier: " + string(get_companion_enemy_slow(x, y)));
+            }
+
+            // Slipstream passive aura
+            if (variable_struct_exists(companion.auras, "slipstream") && companion.auras.slipstream.active) {
+                var base_cd = companion.auras.slipstream.dash_cd_reduction;
+                var scaled_cd = base_cd * multiplier;
+                show_debug_message("Slipstream Passive: " + string(base_cd * 100) + "% → " + string(scaled_cd * 100) + "% dash CD reduction");
+            }
+
+            // Wind deflection aura
+            if (variable_struct_exists(companion.auras, "wind_deflection") && companion.auras.wind_deflection.active) {
+                var base_deflect = companion.auras.wind_deflection.deflect_chance;
+                var scaled_deflect = base_deflect * multiplier;
+                show_debug_message("Wind Deflection: " + string(base_deflect * 100) + "% → " + string(scaled_deflect * 100) + "% (radius: " + string(companion.auras.wind_deflection.radius) + "px)");
+            }
+
+            // Total dash CD reduction (passive + active trigger)
+            var total_dash_cd = get_companion_dash_cd_reduction();
+            show_debug_message("Total Dash CD Reduction: " + string(total_dash_cd * 100) + "%");
+
+            // Maelstrom deflect timer
+            if (variable_instance_exists(companion, "maelstrom_deflect_timer") && companion.maelstrom_deflect_timer > 0) {
+                var seconds_left = companion.maelstrom_deflect_timer / 60;
+                show_debug_message("Maelstrom Deflection Bonus: +25% (active for " + string(seconds_left) + "s)");
+                var deflect_bonus = get_companion_deflection_bonus("hola");
+                show_debug_message("  Total Deflection Bonus: " + string(deflect_bonus * 100) + "%");
+            }
+        }
+    }
+
     // Show nearest enemy traits too
     var nearest_enemy = instance_nearest(x, y, obj_enemy_parent);
     if (nearest_enemy != noone && point_distance(x, y, nearest_enemy.x, nearest_enemy.y) < 200) {
