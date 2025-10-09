@@ -83,17 +83,25 @@ if (!already_inside) {
     // ==============================
 
     if (effect_mode == "on_enter" && effect_to_apply != undefined) {
-        with (player) {
-            if (other.effect_type == "trait") {
-                // Apply trait using existing trait system
-                // The trait system handles duration, stacking, and refreshing
-                apply_timed_trait(other.effect_to_apply, other.effect_duration);
-                show_debug_message("Hazard applied trait: " + other.effect_to_apply + " for " + string(other.effect_duration) + "s");
-            } else if (other.effect_type == "status") {
-                // Apply trait-driven status effect (burning, wet, slowed, etc.)
-                apply_status_effect(other.effect_to_apply, other.effect_duration);
-                show_debug_message("Hazard applied status trait: " + string(status_effect_resolve_trait(other.effect_to_apply)));
+        // Check effect immunity
+        var has_effect_immunity = ds_map_exists(effect_immunity_map, player.id);
+
+        if (!has_effect_immunity) {
+            with (player) {
+                if (other.effect_type == "trait") {
+                    // Apply trait using existing trait system
+                    // The trait system handles duration, stacking, and refreshing
+                    apply_timed_trait(other.effect_to_apply, other.effect_duration);
+                    show_debug_message("Hazard applied trait: " + other.effect_to_apply + " for " + string(other.effect_duration) + "s");
+                } else if (other.effect_type == "status") {
+                    // Apply trait-driven status effect (burning, wet, slowed, etc.)
+                    apply_status_effect(other.effect_to_apply, other.effect_duration);
+                    show_debug_message("Hazard applied status trait: " + string(status_effect_resolve_trait(other.effect_to_apply)));
+                }
             }
+
+            // Set effect immunity
+            effect_immunity_map[? player.id] = effect_immunity_duration;
         }
     }
 }

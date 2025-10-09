@@ -79,6 +79,12 @@ entities_inside = ds_list_create();
 /// Map of entity ID -> damage immunity timer (seconds remaining)
 damage_immunity_map = ds_map_create();
 
+/// Map of entity ID -> effect immunity timer (seconds remaining)
+effect_immunity_map = ds_map_create();
+
+/// Seconds of effect immunity after applying effect (prevents spam)
+effect_immunity_duration = 3.0;
+
 // ==============================
 // INTERNAL TIMERS
 // ==============================
@@ -123,6 +129,7 @@ function serialize() {
         effect_to_apply: effect_to_apply,
         effect_duration: effect_duration,
         effect_mode: effect_mode,
+        effect_immunity_duration: effect_immunity_duration,
         sprite_index: sprite_index != -1 ? sprite_get_name(sprite_index) : "",
         image_speed: image_speed,
         depth: depth
@@ -146,6 +153,7 @@ function deserialize(data) {
     effect_to_apply = data.effect_to_apply;
     effect_duration = data.effect_duration;
     effect_mode = data.effect_mode;
+    effect_immunity_duration = data[$ "effect_immunity_duration"] ?? 3.0;
 
     if (data.sprite_index != "") {
         sprite_index = asset_get_index(data.sprite_index);

@@ -22,11 +22,18 @@ function player_handle_attack_input() {
         return;
     }
 
+    var _was_ready = can_attack;
+
     if (attack_cooldown > 0) {
         attack_cooldown--;
         can_attack = false;
     } else {
         can_attack = true;
+    }
+
+    // Play ready sound when weapon becomes available (transition from not ready to ready)
+    if (!_was_ready && can_attack && equipped.right_hand != undefined) {
+        audio_play_sound(snd_player_ready, 5, false);
     }
 
     var _attack_pressed = keyboard_check_pressed(ord("J"));

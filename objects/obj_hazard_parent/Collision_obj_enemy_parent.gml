@@ -83,13 +83,21 @@ if (damage_mode == "on_enter" && damage_amount > 0) {
 // ==============================
 
 if (effect_mode == "on_enter" && effect_to_apply != undefined) {
-    with (enemy) {
-        if (other.effect_type == "trait") {
-            apply_timed_trait(other.effect_to_apply, other.effect_duration);
-            show_debug_message("Hazard applied trait: " + other.effect_to_apply + " to " + object_get_name(object_index));
-        } else if (other.effect_type == "status") {
-            apply_status_effect(other.effect_to_apply, other.effect_duration);
-            show_debug_message("Hazard applied status trait: " + string(status_effect_resolve_trait(other.effect_to_apply)) + " to " + object_get_name(object_index));
+    // Check effect immunity
+    var has_effect_immunity = ds_map_exists(effect_immunity_map, enemy.id);
+
+    if (!has_effect_immunity) {
+        with (enemy) {
+            if (other.effect_type == "trait") {
+                apply_timed_trait(other.effect_to_apply, other.effect_duration);
+                show_debug_message("Hazard applied trait: " + other.effect_to_apply + " to " + object_get_name(object_index));
+            } else if (other.effect_type == "status") {
+                apply_status_effect(other.effect_to_apply, other.effect_duration);
+                show_debug_message("Hazard applied status trait: " + string(status_effect_resolve_trait(other.effect_to_apply)) + " to " + object_get_name(object_index));
+            }
         }
+
+        // Set effect immunity
+        effect_immunity_map[? enemy.id] = effect_immunity_duration;
     }
 }

@@ -39,6 +39,27 @@ for (var i = 0; i < array_length(immunity_keys); i++) {
 }
 
 // ==============================
+// UPDATE EFFECT IMMUNITY TIMERS
+// ==============================
+
+// Decrement all effect immunity timers
+var effect_immunity_keys = ds_map_keys_to_array(effect_immunity_map);
+for (var i = 0; i < array_length(effect_immunity_keys); i++) {
+    var entity_id = effect_immunity_keys[i];
+    var timer = effect_immunity_map[? entity_id];
+
+    if (timer > 0) {
+        timer -= delta_time / 1000000; // Convert microseconds to seconds
+
+        if (timer <= 0) {
+            ds_map_delete(effect_immunity_map, entity_id);
+        } else {
+            effect_immunity_map[? entity_id] = timer;
+        }
+    }
+}
+
+// ==============================
 // CONTINUOUS DAMAGE MODE
 // ==============================
 

@@ -1,0 +1,25 @@
+{
+  "$GMSound":"",
+  "%Name":"snd_enemy_stunned",
+  "audioGroupId":{
+    "name":"audiogroup_sfx_world",
+    "path":"audiogroups/audiogroup_sfx_world",
+  },
+  "bitDepth":1,
+  "bitRate":128,
+  "compression":0,
+  "conversionMode":0,
+  "duration":1.0156462,
+  "name":"snd_enemy_stunned",
+  "parent":{
+    "name":"world",
+    "path":"folders/Sounds/sfx/world.yy",
+  },
+  "preload":false,
+  "resourceType":"GMSound",
+  "resourceVersion":"2.0",
+  "sampleRate":44100,
+  "soundFile":"snd_enemy_stunned.wav",
+  "type":0,
+  "volume":1.0,
+}

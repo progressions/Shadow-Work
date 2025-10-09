@@ -15,6 +15,11 @@ if (ds_exists(damage_immunity_map, ds_type_map)) {
     ds_map_destroy(damage_immunity_map);
 }
 
+// Destroy effect immunity tracking map
+if (ds_exists(effect_immunity_map, ds_type_map)) {
+    ds_map_destroy(effect_immunity_map);
+}
+
 // ==============================
 // AUDIO CLEANUP
 // ==============================

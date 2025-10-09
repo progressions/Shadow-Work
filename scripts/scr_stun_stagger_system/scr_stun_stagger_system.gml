@@ -161,6 +161,13 @@ function apply_stun(target, duration, source = noone) {
         target.flash_timer = 4;
     }
 
+    // Play stun sound
+    if (target.object_index == obj_player) {
+        audio_play_sound(snd_player_stunned, 5, false);
+    } else if (object_is_ancestor(target.object_index, obj_enemy_parent)) {
+        audio_play_sound(snd_enemy_stunned, 5, false);
+    }
+
     // Create stun star particles
     create_stun_particles(target);
 
@@ -201,6 +208,13 @@ function apply_stagger(target, duration, source = noone) {
     if (variable_instance_exists(target, "flash_color")) {
         target.flash_color = c_orange;
         target.flash_timer = 4;
+    }
+
+    // Play stagger sound
+    if (target.object_index == obj_player) {
+        audio_play_sound(snd_player_staggered, 5, false);
+    } else if (object_is_ancestor(target.object_index, obj_enemy_parent)) {
+        audio_play_sound(snd_enemy_staggered, 5, false);
     }
 
     return true;

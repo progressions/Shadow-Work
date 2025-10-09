@@ -9,7 +9,7 @@
   "bitRate":128,
   "compression":0,
   "conversionMode":0,
-  "duration":0.37501132,
+  "duration":1.4364853,
   "name":"snd_footsteps_grass",
   "parent":{
     "name":"world",
