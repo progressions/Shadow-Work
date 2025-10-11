@@ -288,8 +288,34 @@ if (_use_idle_timer) {
     frame_offset = global.idle_bob_timer % frames_in_seq;
 } else {
     var speed_mult = 1.25; // faster feel for attacks
+
+    // Apply ranged windup speed modifier during windup phase
+    if (state == EnemyState.ranged_attacking && !ranged_windup_complete) {
+        speed_mult = speed_mult * ranged_windup_speed; // Slow down animation during windup
+    }
+
     anim_timer += anim_speed * speed_mult;
     frame_offset = floor(anim_timer) mod frames_in_seq;
+
+    // Handle ranged attack windup completion
+    if (state == EnemyState.ranged_attacking && !ranged_windup_complete && anim_timer >= frames_in_seq) {
+        // Windup animation cycle complete - spawn projectile and exit ranged_attacking state
+        ranged_windup_complete = true;
+        spawn_ranged_projectile();
+        state = EnemyState.targeting; // Return to targeting immediately after firing
+        ranged_windup_complete = false; // Reset flag for next attack
+
+        if (variable_global_exists("debug_mode") && global.debug_mode) {
+            show_debug_message("WINDUP COMPLETE - Projectile spawned after " + string(frames_in_seq) + " frames, returning to targeting");
+        }
+    }
+
+    // Debug: Show windup progress
+    if (state == EnemyState.ranged_attacking && !ranged_windup_complete && variable_global_exists("debug_mode") && global.debug_mode) {
+        if (anim_timer mod 30 == 0) { // Log every 30 frames
+            show_debug_message("Windup progress: anim_timer=" + string(anim_timer) + "/" + string(frames_in_seq) + ", speed_mult=" + string(speed_mult));
+        }
+    }
 
     if (state == EnemyState.attacking && anim_timer >= frames_in_seq) {
         // Keep looping attack animation until alarm[2] finishes and resets state
@@ -322,6 +348,7 @@ if (ranged_attack_cooldown > 0) {
 
 if (state == EnemyState.ranged_attacking && ranged_attack_cooldown <= 0) {
     state = EnemyState.targeting;
+    ranged_windup_complete = false; // Reset windup flag for next attack
 }
 
 // Retreat cooldown (for dual-mode enemies)

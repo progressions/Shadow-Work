@@ -59,6 +59,14 @@ can_ranged_attack = true;    // Cooldown flag for ranged attacks
 ranged_damage_type = DamageType.physical; // Damage type for ranged projectiles
 ranged_status_effects = [];  // Optional status effects applied by ranged projectiles
 ranged_projectile_object = obj_enemy_arrow; // Default projectile for ranged enemies
+ranged_projectile_speed = 4; // Speed of projectile (pixels per frame)
+
+// Ranged attack windup system (telegraph/anticipation before projectile spawn)
+// This creates a visual and audio telegraph by slowing the attack animation and delaying projectile spawn
+ranged_windup_speed = 0.5;        // Animation speed multiplier during windup (0.1-1.0, default 0.5 = half-speed)
+                                  // Lower values = longer telegraph. Example: 0.3 = very slow, 0.7 = quick
+ranged_windup_complete = false;   // Tracks if first animation cycle finished (projectile spawns when true)
+                                  // Set to false when entering ranged_attacking state, becomes true after animation completes
 
 melee_damage_resistance = 0;
 ranged_damage_resistance = 0;
@@ -126,6 +134,7 @@ terrain_speed_modifier = 1.0; // Real: speed multiplier from current terrain
 enemy_sounds = {
     on_melee_attack: undefined,   // Default: snd_enemy_attack_generic
     on_ranged_attack: undefined,  // Default: snd_bow_attack
+    on_ranged_windup: undefined,  // Default: snd_ranged_windup (plays when ranged attack animation starts)
     on_hit: undefined,            // Default: snd_enemy_hit_generic
     on_death: undefined,          // Default: snd_enemy_death
     on_aggro: undefined,          // Default: undefined (no sound)

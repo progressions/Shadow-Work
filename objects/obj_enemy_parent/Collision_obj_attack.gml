@@ -72,6 +72,17 @@ if (state != EnemyState.dead) {
 
 		 hp -= _final_damage;
 
+		 // Interrupt ranged attack windup if enemy takes damage during windup
+		 if (state == EnemyState.ranged_attacking && !ranged_windup_complete) {
+		     state = EnemyState.targeting;
+		     ranged_windup_complete = false; // Reset flag
+		     ranged_attack_cooldown = 0; // Reset cooldown so they can attack again sooner
+
+		     if (variable_global_exists("debug_mode") && global.debug_mode) {
+		         show_debug_message("RANGED ATTACK INTERRUPTED - Enemy took damage during windup");
+		     }
+		 }
+
 		 // Flash and freeze based on crit status
 		 if (_attack_inst.is_crit) {
 		     // Critical hit: red flash + longer freeze

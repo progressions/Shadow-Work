@@ -12,6 +12,7 @@ move_speed = 0.8;
 is_ranged_attacker = true;
 ranged_damage = 2;           // Higher than melee damage
 ranged_attack_speed = 0.6;   // Slower than melee (longer cooldown)
+ranged_windup_speed = 0.3;   // Very slow windup (30% speed)
 
 // Ranged enemy ideal distance from player (for kiting/circle strafe)
 // PATTERN: Set ideal_range to ~75-80% of attack_range for ranged enemies

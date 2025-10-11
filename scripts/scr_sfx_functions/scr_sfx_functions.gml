@@ -87,9 +87,24 @@ function play_enemy_sfx(_event_name, _volume=1) {
 			}
 			break;
 		case "on_attack":
+		case "on_melee_attack":
 			// Default to sword sound for enemy attacks
 			if (audio_exists(snd_attack_sword)) {
 				play_sfx(snd_attack_sword, _volume);
+				return true;
+			}
+			break;
+		case "on_ranged_attack":
+			// Default to bow attack sound for ranged attacks
+			if (audio_exists(snd_bow_attack)) {
+				play_sfx(snd_bow_attack, _volume);
+				return true;
+			}
+			break;
+		case "on_ranged_windup":
+			// Default to ranged windup sound
+			if (audio_exists(snd_ranged_windup)) {
+				play_sfx(snd_ranged_windup, _volume);
 				return true;
 			}
 			break;
