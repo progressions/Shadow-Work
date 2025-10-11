@@ -1,0 +1,1 @@
+item_def.stats.damage_type = DamageType.holy;

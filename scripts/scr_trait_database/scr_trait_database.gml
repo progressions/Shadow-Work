@@ -81,6 +81,26 @@ global.trait_database = {
         max_stacks: 5
     },
 
+    // Unholy traits
+    unholy_immunity: {
+        name: "Unholy Immunity",
+        damage_modifier: 0.0,
+        opposite_trait: "unholy_vulnerability",
+        max_stacks: 5
+    },
+    unholy_resistance: {
+        name: "Unholy Resistance",
+        damage_modifier: 0.75,
+        opposite_trait: "unholy_vulnerability",
+        max_stacks: 5
+    },
+    unholy_vulnerability: {
+        name: "Unholy Vulnerability",
+        damage_modifier: 1.5,
+        opposite_trait: "unholy_resistance",
+        max_stacks: 5
+    },
+
     // Disease traits
     disease_immunity: {
         name: "Disease Immunity",

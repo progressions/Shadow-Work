@@ -3,13 +3,13 @@ event_inherited();
 
 // Greenwood Bandit-specific stats (balanced)
 attack_damage = 1;
-attack_speed = 0.9;
-attack_range = 128;  // Long range for bow attacks (8 tiles)
+attack_speed = 0.75;
+attack_range = 24;  // Long range for bow attacks (8 tiles)
 hp = 4;
-move_speed = 0.8;
+move_speed = 0.7;
 
 // Ranged attack configuration
-is_ranged_attacker = true;
+is_ranged_attacker = false;
 ranged_damage = 2;           // Higher than melee damage
 ranged_attack_speed = 0.6;   // Slower than melee (longer cooldown)
 
@@ -19,11 +19,11 @@ ranged_attack_speed = 0.6;   // Slower than melee (longer cooldown)
 ideal_range = 24;  // 75% of attack_range (128) - stays at bow range, circles/kites player
 
 // Dual-mode configuration (archer with melee fallback)
-enable_dual_mode = true;
-preferred_attack_mode = "ranged";  // Prefers bow attacks
+enable_dual_mode = false;
+preferred_attack_mode = "melee";  // Prefers bow attacks
 // attack_damage = 1 already set above (weak dagger swipe for melee fallback)
-melee_range_threshold = 24;        // Only use dagger when desperate/cornered
-retreat_when_close = true;         // Retreat to maintain bow range
+melee_range_threshold = 24;        
+retreat_when_close = false;         // Retreat to maintain bow range
 
 // Approach variation - bandits are tactical archers (moderate flanking)
 flank_chance = 0.95;

@@ -21,7 +21,7 @@ enemy_sounds.on_hit = snd_burglar_hit;
 enemy_sounds.on_death = snd_burglar_death;
 
 // Burglar loot table - thief-appropriate items (fast, weak enemy = lower drop rate)
-drop_chance = 0.25; // 25% chance to drop loot
+drop_chance = 0.15; // 25% chance to drop loot
 loot_table = [
     {item_key: "rusty_dagger", weight: 3},
     {item_key: "arrows", weight: 2},

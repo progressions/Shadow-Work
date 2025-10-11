@@ -92,7 +92,12 @@ global.tag_database = {
         name: "Sandcrawler",
         description: "Desert wanderer",
         grants_traits: ["fire_resistance", "heat_adapted"]
-    }
+    },
+	undead: {
+		name: "Undead",
+		description: "Unholy living dead",
+		grants_traits: ["fire_immunity", "poison_immunity", "holy_vulnerability"]
+	}
 };
 
 // Initialize terrain effects map (depends on trait_database)
@@ -325,46 +330,6 @@ for (var i = 0; i < array_length(_sound_prefixes); i++) {
     if (global.debug_sound_variants && _variant_count > 0) {
         show_debug_message("Sound variants detected: " + _base_name + " has " + string(_variant_count) + " variants");
     }
-}
-
-// Test loot system weighted selection (debug mode)
-if (global.debug_loot_system) {
-    show_debug_message("=== LOOT SYSTEM TEST ===");
-
-    // Test equal weights
-    var test_table_equal = [
-        {item_key: "small_health_potion"},
-        {item_key: "rusty_dagger"},
-        {item_key: "arrows"}
-    ];
-
-    show_debug_message("Testing equal weights (100 rolls):");
-    var results_equal = {};
-    for (var i = 0; i < 100; i++) {
-        var item = select_weighted_loot_item(test_table_equal);
-        results_equal[$ item] = (results_equal[$ item] ?? 0) + 1;
-    }
-    show_debug_message("small_health_potion: " + string(results_equal[$ "small_health_potion"] ?? 0) + "%");
-    show_debug_message("rusty_dagger: " + string(results_equal[$ "rusty_dagger"] ?? 0) + "%");
-    show_debug_message("arrows: " + string(results_equal[$ "arrows"] ?? 0) + "%");
-
-    // Test weighted selection
-    var test_table_weighted = [
-        {item_key: "small_health_potion", weight: 5},
-        {item_key: "rusty_dagger", weight: 2},
-        {item_key: "greatsword", weight: 1}
-    ];
-
-    show_debug_message("Testing weighted selection (100 rolls, weights 5:2:1):");
-    var results_weighted = {};
-    for (var i = 0; i < 100; i++) {
-        var item = select_weighted_loot_item(test_table_weighted);
-        results_weighted[$ item] = (results_weighted[$ item] ?? 0) + 1;
-    }
-    show_debug_message("small_health_potion (weight 5): " + string(results_weighted[$ "small_health_potion"] ?? 0) + "%");
-    show_debug_message("rusty_dagger (weight 2): " + string(results_weighted[$ "rusty_dagger"] ?? 0) + "%");
-    show_debug_message("greatsword (weight 1): " + string(results_weighted[$ "greatsword"] ?? 0) + "%");
-    show_debug_message("=== END LOOT TEST ===");
 }
 
 // Initialize freeze frame system

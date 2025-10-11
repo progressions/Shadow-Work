@@ -1,0 +1,25 @@
+{
+  "$GMSound":"",
+  "%Name":"miscellaneous_3_meghan",
+  "audioGroupId":{
+    "name":"audiogroup_default",
+    "path":"audiogroups/audiogroup_default",
+  },
+  "bitDepth":1,
+  "bitRate":128,
+  "compression":0,
+  "conversionMode":0,
+  "duration":0.22362812,
+  "name":"miscellaneous_3_meghan",
+  "parent":{
+    "name":"companions",
+    "path":"folders/Sounds/sfx/world/companions.yy",
+  },
+  "preload":false,
+  "resourceType":"GMSound",
+  "resourceVersion":"2.0",
+  "sampleRate":44100,
+  "soundFile":"miscellaneous_3_meghan.wav",
+  "type":0,
+  "volume":1.0,
+}

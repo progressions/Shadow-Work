@@ -10,7 +10,7 @@ damage_type = DamageType.physical;
 status_effects_on_hit = [];
 
 // Movement (set by spawning code)
-speed = 3;
+speed = 2;
 direction = 0;
 image_angle = direction;
 
