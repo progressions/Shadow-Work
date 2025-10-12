@@ -442,11 +442,6 @@ if (array_length(_timed_traits) > 0) {
             draw_rectangle(_bar_x1, _bar_y, _bar_x2, _bar_y + _bar_height, false);
             draw_set_color(_effect.color);
             draw_rectangle(_bar_x1, _bar_y, _bar_x1 + (_bar_width * _percent), _bar_y + _bar_height, false);
-
-            if (_effect.stacks > 1) {
-                draw_set_color(_effect.color);
-                draw_text(_bar_x2 + 2, _bar_y - 2, "x" + string(_effect.stacks));
-            }
         }
 
         draw_set_color(c_white);
