@@ -1,4 +1,11 @@
 function player_state_walking() {
+    // If staggered, can't continue walking - return to idle
+    if (is_staggered) {
+        state = PlayerState.idle;
+        move_dir = "idle";
+        return;
+    }
+
     // Check for dash input first
     if (player_handle_dash_input()) {
         return; // Dash was triggered, state changed

@@ -1,4 +1,13 @@
 function player_state_dashing() {
+    // If staggered, cancel dash immediately
+    if (is_staggered) {
+        state = PlayerState.idle;
+        move_dir = "idle";
+        dash_timer = 0;
+        dash_override_direction = "";
+        return;
+    }
+
     // Stop all footstep sounds when dashing
     stop_all_footstep_sounds();
 
