@@ -3,18 +3,12 @@
   "%Name":"tiles_castle",
   "autoTileSets":[],
   "macroPageTiles":{
-    "SerialiseHeight":33,
-    "SerialiseWidth":39,
-    "TileCompressedData":[
-      -805,0,2,3,4,-37,0,14,5,6,0,0,1,2,0,0,3,4,0,0,127,128,-25,0,2,7,8,-6,0,6,5,6,0,0,128,127,-25,0,5,9,10,
-      11,0,12,-3,0,2,7,8,-29,0,5,16,17,18,0,18,-3,0,2,14,15,-29,0,2,23,24,-6,0,2,21,22,-37,0,2,23,24,-29,0,
-      6,129,130,0,0,129,130,-33,0,6,5,6,0,0,5,6,-33,0,6,7,8,0,0,7,8,-33,0,6,9,10,0,0,14,15,-33,0,6,16,17,0,
-      0,16,22,-33,0,6,23,24,0,0,23,24,-8,0,
-    ],
-    "TileDataFormat":1,
+    "SerialiseHeight":0,
+    "SerialiseWidth":0,
+    "TileSerialiseData":[],
   },
   "name":"tiles_castle",
-  "out_columns":11,
+  "out_columns":13,
   "out_tilehborder":2,
   "out_tilevborder":2,
   "parent":{
@@ -40,5 +34,5 @@
   "tileWidth":16,
   "tilexoff":0,
   "tileyoff":0,
-  "tile_count":132,
+  "tile_count":180,
 }
