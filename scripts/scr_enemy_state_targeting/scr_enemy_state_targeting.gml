@@ -38,6 +38,14 @@ function enemy_state_targeting() {
         return; // Skip normal pathfinding while unsticking
     }
 
+    // Check if enemy has a movement profile assigned
+    // Movement profiles handle their own pathfinding, attacks, and state transitions
+    if (movement_profile != undefined && movement_profile.update_function != undefined) {
+        // Call profile update function - it handles all logic for this enemy
+        movement_profile.update_function(self);
+        return;
+    }
+
     // If player moved significantly and we have a long-running path, recalculate sooner
     if ((abs(_player_x - last_target_x) > 64 || abs(_player_y - last_target_y) > 64) && alarm[0] > 60) {
         show_debug_message("RESETTING ALARM: Player moved, setting alarm from " + string(alarm[0]) + " to 30");

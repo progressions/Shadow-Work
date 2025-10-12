@@ -1,0 +1,199 @@
+# Spec Tasks
+
+These are the tasks to be completed for the spec detailed in @.agent-os/specs/2025-10-11-enemy-movement-profiles/spec.md
+
+> Created: 2025-10-11
+> Status: Ready for Implementation
+
+## Tasks
+
+- [ ] 1. Create Movement Profile Database and Core System
+  - [ ] 1.1 Add movement profile variables to obj_enemy_parent/Create_0.gml
+    - Add `movement_profile` variable (undefined by default)
+    - Add `movement_profile_state` variable (undefined by default)
+    - Add `movement_anchor_x` and `movement_anchor_y` variables
+    - Add `movement_profile_timer` variable (for timing-based behaviors)
+    - Add `movement_profile_offset_x` and `movement_profile_offset_y` variables
+  - [ ] 1.2 Create global.movement_profile_database in obj_game_controller/Create_0.gml
+    - Create `init_movement_profile_database()` function
+    - Initialize `global.movement_profile_database` as empty struct
+    - Call initialization function in obj_game_controller Create event
+  - [ ] 1.3 Define kiting_swooper profile with all parameters
+    - Set `kite_distance: 120` (ideal distance from player)
+    - Set `kite_distance_variance: 30` (randomness in distance)
+    - Set `swoop_range: 80` (distance threshold to trigger swoop)
+    - Set `swoop_speed: 4.0` (dash speed during swoop)
+    - Set `swoop_cooldown: 180` (frames between swoops, 3 seconds)
+    - Set `erratic_movement_timer: 60` (frames between position shifts)
+    - Set `erratic_offset_max: 40` (max random offset from kite position)
+    - Set `return_to_anchor: true` (return after swoop)
+    - Set default `movement_profile_states: ["kiting", "swooping", "returning"]`
+  - [ ] 1.4 Test manual enemy spawning with profile assignment works
+    - Verify database initializes correctly
+    - Verify enemies can be assigned profile in Create event
+    - Verify profile variables initialize properly
+
+- [ ] 2. Implement Kiting Behavior State
+  - [ ] 2.1 Create movement_profile_kiting_swooper_update.gml script
+    - Create new script file in /scripts/
+    - Add function signature `function movement_profile_kiting_swooper_update()`
+    - Add profile parameter retrieval from database
+  - [ ] 2.2 Implement distance calculation and kite distance logic
+    - Calculate distance to player
+    - Calculate ideal kite position (opposite direction from player)
+    - Add kite_distance_variance randomization on state entry
+  - [ ] 2.3 Implement erratic position offset system with timer
+    - Decrement `movement_profile_timer` each frame
+    - When timer expires (≤ 0), generate new random offset
+    - Apply offset to target kite position (±erratic_offset_max)
+    - Reset timer to `erratic_movement_timer` value
+  - [ ] 2.4 Integrate pathfinding for kiting movement
+    - Use existing `mp_grid_path` and pathfinding system
+    - Set path target to kite position + erratic offset
+    - Respect path update throttle (don't recalculate every frame)
+    - Handle collision avoidance using move_and_collide()
+  - [ ] 2.5 Test bat maintains distance from player with erratic movement
+    - Verify bat stays roughly at kite_distance from player
+    - Verify bat moves unpredictably with erratic offsets
+    - Verify bat doesn't get stuck on terrain
+
+- [ ] 3. Implement Swoop Attack State
+  - [ ] 3.1 Add swoop condition checking (range + cooldown)
+    - Check if distance to player ≤ swoop_range
+    - Check if swoop_cooldown timer ≤ 0
+    - Check if not stunned or staggered (CC integration)
+    - Transition from "kiting" to "swooping" state when conditions met
+  - [ ] 3.2 Implement linear dash movement toward player
+    - Calculate direction to player on swoop initiation
+    - Set movement direction (locked for duration)
+    - Apply swoop_speed to movement
+    - Use `move_and_collide()` with collision detection
+  - [ ] 3.3 Create swoop attack hitbox using existing attack system
+    - Create obj_attack instance during swoop (or use collision detection)
+    - Set damage to enemy's attack_damage
+    - Set attack_range to swoop collision detection range
+    - Apply damage on player collision during swoop
+  - [ ] 3.4 Add transition to "returning" state after swoop
+    - Detect when swoop completes (reached player or collision)
+    - Set movement_profile_state to "returning"
+    - Start swoop cooldown timer
+  - [ ] 3.5 Test bat performs swoop attacks when in range
+    - Verify swoop triggers at correct range
+    - Verify swoop applies damage to player
+    - Verify swoop respects cooldown
+
+- [ ] 4. Implement Return to Anchor State
+  - [ ] 4.1 Add pathfinding to anchor position
+    - Use existing pathfinding system with movement_anchor_x/y as target
+    - Set path to anchor position
+    - Apply normal move_speed (not swoop_speed)
+  - [ ] 4.2 Implement anchor proximity check and state transition
+    - Check distance to anchor position each frame
+    - When distance < 32 pixels, consider "arrived"
+    - Transition back to "kiting" state on arrival
+  - [ ] 4.3 Reset swoop cooldown on return completion
+    - Set swoop cooldown timer to profile's swoop_cooldown value
+    - Reset erratic movement timer
+  - [ ] 4.4 Test bat returns to anchor position after swooping
+    - Verify bat pathfinds back to anchor correctly
+    - Verify bat transitions to kiting after reaching anchor
+    - Verify cooldown prevents immediate re-swoop
+
+- [ ] 5. Integrate Movement Profiles with Enemy State Machine
+  - [ ] 5.1 Modify scr_enemy_state_targeting to check for movement_profile
+    - Add conditional check at start of targeting state
+    - Check if `movement_profile != undefined`
+    - If profile exists, call profile update function instead of default logic
+  - [ ] 5.2 Call profile update function if profile exists
+    - Call `movement_profile_kiting_swooper_update()` for kiting_swooper profile
+    - Ensure function receives enemy instance context (use `with (self)`)
+    - Allow profile to control pathfinding and state transitions
+  - [ ] 5.3 Preserve default pathfinding behavior for non-profile enemies
+    - Keep existing targeting logic intact for enemies without profiles
+    - Ensure no regression in normal enemy behavior
+    - Test mixed enemy types in same room
+  - [ ] 5.4 Test profile enemies and normal enemies work simultaneously
+    - Spawn both profile and non-profile enemies together
+    - Verify profile enemies use custom behavior
+    - Verify normal enemies use default pathfinding
+    - Verify no interference between systems
+
+- [ ] 6. Add Stun/Stagger Integration
+  - [ ] 6.1 Check is_stunned before allowing swoop attacks
+    - Add `if (is_stunned)` check before swoop condition
+    - Skip swoop attack if stunned
+    - Continue kiting behavior or idle during stun
+  - [ ] 6.2 Check is_staggered before allowing movement
+    - Add `if (is_staggered)` check before movement calculations
+    - Pause pathfinding during stagger
+    - Resume from current state after stagger ends
+  - [ ] 6.3 Preserve movement_profile_state during CC effects
+    - Don't reset state when stunned/staggered
+    - Resume previous state after CC expires
+    - Test state continuity with various CC durations
+  - [ ] 6.4 Test bat respects stun/stagger properly
+    - Apply stun during kiting - verify movement stops
+    - Apply stun during swoop - verify swoop cancels
+    - Apply stagger - verify bat pauses correctly
+    - Verify bat resumes correct behavior after CC
+
+- [ ] 7. Create Bat Enemy with Movement Profile
+  - [ ] 7.1 Create obj_bat inheriting from obj_enemy_parent
+    - Create new object in GameMaker IDE
+    - Set parent to obj_enemy_parent
+    - Verify inheritance works (test in room)
+  - [ ] 7.2 Assign kiting_swooper profile in Create event
+    - Call `event_inherited()`
+    - Set `movement_profile = "kiting_swooper"`
+    - Set `movement_anchor_x = x` and `movement_anchor_y = y`
+    - Initialize `movement_profile_state = "kiting"`
+    - Initialize `movement_profile_timer = 0`
+  - [ ] 7.3 Configure bat stats (hp, damage, speed)
+    - Set `hp = 8` and `hp_total = 8` (low health, evasive)
+    - Set `attack_damage = 2` (low damage per hit)
+    - Set `move_speed = 1.5` (faster than player base speed)
+    - Set `attack_range = 20` (melee range for swoop)
+    - Set `aggro_range = 200` (standard detection range)
+  - [ ] 7.4 Create or assign bat sprite with animation frames
+    - Create spr_bat with 35-frame layout (or use existing enemy sprite)
+    - Configure idle, walk, attack, and dying animations
+    - Set sprite origin to center for rotation/direction
+    - Test sprite displays correctly
+  - [ ] 7.5 Test bat spawns and uses movement profile correctly
+    - Place obj_bat in test room
+    - Verify bat enters kiting state on player aggro
+    - Verify bat uses kiting_swooper behavior
+    - Verify bat maintains anchor position correctly
+
+- [ ] 8. Animation and Visual Polish
+  - [ ] 8.1 Map movement_profile_state to enemy animations
+    - During "kiting": Use walk animation
+    - During "swooping": Use attack animation
+    - During "returning": Use walk animation
+    - Update facing direction based on movement direction
+  - [ ] 8.2 Add facing direction updates during kiting/swooping
+    - Calculate facing_dir from movement direction
+    - Update facing_dir during kiting movement
+    - Lock facing_dir during swoop (toward player)
+    - Update facing_dir during return (toward anchor)
+  - [ ] 8.3 Test animations play correctly for all profile states
+    - Verify correct animation plays in each state
+    - Verify smooth transitions between states
+    - Verify facing direction updates properly
+  - [ ] 8.4 Verify full gameplay loop (kite → swoop → return → repeat)
+    - Play test with bat enemy in room with player
+    - Observe full behavior cycle: kite, swoop, return, kite again
+    - Verify behavior feels fluid and intentional
+    - Test with multiple bats simultaneously
+    - Test interaction with terrain obstacles
+    - Test interaction with other enemy types
+    - Test interaction with party system (if applicable)
+
+## Notes
+
+- This is a GameMaker Studio 2 project without traditional unit tests
+- Task verification is done through manual gameplay testing in the GameMaker IDE (F5 to run)
+- Movement profiles are designed to be reusable for other enemy types
+- System integrates with existing enemy AI, pathfinding, and combat systems
+- Profile system respects existing crowd control (stun/stagger) mechanics
+- Future profiles can be added to the database for different movement patterns (circling, charging, teleporting, etc.)

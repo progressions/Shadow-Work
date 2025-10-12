@@ -160,6 +160,16 @@ stuck_check_x = x;
 stuck_check_y = y;
 alarm[4] = 60; // Check if stuck every second
 
+// Movement profile system (specialized movement behaviors)
+movement_profile = undefined;           // Assigned profile from global.movement_profile_database
+movement_profile_state = "idle";       // Profile-specific state: "idle", "kiting", "swooping", "returning"
+movement_profile_anchor_x = x;         // Home position X
+movement_profile_anchor_y = y;         // Home position Y
+movement_profile_target_x = x;         // Current movement target X
+movement_profile_target_y = y;         // Current movement target Y
+movement_profile_erratic_timer = 0;    // Timer for erratic adjustments
+movement_profile_swoop_cooldown = 0;   // Cooldown timer for swoop attacks
+
 // Approach variation system (flanking behavior)
 approach_mode = "direct";        // "direct" or "flanking" - chosen when entering trigger range
 approach_chosen = false;         // Set to true once approach angle selected (prevents re-selection)
