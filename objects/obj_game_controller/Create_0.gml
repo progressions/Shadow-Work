@@ -220,7 +220,7 @@ global.debug_pathfinding = false; // Set to false for production
 global.debug_enemy_approach = false; // Set to false for production
 
 // Debug mode for damage reduction display
-global.debug_mode = true;
+global.debug_mode = false;
 
 // Initialize formation database for party controller system
 global.formation_database = {

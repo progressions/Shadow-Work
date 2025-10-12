@@ -190,12 +190,11 @@ function player_execute_attack(_focus_info) {
     return true;
 }
 
-function player_fire_ranged_projectile_local(_direction) {
-    if (!has_ammo("arrows")) {
-        show_debug_message("No arrows available!");
-        return false;
-    }
-
+/// @function spawn_player_arrow()
+/// @description Spawns arrow projectile from player after windup completes
+/// @param {string} _direction - Direction to fire ("up", "down", "left", "right")
+/// @returns {bool} True if arrow spawned successfully
+function spawn_player_arrow(_direction) {
     if (equipped.right_hand == undefined || equipped.right_hand.definition == undefined) {
         show_debug_message("No ranged weapon equipped");
         return false;
@@ -215,15 +214,10 @@ function player_fire_ranged_projectile_local(_direction) {
         _range_profile_id = _weapon_stats.range_profile;
     }
 
-    var _original_facing = facing_dir;
-    if (_direction != "") facing_dir = _direction;
-
-    state = PlayerState.attacking;
-
     var _arrow_x = x;
     var _arrow_y = y;
 
-    switch (facing_dir) {
+    switch (_direction) {
         case "right":
             _arrow_x += 16;
             _arrow_y += 8;
@@ -253,7 +247,7 @@ function player_fire_ranged_projectile_local(_direction) {
     _arrow.spawn_y = _arrow.y;
     _arrow.weapon_range_stat = _weapon_stats[$ "range"] ?? 0;
 
-    switch (facing_dir) {
+    switch (_direction) {
         case "right": _arrow.direction = 0; break;
         case "up": _arrow.direction = 90; break;
         case "left": _arrow.direction = 180; break;
@@ -261,8 +255,45 @@ function player_fire_ranged_projectile_local(_direction) {
     }
     _arrow.image_angle = _arrow.direction;
 
-    consume_ammo("arrows", 1);
+    // Play attack sound when projectile spawns
     play_sfx(snd_bow_attack, 1, false);
+
+    if (variable_global_exists("debug_mode") && global.debug_mode) {
+        show_debug_message("Player arrow spawned after windup complete");
+    }
+
+    return true;
+}
+
+function player_fire_ranged_projectile_local(_direction) {
+    if (!has_ammo("arrows")) {
+        show_debug_message("No arrows available!");
+        return false;
+    }
+
+    if (equipped.right_hand == undefined || equipped.right_hand.definition == undefined) {
+        show_debug_message("No ranged weapon equipped");
+        return false;
+    }
+
+    var _original_facing = facing_dir;
+    if (_direction != "") facing_dir = _direction;
+
+    // Enter windup phase - projectile spawns AFTER animation completes
+    state = PlayerState.attacking;
+    ranged_windup_active = true;          // Mark that we're winding up a ranged attack
+    ranged_windup_complete = false;       // Reset windup flag
+    ranged_windup_direction = facing_dir; // Store direction for arrow spawn
+
+    // Consume ammo now (before windup, so interrupt doesn't waste ammo)
+    consume_ammo("arrows", 1);
+
+    // Play windup sound (attack sound plays when arrow spawns)
+    play_sfx(snd_ranged_windup, 1, false);
+
+    if (variable_global_exists("debug_mode") && global.debug_mode) {
+        show_debug_message("Player starting ranged attack windup (arrow will spawn after animation completes)");
+    }
 
     facing_dir = _original_facing;
 

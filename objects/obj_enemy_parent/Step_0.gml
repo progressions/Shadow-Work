@@ -17,18 +17,21 @@ if (variable_instance_exists(self, "saved_path_speed") && saved_path_speed != 0)
 // Update stun/stagger timers
 update_stun_stagger_timers(self);
 
-// Update stun particle position if stunned
-if (is_stunned) {
-    update_stun_particles(self);
-}
-
 // --- Flash Effect System ---
 // Handle flash countdown and apply image_blend
-if (flash_timer > 0) {
+// Note: Stun/stagger effects override flashes with persistent colors
+if (is_stunned) {
+    // Maintain stun color (yellow)
+    image_blend = c_yellow;
+} else if (is_staggered) {
+    // Maintain stagger color (purple)
+    image_blend = make_color_rgb(160, 32, 240);
+} else if (flash_timer > 0) {
+    // Apply temporary flash effect
     flash_timer--;
     image_blend = flash_color;
 } else {
-    // Reset to normal color when flash expires
+    // Reset to normal color when no effects active
     // image_blend = c_white;
 }
 

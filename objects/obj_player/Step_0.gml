@@ -5,9 +5,11 @@ if (global.game_paused) exit;
 // Update stun/stagger timers
 update_stun_stagger_timers(self);
 
-// Update stun particle position if stunned
+// Maintain stun/stagger color overlays
 if (is_stunned) {
-    update_stun_particles(self);
+    image_blend = c_yellow;
+} else if (is_staggered) {
+    image_blend = make_color_rgb(160, 32, 240); // Purple for stagger
 }
 
 // Make pillars slightly behind player at same position

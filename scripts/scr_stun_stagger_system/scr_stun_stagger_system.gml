@@ -155,10 +155,9 @@ function apply_stun(target, duration, source = noone) {
     target.is_stunned = true;
     target.stun_timer = _final_duration * room_speed;
 
-    // Visual/audio feedback
-    if (variable_instance_exists(target, "flash_color")) {
-        target.flash_color = c_yellow;
-        target.flash_timer = 4;
+    // Visual feedback - persistent yellow overlay while stunned
+    if (variable_instance_exists(target, "image_blend")) {
+        target.image_blend = c_yellow;
     }
 
     // Play stun sound
@@ -168,8 +167,12 @@ function apply_stun(target, duration, source = noone) {
         audio_play_sound(snd_enemy_stunned, 5, false);
     }
 
-    // Create stun star particles
-    create_stun_particles(target);
+    // Spawn floating text above target
+    var _text_y = target.y - 16;
+    if (variable_instance_exists(target, "bbox_top")) {
+        _text_y = target.bbox_top - 16;
+    }
+    spawn_floating_text(target.x, _text_y, "Stunned!", c_yellow, target);
 
     return true;
 }
@@ -204,10 +207,9 @@ function apply_stagger(target, duration, source = noone) {
     target.is_staggered = true;
     target.stagger_timer = _final_duration * room_speed;
 
-    // Visual/audio feedback
-    if (variable_instance_exists(target, "flash_color")) {
-        target.flash_color = c_orange;
-        target.flash_timer = 4;
+    // Visual feedback - persistent purple overlay while staggered
+    if (variable_instance_exists(target, "image_blend")) {
+        target.image_blend = make_color_rgb(160, 32, 240); // Purple for stagger
     }
 
     // Play stagger sound
@@ -216,6 +218,13 @@ function apply_stagger(target, duration, source = noone) {
     } else if (object_is_ancestor(target.object_index, obj_enemy_parent)) {
         audio_play_sound(snd_enemy_staggered, 5, false);
     }
+
+    // Spawn floating text above target
+    var _text_y = target.y - 16;
+    if (variable_instance_exists(target, "bbox_top")) {
+        _text_y = target.bbox_top - 16;
+    }
+    spawn_floating_text(target.x, _text_y, "Staggered!", make_color_rgb(160, 32, 240), target);
 
     return true;
 }
@@ -229,16 +238,16 @@ function clear_stun(target) {
     target.is_stunned = false;
     target.stun_timer = 0;
 
-    // Reset flash color/timer to clear yellow tint
-    if (variable_instance_exists(target, "flash_timer")) {
-        target.flash_timer = 0;
-    }
+    // Reset image_blend to clear yellow overlay (only if not staggered)
     if (variable_instance_exists(target, "image_blend")) {
-        target.image_blend = c_white;
+        // Only reset to white if not also staggered
+        if (!variable_instance_exists(target, "is_staggered") || !target.is_staggered) {
+            target.image_blend = c_white;
+        } else {
+            // Still staggered, reapply stagger color
+            target.image_blend = make_color_rgb(160, 32, 240);
+        }
     }
-
-    // Destroy stun particles
-    destroy_stun_particles(target);
 }
 
 /// @function clear_stagger(target)
@@ -250,12 +259,15 @@ function clear_stagger(target) {
     target.is_staggered = false;
     target.stagger_timer = 0;
 
-    // Reset flash color/timer to clear orange tint
-    if (variable_instance_exists(target, "flash_timer")) {
-        target.flash_timer = 0;
-    }
+    // Reset image_blend to clear purple overlay (only if not stunned)
     if (variable_instance_exists(target, "image_blend")) {
-        target.image_blend = c_white;
+        // Only reset to white if not also stunned
+        if (!variable_instance_exists(target, "is_stunned") || !target.is_stunned) {
+            target.image_blend = c_white;
+        } else {
+            // Still stunned, reapply stun color
+            target.image_blend = c_yellow;
+        }
     }
 }
 

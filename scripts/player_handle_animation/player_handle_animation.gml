@@ -30,11 +30,34 @@ function player_handle_animation() {
 
     if (state == PlayerState.attacking) {
         // Attack animations play once and don't loop
-        anim_frame += anim_speed_walk * 1.5; // Slightly faster for attack animations
+        var _attack_speed_mult = 1.5; // Slightly faster for attack animations
+
+        // Apply ranged windup speed modifier during windup phase
+        if (ranged_windup_active && !ranged_windup_complete) {
+            _attack_speed_mult = _attack_speed_mult * ranged_windup_speed; // Slow down during windup
+        }
+
+        anim_frame += anim_speed_walk * _attack_speed_mult;
+
+        // Handle ranged attack windup completion
+        if (ranged_windup_active && !ranged_windup_complete && anim_frame >= current_anim_length) {
+            // Windup animation cycle complete - spawn arrow
+            ranged_windup_complete = true;
+            spawn_player_arrow(ranged_windup_direction);
+            anim_frame = 0; // Reset for any remaining animation
+            ranged_windup_active = false; // Clear windup flag
+
+            if (variable_global_exists("debug_mode") && global.debug_mode) {
+                show_debug_message("PLAYER WINDUP COMPLETE - Arrow spawned after " + string(current_anim_length) + " frames");
+            }
+        }
+
         if (anim_frame >= current_anim_length) {
             // Attack animation finished, return to idle state
             state = PlayerState.idle;
             anim_frame = 0;
+            ranged_windup_active = false; // Ensure flags are reset
+            ranged_windup_complete = false;
         }
     } else if (move_dir == "idle") {
         // For idle, sync with global timer but keep it in the idle animation range

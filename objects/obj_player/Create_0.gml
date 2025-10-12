@@ -193,6 +193,14 @@ previous_y_offset = 0;
 attack_cooldown = 0;
 can_attack = true;
 
+// Ranged attack windup system (telegraph/anticipation before projectile spawn)
+// Creates visual and audio telegraph by slowing attack animation and delaying projectile spawn
+ranged_windup_speed = 0.6;        // Animation speed multiplier during windup (0.1-1.0, default 0.6)
+                                  // Lower values = longer telegraph. Can be modified by equipment/traits
+ranged_windup_complete = false;   // Tracks if first animation cycle finished (projectile spawns when true)
+ranged_windup_active = false;     // Tracks if currently winding up a ranged attack
+ranged_windup_direction = "down"; // Stores direction for arrow spawn after windup
+
 // Knockback system
 kb_x = 0;
 kb_y = 0;

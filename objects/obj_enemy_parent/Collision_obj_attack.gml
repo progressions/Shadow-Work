@@ -78,6 +78,9 @@ if (state != EnemyState.dead) {
 		     ranged_windup_complete = false; // Reset flag
 		     ranged_attack_cooldown = 0; // Reset cooldown so they can attack again sooner
 
+		     // Play interrupt sound
+		     play_sfx(snd_enemy_interrupted, 0.7, false);
+
 		     if (variable_global_exists("debug_mode") && global.debug_mode) {
 		         show_debug_message("RANGED ATTACK INTERRUPTED - Enemy took damage during windup");
 		     }

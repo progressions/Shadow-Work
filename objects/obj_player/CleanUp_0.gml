@@ -5,6 +5,3 @@ if (audio_emitter_exists(torch_sound_emitter)) {
 }
 
 torch_sound_emitter = -1;
-
-// Clean up stun particles
-destroy_stun_particles(self);
