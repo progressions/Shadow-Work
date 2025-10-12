@@ -1,6 +1,18 @@
 /// obj_hazard_parent : Step Event
 /// Update timers and apply continuous damage
 
+// Handle animation pause/unpause
+if (global.game_paused && !was_paused) {
+    // Just became paused - freeze animation
+    stored_image_speed = image_speed;
+    image_speed = 0;
+    was_paused = true;
+} else if (!global.game_paused && was_paused) {
+    // Just became unpaused - restore animation
+    image_speed = stored_image_speed;
+    was_paused = false;
+}
+
 if (global.game_paused) exit;
 
 // ==============================

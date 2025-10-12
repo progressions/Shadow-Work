@@ -72,6 +72,8 @@ if (sprite_index == -1) {
 }
 
 image_speed = 0.2; // Default animation speed
+stored_image_speed = image_speed; // Store for pause/unpause
+was_paused = false; // Track pause state
 
 // ==============================
 // ENTITY TRACKING DATA STRUCTURES

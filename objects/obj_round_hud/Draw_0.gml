@@ -71,6 +71,40 @@ if (instance_exists(obj_player) && obj_player.loadouts.ranged.right_hand != unde
     draw_sprite_stretched(spr_items, _ranged_frame, x + 8, y + _sprite_height + 90, 64, 64);
 }
 
+// Draw dash icon with cooldown visualization
+// frame 0: dash is ready
+// frame 1: cooldown just started (0-30%)
+// frame 2: cooldown is 30% over (30-60%)
+// frame 3: cooldown is 60% over (60-100%)
+if (instance_exists(obj_player)) {
+    var _dash_frame = 0;
+
+    if (obj_player.dash_cooldown > 0) {
+        // Calculate cooldown progress (0.0 to 1.0)
+        var _progress = (obj_player.dash_cooldown_time - obj_player.dash_cooldown) / obj_player.dash_cooldown_time;
+
+        // Map progress to frame (1, 2, or 3)
+        if (_progress < 0.3) {
+            _dash_frame = 1; // Just started (0-30%)
+        } else if (_progress < 0.6) {
+            _dash_frame = 2; // 30-60% complete
+        } else {
+            _dash_frame = 3; // 60-100% complete
+        }
+    }
+
+    // Apply blue flash when dash is first triggered (first 10% of cooldown)
+    var _dash_color = c_white;
+    if (obj_player.dash_cooldown > 0) {
+        var _cooldown_percent = obj_player.dash_cooldown / obj_player.dash_cooldown_time;
+        if (_cooldown_percent > 0.9) {  // Flash during first 10% of cooldown
+            _dash_color = c_aqua;  // Bright blue flash
+        }
+    }
+
+    draw_sprite_ext(spr_dash_icon, _dash_frame, x + 8, y + _sprite_height + 150, 1, 1, 0, _dash_color, 1);
+}
+
 // Build status effect display string
 if (instance_exists(obj_player)) {
     var _status_string = "";
@@ -129,6 +163,6 @@ if (instance_exists(obj_player)) {
         scribble(_status_string)
             .starting_format("fnt_ui", c_white)
             .scale(0.25)
-            .draw(x + 8, y + _sprite_height + 150);
+            .draw(x + 8, y + _sprite_height + 180);
     }
 }

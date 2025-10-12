@@ -46,6 +46,18 @@ if (state == CompanionState.casting) {
             // Return to previous state
             state = previous_state;
             casting_frame_index = 0;
+
+            // Reset instant trigger active flags (triggers without durations)
+            // These are effects that fire immediately during casting and don't persist
+            if (variable_struct_exists(triggers, "gust") && triggers.gust.active) {
+                triggers.gust.active = false;
+            }
+            if (variable_struct_exists(triggers, "maelstrom") && triggers.maelstrom.active) {
+                triggers.maelstrom.active = false;
+            }
+            if (variable_struct_exists(triggers, "dash_mend") && triggers.dash_mend.active) {
+                triggers.dash_mend.active = false;
+            }
         }
     }
 
