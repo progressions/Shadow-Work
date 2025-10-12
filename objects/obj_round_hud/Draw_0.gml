@@ -49,15 +49,12 @@ draw_sprite(round_hud_level, 0, x+20, y+106);
 
 // Draw player level
 if (instance_exists(obj_player)) {
-    draw_set_font(fnt_determination_large);
-    draw_set_color(c_black);
-
     // Draw text at normal size (create a larger font resource if you need bigger text)
-    draw_text(x + 32, y + _sprite_height - 12, "99"); // string(obj_player.level));
+    scribble(string(obj_player.level))
+		.starting_format("fnt_ui", c_black)
+		.scale(0.35)
+		.draw(x + 32, y + _sprite_height - 12)
 
-    // Reset font settings
-    draw_set_color(c_white);
-    draw_set_font(-1);
 }
 
 // Draw melee loadout weapon slot
@@ -78,23 +75,27 @@ if (instance_exists(obj_player) && obj_player.loadouts.ranged.right_hand != unde
 if (instance_exists(obj_player)) {
     var _status_string = "";
     var _status_list = ["burning", "poisoned", "diseased", "cursed", "wet", "bleeding"];
-    var _has_status_effect = method(obj_player, has_status_effect);
 
-    // Check trait-based status effects
-    if (_has_status_effect != undefined) {
-        for (var i = 0; i < array_length(_status_list); i++) {
-            var _trait_key = _status_list[i];
+    // Check trait-based status effects (only active timed traits with timer bars)
+    if (variable_instance_exists(obj_player, "timed_traits")) {
+        for (var i = 0; i < array_length(obj_player.timed_traits); i++) {
+            var _entry = obj_player.timed_traits[i];
+            var _trait_key = _entry.trait;
 
-            // Get stack count for this status effect
-            var _stacks = 0;
-            with (obj_player) {
-                _stacks = get_total_trait_stacks(_trait_key);
+            // Only show status effects in our display list
+            var _is_status_effect = false;
+            for (var j = 0; j < array_length(_status_list); j++) {
+                if (_status_list[j] == _trait_key) {
+                    _is_status_effect = true;
+                    break;
+                }
             }
 
-            if (_stacks > 0) {
+            if (_is_status_effect) {
                 var _trait_data = status_effect_get_trait_data(_trait_key);
                 if (_trait_data != undefined) {
                     var _name = _trait_data.name ?? string_upper(_trait_key);
+                    var _stacks = _entry.stacks_applied;
 
                     // Add stack count if more than 1 stack
                     if (_stacks > 1) {

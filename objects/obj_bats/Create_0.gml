@@ -52,3 +52,5 @@ loot_table = [
 attack_status_effects = [
     {trait: "bleeding", chance: 0.3, stacks: 1}  // 30% chance to apply bleeding
 ];
+
+show_debug_message("Bat attack_status_effects configured: " + string(attack_status_effects));

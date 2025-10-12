@@ -107,15 +107,26 @@ if (state == EnemyState.attacking) {
 
             // Apply attack status effects (like burning from fire imp)
             if (variable_instance_exists(self, "attack_status_effects")) {
+                show_debug_message("Checking " + string(array_length(attack_status_effects)) + " status effects");
                 for (var i = 0; i < array_length(attack_status_effects); i++) {
                     var effect_data = attack_status_effects[i];
-                    if (random(1) < effect_data.chance) {
+                    var _trait_key = status_effect_resolve_trait(effect_data);
+                    var _chance = effect_data.chance;
+                    var _roll = random(1);
+                    show_debug_message("Status effect " + _trait_key + ": chance=" + string(_chance) + " roll=" + string(_roll));
+                    if (_roll < _chance) {
+                        show_debug_message("Applying status effect: " + _trait_key);
                         with (_player) {
-                            apply_status_effect(effect_data);
+                            var _applied = apply_status_effect(effect_data);
+                            show_debug_message("Status effect apply result: " + string(_applied));
                         }
-                        show_debug_message("Enemy applied trait effect: " + string(status_effect_resolve_trait(effect_data)));
+                        show_debug_message("Enemy applied trait effect: " + _trait_key);
+                    } else {
+                        show_debug_message("Status effect " + _trait_key + " did not proc (roll too high)");
                     }
                 }
+            } else {
+                show_debug_message("Enemy has no attack_status_effects variable");
             }
 
             show_debug_message("Enemy dealt " + string(final_damage) + " damage to player");

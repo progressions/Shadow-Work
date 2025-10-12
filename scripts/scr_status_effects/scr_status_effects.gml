@@ -160,6 +160,7 @@ function apply_status_effect(_effect_entry, _duration_override = -1, _is_permane
     if (_trait_key == "") return false;
 
     var _trait_data = status_effect_get_trait_data(_trait_key);
+    show_debug_message("apply_status_effect - trait_key: " + _trait_key + ", trait_data: " + string(_trait_data != undefined ? "found" : "NOT FOUND"));
     if (_trait_data == undefined) return false;
 
     var _stacks = 1;
@@ -170,14 +171,21 @@ function apply_status_effect(_effect_entry, _duration_override = -1, _is_permane
     if (_stacks <= 0) return false;
 
     var _duration_seconds = (_duration_override > -1) ? _duration_override : undefined;
+    show_debug_message("Duration override: " + string(_duration_override) + ", initial duration_seconds: " + string(_duration_seconds));
 
     if (_duration_seconds == undefined) {
-        if (_normalized != undefined && variable_struct_exists(_normalized, "duration")) {
+        if (_normalized != undefined && variable_struct_exists(_normalized, "duration") && _normalized.duration != undefined) {
             _duration_seconds = _normalized.duration;
+            show_debug_message("Got duration from normalized: " + string(_duration_seconds));
         } else if (variable_struct_exists(_trait_data, "default_duration")) {
             _duration_seconds = _trait_data.default_duration;
+            show_debug_message("Got duration from trait_data.default_duration: " + string(_duration_seconds));
+        } else {
+            show_debug_message("NO DURATION FOUND - trait_data has no default_duration!");
         }
     }
+
+    show_debug_message("Final duration_seconds: " + string(_duration_seconds));
 
     if (_is_permanent) {
         add_permanent_trait(_trait_key, _stacks);
