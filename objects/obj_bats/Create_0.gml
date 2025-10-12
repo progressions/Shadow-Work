@@ -1,10 +1,14 @@
 // Inherit the parent event
 event_inherited();
 
+// Start in wander state - bats need to detect player before engaging
+state = EnemyState.wander;
+aggro_distance = 200;  // Detection range for gaining aggro
+
 // Bat-specific stats (fast flyer, low hp, hit-and-run tactics)
-attack_damage = 3;
+attack_damage = 2;
 attack_speed = 1.0;
-attack_range = 20;
+attack_range = 32;
 hp = 4;
 hp_total = hp;
 move_speed = 1.2;  // Fast flying movement

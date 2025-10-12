@@ -92,35 +92,75 @@ function movement_profile_kiting_swooper_update(_enemy) {
             _enemy.movement_profile_target_y = _base_target_y + lengthdir_y(_random_dist, _random_angle);
         }
 
-        // Use pathfinding to move toward erratic target
-        // Check if we need to update path (target moved significantly or no path)
-        var _path_needs_update = false;
-
-        if (!path_exists(_enemy.path) || _enemy.path_speed == 0) {
-            _path_needs_update = true;
-        } else {
-            var _dist_to_path_target = point_distance(
-                _enemy.movement_profile_target_x,
-                _enemy.movement_profile_target_y,
-                _enemy.current_path_target_x,
-                _enemy.current_path_target_y
-            );
-            if (_dist_to_path_target > 32) {
-                _path_needs_update = true;
+        // Check if enemy is flying (can move directly without pathfinding)
+        var _is_flying = false;
+        with (_enemy) {
+            if (variable_instance_exists(self, "tags") && is_array(tags)) {
+                for (var i = 0; i < array_length(tags); i++) {
+                    if (tags[i] == "flying") {
+                        _is_flying = true;
+                        break;
+                    }
+                }
             }
         }
 
-        if (_path_needs_update) {
-            // Use existing enemy pathfinding system
-            with (_enemy) {
-                var _path_found = enemy_update_path(
-                    movement_profile_target_x,
-                    movement_profile_target_y
-                );
+        if (_is_flying) {
+            // Flying enemies move directly toward target without pathfinding
+            var _dir = point_direction(_enemy.x, _enemy.y, _enemy.movement_profile_target_x, _enemy.movement_profile_target_y);
+            var _dist_to_target = point_distance(_enemy.x, _enemy.y, _enemy.movement_profile_target_x, _enemy.movement_profile_target_y);
 
-                if (_path_found) {
-                    current_path_target_x = movement_profile_target_x;
-                    current_path_target_y = movement_profile_target_y;
+            // Apply speed modifiers
+            var _speed_modifier = 1.0;
+            with (_enemy) {
+                _speed_modifier = get_status_effect_modifier("speed");
+                var _terrain_speed = enemy_get_terrain_speed_modifier();
+                var _companion_slow = get_companion_enemy_slow(x, y);
+                _speed_modifier *= _terrain_speed * _companion_slow;
+            }
+
+            var _actual_speed = _enemy.move_speed * _speed_modifier;
+
+            // Move directly (only avoid rising pillars and other solid objects)
+            if (_dist_to_target > 2) {
+                var _dx = lengthdir_x(_actual_speed, _dir);
+                var _dy = lengthdir_y(_actual_speed, _dir);
+
+                with (_enemy) {
+                    move_and_collide(_dx, _dy, [obj_rising_pillar]);
+                }
+            }
+        } else {
+            // Ground enemies use pathfinding
+            // Check if we need to update path (target moved significantly or no path)
+            var _path_needs_update = false;
+
+            if (!path_exists(_enemy.path) || _enemy.path_speed == 0) {
+                _path_needs_update = true;
+            } else {
+                var _dist_to_path_target = point_distance(
+                    _enemy.movement_profile_target_x,
+                    _enemy.movement_profile_target_y,
+                    _enemy.current_path_target_x,
+                    _enemy.current_path_target_y
+                );
+                if (_dist_to_path_target > 32) {
+                    _path_needs_update = true;
+                }
+            }
+
+            if (_path_needs_update) {
+                // Use existing enemy pathfinding system
+                with (_enemy) {
+                    var _path_found = enemy_update_path(
+                        movement_profile_target_x,
+                        movement_profile_target_y
+                    );
+
+                    if (_path_found) {
+                        current_path_target_x = movement_profile_target_x;
+                        current_path_target_y = movement_profile_target_y;
+                    }
                 }
             }
         }
@@ -263,35 +303,73 @@ function movement_profile_kiting_swooper_update(_enemy) {
 
             show_debug_message("Enemy " + object_get_name(_enemy.object_index) + " returned to anchor, resuming kiting");
         } else {
-            // Not at anchor yet - navigate back using pathfinding
-            // Check if we need to update path
-            var _path_needs_update = false;
-
-            if (!path_exists(_enemy.path) || _enemy.path_speed == 0) {
-                _path_needs_update = true;
-            } else {
-                var _dist_to_path_target = point_distance(
-                    _enemy.movement_profile_anchor_x,
-                    _enemy.movement_profile_anchor_y,
-                    _enemy.current_path_target_x,
-                    _enemy.current_path_target_y
-                );
-                if (_dist_to_path_target > 32) {
-                    _path_needs_update = true;
+            // Not at anchor yet - navigate back
+            // Check if enemy is flying (can move directly without pathfinding)
+            var _is_flying = false;
+            with (_enemy) {
+                if (variable_instance_exists(self, "tags") && is_array(tags)) {
+                    for (var i = 0; i < array_length(tags); i++) {
+                        if (tags[i] == "flying") {
+                            _is_flying = true;
+                            break;
+                        }
+                    }
                 }
             }
 
-            if (_path_needs_update) {
-                // Use existing enemy pathfinding system
-                with (_enemy) {
-                    var _path_found = enemy_update_path(
-                        movement_profile_anchor_x,
-                        movement_profile_anchor_y
-                    );
+            if (_is_flying) {
+                // Flying enemies move directly toward anchor without pathfinding
+                var _dir = point_direction(_enemy.x, _enemy.y, _enemy.movement_profile_anchor_x, _enemy.movement_profile_anchor_y);
 
-                    if (_path_found) {
-                        current_path_target_x = movement_profile_anchor_x;
-                        current_path_target_y = movement_profile_anchor_y;
+                // Apply speed modifiers
+                var _speed_modifier = 1.0;
+                with (_enemy) {
+                    _speed_modifier = get_status_effect_modifier("speed");
+                    var _terrain_speed = enemy_get_terrain_speed_modifier();
+                    var _companion_slow = get_companion_enemy_slow(x, y);
+                    _speed_modifier *= _terrain_speed * _companion_slow;
+                }
+
+                var _actual_speed = _enemy.move_speed * _speed_modifier * _params.return_speed;
+
+                // Move directly (only avoid rising pillars and other solid objects)
+                var _dx = lengthdir_x(_actual_speed, _dir);
+                var _dy = lengthdir_y(_actual_speed, _dir);
+
+                with (_enemy) {
+                    move_and_collide(_dx, _dy, [obj_rising_pillar]);
+                }
+            } else {
+                // Ground enemies use pathfinding
+                // Check if we need to update path
+                var _path_needs_update = false;
+
+                if (!path_exists(_enemy.path) || _enemy.path_speed == 0) {
+                    _path_needs_update = true;
+                } else {
+                    var _dist_to_path_target = point_distance(
+                        _enemy.movement_profile_anchor_x,
+                        _enemy.movement_profile_anchor_y,
+                        _enemy.current_path_target_x,
+                        _enemy.current_path_target_y
+                    );
+                    if (_dist_to_path_target > 32) {
+                        _path_needs_update = true;
+                    }
+                }
+
+                if (_path_needs_update) {
+                    // Use existing enemy pathfinding system
+                    with (_enemy) {
+                        var _path_found = enemy_update_path(
+                            movement_profile_anchor_x,
+                            movement_profile_anchor_y
+                        );
+
+                        if (_path_found) {
+                            current_path_target_x = movement_profile_anchor_x;
+                            current_path_target_y = movement_profile_anchor_y;
+                        }
                     }
                 }
             }
