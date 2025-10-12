@@ -115,6 +115,14 @@ global.trait_database = {
         max_stacks: 5
     },
 
+    // Bleeding traits (physical damage resistance)
+    bleeding_immunity: {
+        name: "Bleeding Immunity",
+        description: "Complete immunity to bleeding effects",
+        damage_modifier: 0.0,
+        max_stacks: 5
+    },
+
     // Special traits
     deals_poison_damage: {
         name: "Deals Poison Damage",
@@ -230,6 +238,17 @@ global.trait_database = {
         ui_color: make_color_rgb(139, 69, 19), // Brown
         show_feedback: true,
         blocked_by: ["disease_immunity"]
+    },
+    bleeding: {
+        name: "Bleeding",
+        default_duration: 4,
+        tick_damage: 1,
+        tick_rate_seconds: 0.5,
+        damage_type: DamageType.physical,
+        max_stacks: 5,
+        ui_color: make_color_rgb(139, 0, 0), // Dark red
+        show_feedback: true,
+        blocked_by: ["bleeding_immunity"]
     },
     // Defense traits (affect damage reduction, not damage type)
     defense_resistance: {

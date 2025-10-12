@@ -77,7 +77,7 @@ if (instance_exists(obj_player) && obj_player.loadouts.ranged.right_hand != unde
 // Build status effect display string
 if (instance_exists(obj_player)) {
     var _status_string = "";
-    var _status_list = ["burning", "poisoned", "diseased", "cursed", "wet"];
+    var _status_list = ["burning", "poisoned", "diseased", "cursed", "wet", "bleeding"];
     var _has_status_effect = method(obj_player, has_status_effect);
 
     // Check trait-based status effects
@@ -85,10 +85,22 @@ if (instance_exists(obj_player)) {
         for (var i = 0; i < array_length(_status_list); i++) {
             var _trait_key = _status_list[i];
 
-            if (_has_status_effect(_trait_key)) {
+            // Get stack count for this status effect
+            var _stacks = 0;
+            with (obj_player) {
+                _stacks = get_total_trait_stacks(_trait_key);
+            }
+
+            if (_stacks > 0) {
                 var _trait_data = status_effect_get_trait_data(_trait_key);
                 if (_trait_data != undefined) {
                     var _name = _trait_data.name ?? string_upper(_trait_key);
+
+                    // Add stack count if more than 1 stack
+                    if (_stacks > 1) {
+                        _name += " x" + string(_stacks);
+                    }
+
                     var _color = _trait_data.ui_color ?? c_white;
                     var _color_value = clamp(round(_color), 0, 16777215);
                     var _color_tag = "[d#" + string(_color_value) + "]";

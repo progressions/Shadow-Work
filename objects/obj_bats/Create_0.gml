@@ -47,3 +47,8 @@ loot_table = [
     {item_key: "arrows", weight: 2},
     {item_key: "small_health_potion", weight: 1}
 ];
+
+// Bat melee attack - applies bleeding status effect (bite causes bleeding)
+attack_status_effects = [
+    {trait: "bleeding", chance: 0.3, stacks: 1}  // 30% chance to apply bleeding
+];
