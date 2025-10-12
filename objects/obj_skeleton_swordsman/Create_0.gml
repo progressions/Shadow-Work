@@ -5,7 +5,7 @@ event_inherited();
 attack_damage = 2;
 attack_speed = 1.4;
 attack_range = 24;
-hp = 5;
+hp = 7;
 move_speed = 0.8;
 
 array_push(tags, "undead");

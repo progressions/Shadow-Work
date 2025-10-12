@@ -217,6 +217,12 @@ if (state != PlayerState.dead) {
     #endregion Companion System
 }
 
+// DEBUG: Stagger player (4 key)
+if (keyboard_check_pressed(ord("4"))) {
+    apply_stagger(self, 2.0, noone); // 2 second stagger
+    show_debug_message("Applied 2 second stagger to player");
+}
+
 // DEBUG: Stun nearest enemy (7 key)
 if (keyboard_check_pressed(ord("7"))) {
     var nearest_enemy = instance_nearest(x, y, obj_enemy_parent);
