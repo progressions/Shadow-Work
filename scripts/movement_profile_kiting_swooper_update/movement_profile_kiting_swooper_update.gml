@@ -8,6 +8,26 @@ function movement_profile_kiting_swooper_update(_enemy) {
     var _profile = _enemy.movement_profile;
     var _params = _profile.parameters;
 
+    // Use custom parameters if defined (allows per-enemy variation)
+    if (variable_instance_exists(_enemy, "movement_profile_custom_params")) {
+        var _custom = _enemy.movement_profile_custom_params;
+        // Override distance parameters if custom values exist
+        if (variable_struct_exists(_custom, "kite_min_distance")) {
+            _params = {
+                kite_min_distance: _custom.kite_min_distance,
+                kite_max_distance: _custom.kite_max_distance,
+                kite_ideal_distance: _custom.kite_ideal_distance,
+                erratic_offset: _params.erratic_offset,
+                erratic_update_interval: _params.erratic_update_interval,
+                swoop_range: _params.swoop_range,
+                swoop_speed: _params.swoop_speed,
+                swoop_cooldown: _params.swoop_cooldown,
+                return_speed: _params.return_speed,
+                anchor_tolerance: _params.anchor_tolerance
+            };
+        }
+    }
+
     // Get player reference
     if (!instance_exists(obj_player)) return;
     var _player = obj_player;
@@ -121,10 +141,13 @@ function movement_profile_kiting_swooper_update(_enemy) {
         if (_enemy.movement_profile_swoop_cooldown <= 0 && _dist_to_player <= _params.swoop_range) {
             // Ready to swoop!
             _enemy.movement_profile_state = "swooping";
-            _enemy.state = EnemyState.attacking;
+            // Keep enemy in targeting state - movement profile handles everything
 
-            if (path_exists(_enemy.path)) {
-                path_end(_enemy.path);
+            // Stop following current path
+            with (_enemy) {
+                if (path_exists(path)) {
+                    path_end();
+                }
             }
 
             show_debug_message("Enemy " + object_get_name(_enemy.object_index) + " initiating swoop attack!");
@@ -132,8 +155,10 @@ function movement_profile_kiting_swooper_update(_enemy) {
     }
     // Handle swooping state (dash attack toward player)
     else if (_enemy.movement_profile_state == "swooping") {
-        // Calculate direction to player (locked at swoop start)
-        if (!variable_instance_exists(_enemy, "swoop_target_x")) {
+        // Initialize swoop if not already initialized (check multiple variables to ensure complete init)
+        if (!variable_instance_exists(_enemy, "swoop_target_x") ||
+            !variable_instance_exists(_enemy, "swoop_direction") ||
+            _enemy.swoop_direction == undefined) {
             // Store target position when swoop begins
             _enemy.swoop_target_x = _player.x;
             _enemy.swoop_target_y = _player.y;
@@ -155,29 +180,45 @@ function movement_profile_kiting_swooper_update(_enemy) {
                 _enemy.facing_dir = "up";
             }
 
-            // Create swoop attack hitbox
-            var _attack = instance_create_layer(_enemy.x, _enemy.y, "Instances", obj_enemy_attack);
-            _attack.creator = _enemy;
-            _attack.damage = _enemy.attack_damage;
-            _attack.damage_type = _enemy.attack_damage_type;
-            _attack.direction = _enemy.swoop_direction;
-            _attack.speed = _params.swoop_speed;
-            _attack.image_angle = _enemy.swoop_direction;
+            // Initialize swoop hit tracking (prevent multi-hits on same swoop)
+            _enemy.swoop_has_hit = false;
 
-            // Store attack instance reference
-            _enemy.swoop_attack_instance = _attack;
+            show_debug_message("Swoop attack initialized at angle " + string(_enemy.swoop_direction));
+        }
 
-            show_debug_message("Swoop attack created at angle " + string(_enemy.swoop_direction));
+        // Safety check - if swoop_direction is undefined, abort swoop
+        if (!variable_instance_exists(_enemy, "swoop_direction") || _enemy.swoop_direction == undefined) {
+            show_debug_message("ERROR: swoop_direction undefined, aborting swoop");
+            _enemy.movement_profile_state = "returning";
+            return;
         }
 
         // Move in straight line toward target
         var _swoop_dx = lengthdir_x(_params.swoop_speed, _enemy.swoop_direction);
         var _swoop_dy = lengthdir_y(_params.swoop_speed, _enemy.swoop_direction);
 
-        // Apply movement (using move_and_collide for collision detection)
+        // Apply movement (bats can pass through other enemies during swoop)
         var _collisions = [];
         with (_enemy) {
-            _collisions = move_and_collide(_swoop_dx, _swoop_dy, [tilemap, obj_enemy_parent, obj_rising_pillar, obj_player]);
+            _collisions = move_and_collide(_swoop_dx, _swoop_dy, [tilemap, obj_rising_pillar]);
+        }
+
+        // Check if player is in melee range and trigger attack
+        if (!_enemy.swoop_has_hit && instance_exists(obj_player)) {
+            var _dist_to_player = point_distance(_enemy.x, _enemy.y, obj_player.x, obj_player.y);
+            if (_dist_to_player <= _enemy.attack_range && _enemy.can_attack) {
+                // Temporarily set state to attacking and trigger melee attack
+                with (_enemy) {
+                    state = EnemyState.attacking;
+                    attack_cooldown = round(90 / attack_speed);
+                    can_attack = false;
+                    alarm[2] = 15; // Standard melee attack delay
+                }
+
+                // Mark that this swoop has hit (prevent multi-hits)
+                _enemy.swoop_has_hit = true;
+                show_debug_message("Swoop triggered melee attack on player (distance: " + string(_dist_to_player) + ")");
+            }
         }
 
         // Check if we've reached target or hit something
@@ -191,7 +232,7 @@ function movement_profile_kiting_swooper_update(_enemy) {
         if (_dist_to_target < 20 || _dist_traveled > _params.swoop_range || array_length(_collisions) > 0) {
             // Swoop complete - transition to returning
             _enemy.movement_profile_state = "returning";
-            _enemy.state = EnemyState.targeting;
+            // Enemy stays in targeting state throughout movement profile
 
             // Clean up swoop variables
             _enemy.swoop_target_x = undefined;
@@ -199,13 +240,7 @@ function movement_profile_kiting_swooper_update(_enemy) {
             _enemy.swoop_start_x = undefined;
             _enemy.swoop_start_y = undefined;
             _enemy.swoop_direction = undefined;
-
-            // Destroy attack hitbox if still exists
-            if (variable_instance_exists(_enemy, "swoop_attack_instance") &&
-                instance_exists(_enemy.swoop_attack_instance)) {
-                instance_destroy(_enemy.swoop_attack_instance);
-            }
-            _enemy.swoop_attack_instance = undefined;
+            _enemy.swoop_has_hit = undefined;
 
             show_debug_message("Swoop complete, transitioning to returning state");
         }

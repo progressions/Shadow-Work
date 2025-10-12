@@ -1,30 +1,41 @@
 // Inherit the parent event
 event_inherited();
 
-// Burglar-specific stats (fast, low damage)
-attack_damage = 2;
-attack_speed = 1.5;
-attack_range = 18;
-hp = 2;
-move_speed = 0.8;
+// Bat-specific stats (fast flyer, low hp, hit-and-run tactics)
+attack_damage = 3;
+attack_speed = 1.0;
+attack_range = 20;
+hp = 4;
+hp_total = hp;
+move_speed = 1.2;  // Fast flying movement
 
-// Burglar traits - forest dweller, vulnerable to fire, resistant to poison
-array_push(tags, "arboreal");
-apply_tag_traits();
+// Assign kiting swooper movement profile
+movement_profile = global.movement_profile_database.kiting_swooper;
+movement_profile_state = "kiting";  // Start in kiting state
 
-// Approach variation - burglars are sneaky and flank frequently
-flank_chance = 0.7;
-flank_trigger_distance = 100;  // Shorter range for aggressive close-quarters flanking
+// Initialize movement profile variables
+movement_profile_anchor_x = x;  // Remember spawn position
+movement_profile_anchor_y = y;
+movement_profile_erratic_timer = 0;  // Will pick position immediately
+movement_profile_swoop_cooldown = movement_profile.parameters.swoop_cooldown;
 
-enemy_sounds.on_melee_attack = snd_burglar_attack;
-enemy_sounds.on_hit = snd_burglar_hit;
-enemy_sounds.on_death = snd_burglar_death;
+// Add variation to kite distance to prevent clustering
+// This spreads bats out at different distances (±20 pixels from ideal)
+var _distance_variation = irandom_range(-20, 20);
+movement_profile_custom_params = {
+    kite_min_distance: movement_profile.parameters.kite_min_distance + _distance_variation,
+    kite_max_distance: movement_profile.parameters.kite_max_distance + _distance_variation,
+    kite_ideal_distance: movement_profile.parameters.kite_ideal_distance + _distance_variation
+};
 
-// Burglar loot table - thief-appropriate items (fast, weak enemy = lower drop rate)
-drop_chance = 0.15; // 25% chance to drop loot
+// Bat sounds (using generic sounds for now)
+// enemy_sounds.on_melee_attack = snd_bat_attack;
+// enemy_sounds.on_hit = snd_bat_hit;
+// enemy_sounds.on_death = snd_bat_death;
+
+// Bat loot table - light items (fast weak flyer = low drop rate)
+drop_chance = 0.2; // 20% chance to drop loot
 loot_table = [
-    {item_key: "rusty_dagger", weight: 3},
     {item_key: "arrows", weight: 2},
-    {item_key: "small_health_potion", weight: 2},
-    {item_key: "water", weight: 1}
+    {item_key: "small_health_potion", weight: 1}
 ];

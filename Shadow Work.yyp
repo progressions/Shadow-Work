@@ -395,6 +395,7 @@
     {"id":{"name":"inventory_draw_paper_doll","path":"scripts/inventory_draw_paper_doll/inventory_draw_paper_doll.yy",},},
     {"id":{"name":"inventory_get_item_description","path":"scripts/inventory_get_item_description/inventory_get_item_description.yy",},},
     {"id":{"name":"IsChatterbox","path":"scripts/IsChatterbox/IsChatterbox.yy",},},
+    {"id":{"name":"movement_profile_kiting_swooper_update","path":"scripts/movement_profile_kiting_swooper_update/movement_profile_kiting_swooper_update.yy",},},
     {"id":{"name":"player_attacking","path":"scripts/player_attacking/player_attacking.yy",},},
     {"id":{"name":"player_dashing","path":"scripts/player_dashing/player_dashing.yy",},},
     {"id":{"name":"player_focus_state","path":"scripts/player_focus_state/player_focus_state.yy",},},
