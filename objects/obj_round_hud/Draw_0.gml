@@ -73,3 +73,49 @@ if (instance_exists(obj_player) && obj_player.loadouts.ranged.right_hand != unde
     var _ranged_frame = obj_player.loadouts.ranged.right_hand.definition.world_sprite_frame;
     draw_sprite_stretched(spr_items, _ranged_frame, x + 8, y + _sprite_height + 90, 64, 64);
 }
+
+// Build status effect display string
+if (instance_exists(obj_player)) {
+    var _status_string = "";
+    var _status_list = ["burning", "poisoned", "diseased", "cursed", "wet"];
+    var _has_status_effect = method(obj_player, has_status_effect);
+
+    // Check trait-based status effects
+    if (_has_status_effect != undefined) {
+        for (var i = 0; i < array_length(_status_list); i++) {
+            var _trait_key = _status_list[i];
+
+            if (_has_status_effect(_trait_key)) {
+                var _trait_data = status_effect_get_trait_data(_trait_key);
+                if (_trait_data != undefined) {
+                    var _name = _trait_data.name ?? string_upper(_trait_key);
+                    var _color = _trait_data.ui_color ?? c_white;
+                    var _color_value = clamp(round(_color), 0, 16777215);
+                    var _color_tag = "[d#" + string(_color_value) + "]";
+
+                    if (_status_string != "") _status_string += "\n";
+                    _status_string += _color_tag + _name + "[/c]";
+                }
+            }
+        }
+    }
+
+    // Check stunned/staggered variables
+    if (obj_player.is_stunned) {
+        if (_status_string != "") _status_string += "\n";
+        _status_string += "[c_yellow]Stunned[/c_yellow]";
+    }
+
+    if (obj_player.is_staggered) {
+        if (_status_string != "") _status_string += "\n";
+        _status_string += "[#A020F0]Staggered[/c]";  // Purple
+    }
+
+    // Draw status effects if any are active
+    if (_status_string != "") {
+        scribble(_status_string)
+            .starting_format("fnt_ui", c_white)
+            .scale(0.25)
+            .draw(x + 8, y + _sprite_height + 150);
+    }
+}

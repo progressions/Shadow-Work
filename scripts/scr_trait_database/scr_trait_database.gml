@@ -220,6 +220,17 @@ global.trait_database = {
         blocked_by: [],
 		opposite_trait: "cursed"
     },
+    diseased: {
+        name: "Diseased",
+        default_duration: 5,
+        tick_damage: 1,
+        tick_rate_seconds: 1.0,
+        damage_type: DamageType.disease,
+        max_stacks: 5,
+        ui_color: make_color_rgb(139, 69, 19), // Brown
+        show_feedback: true,
+        blocked_by: ["disease_immunity"]
+    },
     // Defense traits (affect damage reduction, not damage type)
     defense_resistance: {
         name: "Bolstered Defense",
