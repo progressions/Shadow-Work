@@ -20,6 +20,9 @@ effect_to_apply = "cursed";
 effect_duration = -1;                // Use trait default duration
 effect_mode = "on_enter";
 
+// Immunity - entities with these traits are immune to curse
+immunity_traits = ["unholy_immunity", "ground_hazard_immunity"];
+
 // Visual/Animation
 image_speed = 0.2;                  // Animation speed (slower than fire)
 

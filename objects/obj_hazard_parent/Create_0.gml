@@ -41,6 +41,10 @@ effect_duration = 3.0;
 /// Effect mode: "none", "on_enter"
 effect_mode = "on_enter";
 
+/// Immunity traits - entities with these traits are immune to this hazard's effects
+// Array of trait keys (e.g., ["poison_immunity", "ground_hazard_immunity"])
+immunity_traits = [];
+
 // ==============================
 // AUDIO CONFIGURATION
 // ==============================

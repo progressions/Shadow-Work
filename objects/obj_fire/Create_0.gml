@@ -20,6 +20,9 @@ effect_type = "status";                      // Apply status effect
 effect_to_apply = "burning";  // Burning trait effect
 effect_mode = "on_enter";                    // Apply when entering fire
 
+// Immunity - entities with these traits are immune to fire
+immunity_traits = ["fire_immunity", "ground_hazard_immunity"];
+
 // Visual/Animation
 sprite_index = spr_fire;            // 4-frame fire animation
 image_speed = 0.3;                  // Animation speed

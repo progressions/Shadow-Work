@@ -10,13 +10,13 @@ function init_terrain_effects() {
             traits: ["burning"],              // Array of trait keys to apply
             speed_modifier: 0.5,              // 20% slower (0.8x speed)
             is_hazard: true,                  // Mark as obstacle in pathfinding
-            hazard_immunity_traits: ["fire_immunity"]  // Entities with these traits ignore hazard flag
+            hazard_immunity_traits: ["fire_immunity", "ground_hazard_immunity"]  // Entities with these traits ignore hazard flag
         },
         "poison_pool": {
             traits: ["poisoned"],
             speed_modifier: 0.7,              // 30% slower
             is_hazard: true,
-            hazard_immunity_traits: ["poison_immunity"]
+            hazard_immunity_traits: ["poison_immunity", "ground_hazard_immunity"]
         },
         "ice": {
             traits: [],                       // No traits applied

@@ -97,6 +97,11 @@ global.tag_database = {
 		name: "Undead",
 		description: "Unholy living dead",
 		grants_traits: ["fire_immunity", "poison_immunity", "holy_vulnerability"]
+	},
+	flying: {
+		name: "Flying",
+		description: "Airborne creature",
+		grants_traits: ["ground_hazard_immunity"]
 	}
 };
 

@@ -611,21 +611,36 @@ function apply_terrain_effects() {
         _terrain_data = global.terrain_effects_map[$ "grass"]; // Default
     }
 
-    // Apply speed modifier (direct modification)
+    // Check if entity is immune to this terrain's hazards
+    var _is_immune = false;
+    if (variable_struct_exists(_terrain_data, "hazard_immunity_traits")) {
+        var _immunity_traits = _terrain_data.hazard_immunity_traits;
+        for (var i = 0; i < array_length(_immunity_traits); i++) {
+            if (has_trait(_immunity_traits[i])) {
+                _is_immune = true;
+                break;
+            }
+        }
+    }
+
+    // Apply speed modifier (direct modification) - always applied, even if immune
     terrain_speed_modifier = _terrain_data.speed_modifier;
 
     // Track terrain traits
     var _new_terrain_traits = {};
 
-    // Apply traits from current terrain
-    var _traits_to_apply = _terrain_data.traits;
-    for (var i = 0; i < array_length(_traits_to_apply); i++) {
-        var _trait_key = _traits_to_apply[i];
-        _new_terrain_traits[$ _trait_key] = true;
+    // Only apply traits if not immune to hazard
+    if (!_is_immune) {
+        // Apply traits from current terrain
+        var _traits_to_apply = _terrain_data.traits;
+        for (var i = 0; i < array_length(_traits_to_apply); i++) {
+            var _trait_key = _traits_to_apply[i];
+            _new_terrain_traits[$ _trait_key] = true;
 
-        // Only apply trait if we haven't already applied it from this terrain
-        if (!variable_struct_exists(terrain_applied_traits, _trait_key)) {
-            apply_status_effect(_trait_key); // Shows floating text feedback
+            // Only apply trait if we haven't already applied it from this terrain
+            if (!variable_struct_exists(terrain_applied_traits, _trait_key)) {
+                apply_status_effect(_trait_key); // Shows floating text feedback
+            }
         }
     }
 

@@ -20,6 +20,9 @@ effect_to_apply = "poisoned";
 effect_duration = -1;                // Use trait default duration
 effect_mode = "on_enter";
 
+// Immunity - entities with these traits are immune to poison
+immunity_traits = ["poison_immunity", "ground_hazard_immunity"];
+
 // Visual/Animation
 // sprite_index = spr_poison_pool;     // Poison pool animation
 image_speed = 0.2;                  // Animation speed (slower than fire)

@@ -83,7 +83,23 @@ if (damage_mode == "on_enter" && damage_amount > 0) {
 // ==============================
 
 if (effect_mode == "on_enter" && effect_to_apply != undefined) {
-    // Check effect immunity
+    // Check if enemy has immunity traits
+    var _is_immune = false;
+    with (enemy) {
+        for (var i = 0; i < array_length(other.immunity_traits); i++) {
+            if (has_trait(other.immunity_traits[i])) {
+                _is_immune = true;
+                show_debug_message(object_get_name(object_index) + " is immune to hazard (has " + other.immunity_traits[i] + ")");
+                break;
+            }
+        }
+    }
+
+    if (_is_immune) {
+        exit; // Don't apply effect if immune
+    }
+
+    // Check effect immunity (cooldown)
     var has_effect_immunity = ds_map_exists(effect_immunity_map, enemy.id);
 
     if (!has_effect_immunity) {

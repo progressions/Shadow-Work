@@ -9,6 +9,10 @@ hp = 4;
 hp_total = hp;
 move_speed = 1.2;  // Fast flying movement
 
+// Flying trait - grants immunity to ground-based hazards (lava, poison pools, etc.)
+array_push(tags, "flying");
+apply_tag_traits();
+
 // Assign kiting swooper movement profile
 movement_profile = global.movement_profile_database.kiting_swooper;
 movement_profile_state = "kiting";  // Start in kiting state
