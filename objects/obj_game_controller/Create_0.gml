@@ -202,6 +202,8 @@ ChatterboxAddFunction("companion_stop_carrying_torch", companion_stop_carrying_t
 
 // Declare Chatterbox variables for companions
 ChatterboxVariableDefault("canopy_recruited", false);
+ChatterboxVariableDefault("hola_recruited", false);
+ChatterboxVariableDefault("yorna_recruited", false);
 ChatterboxVariableDefault("hola_thanked_for_yorna", false);
 
 // Initialize quest system

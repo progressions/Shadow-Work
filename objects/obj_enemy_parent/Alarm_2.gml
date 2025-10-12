@@ -62,7 +62,7 @@ if (state == EnemyState.attacking) {
                     play_sfx(snd_player_interrupted, 0.7, false);
 
                     // Refund arrow since attack was interrupted
-                    inventory_add_item("arrows", 1);
+                    inventory_add_item(global.item_database.arrows, 1);
 
                     if (variable_global_exists("debug_mode") && global.debug_mode) {
                         show_debug_message("PLAYER RANGED ATTACK INTERRUPTED - Took damage during windup, arrow refunded");
