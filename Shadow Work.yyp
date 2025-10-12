@@ -676,6 +676,7 @@
     {"id":{"name":"spr_character_panel","path":"sprites/spr_character_panel/spr_character_panel.yy",},},
     {"id":{"name":"spr_collision","path":"sprites/spr_collision/spr_collision.yy",},},
     {"id":{"name":"spr_column_marble","path":"sprites/spr_column_marble/spr_column_marble.yy",},},
+    {"id":{"name":"spr_companion_badge_frames","path":"sprites/spr_companion_badge_frames/spr_companion_badge_frames.yy",},},
     {"id":{"name":"spr_companion_badges","path":"sprites/spr_companion_badges/spr_companion_badges.yy",},},
     {"id":{"name":"spr_companion_hola","path":"sprites/spr_companion_hola/spr_companion_hola.yy",},},
     {"id":{"name":"spr_companion_yorna","path":"sprites/spr_companion_yorna/spr_companion_yorna.yy",},},

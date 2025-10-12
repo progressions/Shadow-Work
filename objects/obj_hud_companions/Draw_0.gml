@@ -50,6 +50,11 @@ for (var _i = 0; _i < array_length(_draw_ids); _i++) {
 	var _badge_x = x - _label.get_width() - _badge_padding - _badge_width;
 
 	draw_sprite_ext(spr_companion_badges, _badge_frame, _badge_x, _current_y, _badge_scale, _badge_scale, 0, c_white, 1);
+	var _affinity = _companion.affinity ?? 0;
+	var _frame_total = max(1, sprite_get_number(spr_companion_badge_frames));
+	var _frame_index = clamp(floor(max(0, _affinity)), 0, _frame_total - 1);
+	draw_sprite_ext(spr_companion_badge_frames, _frame_index, _badge_x, _current_y, _badge_scale, _badge_scale, 0, c_white, 1);
+
 	_label.draw(x, _current_y);
 
 	var _row_height = max(_badge_height, _label.get_height()) + 4;
