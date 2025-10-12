@@ -167,12 +167,10 @@ function apply_stun(target, duration, source = noone) {
         audio_play_sound(snd_enemy_stunned, 5, false);
     }
 
-    // Spawn floating text above target
-    var _text_y = target.y - 16;
-    if (variable_instance_exists(target, "bbox_top")) {
-        _text_y = target.bbox_top - 16;
+    // Spawn floating text using status effect feedback system
+    with (target) {
+        status_effect_spawn_feedback("stunned");
     }
-    spawn_floating_text(target.x, _text_y, "Stunned!", c_yellow, target);
 
     return true;
 }
@@ -219,12 +217,10 @@ function apply_stagger(target, duration, source = noone) {
         audio_play_sound(snd_enemy_staggered, 5, false);
     }
 
-    // Spawn floating text above target
-    var _text_y = target.y - 16;
-    if (variable_instance_exists(target, "bbox_top")) {
-        _text_y = target.bbox_top - 16;
+    // Spawn floating text using status effect feedback system
+    with (target) {
+        status_effect_spawn_feedback("staggered");
     }
-    spawn_floating_text(target.x, _text_y, "Staggered!", make_color_rgb(160, 32, 240), target);
 
     return true;
 }

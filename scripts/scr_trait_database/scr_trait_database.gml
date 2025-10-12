@@ -236,6 +236,24 @@ global.trait_database = {
         max_stacks: 5
     },
 
+    // Crowd control status effects
+    stunned: {
+        name: "Stunned!",
+        default_duration: 1.5,
+        max_stacks: 1,
+        ui_color: c_yellow,
+        show_feedback: true,
+        blocked_by: ["stun_immunity"]
+    },
+    staggered: {
+        name: "Staggered!",
+        default_duration: 1.0,
+        max_stacks: 1,
+        ui_color: make_color_rgb(160, 32, 240), // Purple
+        show_feedback: true,
+        blocked_by: ["stagger_immunity"]
+    },
+
     // Crowd control resistance traits
     stun_immunity: {
         name: "Stun Immunity",

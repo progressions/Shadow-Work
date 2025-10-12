@@ -120,7 +120,13 @@ function status_effect_spawn_feedback(_trait_key, _stacks = 1) {
 
     if (is_undefined(spawn_floating_text)) return;
 
-    spawn_floating_text(x, y - 16, _name, _color, self);
+    // Spawn at top of bounding box for better visibility
+    var _spawn_y = y - 16;
+    if (variable_instance_exists(self, "bbox_top")) {
+        _spawn_y = bbox_top - 8;
+    }
+
+    spawn_floating_text(x, _spawn_y, _name, _color, self);
 }
 
 /// @function init_status_effects()

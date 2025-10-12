@@ -1,9 +1,9 @@
 // Floating text properties
 text = "Text";
 text_color = c_white;
-float_speed = 0.75;
+float_speed = 0.3; // Slower upward movement (was 0.75)
 fade_speed = 0.03;
-lifetime = 40; // Frames until it starts fading
+lifetime = 120; // Frames until it starts fading (~2 seconds at 60fps, was 40)
 
 // Damage type (for colored damage numbers)
 damage_type = DamageType.physical;
