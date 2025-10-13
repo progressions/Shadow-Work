@@ -38,8 +38,8 @@ function serialize_player() {
             var timed_entry = player.timed_traits[i];
             array_push(timed_traits_array, {
                 trait: timed_entry.trait,
-                remaining_seconds: (timed_entry.timer ?? 0) / room_speed,
-                total_seconds: (timed_entry.total_duration ?? timed_entry.timer ?? 0) / room_speed,
+                remaining_seconds: (timed_entry.timer ?? 0) / game_get_speed(gamespeed_fps),
+                total_seconds: (timed_entry.total_duration ?? timed_entry.timer ?? 0) / game_get_speed(gamespeed_fps),
                 stacks: timed_entry.stacks_applied
             });
         }
@@ -193,8 +193,8 @@ function serialize_enemies() {
                 var timed_entry = timed_traits[i];
                 array_push(timed_traits_array, {
                     trait: timed_entry.trait,
-                    remaining_seconds: (timed_entry.timer ?? 0) / room_speed,
-                    total_seconds: (timed_entry.total_duration ?? timed_entry.timer ?? 0) / room_speed,
+                    remaining_seconds: (timed_entry.timer ?? 0) / game_get_speed(gamespeed_fps),
+                    total_seconds: (timed_entry.total_duration ?? timed_entry.timer ?? 0) / game_get_speed(gamespeed_fps),
                     stacks: timed_entry.stacks_applied
                 });
             }
@@ -299,8 +299,8 @@ function deserialize_player(data) {
 
             var _last_idx = array_length(player.timed_traits) - 1;
             if (_last_idx >= 0) {
-                player.timed_traits[_last_idx].timer = round(max(0, remaining_seconds) * room_speed);
-                player.timed_traits[_last_idx].total_duration = round(max(0, total_seconds) * room_speed);
+                player.timed_traits[_last_idx].timer = round(max(0, remaining_seconds) * game_get_speed(gamespeed_fps));
+                player.timed_traits[_last_idx].total_duration = round(max(0, total_seconds) * game_get_speed(gamespeed_fps));
             }
         }
     }
@@ -533,8 +533,8 @@ function deserialize_enemies(data) {
                     apply_timed_trait(trait_key, total_seconds, stacks);
                     var _idx = array_length(timed_traits) - 1;
                     if (_idx >= 0) {
-                        timed_traits[_idx].timer = round(max(0, remaining_seconds) * room_speed);
-                        timed_traits[_idx].total_duration = round(max(0, total_seconds) * room_speed);
+                        timed_traits[_idx].timer = round(max(0, remaining_seconds) * game_get_speed(gamespeed_fps));
+                        timed_traits[_idx].total_duration = round(max(0, total_seconds) * game_get_speed(gamespeed_fps));
                     }
                 }
             }

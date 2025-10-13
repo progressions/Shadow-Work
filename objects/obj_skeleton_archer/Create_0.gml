@@ -19,6 +19,7 @@ ranged_windup_speed = 0.3
 // This allows them to maintain shooting distance while having room to maneuver
 ideal_range = 24;  // 75% of attack_range (128) - stays at bow range, circles/kites player
 
+if (!variable_instance_exists(self, "tags")) tags = [];
 array_push(tags, "undead");
 apply_tag_traits();
 

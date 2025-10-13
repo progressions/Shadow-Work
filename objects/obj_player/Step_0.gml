@@ -124,7 +124,7 @@ if (state != PlayerState.dead) {
             dash_attack_window = 0; // Cancel window on direction change
             show_debug_message("Dash attack window CANCELLED - direction changed from " + last_dash_direction + " to " + _input_dir);
         } else {
-            dash_attack_window -= 1 / room_speed; // Decrement by delta time
+            dash_attack_window -= 1 / game_get_speed(gamespeed_fps); // Decrement by delta time
 
             if (dash_attack_window <= 0) {
                 dash_attack_window = 0;

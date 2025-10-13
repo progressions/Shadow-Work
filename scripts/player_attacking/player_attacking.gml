@@ -258,7 +258,7 @@ function spawn_player_arrow(_direction) {
     // Play attack sound when projectile spawns
     play_sfx(snd_bow_attack, 1, false);
 
-    if (variable_global_exists("debug_mode") && global.debug_mode) {
+    if (variable_global_exists("debug_mode") && global.debug_damage_reduction) {
         show_debug_message("Player arrow spawned after windup complete");
     }
 
@@ -291,7 +291,7 @@ function player_fire_ranged_projectile_local(_direction) {
     // Play windup sound (attack sound plays when arrow spawns)
     play_sfx(snd_ranged_windup, 1, false);
 
-    if (variable_global_exists("debug_mode") && global.debug_mode) {
+    if (variable_global_exists("debug_mode") && global.debug_damage_reduction) {
         show_debug_message("Player starting ranged attack windup (arrow will spawn after animation completes)");
     }
 

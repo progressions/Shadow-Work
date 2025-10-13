@@ -52,7 +52,7 @@ function enemy_calculate_target_position() {
 /// @desc Find a position with clear cardinal line of sight to target
 /// @param {real} target_x
 /// @param {real} target_y
-/// @return {struct|noone} {x, y} position or noone if none found
+/// @return {struct} {x, y} position or noone if none found
 function enemy_find_shooting_position(target_x, target_y) {
     var _controller = instance_exists(obj_pathfinding_controller) ? obj_pathfinding_controller : noone;
     if (_controller == noone) return noone;

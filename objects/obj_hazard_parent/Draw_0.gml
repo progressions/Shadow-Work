@@ -11,7 +11,7 @@ draw_self();
 
 // Uncomment to show hazard collision bounds
 /*
-if (variable_global_exists("debug_mode") && global.debug_mode) {
+if (variable_global_exists("debug_mode") && global.debug_damage_reduction) {
     draw_set_color(c_red);
     draw_set_alpha(0.3);
     draw_rectangle(bbox_left, bbox_top, bbox_right, bbox_bottom, false);

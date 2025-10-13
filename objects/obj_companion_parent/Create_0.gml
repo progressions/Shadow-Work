@@ -26,6 +26,8 @@ follow_target = noone;
 follow_distance = 28; // Pixels to maintain from player
 follow_speed = 1.15; // Slightly slower than player base speed
 min_follow_distance = 16; // Don't get closer than this
+follow_x = x; // Cached follow position
+follow_y = y;
 
 // Evading behavior (for combat evasion)
 evade_distance_min = 64; // Minimum distance from player/enemies when evading
@@ -35,6 +37,7 @@ evade_recalc_timer = 0; // Timer for throttling pathfinding recalculation
 evade_recalc_interval = 20; // Frames between recalculations (20 frames = ~333ms at 60fps)
 evade_target_x = x; // Cached evasion target position
 evade_target_y = y;
+companion_dodge_cooldown = 0; // Cooldown timer for companion collision avoidance
 
 // Pathfinding (for following behavior that avoids hazards)
 companion_path = path_add();
@@ -170,7 +173,7 @@ var _torch_burn_seconds = 60;
 if (_torch_stats != undefined && variable_struct_exists(_torch_stats, "burn_time_seconds")) {
     _torch_burn_seconds = max(1, _torch_stats[$ "burn_time_seconds"]);
 }
-torch_duration = max(1, floor(_torch_burn_seconds * room_speed));
+torch_duration = max(1, floor(_torch_burn_seconds * game_get_speed(gamespeed_fps)));
 torch_light_radius = (_torch_stats != undefined && variable_struct_exists(_torch_stats, "light_radius"))
     ? _torch_stats[$ "light_radius"]
     : 100;
@@ -193,10 +196,9 @@ function companion_start_torch_loop() {
 
     if (torch_looping) return;
 
-    var _loop_sound = asset_get_index("snd_torch_burning_loop");
-    if (_loop_sound != -1) {
+    if (audio_exists(snd_torch_burning_loop)) {
         audio_emitter_position(torch_sound_emitter, x, y, 0);
-        torch_sound_loop_instance = audio_play_sound_on(torch_sound_emitter, _loop_sound, 0, true);
+        torch_sound_loop_instance = audio_play_sound_on(torch_sound_emitter, snd_torch_burning_loop, 0, true);
         torch_looping = true;
     }
 }
@@ -400,8 +402,19 @@ function companion_update_path() {
     // Clear grid to base state (obstacles only, no hazards yet)
     mp_grid_clear_all(_grid);
 
-    // Add collision obstacles
-    mp_grid_add_instances(_grid, tilemap, true);
+    // Add collision tilemap obstacles
+    if (tilemap != -1) {
+        for (var i = 0; i < _controller.horizontal_cells; i++) {
+            for (var j = 0; j < _controller.vertical_cells; j++) {
+                var tile_data = tilemap_get(tilemap, i, j);
+                if (tile_data != 0) {
+                    mp_grid_add_cell(_grid, i, j);
+                }
+            }
+        }
+    }
+
+    // Add object obstacles
     mp_grid_add_instances(_grid, obj_rising_pillar, true);
 
     // Mark hazardous terrain as obstacles (companions always avoid hazards, no immunity)

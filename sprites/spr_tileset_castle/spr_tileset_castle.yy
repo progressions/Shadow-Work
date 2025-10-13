@@ -2,7 +2,7 @@
   "$GMSprite":"",
   "%Name":"spr_tileset_castle",
   "bboxMode":0,
-  "bbox_bottom":479,
+  "bbox_bottom":207,
   "bbox_left":0,
   "bbox_right":95,
   "bbox_top":0,
@@ -12,14 +12,14 @@
   "edgeFiltering":false,
   "For3D":false,
   "frames":[
-    {"$GMSpriteFrame":"","%Name":"1ed8d2e8-2ada-4963-8623-876a189ccc12","name":"1ed8d2e8-2ada-4963-8623-876a189ccc12","resourceType":"GMSpriteFrame","resourceVersion":"2.0",},
+    {"$GMSpriteFrame":"","%Name":"6964478f-7c5d-48c1-beb2-35e3b03851f7","name":"6964478f-7c5d-48c1-beb2-35e3b03851f7","resourceType":"GMSpriteFrame","resourceVersion":"2.0",},
   ],
   "gridX":0,
   "gridY":0,
-  "height":480,
+  "height":208,
   "HTile":false,
   "layers":[
-    {"$GMImageLayer":"","%Name":"2224f857-defa-4c22-a509-409ee177c15f","blendMode":0,"displayName":"default","isLocked":false,"name":"2224f857-defa-4c22-a509-409ee177c15f","opacity":100.0,"resourceType":"GMImageLayer","resourceVersion":"2.0","visible":true,},
+    {"$GMImageLayer":"","%Name":"848ed911-8c57-4653-a82f-0a7dbaff424e","blendMode":0,"displayName":"default","isLocked":false,"name":"848ed911-8c57-4653-a82f-0a7dbaff424e","opacity":100.0,"resourceType":"GMImageLayer","resourceVersion":"2.0","visible":true,},
   ],
   "name":"spr_tileset_castle",
   "nineSlice":null,
@@ -63,7 +63,7 @@
     "playbackSpeedType":0,
     "resourceType":"GMSequence",
     "resourceVersion":"2.0",
-    "seqHeight":480.0,
+    "seqHeight":208.0,
     "seqWidth":96.0,
     "showBackdrop":true,
     "showBackdropImage":false,
@@ -71,8 +71,8 @@
     "tracks":[
       {"$GMSpriteFramesTrack":"","builtinName":0,"events":[],"inheritsTrackColour":true,"interpolation":1,"isCreationTrack":false,"keyframes":{"$KeyframeStore<SpriteFrameKeyframe>":"","Keyframes":[
             {"$Keyframe<SpriteFrameKeyframe>":"","Channels":{
-                "0":{"$SpriteFrameKeyframe":"","Id":{"name":"1ed8d2e8-2ada-4963-8623-876a189ccc12","path":"sprites/spr_tileset_castle/spr_tileset_castle.yy",},"resourceType":"SpriteFrameKeyframe","resourceVersion":"2.0",},
-              },"Disabled":false,"id":"49d02bae-0b38-4321-b53e-ecb90890d1ce","IsCreationKey":false,"Key":0.0,"Length":1.0,"resourceType":"Keyframe<SpriteFrameKeyframe>","resourceVersion":"2.0","Stretch":false,},
+                "0":{"$SpriteFrameKeyframe":"","Id":{"name":"6964478f-7c5d-48c1-beb2-35e3b03851f7","path":"sprites/spr_tileset_castle/spr_tileset_castle.yy",},"resourceType":"SpriteFrameKeyframe","resourceVersion":"2.0",},
+              },"Disabled":false,"id":"917777bd-5e61-4fff-9be7-f0789bd0c1d0","IsCreationKey":false,"Key":0.0,"Length":1.0,"resourceType":"Keyframe<SpriteFrameKeyframe>","resourceVersion":"2.0","Stretch":false,},
           ],"resourceType":"KeyframeStore<SpriteFrameKeyframe>","resourceVersion":"2.0",},"modifiers":[],"name":"frames","resourceType":"GMSpriteFramesTrack","resourceVersion":"2.0","spriteId":null,"trackColour":0,"tracks":[],"traits":0,},
     ],
     "visibleRange":null,

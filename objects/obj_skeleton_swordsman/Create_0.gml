@@ -8,6 +8,7 @@ attack_range = 24;
 hp = 7;
 move_speed = 0.8;
 
+if (!variable_instance_exists(self, "tags")) tags = [];
 array_push(tags, "undead");
 apply_tag_traits();
 

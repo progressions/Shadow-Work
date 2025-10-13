@@ -47,7 +47,7 @@ function player_handle_animation() {
             anim_frame = 0; // Reset for any remaining animation
             ranged_windup_active = false; // Clear windup flag
 
-            if (variable_global_exists("debug_mode") && global.debug_mode) {
+            if (variable_global_exists("debug_mode") && global.debug_damage_reduction) {
                 show_debug_message("PLAYER WINDUP COMPLETE - Arrow spawned after " + string(current_anim_length) + " frames");
             }
         }

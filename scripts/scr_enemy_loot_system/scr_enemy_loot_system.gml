@@ -44,7 +44,7 @@ function select_weighted_loot_item(loot_table) {
 /// @desc Find valid spawn position for dropped loot
 /// @param {Real} origin_x Enemy x position
 /// @param {Real} origin_y Enemy y position
-/// @return {Struct|noone} {x, y} position or noone if no valid position found
+/// @return {struct} {x, y} position or noone if no valid position found
 function find_loot_spawn_position(origin_x, origin_y) {
     var scatter_distance = 16;
     var max_attempts = 8;

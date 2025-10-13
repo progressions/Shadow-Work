@@ -416,7 +416,7 @@ function get_companion_deflection_bonus(companion_id = undefined) {
 
 /// @function apply_companion_regeneration_auras(player_instance)
 /// @description Apply HP regeneration from companion auras
-/// @param {instance} player_instance The player to heal
+/// @param {Id.Instance} player_instance The player to heal
 function apply_companion_regeneration_auras(player_instance) {
     var companions = get_active_companions();
 
@@ -496,14 +496,14 @@ function companion_play_trigger_sfx(_companion_instance, _trigger_name) {
 
     if (_sound != undefined) {
         play_sfx(_sound, 1, 8, false);
-    } else if (variable_global_exists("debug_mode") && global.debug_mode) {
+    } else if (variable_global_exists("debug_mode") && global.debug_damage_reduction) {
         show_debug_message("No trigger sound found for " + _companion_id + "." + string(_trigger_name));
     }
 }
 
 /// @function evaluate_companion_triggers(player_instance)
 /// @description Check and activate companion triggers based on game state
-/// @param {instance} player_instance The player to check conditions for
+/// @param {Id.Instance} player_instance The player to check conditions for
 function evaluate_companion_triggers(player_instance) {
     var companions = get_active_companions();
 
@@ -748,8 +748,8 @@ function evaluate_companion_triggers(player_instance) {
 
 /// @function companion_on_player_hit(player_instance, enemy_instance, base_damage)
 /// @description Notify companions that the player hit an enemy (used for On-Hit Strike trigger)
-/// @param {instance} player_instance The player who landed the hit
-/// @param {instance} enemy_instance The enemy that was hit
+/// @param {Id.Instance} player_instance The player who landed the hit
+/// @param {Id.Instance} enemy_instance The enemy that was hit
 /// @param {real} base_damage The base damage before companion bonuses
 /// @return {real} Bonus damage to add to the hit
 function companion_on_player_hit(player_instance, enemy_instance, base_damage) {
@@ -799,7 +799,7 @@ function companion_on_player_hit(player_instance, enemy_instance, base_damage) {
 
 /// @function companion_on_player_dash(player_instance)
 /// @description Notify companions that the player started a dash (used for Dash Mend, Expose Weakness, and Execution Window triggers)
-/// @param {instance} player_instance The player who dashed
+/// @param {Id.Instance} player_instance The player who dashed
 function companion_on_player_dash(player_instance) {
     if (player_instance == undefined || player_instance == noone) {
         return;
@@ -947,7 +947,7 @@ function companion_on_player_dash(player_instance) {
 
 /// @function companion_on_player_damaged(player_instance, damage_amount, damage_type)
 /// @description Notify companions that the player has taken damage (used for Aegis trigger)
-/// @param {instance} player_instance The player who was damaged
+/// @param {Id.Instance} player_instance The player who was damaged
 /// @param {real} damage_amount The amount of damage taken
 /// @param {real} damage_type Optional damage type enum
 function companion_on_player_damaged(player_instance, damage_amount, damage_type = undefined) {
@@ -1000,8 +1000,8 @@ function companion_on_player_damaged(player_instance, damage_amount, damage_type
 
 /// @function recruit_companion(companion_instance, player_instance)
 /// @description Recruit a companion to the party
-/// @param {instance} companion_instance The companion to recruit
-/// @param {instance} player_instance The player recruiting
+/// @param {Id.Instance} companion_instance The companion to recruit
+/// @param {Id.Instance} player_instance The player recruiting
 function recruit_companion(companion_instance, player_instance) {
     with (companion_instance) {
         is_recruited = true;
@@ -1054,7 +1054,7 @@ function init_companion_global_data() {
 
 /// @function serialize_companion_data(companion_instance)
 /// @description Serialize a companion's state for saving
-/// @param {instance} companion_instance The companion to serialize
+/// @param {Id.Instance} companion_instance The companion to serialize
 /// @return {struct} Companion data struct
 function serialize_companion_data(companion_instance) {
     with (companion_instance) {
@@ -1086,7 +1086,7 @@ function serialize_all_companions() {
 
 /// @function deserialize_companion_data(companion_instance, data)
 /// @description Restore a companion's state from save data (FULLY MODULAR)
-/// @param {instance} companion_instance The companion to restore
+/// @param {Id.Instance} companion_instance The companion to restore
 /// @param {struct} data The saved companion data
 function deserialize_companion_data(companion_instance, data) {
     with (companion_instance) {
@@ -1127,7 +1127,7 @@ function restore_all_companions(companions_data) {
 
 /// @function companion_receive_torch(companion_instance, time_remaining, light_radius)
 /// @description Transfer a lit torch to the given companion instance
-/// @param {instance} companion_instance Companion receiving torch
+/// @param {Id.Instance} companion_instance Companion receiving torch
 /// @param {real} time_remaining Remaining burn time to inherit
 /// @return {bool} True if transfer succeeded
 function companion_receive_torch(companion_instance, time_remaining, light_radius) {

@@ -9,6 +9,7 @@ hp = 10;
 move_speed = 0.7;
 
 // Burglar traits - forest dweller, vulnerable to fire, resistant to poison
+if (!variable_instance_exists(self, "tags")) tags = [];
 array_push(tags, "aquatic");
 apply_tag_traits();
 

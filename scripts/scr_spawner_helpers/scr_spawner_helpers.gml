@@ -101,7 +101,7 @@ function spawner_check_proximity(spawner) {
 
 /// @desc Spawn an enemy from the spawner's spawn table
 /// @param {Id.Instance} spawner The spawner instance
-/// @return {Id.Instance|noone} The spawned enemy instance or noone if spawn failed
+/// @return {Id.Instance} The spawned enemy instance or noone if spawn failed
 function spawner_spawn_enemy(spawner) {
     with (spawner) {
         // Select enemy from weighted table

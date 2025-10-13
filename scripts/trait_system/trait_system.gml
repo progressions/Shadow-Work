@@ -1,17 +1,17 @@
 // Trait System Helper Functions (VERSION 2.0 - Stacking Mechanics)
 // Functions for managing and querying character traits with stack counts
 
-/// @function has_trait(trait_key)
+/// @function has_trait(_trait_key)
 /// @description Check if character has a specific trait (checks both permanent and temporary)
-/// @param {string} trait_key The trait to check for
+/// @param {string} _trait_key The trait to check for
 /// @return {bool} True if character has the trait with 1+ stacks
 function has_trait(_trait_key) {
     return get_total_trait_stacks(_trait_key) > 0;
 }
 
-/// @function get_total_trait_stacks(trait_key)
+/// @function get_total_trait_stacks(_trait_key)
 /// @description Get total stacks of a trait from both permanent and temporary
-/// @param {string} trait_key The trait to check
+/// @param {string} _trait_key The trait to check
 /// @return {real} Total stack count (0 if trait not present)
 function get_total_trait_stacks(_trait_key) {
     var _perm_stacks = 0;
@@ -28,10 +28,10 @@ function get_total_trait_stacks(_trait_key) {
     return min(_perm_stacks + _temp_stacks, 5); // Cap at 5 stacks
 }
 
-/// @function add_permanent_trait(trait_key, [stacks])
+/// @function add_permanent_trait(_trait_key, _stacks)
 /// @description Add permanent trait stacks (from tags, quest rewards)
-/// @param {string} trait_key The trait to add
-/// @param {real} [stacks] Number of stacks to add (default 1)
+/// @param {string} _trait_key The trait to add
+/// @param {real} _stacks Number of stacks to add (default 1)
 /// @return {real} Actual stacks added
 function add_permanent_trait(_trait_key, _stacks = 1) {
     if (!variable_instance_exists(self, "permanent_traits")) {
@@ -64,8 +64,8 @@ function add_permanent_trait(_trait_key, _stacks = 1) {
 
 /// @function add_temporary_trait(trait_key, [stacks])
 /// @description Add temporary trait stacks (from equipment, companions, buffs)
-/// @param {string} trait_key The trait to add
-/// @param {real} [stacks] Number of stacks to add (default 1)
+/// @param {string} _trait_key The trait to add
+/// @param {real} _stacks Number of stacks to add (default 1)
 /// @return {real} Actual stacks added (0 if none)
 function add_temporary_trait(_trait_key, _stacks = 1) {
     if (!variable_instance_exists(self, "temporary_traits")) {
@@ -105,8 +105,8 @@ function add_temporary_trait(_trait_key, _stacks = 1) {
 
 /// @function remove_temporary_trait(trait_key, [stacks])
 /// @description Remove temporary trait stacks (when unequipping, buff expires)
-/// @param {string} trait_key The trait to remove
-/// @param {real} [stacks] Number of stacks to remove (default 1)
+/// @param {string} _trait_key The trait to remove
+/// @param {real} _stacks Number of stacks to remove (default 1)
 /// @return {real} Actual stacks removed
 function remove_temporary_trait(_trait_key, _stacks = 1) {
     if (!variable_instance_exists(self, "temporary_traits")) return 0;
@@ -131,10 +131,10 @@ function remove_temporary_trait(_trait_key, _stacks = 1) {
 
 /// @function apply_timed_trait(trait_key, duration_seconds, [stacks], [options])
 /// @description Apply a temporary trait that expires after a duration
-/// @param {string} trait_key The trait to apply
-/// @param {real} duration_seconds How long the trait lasts in seconds
-/// @param {real} [stacks] Number of stacks to apply (default 1)
-/// @param {struct} [options] Optional settings {refresh:true, use_frames:true}
+/// @param {string} _trait_key The trait to apply
+/// @param {real} _duration_seconds How long the trait lasts in seconds
+/// @param {real} _stacks Number of stacks to apply (default 1)
+/// @param {struct} _options Optional settings {refresh:true, use_frames:true}
 /// @return {real} Actual stacks applied (0 if blocked)
 function apply_timed_trait(_trait_key, _duration_seconds, _stacks = 1, _options = undefined) {
     // Initialize timed traits tracking if needed
@@ -164,7 +164,7 @@ function apply_timed_trait(_trait_key, _duration_seconds, _stacks = 1, _options 
     if (_options != undefined && variable_struct_exists(_options, "use_frames") && _options.use_frames) {
         _duration_frames = max(1, round(_duration_seconds));
     } else {
-        _duration_frames = max(1, round(_duration_seconds * room_speed));
+        _duration_frames = max(1, round(_duration_seconds * game_get_speed(gamespeed_fps)));
     }
 
     var _stacks_added = add_temporary_trait(_trait_key, _stacks);
@@ -244,9 +244,9 @@ function update_timed_traits() {
 
             _entry.tick_timer++;
 
-            var _tick_rate = room_speed;
+            var _tick_rate = game_get_speed(gamespeed_fps);
             if (variable_struct_exists(_trait_data, "tick_rate_seconds")) {
-                _tick_rate = max(1, round(_trait_data.tick_rate_seconds * room_speed));
+                _tick_rate = max(1, round(_trait_data.tick_rate_seconds * game_get_speed(gamespeed_fps)));
             } else if (variable_struct_exists(_trait_data, "tick_rate")) {
                 _tick_rate = _trait_data.tick_rate;
             }
@@ -286,7 +286,7 @@ function update_timed_traits() {
 
 /// @function apply_tag_traits([tag_key])
 /// @description Apply all traits from a tag (or all tags array) as permanent traits
-/// @param {string} [tag_key] Optional - specific tag to apply. If omitted, applies all tags in tags array
+/// @param {string} _tag_key Optional - specific tag to apply. If omitted, applies all tags in tags array
 function apply_tag_traits(_tag_key = undefined) {
     if (!variable_global_exists("tag_database")) return;
 
@@ -343,7 +343,7 @@ function get_defense_modifier() {
 
 /// @function get_damage_modifier_for_type(damage_type)
 /// @description Calculate final damage modifier for a damage type with opposite trait cancellation
-/// @param {Real|String} damage_type The DamageType enum value or string type name (e.g., "stun", "stagger")
+/// @param {Real|String} _damage_type The DamageType enum value or string type name (e.g., "stun", "stagger")
 /// @return {Real} Final damage multiplier (0.0 = immune, 1.0 = normal, etc.)
 function get_damage_modifier_for_type(_damage_type) {
     // Convert DamageType enum to string, or use string directly if already a string
@@ -398,7 +398,7 @@ function get_damage_modifier_for_type(_damage_type) {
 
 /// @function get_effective_trait_stacks(trait_key)
 /// @description Net positive stacks after cancelling opposing trait stacks
-/// @param {string} trait_key
+/// @param {string} _trait_key
 /// @return {real} Net stacks (0 if fully cancelled)
 function get_effective_trait_stacks(_trait_key) {
     var _stacks = get_total_trait_stacks(_trait_key);
@@ -420,7 +420,7 @@ function get_effective_trait_stacks(_trait_key) {
 
 /// @function get_trait_modifier(modifier_key)
 /// @description Aggregate multiplicative modifier from active traits
-/// @param {string} modifier_key ("speed", "damage", etc.)
+/// @param {string} _modifier_key ("speed", "damage", etc.)
 /// @return {real} Multiplier (1.0 = unchanged)
 function get_trait_modifier(_modifier_key) {
     var _modifier = 1.0;
@@ -488,8 +488,8 @@ function get_active_timed_trait_data() {
 
 /// @function get_terrain_at_position(x, y)
 /// @description Get terrain type at position by checking all tile layers
-/// @param {real} x X position
-/// @param {real} y Y position
+/// @param {real} _x X position
+/// @param {real} _y Y position
 /// @return {string} Terrain type (grass, path, water, dirt, stone, etc.)
 function get_terrain_at_position(_x, _y) {
     // Safety check: ensure terrain map exists
@@ -537,7 +537,7 @@ function get_terrain_at_position(_x, _y) {
 
 /// @function get_damage_type(attacker)
 /// @description Determine damage type from attacker's weapon or status effects
-/// @param {instance} attacker The attacking character instance
+/// @param {Id.Instance} _attacker The attacking character instance
 /// @return {string} Damage type (fire, ice, lightning, poison, physical, holy, shadow)
 function get_damage_type(_attacker) {
     // Default damage type

@@ -37,3 +37,13 @@ max_travel_distance = range_profile.max_distance + range_profile.overshoot_buffe
 spawn_x = x;
 spawn_y = y;
 weapon_range_stat = 0;
+
+// Debug/communication variables (used to pass data during collision)
+__proj_damage_type = DamageType.physical;
+__proj_scaled_damage = 0;
+__proj_damage_multiplier = 1.0;
+__proj_travel_distance = 0;
+__proj_debug_final_damage = undefined;
+__proj_debug_target_name = undefined;
+__proj_debug_before_dr = undefined;
+__proj_debug_ranged_dr = undefined;

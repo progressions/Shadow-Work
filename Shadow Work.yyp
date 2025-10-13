@@ -764,7 +764,6 @@
     {"id":{"name":"spr_worn_plate_helmet","path":"sprites/spr_worn_plate_helmet/spr_worn_plate_helmet.yy",},},
     {"id":{"name":"spr_worn_plate_sabatons","path":"sprites/spr_worn_plate_sabatons/spr_worn_plate_sabatons.yy",},},
     {"id":{"name":"spr_yorna_vn_intro","path":"sprites/spr_yorna_vn_intro/spr_yorna_vn_intro.yy",},},
-    {"id":{"name":"tiles_castle","path":"tilesets/tiles_castle/tiles_castle.yy",},},
     {"id":{"name":"tiles_collision","path":"tilesets/tiles_collision/tiles_collision.yy",},},
     {"id":{"name":"tiles_forest","path":"tilesets/tiles_forest/tiles_forest.yy",},},
     {"id":{"name":"tiles_lava_moving","path":"tilesets/tiles_lava_moving/tiles_lava_moving.yy",},},

@@ -216,7 +216,7 @@ function get_speed_modifier() {
 
 /// @function freeze_frame(duration)
 /// @description Activate a freeze frame effect for the specified number of frames
-/// @param {Real} duration Number of frames to freeze (2-4 recommended)
+/// @param {real} _duration Number of frames to freeze (2-4 recommended)
 function freeze_frame(_duration) {
     if (!instance_exists(obj_game_controller)) return;
 
@@ -228,8 +228,8 @@ function freeze_frame(_duration) {
 
 /// @function enemy_flash(color, duration)
 /// @description Flash an enemy with a specific color for visual feedback
-/// @param {Constant.Color} color Color to flash (c_white for hit, c_red for crit)
-/// @param {Real} duration Number of frames to flash (6-10 recommended)
+/// @param {real} _color Color to flash (c_white for hit, c_red for crit)
+/// @param {real} _duration Number of frames to flash (6-10 recommended)
 function enemy_flash(_color, _duration) {
     // Only works when called from an enemy instance
     if (object_index == obj_enemy_parent || object_is_ancestor(object_index, obj_enemy_parent)) {
@@ -240,7 +240,7 @@ function enemy_flash(_color, _duration) {
 
 /// @function screen_shake(intensity)
 /// @description Trigger a screen shake effect with specified intensity
-/// @param {Real} intensity Shake magnitude in pixels (2-12 recommended)
+/// @param {real} _intensity Shake magnitude in pixels (2-12 recommended)
 function screen_shake(_intensity) {
     if (!instance_exists(obj_game_controller)) return;
 
@@ -253,9 +253,9 @@ function screen_shake(_intensity) {
 
 /// @function spawn_hit_effect(x, y, direction)
 /// @description Spawn a hit sparkle effect at the hit location
-/// @param {Real} x X position to spawn effect
-/// @param {Real} y Y position to spawn effect
-/// @param {Real} direction Direction away from attacker (degrees)
+/// @param {real} _x X position to spawn effect
+/// @param {real} _y Y position to spawn effect
+/// @param {real} _direction Direction away from attacker (degrees)
 function spawn_hit_effect(_x, _y, _direction) {
     var _effect = instance_create_depth(_x, _y, -100, obj_hit_effect);
 
@@ -273,7 +273,7 @@ function spawn_hit_effect(_x, _y, _direction) {
 
 /// @function activate_slowmo(duration_seconds)
 /// @description Activate slow-motion effect for companion triggers
-/// @param {Real} duration_seconds Duration in seconds (0.5 recommended)
+/// @param {real} _duration_seconds Duration in seconds (0.5 recommended)
 function activate_slowmo(_duration_seconds) {
     if (!instance_exists(obj_game_controller)) return;
 

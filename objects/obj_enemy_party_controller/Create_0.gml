@@ -131,7 +131,7 @@ function assign_formation_roles() {
 
 /// @function get_formation_position(enemy_instance)
 /// @description Calculate target formation coordinates for an enemy
-/// @param {instance} enemy_instance - The enemy to get formation position for
+/// @param {Id.Instance} enemy_instance - The enemy to get formation position for
 /// @return {struct} Struct with x and y coordinates, or undefined if enemy not in party
 function get_formation_position(_enemy) {
     if (!variable_struct_exists(formation_data, "assignments")) {
@@ -273,7 +273,7 @@ function update_party_state() {
 
 /// @function transition_to_state(new_state)
 /// @description Handle state transition with audio feedback
-/// @param {PartyState} new_state - The state to transition to
+/// @param {real} new_state - The state to transition to
 function transition_to_state(_new_state) {
     if (party_state == _new_state) return;
 
@@ -311,7 +311,7 @@ function transition_to_state(_new_state) {
 
 /// @function calculate_decision_weights(enemy_instance)
 /// @description Calculate weighted objectives for individual enemy
-/// @param {instance} enemy_instance - The enemy to calculate weights for
+/// @param {Id.Instance} enemy_instance - The enemy to calculate weights for
 function calculate_decision_weights(_enemy) {
     if (!instance_exists(_enemy)) return;
     if (!instance_exists(obj_player)) return;
@@ -418,7 +418,7 @@ function calculate_decision_weights(_enemy) {
 
 /// @function on_member_death(enemy_instance)
 /// @description Handle party member removal and formation adjustment
-/// @param {instance} enemy_instance - The enemy that died
+/// @param {Id.Instance} enemy_instance - The enemy that died
 function on_member_death(_enemy) {
     if (!instance_exists(_enemy)) return;
 

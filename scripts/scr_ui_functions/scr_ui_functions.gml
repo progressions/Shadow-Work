@@ -201,11 +201,11 @@ function ui_draw_status_effects(_player, _x, _y, _icon_size, _spacing) {
 
 /// @function show_interaction_prompt(radius, offset_x, offset_y, key, action)
 /// @description Manage interaction prompt display based on player proximity
-/// @param {real} radius - Distance from object to show prompt
-/// @param {real} offset_x - X offset from object position
-/// @param {real} offset_y - Y offset from object position (usually negative, like -12)
-/// @param {string} key - Key name to display (e.g., "Space", "E", "F")
-/// @param {string} action - Action text to display (e.g., "Open", "Recruit", "Talk")
+/// @param {real} _radius - Distance from object to show prompt
+/// @param {real} _offset_x - X offset from object position
+/// @param {real} _offset_y - Y offset from object position (usually negative, like -12)
+/// @param {string} _key - Key name to display (e.g., "Space", "E", "F")
+/// @param {string} _action - Action text to display (e.g., "Open", "Recruit", "Talk")
 ///
 /// NOTE: This function should only be called when the calling object
 /// is the active interactive (global.active_interactive == id)

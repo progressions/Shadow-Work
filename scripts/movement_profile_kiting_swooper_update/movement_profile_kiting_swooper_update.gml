@@ -1,6 +1,6 @@
 /// @function movement_profile_kiting_swooper_update(enemy)
 /// @description Update function for kiting swooper movement profile
-/// @param {Id.Instance} enemy - The enemy instance using this profile
+/// @param {Id.Instance} _enemy - The enemy instance using this profile
 function movement_profile_kiting_swooper_update(_enemy) {
     if (!instance_exists(_enemy)) return;
     if (_enemy.movement_profile == undefined) return;

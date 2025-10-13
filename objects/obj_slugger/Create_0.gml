@@ -10,6 +10,7 @@ move_speed = 0.6;
 melee_damage_resistance = 0.2;
 
 // Burglar traits - forest dweller, vulnerable to fire, resistant to poison
+if (!variable_instance_exists(self, "tags")) tags = [];
 array_push(tags, "fire_vulnerability");
 apply_tag_traits();
 

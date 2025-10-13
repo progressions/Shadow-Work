@@ -146,7 +146,7 @@ if (_hit_player != noone) {
                         var effect_data = _effects[i];
                         if (random(1) < effect_data.chance) {
                             apply_status_effect(effect_data);
-                            if (variable_global_exists("debug_mode") && global.debug_mode) {
+                            if (variable_global_exists("debug_mode") && global.debug_damage_reduction) {
                                 show_debug_message("Projectile applied trait effect: " + string(status_effect_resolve_trait(effect_data)));
                             }
                         }
@@ -166,7 +166,7 @@ if (_hit_player != noone) {
                 show_debug_message("Player died from projectile");
             }
 
-            if (variable_global_exists("debug_mode") && global.debug_mode) {
+            if (variable_global_exists("debug_mode") && global.debug_damage_reduction) {
                 show_debug_message("Enemy projectile dealt " + string(_impact_damage) + " " + damage_type_to_string(_impact_type) + " damage (res mult=" + string(_res_mult) + ")");
             }
         }

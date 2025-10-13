@@ -153,7 +153,7 @@ function apply_stun(target, duration, source = noone) {
 
     // Apply stun
     target.is_stunned = true;
-    target.stun_timer = _final_duration * room_speed;
+    target.stun_timer = _final_duration * game_get_speed(gamespeed_fps);
 
     // Visual feedback - persistent yellow overlay while stunned
     if (variable_instance_exists(target, "image_blend")) {
@@ -203,7 +203,7 @@ function apply_stagger(target, duration, source = noone) {
 
     // Apply stagger
     target.is_staggered = true;
-    target.stagger_timer = _final_duration * room_speed;
+    target.stagger_timer = _final_duration * game_get_speed(gamespeed_fps);
 
     // Visual feedback - persistent purple overlay while staggered
     if (variable_instance_exists(target, "image_blend")) {

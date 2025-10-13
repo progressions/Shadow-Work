@@ -453,7 +453,7 @@ if (array_length(_timed_traits) > 0) {
 draw_set_alpha(1);
 
 // Debug: Display damage reduction values
-if (global.debug_mode) {
+if (global.debug_damage_reduction) {
     var _melee_dr = get_melee_damage_reduction();
     var _ranged_dr = get_ranged_damage_reduction();
 

@@ -14,6 +14,7 @@ hp_total = hp;
 move_speed = 1.2;  // Fast flying movement
 
 // Flying trait - grants immunity to ground-based hazards (lava, poison pools, etc.)
+if (!variable_instance_exists(self, "tags")) tags = [];
 array_push(tags, "flying");
 apply_tag_traits();
 

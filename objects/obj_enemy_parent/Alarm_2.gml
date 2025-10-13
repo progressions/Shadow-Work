@@ -64,7 +64,7 @@ if (state == EnemyState.attacking) {
                     // Refund arrow since attack was interrupted
                     inventory_add_item(global.item_database.arrows, 1);
 
-                    if (variable_global_exists("debug_mode") && global.debug_mode) {
+                    if (variable_global_exists("debug_mode") && global.debug_damage_reduction) {
                         show_debug_message("PLAYER RANGED ATTACK INTERRUPTED - Took damage during windup, arrow refunded");
                     }
                 }

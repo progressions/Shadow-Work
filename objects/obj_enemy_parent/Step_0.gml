@@ -308,13 +308,13 @@ if (_use_idle_timer) {
         state = EnemyState.targeting; // Return to targeting immediately after firing
         ranged_windup_complete = false; // Reset flag for next attack
 
-        if (variable_global_exists("debug_mode") && global.debug_mode) {
+        if (variable_global_exists("debug_mode") && global.debug_damage_reduction) {
             show_debug_message("WINDUP COMPLETE - Projectile spawned after " + string(frames_in_seq) + " frames, returning to targeting");
         }
     }
 
     // Debug: Show windup progress
-    if (state == EnemyState.ranged_attacking && !ranged_windup_complete && variable_global_exists("debug_mode") && global.debug_mode) {
+    if (state == EnemyState.ranged_attacking && !ranged_windup_complete && variable_global_exists("debug_mode") && global.debug_damage_reduction) {
         if (anim_timer mod 30 == 0) { // Log every 30 frames
             show_debug_message("Windup progress: anim_timer=" + string(anim_timer) + "/" + string(frames_in_seq) + ", speed_mult=" + string(speed_mult));
         }

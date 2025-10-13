@@ -21,6 +21,7 @@ melee_range_threshold = 48;        // Switch to melee at medium distance
 retreat_when_close = false;        // Orcs never retreat
 
 // Orc traits - fire-born warrior, immune to fire but weak to ice
+if (!variable_instance_exists(self, "tags")) tags = [];
 array_push(tags, "fireborne");
 apply_tag_traits();
 

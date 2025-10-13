@@ -1,5 +1,9 @@
 draw_self();
 
+// Get sprite dimensions at the start (used throughout draw event)
+var _sprite_height = sprite_get_height(round_hud_hp_bar);
+var _sprite_width = sprite_get_width(round_hud_hp_bar);
+
 // Draw all HUD elements at the object's GUI position
 draw_sprite(round_hud_xp_frame, 0, x+24, y+110);
 
@@ -27,8 +31,6 @@ draw_sprite(round_hud_hp_bar_bg, 0, x+24, y+20);
 
 // Draw HP bar filled from bottom to top based on player HP
 if (instance_exists(obj_player)) {
-    var _sprite_height = sprite_get_height(round_hud_hp_bar);
-    var _sprite_width = sprite_get_width(round_hud_hp_bar);
 
     // Calculate fill percentage (0.0 to 1.0)
     var _fill_percent = clamp(obj_player.hp / obj_player.hp_total, 0, 1);

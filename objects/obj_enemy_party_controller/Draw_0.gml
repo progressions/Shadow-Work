@@ -2,10 +2,10 @@
 
 // Only draw debug visuals if debug mode is enabled
 if (!variable_global_exists("debug_mode")) {
-    global.debug_mode = false;
+    global.debug_damage_reduction = false;
 }
 
-if (!global.debug_mode) {
+if (!global.debug_damage_reduction) {
     exit;
 }
 

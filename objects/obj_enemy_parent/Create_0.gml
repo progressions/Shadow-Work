@@ -259,8 +259,8 @@ function serialize() {
             var _entry = timed_traits[t];
             array_push(data.timed_traits, {
                 trait: _entry.trait,
-                remaining_seconds: (_entry.timer ?? 0) / room_speed,
-                total_seconds: (_entry.total_duration ?? _entry.timer ?? 0) / room_speed,
+                remaining_seconds: (_entry.timer ?? 0) / game_get_speed(gamespeed_fps),
+                total_seconds: (_entry.total_duration ?? _entry.timer ?? 0) / game_get_speed(gamespeed_fps),
                 stacks: _entry.stacks_applied
             });
         }
@@ -306,8 +306,8 @@ function deserialize(data) {
 
             var _last_index = array_length(timed_traits) - 1;
             if (_last_index >= 0) {
-                timed_traits[_last_index].timer = round(max(0, _remaining_seconds) * room_speed);
-                timed_traits[_last_index].total_duration = round(max(0, _total_seconds) * room_speed);
+                timed_traits[_last_index].timer = round(max(0, _remaining_seconds) * game_get_speed(gamespeed_fps));
+                timed_traits[_last_index].total_duration = round(max(0, _total_seconds) * game_get_speed(gamespeed_fps));
             }
         }
     }

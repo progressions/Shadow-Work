@@ -73,7 +73,7 @@ function spawn_ranged_projectile() {
     // Play ranged attack sound effect (when projectile spawns)
     play_enemy_sfx("on_ranged_attack");
 
-    if (variable_global_exists("debug_mode") && global.debug_mode) {
+    if (variable_global_exists("debug_mode") && global.debug_damage_reduction) {
         show_debug_message("Enemy fired ranged attack (" + object_get_name(_projectile_obj) + ") Damage: " + string(ranged_damage) + ", Direction: " + facing_dir);
     }
 
@@ -119,7 +119,7 @@ function enemy_handle_ranged_attack() {
         // Play windup sound effect (attack sound plays when projectile spawns)
         play_enemy_sfx("on_ranged_windup");
 
-        if (variable_global_exists("debug_mode") && global.debug_mode) {
+        if (variable_global_exists("debug_mode") && global.debug_damage_reduction) {
             show_debug_message("Enemy starting ranged attack windup (projectile will spawn after animation completes)");
         }
 

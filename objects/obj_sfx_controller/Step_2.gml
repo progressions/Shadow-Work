@@ -7,9 +7,9 @@ var _final_volume = global.audio_config.sfx_enabled
 
 #region Play all queued sounds
 
-for (i = 0; i < array_length(sounds_to_play); i++) {
-	
-	sound_data = sounds_to_play[i];
+for (var i = 0; i < array_length(sounds_to_play); i++) {
+
+	var sound_data = sounds_to_play[i];
 	
 	if (sound_data.loop == false) {
 		var _sound_instance = audio_play_sound(sound_data.sound, sound_data.priority, sound_data.loop);

@@ -15,7 +15,7 @@ distance_travelled = _distance_travelled;
 previous_damage_multiplier = current_damage_multiplier;
 current_damage_multiplier = projectile_calculate_damage_multiplier(range_profile, _distance_travelled);
 
-if (variable_global_exists("debug_mode") && global.debug_mode) {
+if (variable_global_exists("debug_mode") && global.debug_damage_reduction) {
     if (abs(current_damage_multiplier - previous_damage_multiplier) > 0.01) {
         show_debug_message("[Projectile] profile=" + string(range_profile_id) + " dist=" + string_format(_distance_travelled, 0, 1) + " mult=" + string_format(current_damage_multiplier, 0, 3));
     }
@@ -124,7 +124,7 @@ if (_hit_enemy != noone) {
     var _log_before_dr = __proj_debug_before_dr;
     var _log_ranged_dr = __proj_debug_ranged_dr;
 
-    if (variable_global_exists("debug_mode") && global.debug_mode) {
+    if (variable_global_exists("debug_mode") && global.debug_damage_reduction) {
         var _target_name = is_string(_log_target_name) ? _log_target_name : "unknown_target";
         var _final_val = is_real(_log_final_damage) ? _log_final_damage : -1;
         var _scaled_val = is_real(_log_scaled_damage) ? _log_scaled_damage : 0;

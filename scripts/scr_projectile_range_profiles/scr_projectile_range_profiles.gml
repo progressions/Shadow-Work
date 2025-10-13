@@ -12,7 +12,7 @@ enum RangeProfile {
 
 /// @function projectile_range_profiles_init(_force)
 /// @description Populate global projectile range profile data
-/// @param {boolean} _force Rebuild profiles even if already initialized
+/// @param {bool} _force Rebuild profiles even if already initialized
 function projectile_range_profiles_init(_force = false) {
     if (!variable_global_exists("projectile_range_profiles_initialized")) {
         global.projectile_range_profiles_initialized = false;
@@ -276,7 +276,7 @@ function projectile_range_profiles_self_test() {
                 passed: _passed
             });
 
-            if (!_passed && variable_global_exists("debug_mode") && global.debug_mode) {
+            if (!_passed && variable_global_exists("debug_mode") && global.debug_damage_reduction) {
                 show_debug_message("[RangeProfile Self-Test] " + _profile.name + " " + _check.label + " FAILED -> expected " + string_format(_check.expected, 0, 3) + ", observed " + string_format(_value, 0, 3));
             }
         }

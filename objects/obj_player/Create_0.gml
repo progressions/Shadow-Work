@@ -245,7 +245,7 @@ var _torch_burn_seconds = 60;
 if (_torch_stats != undefined && variable_struct_exists(_torch_stats, "burn_time_seconds")) {
     _torch_burn_seconds = max(1, _torch_stats[$ "burn_time_seconds"]);
 }
-torch_duration = max(1, floor(_torch_burn_seconds * room_speed));
+torch_duration = max(1, floor(_torch_burn_seconds * game_get_speed(gamespeed_fps)));
 
 torch_sound_emitter = audio_emitter_create();
 torch_sound_loop_instance = -1;

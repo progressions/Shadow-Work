@@ -25,20 +25,21 @@ if (state != EnemyState.dead) {
 		show_debug_message("Attack hit count: " + string(_attack_inst.current_hit_count) + "/" + string(_attack_inst.max_hit_count));
 
 		 var old_hp = hp;
+		 var attacker = other.creator; // Declare attacker once at the beginning
 
 		 // Get weapon damage type from attacker's equipped weapon
 		 var _weapon_damage_type = DamageType.physical; // Default
-		 if (other.creator != noone && instance_exists(other.creator)) {
+		 if (attacker != noone && instance_exists(attacker)) {
 		     // Check right hand first
-		     if (other.creator.equipped.right_hand != undefined) {
-		         var _weapon_stats = other.creator.equipped.right_hand.definition.stats;
+		     if (attacker.equipped.right_hand != undefined) {
+		         var _weapon_stats = attacker.equipped.right_hand.definition.stats;
 		         if (variable_struct_exists(_weapon_stats, "damage_type")) {
 		             _weapon_damage_type = _weapon_stats.damage_type;
 		         }
 		     }
 		     // Check left hand if no right hand weapon
-		     else if (other.creator.equipped.left_hand != undefined) {
-		         var _left_stats = other.creator.equipped.left_hand.definition.stats;
+		     else if (attacker.equipped.left_hand != undefined) {
+		         var _left_stats = attacker.equipped.left_hand.definition.stats;
 		         if (variable_struct_exists(_left_stats, "damage_type")) {
 		             _weapon_damage_type = _left_stats.damage_type;
 		         }
@@ -81,7 +82,7 @@ if (state != EnemyState.dead) {
 		     // Play interrupt sound
 		     play_sfx(snd_enemy_interrupted, 0.7, false);
 
-		     if (variable_global_exists("debug_mode") && global.debug_mode) {
+		     if (variable_global_exists("debug_mode") && global.debug_damage_reduction) {
 		         show_debug_message("RANGED ATTACK INTERRUPTED - Enemy took damage during windup");
 		     }
 		 }
@@ -133,7 +134,7 @@ if (state != EnemyState.dead) {
 
 		 // Apply stun/stagger from weapon if enemy didn't die and damage was dealt
 		 if (hp > 0 && _final_damage > 0 && _resistance_multiplier > 0) {
-		     var attacker = other.creator;
+		     // attacker already declared at the beginning
 		     if (attacker != noone && instance_exists(attacker)) {
 		         // Get weapon stats from attacker
 		         var _weapon_stats = undefined;
@@ -152,7 +153,7 @@ if (state != EnemyState.dead) {
 
 		 // Check if enemy died and award XP
 		 if (hp <= 0) {
-		     var attacker = other.creator;
+		     attacker = other.creator;
 		     show_debug_message("Enemy died! Attacker: " + (attacker != noone ? object_get_name(attacker.object_index) : "none"));
 		     show_debug_message("Checking if attacker == obj_player: attacker=" + string(attacker) + ", obj_player=" + string(obj_player));
 		     show_debug_message("Attacker is instance? " + string(instance_exists(attacker)));
@@ -197,7 +198,7 @@ if (state != EnemyState.dead) {
 		 }
 
 		 // Apply weapon status effects
-		 var attacker = other.creator;
+		 // attacker already declared at the beginning
 		 if (attacker != noone) {
 		     // Check right hand weapon
 		     if (attacker.equipped.right_hand != undefined) {
