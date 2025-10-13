@@ -12,6 +12,16 @@ function enemy_state_targeting() {
     var _player_y = obj_player.y;
     var _dist_to_player = point_distance(x, y, _player_x, _player_y);
 
+    var _melee_range = attack_range;
+    if (is_struct(melee_attack) && variable_struct_exists(melee_attack, "range")) {
+        _melee_range = melee_attack.range;
+    }
+
+    var _ranged_range = attack_range;
+    if (is_struct(ranged_attack) && variable_struct_exists(ranged_attack, "range")) {
+        _ranged_range = ranged_attack.range;
+    }
+
     // Unstuck mode - move directly in a random direction to get around obstacle
     if (variable_instance_exists(self, "unstuck_mode") && unstuck_mode > 0) {
         if (unstuck_mode == 44) { // Only log once at start
@@ -65,11 +75,11 @@ function enemy_state_targeting() {
         var _use_ranged = false;
         var _use_melee = false;
 
-        // Distance-based decision
-        if (_dist_to_player > ideal_range) {
-            _use_ranged = true;  // Player is far, use ranged
-        } else if (_dist_to_player < melee_range_threshold) {
+        // Distance-based decision (prioritize melee when close)
+        if (_dist_to_player <= melee_range_threshold) {
             _use_melee = true;   // Player is close, use melee
+        } else if (_dist_to_player > ideal_range) {
+            _use_ranged = true;  // Player is far, use ranged
         } else {
             // In the "flexible zone" - use preference
             if (preferred_attack_mode == "ranged") {
@@ -106,7 +116,7 @@ function enemy_state_targeting() {
         }
 
         // Execute ranged attack if chosen and ready
-        if (_use_ranged && _dist_to_player <= attack_range && can_ranged_attack) {
+        if (_use_ranged && _dist_to_player <= _ranged_range && can_ranged_attack) {
             var _has_los = enemy_has_line_of_sight(_player_x, _player_y);
             if (_has_los) {
                 enemy_handle_ranged_attack();
@@ -117,7 +127,7 @@ function enemy_state_targeting() {
         }
 
         // Execute melee attack if chosen and ready
-        if (_use_melee && _dist_to_player <= attack_range && can_attack) {
+        if (_use_melee && _dist_to_player <= _melee_range && can_attack) {
             state = EnemyState.attacking;
             attack_cooldown = round(90 / attack_speed);
             can_attack = false;
@@ -147,7 +157,7 @@ function enemy_state_targeting() {
     }
     // Legacy single-mode logic (fallback for enable_dual_mode = false)
     else if (is_ranged_attacker) {
-        if (_dist_to_player <= attack_range && can_ranged_attack) {
+        if (_dist_to_player <= _ranged_range && can_ranged_attack) {
             var _has_los = enemy_has_line_of_sight(_player_x, _player_y);
             if (_has_los) {
                 enemy_handle_ranged_attack();
@@ -157,7 +167,7 @@ function enemy_state_targeting() {
             }
         }
     } else {
-        if (_dist_to_player <= attack_range && can_attack) {
+        if (_dist_to_player <= _melee_range && can_attack) {
             state = EnemyState.attacking;
             attack_cooldown = round(90 / attack_speed);
             can_attack = false;

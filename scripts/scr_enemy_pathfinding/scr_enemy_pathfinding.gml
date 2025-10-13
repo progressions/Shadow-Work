@@ -13,12 +13,24 @@ function enemy_calculate_target_position() {
     var _player_x = obj_player.x;
     var _player_y = obj_player.y;
 
+    var _melee_range = attack_range;
+    if (is_struct(melee_attack) && variable_struct_exists(melee_attack, "range")) {
+        _melee_range = melee_attack.range;
+    }
+
+    var _ranged_range = _melee_range;
+    if (is_struct(ranged_attack) && variable_struct_exists(ranged_attack, "range")) {
+        _ranged_range = ranged_attack.range;
+    }
+
+    var _effective_range = max(_melee_range, _ranged_range);
+
     // Apply approach variation (flanking behavior)
     if (approach_mode == "flanking" && flank_offset_angle != 0) {
         var dist_to_player = point_distance(x, y, _player_x, _player_y);
 
         // Use flanking offset until very close, then commit to direct attack
-        if (dist_to_player > attack_range + 4) {
+        if (dist_to_player > _effective_range + 4) {
             // Calculate base direction to player
             var base_dir = point_direction(x, y, _player_x, _player_y);
 
@@ -30,10 +42,13 @@ function enemy_calculate_target_position() {
             // Close: small offset (tighten the spiral)
             var max_offset = 64;  // Maximum arc distance when far away
             var min_offset = 4;   // Minimum arc distance when close
-            var offset_range = flank_trigger_distance - attack_range;
+            var offset_range = flank_trigger_distance - _effective_range;
+            if (offset_range <= 0) {
+                offset_range = 1;
+            }
 
             // Linear interpolation based on distance
-            var t = clamp((dist_to_player - attack_range) / offset_range, 0, 1);
+            var t = clamp((dist_to_player - _effective_range) / offset_range, 0, 1);
             var approach_distance = lerp(min_offset, max_offset, t);
 
             var target_x = _player_x + lengthdir_x(approach_distance, approach_dir);

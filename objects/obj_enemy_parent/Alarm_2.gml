@@ -11,8 +11,13 @@ if (state == EnemyState.attacking) {
 
     var _player = instance_nearest(x, y, obj_player);
     if (_player != noone) {
+        var _melee_range = attack_range;
+        if (is_struct(melee_attack) && variable_struct_exists(melee_attack, "range")) {
+            _melee_range = melee_attack.range;
+        }
+
         var _dist = point_distance(x, y, _player.x, _player.y);
-        if (_dist <= attack_range && _player.state != PlayerState.dead) {
+        if (_dist <= _melee_range && _player.state != PlayerState.dead) {
             // Roll for critical hit
             var _is_crit = (random(1) < crit_chance);
             var _crit_multiplier = _is_crit ? crit_multiplier : 1.0;

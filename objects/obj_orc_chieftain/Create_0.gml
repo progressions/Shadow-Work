@@ -17,6 +17,8 @@ preferred_attack_mode = "melee";   // Prefers brutal melee combat
 ranged_damage = 4;                 // Throwing axe damage
 ranged_attack_speed = 0.5;         // Slower than melee
 ranged_projectile_object = obj_enemy_arrow;  // TODO: Create obj_throwing_axe for visual distinction
+ranged_attack.range = 112;         // Chieftain throws axes farther
+is_ranged_attacker = true;         // Unlock ranged fallback behavior
 melee_range_threshold = 48;        // Switch to melee at medium distance
 retreat_when_close = false;        // Orcs never retreat
 
@@ -30,10 +32,10 @@ flank_chance = 0.8;
 
 // Ranged attack animation overrides (throwing axes)
 enemy_anim_overrides = {
-    ranged_attack_down: {start: 35, length: 3},
-    ranged_attack_right: {start: 38, length: 4},
-    ranged_attack_left: {start: 42, length: 4},
-    ranged_attack_up: {start: 46, length: 3}
+    ranged_attack_down: {start: 20, length: 3},
+    ranged_attack_right: {start: 23, length: 3},
+    ranged_attack_left: {start: 26, length: 3},
+    ranged_attack_up: {start: 29, length: 3}
 };
 
 enemy_sounds.on_aggro = snd_orc_aggro;

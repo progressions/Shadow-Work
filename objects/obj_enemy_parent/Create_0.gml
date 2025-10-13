@@ -10,6 +10,8 @@ hp_total = hp;
 anim_timer = 0;  // Make sure this is here
 image_speed = 0;
 image_index = 0;
+base_image_blend = c_white;
+image_blend = base_image_blend;
 
 target_x = x;
 target_y = y;
@@ -79,7 +81,8 @@ melee_attack = {
     chance_to_stun: 0.05,       // 5% default stun chance
     chance_to_stagger: 0.10,    // 10% default stagger chance
     stun_duration: 1.5,         // 1.5 seconds default
-    stagger_duration: 1.0       // 1.0 seconds default
+    stagger_duration: 1.0,      // 1.0 seconds default
+    range: attack_range         // Melee reach (overridden by child enemy if needed)
 };
 
 ranged_attack = {
@@ -88,7 +91,8 @@ ranged_attack = {
     chance_to_stun: 0.03,       // 3% default (lower for ranged)
     chance_to_stagger: 0.08,    // 8% default (lower for ranged)
     stun_duration: 1.2,         // 1.2 seconds default
-    stagger_duration: 0.8       // 0.8 seconds default
+    stagger_duration: 0.8,      // 0.8 seconds default
+    range: attack_range         // Default to melee range unless overridden
 };
 
 // Dual-mode combat system (context-based attack switching)

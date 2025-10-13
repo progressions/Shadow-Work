@@ -9,9 +9,13 @@ function enemy_state_ranged_attacking() {
 
     // Resume targeting immediately for repositioning or re-engagement
     var _dist_to_player = point_distance(x, y, obj_player.x, obj_player.y);
+    var _ranged_range = attack_range;
+    if (is_struct(ranged_attack) && variable_struct_exists(ranged_attack, "range")) {
+        _ranged_range = ranged_attack.range;
+    }
 
     // If player moved significantly out of attack range, resume pursuit
-    if (_dist_to_player > attack_range + 32) {
+    if (_dist_to_player > _ranged_range + 32) {
         state = EnemyState.targeting;
         return;
     }

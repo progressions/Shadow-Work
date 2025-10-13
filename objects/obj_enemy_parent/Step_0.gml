@@ -31,8 +31,11 @@ if (is_stunned) {
     flash_timer--;
     image_blend = flash_color;
 } else {
-    // Reset to normal color when no effects active
-    // image_blend = c_white;
+    // Reset to base color when no effects active
+    if (!variable_instance_exists(self, "base_image_blend")) {
+        base_image_blend = c_white;
+    }
+    image_blend = base_image_blend;
 }
 
 // Tick trait-driven status effects (runs even when dead)

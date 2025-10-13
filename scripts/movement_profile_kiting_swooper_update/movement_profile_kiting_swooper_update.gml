@@ -246,7 +246,12 @@ function movement_profile_kiting_swooper_update(_enemy) {
         // Check if player is in melee range and trigger attack
         if (!_enemy.swoop_has_hit && instance_exists(obj_player)) {
             var _dist_to_player = point_distance(_enemy.x, _enemy.y, obj_player.x, obj_player.y);
-            if (_dist_to_player <= _enemy.attack_range && _enemy.can_attack) {
+            var _melee_range = _enemy.attack_range;
+            if (is_struct(_enemy.melee_attack) && variable_struct_exists(_enemy.melee_attack, "range")) {
+                _melee_range = _enemy.melee_attack.range;
+            }
+
+            if (_dist_to_player <= _melee_range && _enemy.can_attack) {
                 // Temporarily set state to attacking and trigger melee attack
                 with (_enemy) {
                     state = EnemyState.attacking;
