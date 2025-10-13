@@ -16,7 +16,8 @@ spawn_period = 90;                // 1.5 seconds between spawns (at 60 FPS)
 spawn_table = [
 	{enemy_object: obj_skeleton_swordsman, weight: 20},
 	{enemy_object: obj_skeleton_archer, weight: 60},
-	{enemy_object: obj_bats, weight: 100}
+	{enemy_object: obj_bats, weight: 100},
+	{enemy_object: obj_orc_chieftain, weight: 40}
 ];
 
 // Proximity activation - ambush triggers when player gets close

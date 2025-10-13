@@ -189,6 +189,7 @@
     {"id":{"name":"obj_lighting_controller","path":"objects/obj_lighting_controller/obj_lighting_controller.yy",},},
     {"id":{"name":"obj_music_controller","path":"objects/obj_music_controller/obj_music_controller.yy",},},
     {"id":{"name":"obj_openable","path":"objects/obj_openable/obj_openable.yy",},},
+    {"id":{"name":"obj_orc_chieftain","path":"objects/obj_orc_chieftain/obj_orc_chieftain.yy",},},
     {"id":{"name":"obj_orc_raiding_party","path":"objects/obj_orc_raiding_party/obj_orc_raiding_party.yy",},},
     {"id":{"name":"obj_orc","path":"objects/obj_orc/obj_orc.yy",},},
     {"id":{"name":"obj_pathfinding_controller","path":"objects/obj_pathfinding_controller/obj_pathfinding_controller.yy",},},
