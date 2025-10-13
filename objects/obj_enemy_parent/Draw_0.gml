@@ -96,6 +96,8 @@ draw_sprite_ext(spr_shadow, image_index, x, y + 2, 1, 0.5, 0, c_black, 0.3);
 
 draw_self();
 
+draw_stun_particles(self);
+
 // Health bar above enemy
 if (hp < hp_total && state != EnemyState.dead) { // Only show when damaged and alive
     var bar_x1 = x - 8;

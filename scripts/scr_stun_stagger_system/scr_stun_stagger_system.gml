@@ -4,124 +4,239 @@
 /// Both = Fully immobilized
 
 /// @function create_stun_particles(target)
-/// @description Create particle system for stun stars above target's head
-/// @param {Id.Instance} target - The instance to attach particles to
+/// @description Ensure the scripted stun stars are set up for the target
+/// @param {Id.Instance} target - The instance to attach the stars to
 function create_stun_particles(target) {
     if (!instance_exists(target)) return;
 
-    // Clean up any existing particles first to avoid duplicates
-    if (variable_instance_exists(target, "stun_particle_system") && target.stun_particle_system != -1) {
-        destroy_stun_particles(target);
+    if (!variable_instance_exists(target, "stun_star_state")) {
+        target.stun_star_state = undefined;
     }
 
-    // Create particle system
-    var _ps = part_system_create();
-    part_system_depth(_ps, target.depth - 1); // Above character
+    if (is_struct(target.stun_star_state)) {
+        return;
+    }
 
-    // Create particle type
-    var _pt = part_type_create();
-    part_type_sprite(_pt, spr_stars, true, false, false);
-    part_type_size(_pt, 0.9, 1.1, 0, 0);
-    part_type_alpha2(_pt, 1.0, 0.9); // Stay fully visible, slight fade at very end
-    part_type_life(_pt, 9999, 9999); // Very long lifetime - destroyed manually when stun ends
-    part_type_speed(_pt, 0, 0, 0, 0); // No movement - stay in place
-    part_type_direction(_pt, 0, 360, 0, 0); // Direction doesn't matter since speed is 0
-    part_type_gravity(_pt, 0, 270); // No gravity
+    var _stars = [];
+    var _slots = array_shuffle([-12, 0, 12]);
 
-    // Add gentle floating animation
-    part_type_orientation(_pt, 0, 360, 0.5, 0, false); // Slow rotation
+    for (var i = 0; i < 3; i++) {
+        var _slot_x = _slots[i];
+        var _star = {
+            base_x: _slot_x + random_range(-1.5, 1.5),
+            base_y: random_range(-3, 1),
+            amplitude: irandom_range(1, 2),
+            phase: random_range(0, pi * 2),
+            speed: random_range(0.05, 0.12)
+        };
+        array_push(_stars, _star);
+    }
 
-    // Create emitter above target's head
-    var _em = part_emitter_create(_ps);
-    var _head_y = target.y - target.sprite_height * 0.75; // Above head
-    part_emitter_region(_ps, _em, target.x - 8, target.x + 8, _head_y - 8, _head_y + 8, ps_shape_ellipse, ps_distr_gaussian);
+    target.stun_star_state = {
+        stars: _stars,
+        jitter_timer: irandom_range(0, 30),
+        baseline_offset: -12
+    };
 
-    // Emit 3-5 stars in a burst (one-time emission)
-    part_emitter_burst(_ps, _em, _pt, irandom_range(3, 5));
+    stun_stars_ensure_spacing(target.stun_star_state);
+}
 
-    // Store in target instance
-    target.stun_particle_system = _ps;
-    target.stun_particle_type = _pt;
-    target.stun_particle_emitter = _em;
+/// @function stun_stars_ensure_spacing(state)
+/// @description Push stars apart so 8x8 sprites don't overlap
+/// @param {Struct} state - Stun star state struct
+function stun_stars_ensure_spacing(state) {
+    if (!is_struct(state)) return;
+    if (!variable_struct_exists(state, "stars")) return;
 
-    // Initialize position tracking for movement detection
-    target.stun_particle_last_x = target.x;
-    target.stun_particle_last_y = target.y;
+    var _stars = state.stars;
+    if (!is_array(_stars) || array_length(_stars) < 2) return;
+
+    var _iterations = 0;
+    var _min_sep = 8;
+
+    while (_iterations < 5) {
+        var _changed = false;
+
+        for (var i = 0; i < array_length(_stars); i++) {
+            var _a = _stars[i];
+            if (!is_struct(_a)) continue;
+
+            for (var j = i + 1; j < array_length(_stars); j++) {
+                var _b = _stars[j];
+                if (!is_struct(_b)) continue;
+
+                var _needed = _min_sep + max(0, _a.amplitude) + max(0, _b.amplitude);
+                var _dx = _b.base_x - _a.base_x;
+                var _abs_dx = abs(_dx);
+
+                if (_abs_dx < _needed) {
+                    var _direction = (_dx >= 0) ? 1 : -1;
+                    if (_direction == 0) {
+                        _direction = choose(-1, 1);
+                    }
+
+                    var _adjust = (_needed - _abs_dx) * 0.5;
+                    _a.base_x -= _adjust * _direction;
+                    _b.base_x += _adjust * _direction;
+
+                    _a.base_x = clamp(_a.base_x, -16, 16);
+                    _b.base_x = clamp(_b.base_x, -16, 16);
+
+                    _stars[i] = _a;
+                    _stars[j] = _b;
+                    _changed = true;
+                }
+            }
+        }
+
+        if (!_changed) break;
+        _iterations += 1;
+    }
+
+    state.stars = _stars;
 }
 
 /// @function update_stun_particles(target)
-/// @description Update particle system position to follow target
-/// @param {Id.Instance} target - The instance with stun particles
+/// @description Update the scripted stun stars while the target is disabled
+/// @param {Id.Instance} target - The instance with stun stars
 function update_stun_particles(target) {
     if (!instance_exists(target)) return;
 
-    if (!variable_instance_exists(target, "stun_particle_system") || target.stun_particle_system == -1) {
-        return;
-    }
+    var _has_stun = (variable_instance_exists(target, "is_stunned") && target.is_stunned);
+    var _has_stagger = (variable_instance_exists(target, "is_staggered") && target.is_staggered);
 
-    // Safety check: verify particle system still exists
-    if (!part_system_exists(target.stun_particle_system)) {
-        target.stun_particle_system = -1;
-        target.stun_particle_type = -1;
-        target.stun_particle_emitter = -1;
-        return;
-    }
-
-    // Safety check: make sure position tracking exists
-    if (!variable_instance_exists(target, "stun_particle_last_x") ||
-        !variable_instance_exists(target, "stun_particle_last_y")) {
-        target.stun_particle_last_x = target.x;
-        target.stun_particle_last_y = target.y;
-        return;
-    }
-
-    // Check if character has moved significantly (more than 2 pixels)
-    var _moved = point_distance(target.x, target.y, target.stun_particle_last_x, target.stun_particle_last_y) > 2;
-
-    if (_moved) {
-        // Recreate particles at new position
+    if (!_has_stun && !_has_stagger) {
         destroy_stun_particles(target);
+        return;
+    }
+
+    if (!variable_instance_exists(target, "stun_star_state") || !is_struct(target.stun_star_state)) {
         create_stun_particles(target);
     }
+
+    var _state = target.stun_star_state;
+    if (!is_struct(_state)) return;
+
+    if (!is_array(_state.stars) || array_length(_state.stars) == 0) {
+        create_stun_particles(target);
+        _state = target.stun_star_state;
+    }
+
+    var _two_pi = pi * 2;
+
+    for (var i = 0; i < array_length(_state.stars); i++) {
+        var _star = _state.stars[i];
+
+        if (!is_struct(_star)) {
+            _star = {
+                base_x: random_range(-6, 6),
+                base_y: random_range(-2, 2),
+                amplitude: irandom_range(1, 2),
+                phase: random_range(0, _two_pi),
+                speed: random_range(0.05, 0.12)
+            };
+        } else {
+            _star.phase += _star.speed;
+            if (_star.phase >= _two_pi) {
+                _star.phase -= _two_pi;
+            }
+        }
+
+        _state.stars[i] = _star;
+    }
+
+    if (!variable_struct_exists(_state, "jitter_timer")) {
+        _state.jitter_timer = 0;
+    }
+
+    _state.jitter_timer += 1;
+    if (_state.jitter_timer >= 90) {
+        _state.jitter_timer = irandom_range(0, 30);
+        for (var j = 0; j < array_length(_state.stars); j++) {
+            var _jstar = _state.stars[j];
+            _jstar.base_x = clamp(_jstar.base_x + random_range(-1, 1), -14, 14);
+            _jstar.base_y = clamp(_jstar.base_y + random_range(-0.5, 0.5), -4, 2);
+            _state.stars[j] = _jstar;
+        }
+
+        stun_stars_ensure_spacing(_state);
+    }
+
+    target.stun_star_state = _state;
 }
 
 /// @function destroy_stun_particles(target)
-/// @description Clean up particle system for stun stars
-/// @param {Id.Instance} target - The instance to remove particles from
+/// @description Clear the scripted stun stars from the target
+/// @param {Id.Instance} target - The instance to remove the stars from
 function destroy_stun_particles(target) {
     if (!instance_exists(target)) return;
 
-    if (!variable_instance_exists(target, "stun_particle_system")) return;
+    if (!variable_instance_exists(target, "stun_star_state")) return;
 
-    if (target.stun_particle_system != -1) {
-        // Safety check: only destroy if particle system exists
-        if (part_system_exists(target.stun_particle_system)) {
-            // Stop emitting new particles
-            if (variable_instance_exists(target, "stun_particle_emitter") && target.stun_particle_emitter != -1) {
-                part_emitter_destroy(target.stun_particle_system, target.stun_particle_emitter);
-            }
+    target.stun_star_state = undefined;
+}
 
-            // Clean up particle type
-            if (variable_instance_exists(target, "stun_particle_type") && target.stun_particle_type != -1) {
-                if (part_type_exists(target.stun_particle_type)) {
-                    part_type_destroy(target.stun_particle_type);
-                }
-            }
+/// @function cleanup_stun_stars_if_inactive(target)
+/// @description Destroy stun stars when both stun and stagger have cleared
+/// @param {Id.Instance} target - The instance to evaluate
+function cleanup_stun_stars_if_inactive(target) {
+    if (!instance_exists(target)) return;
 
-            // Destroy particle system (existing particles will fade out naturally)
-            part_system_destroy(target.stun_particle_system);
-        }
+    var _has_stun = (variable_instance_exists(target, "is_stunned") && target.is_stunned);
+    var _has_stagger = (variable_instance_exists(target, "is_staggered") && target.is_staggered);
 
-        // Always reset variables even if particle system was already destroyed
-        target.stun_particle_system = -1;
-        target.stun_particle_type = -1;
-        target.stun_particle_emitter = -1;
+    if (!_has_stun && !_has_stagger) {
+        destroy_stun_particles(target);
+    }
+}
+
+/// @function draw_stun_particles(target)
+/// @description Draw the scripted stun stars for the target instance
+/// @param {Id.Instance} target - The instance whose stars should be drawn
+function draw_stun_particles(target) {
+    if (!instance_exists(target)) return;
+    if (!variable_instance_exists(target, "stun_star_state")) return;
+
+    var _state = target.stun_star_state;
+    if (!is_struct(_state)) return;
+
+    var _stars = _state.stars;
+    if (!is_array(_stars) || array_length(_stars) == 0) return;
+
+    if (!sprite_exists(spr_stars)) return;
+
+    var _frame_total = sprite_get_number(spr_stars);
+
+    var _baseline_offset = -8;
+    if (variable_struct_exists(_state, "baseline_offset")) {
+        _baseline_offset = _state.baseline_offset;
     }
 
-    // Clean up position tracking variables
-    if (variable_instance_exists(target, "stun_particle_last_x")) {
-        target.stun_particle_last_x = undefined;
-        target.stun_particle_last_y = undefined;
+    var _top = target.bbox_top;
+    if (_top == 0 && target.sprite_height != undefined) {
+        _top = target.y - (target.sprite_height * 0.5);
+    }
+
+    var _base_y = _top + _baseline_offset;
+    if (variable_instance_exists(target, "y_offset")) {
+        _base_y += target.y_offset;
+    }
+
+    for (var i = 0; i < array_length(_stars); i++) {
+        var _star = _stars[i];
+        if (!is_struct(_star)) continue;
+
+        var _phase = _star.phase;
+        var _amplitude = _star.amplitude;
+        var _x = target.x + _star.base_x + sin(_phase) * _amplitude;
+        var _y = _base_y + _star.base_y + cos(_phase * 0.5) * 0.4;
+        var _frame = 0;
+
+        if (_frame_total > 1) {
+            _frame = (floor(current_time / 120) + i) mod _frame_total;
+        }
+
+        draw_sprite_ext(spr_stars, _frame, _x, _y, 1, 1, 0, c_white, 1);
     }
 }
 
@@ -171,6 +286,8 @@ function apply_stun(target, duration, source = noone) {
     with (target) {
         status_effect_spawn_feedback("stunned");
     }
+
+    create_stun_particles(target);
 
     return true;
 }
@@ -222,6 +339,8 @@ function apply_stagger(target, duration, source = noone) {
         status_effect_spawn_feedback("staggered");
     }
 
+    create_stun_particles(target);
+
     return true;
 }
 
@@ -244,6 +363,8 @@ function clear_stun(target) {
             target.image_blend = make_color_rgb(160, 32, 240);
         }
     }
+
+    cleanup_stun_stars_if_inactive(target);
 }
 
 /// @function clear_stagger(target)
@@ -265,6 +386,8 @@ function clear_stagger(target) {
             target.image_blend = c_yellow;
         }
     }
+
+    cleanup_stun_stars_if_inactive(target);
 }
 
 /// @function clear_all_cc(target)
@@ -326,6 +449,8 @@ function update_stun_stagger_timers(target) {
             clear_stagger(target);
         }
     }
+
+    update_stun_particles(target);
 }
 
 /// @function get_weapon_stun_chance(weapon_stats)

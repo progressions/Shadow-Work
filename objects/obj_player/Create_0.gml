@@ -46,10 +46,8 @@ stagger_timer = 0;       // Countdown in frames
 stun_resistance = 0;     // 0.0 to 1.0 (can be modified by traits)
 stagger_resistance = 0;  // 0.0 to 1.0 (can be modified by traits)
 
-// Stun particle system
-stun_particle_system = -1;
-stun_particle_type = -1;
-stun_particle_emitter = -1;
+// Stun star overlay
+stun_star_state = undefined;
 
 #endregion Stats
 

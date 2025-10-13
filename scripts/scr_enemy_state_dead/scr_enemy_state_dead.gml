@@ -8,7 +8,7 @@ function enemy_state_dead() {
         death_anim_complete = false;
         death_anim_timer = 0;
 
-        // Clean up stun particles immediately on death
+        // Clean up stun stars immediately on death
         destroy_stun_particles(self);
     }
 

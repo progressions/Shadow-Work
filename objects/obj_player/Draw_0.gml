@@ -365,6 +365,8 @@ function get_equipped_sprite(_sprite_key) {
 
 draw_player_with_equipment();
 
+draw_stun_particles(self);
+
 // Debug display for attack system (remove this later)
 if (debug) {
     draw_set_color(c_white);
