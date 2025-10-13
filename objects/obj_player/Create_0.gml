@@ -143,6 +143,12 @@ dash_attack_defense_penalty = 0.75; // -25% damage reduction
 last_dash_direction = "";
 is_dash_attacking = false;
 dash_override_direction = "";
+dash_hit_enemies = -1;
+dash_hit_count = 0;
+dash_target_cap = 1;
+dash_impact_sound_played = false;
+dash_multi_bonus_active = false;
+dash_multi_bonus_cap = 0;
 
 // Player animation data based on sprite frame tags
 anim_data = {
@@ -226,6 +232,7 @@ function start_dash(_direction, _preserve_facing) {
         facing_dir = _direction;
     }
 
+    player_dash_begin();
     play_sfx(snd_dash, 1, false);
     companion_on_player_dash(id);
 }

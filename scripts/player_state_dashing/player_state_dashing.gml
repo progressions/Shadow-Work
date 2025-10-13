@@ -5,6 +5,7 @@ function player_state_dashing() {
         move_dir = "idle";
         dash_timer = 0;
         dash_override_direction = "";
+        player_dash_end();
         return;
     }
 
@@ -43,6 +44,7 @@ function player_state_dashing() {
             player_focus_fire_ranged_followup(self);
         }
 
+        player_dash_end();
         return;
     }
 
@@ -69,8 +71,13 @@ function player_state_dashing() {
         case "right": dash_x =  final_dash_speed; break;
     }
 
+    var _prev_x = x;
+    var _prev_y = y;
+
     move_and_collide(dash_x, dash_y, tilemap);
     move_dir = "dash";
+
+    player_dash_handle_collisions(_prev_x, _prev_y);
 
     // Check for pillar interaction while dashing (only in grid puzzle rooms)
     if (instance_exists(obj_grid_controller)) {

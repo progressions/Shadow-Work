@@ -17,7 +17,7 @@ if (room_darkness_level <= 0 && !surface_dirty) {
     exit;
 }
 
-var _player = obj_player;
+var _player = instance_find(obj_player, 0);
 if (_player != noone) {
     if (_player.torch_active) {
         var _get_radius = method(_player, player_get_torch_light_radius);

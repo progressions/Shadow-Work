@@ -181,7 +181,7 @@ if (is_open) {
 
     var _row = floor(selected_slot / grid_columns);
     var _col = selected_slot % grid_columns;
-    var _player = instance_exists(obj_player) ? obj_player : noone;
+    var _player = instance_find(obj_player, 0);
     var _slot_action = inventory_get_slot_action(_player, selected_slot);
 
     var _action_text = "none";

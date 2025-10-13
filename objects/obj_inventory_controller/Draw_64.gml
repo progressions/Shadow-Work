@@ -11,7 +11,8 @@ if (is_open) {
 	// Draw the nine-slice background
 	draw_sprite_stretched(spr_box_frame, 0, _x, _y, _width, _height);
 
-	var _player = obj_player;
+	var _player = instance_find(obj_player, 0);
+	if (_player == noone) return;
 
 	#region Character Panel
 	var _panel_char_x = _x + 40;

@@ -29,8 +29,8 @@ function movement_profile_kiting_swooper_update(_enemy) {
     }
 
     // Get player reference
-    if (!instance_exists(obj_player)) return;
-    var _player = obj_player;
+    var _player = instance_find(obj_player, 0);
+    if (_player == noone) return;
 
     // Handle crowd control effects
     // Stunned: Can't attack or take actions (skip all logic, preserve state)

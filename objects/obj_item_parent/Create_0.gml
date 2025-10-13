@@ -33,9 +33,8 @@ function can_interact() {
 /// @function on_interact()
 /// @description Called when player presses spacebar to pick up item
 function on_interact() {
-    if (!instance_exists(obj_player)) return;
-
-    var _player = obj_player;
+    var _player = instance_find(obj_player, 0);
+    if (_player == noone) return;
 
     // Try to add to inventory
     var _added_to_inventory = false;
