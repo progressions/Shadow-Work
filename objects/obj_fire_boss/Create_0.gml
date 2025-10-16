@@ -76,6 +76,7 @@ hazard_projectile_damage = 3;          // High damage
 hazard_projectile_damage_type = DamageType.fire;
 hazard_projectile_direction_offset = 0;  // Straight ahead
 hazard_spawn_object = obj_fire;   // Spawns fire hazard at landing
+hazard_lifetime = 5;               // Hazard lasts 5 seconds before disappearing
 
 // Optional: Apply burning status effect on projectile hit
 hazard_status_effects = [
@@ -108,10 +109,10 @@ apply_tag_traits();
 // Override default sounds with boss-specific sounds (if available)
 // enemy_sounds.on_melee_attack = snd_fire_boss_melee;
 // enemy_sounds.on_ranged_attack = snd_fire_boss_ranged;
-enemy_sounds.on_hazard_windup = snd_fire_boss_cast;  // Casting sound for hazard windup
+enemy_sounds.on_hazard_vocalize = snd_fire_boss_roar;  // Monster vocalization when starting hazard attack
+enemy_sounds.on_hazard_windup = snd_fire_boss_cast;    // Physical sound of projectile launching
 // enemy_sounds.on_hit = snd_fire_boss_hit;
 // enemy_sounds.on_death = snd_fire_boss_death;
-// enemy_sounds.on_aggro = snd_fire_boss_roar;
 
 // ============================================
 // LOOT TABLE

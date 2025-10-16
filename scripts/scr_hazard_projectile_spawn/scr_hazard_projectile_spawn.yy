@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"scr_hazard_projectile_spawn",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"scr_hazard_projectile_spawn",
+  "parent":{
+    "name":"enemies",
+    "path":"folders/Scripts/enemies.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

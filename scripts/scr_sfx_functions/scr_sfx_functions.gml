@@ -108,6 +108,16 @@ function play_enemy_sfx(_event_name, _volume=1) {
 				return true;
 			}
 			break;
+		case "on_hazard_vocalize":
+			// No default sound for hazard vocalization (monster call/vocalization)
+			return false;
+		case "on_hazard_windup":
+			// Default to generic enemy attack sound if available
+			if (audio_exists(snd_attack_sword)) {
+				play_sfx(snd_attack_sword, _volume);
+				return true;
+			}
+			break;
 		case "on_aggro":
 		case "on_footstep":
 		case "on_status_effect":

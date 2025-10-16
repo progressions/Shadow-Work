@@ -178,6 +178,7 @@ enemy_sounds = {
     on_ranged_attack: undefined,  // Default: snd_bow_attack
     on_ranged_windup: undefined,  // Default: snd_ranged_windup (plays when ranged attack animation starts)
     on_hazard_windup: undefined,  // Default: snd_enemy_attack_generic or snd_ranged_attack (hazard spawn telegraph)
+    on_hazard_vocalize: undefined,  // Default: undefined (monster vocalization - played alongside on_hazard_windup)
     on_hit: undefined,            // Default: snd_enemy_hit_generic
     on_death: undefined,          // Default: snd_enemy_death
     on_aggro: undefined,          // Default: undefined (no sound)

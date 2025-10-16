@@ -1,5 +1,5 @@
-// Collision with player - damage but don't destroy projectile
-// This allows the projectile to continue and land, creating a hazard
+// Collision with player - damage player and spawn hazard at collision point
+// Then destroy the projectile
 
 // Only damage if player is alive and not dead
 if (other.hp > 0 && other.state != PlayerState.dead) {
@@ -80,6 +80,9 @@ if (other.hp > 0 && other.state != PlayerState.dead) {
     if (variable_instance_exists(other, "combat_timer")) {
         other.combat_timer = 0;  // Reset to max combat duration
     }
-}
 
-// IMPORTANT: Do not destroy projectile - it continues traveling to landing point
+    // Spawn hazard at current position and destroy projectile
+    if (!hazard_spawned) {
+        spawn_hazard_and_destroy();
+    }
+}

@@ -368,6 +368,11 @@ if (_use_idle_timer) {
 } else {
     var speed_mult = 1.25; // faster feel for attacks
 
+    // Slow down all attacks to spread animation over longer duration
+    if (state == EnemyState.attacking || state == EnemyState.ranged_attacking || state == EnemyState.hazard_spawning) {
+        speed_mult = 0.5;
+    }
+
     // Apply ranged windup speed modifier during windup phase
     if (state == EnemyState.ranged_attacking && !ranged_windup_complete) {
         speed_mult = speed_mult * ranged_windup_speed; // Slow down animation during windup
@@ -396,9 +401,9 @@ if (_use_idle_timer) {
         }
     }
 
-    if (state == EnemyState.attacking && anim_timer >= frames_in_seq) {
-        // Keep looping attack animation until alarm[2] finishes and resets state
-        anim_timer = 0;
+    if ((state == EnemyState.attacking || state == EnemyState.ranged_attacking || state == EnemyState.hazard_spawning) && anim_timer >= frames_in_seq) {
+        // Clamp animation timer so it plays slowly without looping
+        anim_timer = frames_in_seq - 0.01;
     }
 }
 

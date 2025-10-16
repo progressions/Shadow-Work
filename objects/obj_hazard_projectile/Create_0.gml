@@ -23,13 +23,6 @@ attack_category = AttackCategory.ranged;  // For DR calculations
 // Hazard spawn configuration
 hazard_object = obj_fire;         // Object to spawn at landing point
 hazard_spawned = false;           // Track if we've spawned the hazard
-hazard_lifetime = -1;             // Hazard duration in seconds (-1 = permanent)
-
-// Explosion configuration (optional blast on landing)
-explosion_enabled = false;        // Whether to spawn explosion
-explosion_object = obj_explosion; // Explosion object to spawn
-explosion_damage = 3;             // Explosion damage amount
-explosion_damage_type = DamageType.fire; // Explosion damage type
 
 // Visual configuration
 sprite_index = spr_fireball;    // Placeholder sprite
@@ -38,7 +31,7 @@ image_speed = 0;             // No animation
 depth = -y;                  // Draw above ground
 
 // Status effects (optional)
-status_effects_on_hit = [];  // Status effects to apply on player hit
+status_effects_on_hit = ["burning"];  // Status effects to apply on player hit
 
 // ==============================
 // RANGE PROFILE CONFIGURATION
