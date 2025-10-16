@@ -7,11 +7,20 @@
 // Must set auxiliary_object BEFORE event_inherited() so parent can spawn correct type
 auxiliary_object = obj_fire_imp;
 
+// IMPORTANT: Set HP BEFORE event_inherited() so parent uses correct hp_total value
+hp = 100;
+
 // Now inherit parent (will spawn auxiliaries using obj_fire_imp)
 event_inherited();
 
-hp = 100;
+// Ensure hp_total is set correctly (redundant but safe)
 hp_total = hp;
+
+// Debug: Verify HP initialization
+show_debug_message("CHAIN BOSS CREATED:");
+show_debug_message("  hp: " + string(hp));
+show_debug_message("  hp_total: " + string(hp_total));
+show_debug_message("  auxiliaries_alive: " + string(auxiliaries_alive));
 
 // ============================================
 // ENABLE ADVANCED ATTACKS
@@ -42,3 +51,5 @@ spin_rotation_speed = 8; // Faster spin for dramatic effect
 // Fire-based boss with fire immunity
 array_push(tags, "fireborne");  // Grants fire_immunity, ice_vulnerability
 apply_tag_traits();
+
+  enable_auxiliary_respawn = true;

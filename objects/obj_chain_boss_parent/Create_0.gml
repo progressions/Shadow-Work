@@ -76,6 +76,9 @@ spin_sound_end = snd_spin_end;            // Sound when spin ends
 auxiliaries = [];                         // Array of auxiliary instance references
 chain_data = [];                          // Array of chain state structs
 
+// Auxiliary respawning
+enable_auxiliary_respawn = false;         // If true, boss will respawn auxiliaries when all are defeated
+
 // Enrage state
 auxiliaries_alive = auxiliary_count;      // Counter for living auxiliaries
 is_enraged = false;                       // Whether boss has entered enrage phase

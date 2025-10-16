@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"scr_chain_boss_respawn_auxiliaries",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"scr_chain_boss_respawn_auxiliaries",
+  "parent":{
+    "name":"enemies",
+    "path":"folders/Scripts/enemies.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

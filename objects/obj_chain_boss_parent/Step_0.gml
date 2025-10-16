@@ -55,6 +55,11 @@ if (enable_throw_attack && throw_state == "none" && throw_cooldown_timer <= 0) {
 
         // Check if player is in throw range
         if (_dist_to_player >= throw_range_min && _dist_to_player <= throw_range_max) {
+            // If no auxiliaries left and respawn enabled, respawn them first
+            if (auxiliaries_alive <= 0 && enable_auxiliary_respawn) {
+                chain_boss_respawn_auxiliaries();
+            }
+
             // Find an available auxiliary (not stunned, not already being thrown)
             var _available_aux = noone;
             for (var i = 0; i < array_length(auxiliaries); i++) {
@@ -102,7 +107,8 @@ if (throw_state == "winding_up") {
             // Set auxiliary to thrown state
             _aux.throw_state = "being_thrown";
 
-            // Enable collision damage during throw
+            // Save original collision damage state and enable during throw
+            _aux.original_collision_damage_enabled = _aux.collision_damage_enabled;
             _aux.collision_damage_enabled = true;
             _aux.collision_damage_amount = throw_damage;
             _aux.collision_damage_type = throw_damage_type;
@@ -139,6 +145,11 @@ if (enable_spin_attack && spin_state == "none" && throw_state == "none" && spin_
     if (instance_exists(obj_player)) {
         var _dist_to_player = point_distance(x, y, obj_player.x, obj_player.y);
 
+        // If not enough auxiliaries and respawn enabled, respawn them first
+        if (auxiliaries_alive < 2 && enable_auxiliary_respawn) {
+            chain_boss_respawn_auxiliaries();
+        }
+
         // Check if player is in spin range and boss has at least 2 living auxiliaries
         if (_dist_to_player <= spin_range_max && auxiliaries_alive >= 2) {
             // Start spin attack
@@ -173,7 +184,8 @@ if (spin_state == "winding_up") {
                 _aux.state != EnemyState.dead) {
                 _aux.spin_state = "spinning";
 
-                // Enable collision damage during spin
+                // Save original collision damage state and enable during spin
+                _aux.original_collision_damage_enabled = _aux.collision_damage_enabled;
                 _aux.collision_damage_enabled = true;
                 _aux.collision_damage_amount = spin_damage;
                 _aux.collision_damage_type = spin_damage_type;

@@ -10,6 +10,12 @@ function enemy_state_dead() {
 
         // Clean up stun stars immediately on death
         destroy_stun_particles(self);
+
+        // Notify chain boss immediately on death (don't wait for destroy event)
+        if (variable_instance_exists(self, "chain_boss") && instance_exists(chain_boss)) {
+            chain_boss.auxiliaries_alive--;
+            show_debug_message("Auxiliary entered DEAD state! Boss now has " + string(chain_boss.auxiliaries_alive) + " alive.");
+        }
     }
 
     if (!death_anim_complete) {

@@ -427,6 +427,7 @@
     {"id":{"name":"scr_animate_6frame_bob","path":"scripts/scr_animate_6frame_bob/scr_animate_6frame_bob.yy",},},
     {"id":{"name":"scr_animation_helpers","path":"scripts/scr_animation_helpers/scr_animation_helpers.yy",},},
     {"id":{"name":"scr_broadcast_ai_event","path":"scripts/scr_broadcast_ai_event/scr_broadcast_ai_event.yy",},},
+    {"id":{"name":"scr_chain_boss_respawn_auxiliaries","path":"scripts/scr_chain_boss_respawn_auxiliaries/scr_chain_boss_respawn_auxiliaries.yy",},},
     {"id":{"name":"scr_combat_system","path":"scripts/scr_combat_system/scr_combat_system.yy",},},
     {"id":{"name":"scr_companion_system","path":"scripts/scr_companion_system/scr_companion_system.yy",},},
     {"id":{"name":"scr_damage_type_helpers","path":"scripts/scr_damage_type_helpers/scr_damage_type_helpers.yy",},},

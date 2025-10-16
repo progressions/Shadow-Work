@@ -102,6 +102,565 @@ Key global variables that coordinate systems:
 - `/objects/obj_arrow/Create_0.gml` - Ranged attack projectile
 - `/objects/obj_enemy_parent/Collision_obj_attack.gml` - Damage application to enemies
 
+## Major Gameplay Behaviors
+
+### Dashing System
+
+**Trigger:** Double-tap W/A/S/D within 300ms window
+
+**Core Mechanics:**
+- **Duration:** 8 frames (~0.13 seconds)
+- **Speed:** 6 pixels/frame (modified by terrain and status effects)
+- **Cooldown:** 75 frames (~1.25 seconds)
+- **Momentum:** 60% of dash speed carries over as velocity after dash ends
+- **Direction:** Based on `facing_dir` or `dash_override_direction` (for retreat dashes)
+
+**Dash Properties:**
+- Interrupted by stagger effects
+- Uses `move_and_collide()` for wall collision
+- Notifies companions via `companion_on_player_dash()` for reactive triggers
+- Cooldown reduced by companion auras (Hola's Slipstream: 10-30%)
+
+**Animation:**
+- Dedicated 4-frame animations per direction (frames 26-41 in player sprite)
+- Manual frame control with `image_speed = 0`
+
+**Key Variables:**
+```gml
+dash_speed = 6;                  // Base dash speed
+dash_duration = 8;               // Frames
+dash_cooldown_time = 75;         // Frames between dashes
+dash_override_direction = "";    // For retreat/focus dashes
+last_dash_direction = "";        // Tracks dash direction
+```
+
+**Key Files:**
+- `/scripts/player_handle_dash_input/player_handle_dash_input.gml` - Double-tap detection
+- `/scripts/player_state_dashing/player_state_dashing.gml` - Movement logic
+- `/scripts/player_handle_dash_cooldown/player_handle_dash_cooldown.gml` - Cooldown reduction
+- `/objects/obj_player/Create_0.gml` - `start_dash()` function (lines 243-260)
+
+---
+
+### Dash Attack System
+
+**Two Attack Types:**
+
+**1. Collision Damage (During Dash):**
+- Damages enemies by dashing through them
+- Target cap scales with player level (1-4 enemies)
+- 1.5x damage multiplier applied
+- Respects normal damage calculations (crits, traits, equipment)
+- Uses line collision detection to prevent tunneling
+- Sound: `snd_dash_attack` on first hit
+
+**2. Post-Dash Attack Window:**
+- **Window Duration:** 0.4 seconds after dash completes
+- **Activation:** Attack within window AND in same direction as dash
+- **Damage Bonus:** 1.5x multiplier
+- **Trade-off:** Applies defense vulnerability (-25% DR) for 1 second
+- **Cancellation:** Window cancelled if player changes direction
+
+**Damage Calculation Order:**
+1. Base weapon damage → Status effects → **Dash multiplier (1.5x)** → Companion bonuses → Execution bonus → Critical hit
+
+**Target Cap by Level:**
+- Level 1-4: 1 enemy
+- Level 5-9: 2 enemies
+- Level 10-14: 3 enemies
+- Level 15+: 4 enemies
+
+**Visual Feedback:**
+- Screen shake (2-8 pixels based on weapon handedness)
+- Hit sparkles spray from impact
+- Enemy flash (white/red for crit)
+- Damage numbers
+
+**Key Variables:**
+```gml
+is_dash_attacking = false;              // Flag for damage calculation
+dash_attack_window = 0;                 // Timer for post-dash window
+dash_attack_window_duration = 0.4;      // Window length in seconds
+dash_attack_damage_multiplier = 1.5;    // +50% damage
+dash_attack_defense_penalty = 0.75;     // -25% DR penalty
+dash_hit_enemies = -1;                  // DS list of hit enemies
+dash_target_cap = 1;                    // Max targets (scales with level)
+```
+
+**Key Files:**
+- `/scripts/player_dash_attack/player_dash_attack.gml` - Collision damage and tracking
+- `/scripts/player_attacking/player_attacking.gml` - Post-dash window logic (lines 69-88)
+- `/scripts/scr_combat_system/scr_combat_system.gml` - Damage multiplier application (lines 36-40)
+- `/docs/dash_attack.md` - Complete dash attack documentation
+
+---
+
+### Shield Blocking System
+
+**Status:** Partially implemented (animations and state complete, damage blocking NOT implemented)
+
+**Trigger:** Hold **O** key with shield equipped in left hand
+
+**Current Implementation:**
+- **State Management:** `PlayerState.shielding` entry/exit functional
+- **Animation:** Shield raise animation (frames 61-73, 3 frames per direction)
+- **Movement:** Omnidirectional strafing while shield is raised
+- **Facing Lock:** Shield direction locked on entry, player can strafe
+- **Perfect Block Window:** 18 frames (~0.3s) tracked after animation completes
+- **Cooldown System:** 60 frames normal, 30 frames perfect block
+- **Visual Polish:** Shield moves 6 pixels forward when blocking
+
+**NOT Implemented:**
+- ❌ Damage reduction on block
+- ❌ Projectile collision detection
+- ❌ Perfect block projectile destruction
+- ❌ Directional blocking (front arc checks)
+- ❌ Shield-specific properties (block arc, DR amounts)
+- ❌ Integration with hazard/arrow collision events
+
+**Animation Frames:**
+- shielding_down: 61-63
+- shielding_right: 64-66
+- shielding_left: 67-69
+- shielding_up: 70-72
+
+**Key Variables:**
+```gml
+block_cooldown = 0;                      // Current cooldown
+block_cooldown_max = 60;                 // Normal cooldown (1s)
+block_cooldown_perfect_max = 30;         // Perfect block cooldown (0.5s)
+perfect_block_window = 0;                // Perfect block active frames
+perfect_block_window_duration = 18;      // Perfect block window (~0.3s)
+shield_raise_complete = false;           // Animation finished?
+shield_facing_dir = "down";              // Locked direction
+```
+
+**Key Files:**
+- `/scripts/player_state_shielding/player_state_shielding.gml` - State logic
+- `/scripts/player_handle_animation/player_handle_animation.gml` - Animation (lines 89-113)
+- `/objects/obj_player/Create_0.gml` - Variable initialization (lines 214-222)
+
+**Implementation Note:** Shield blocking requires Task 2-6 from spec in `.agent-os/specs/2025-10-16-shield-block-system/` to become functional for actual damage mitigation.
+
+---
+
+### Ranged Attack System
+
+#### Player Ranged Attacks
+
+**Equipment:**
+- **Wooden Bow:** 2 damage, 1.2 speed, 120 range
+- **Longbow:** 5 damage, 1.0 speed, 150 range
+- **Crossbow:** 3 damage, 0.6 speed, 140 range (one-handed)
+- **Heavy Crossbow:** 6 damage, 0.4 speed, 160 range, 30% armor pen
+
+**Ammo System:**
+- Requires arrows in inventory (stackable, max 99)
+- Ammo consumed at start of windup (prevents waste if interrupted)
+- Check via `has_ammo("arrows")`, consume via `consume_ammo("arrows", 1)`
+
+**Attack Flow:**
+1. **Windup Phase:** Enter attacking state, play `snd_ranged_windup`, consume ammo
+2. **Animation:** Ranged attack animation plays
+3. **Arrow Spawn:** Create `obj_arrow` when animation completes
+4. **Spawn Position:** Direction-based offsets (right: +16/+8, up: +16/-16, etc.)
+5. **Properties:** Damage from `get_total_damage()`, speed 2 px/frame, range profile applied
+
+**Range Profile System:**
+Range profiles control distance-based damage falloff with 3 zones:
+- **Point Blank:** Reduced damage (0.5x-0.7x) at close range
+- **Optimal Range:** Full 1.0x damage in sweet spot
+- **Long Range:** Falloff to 0.4x-0.6x at max distance
+
+Example (Longbow):
+- Point blank: 0-148px @ 0.5x damage
+- Optimal: 160-260px @ 1.0x damage
+- Max: 340px @ 0.6x damage
+
+**Arrow Collision:**
+- **Enemies:** Apply ranged damage with range multiplier, enemy ranged DR subtraction
+- **Walls:** Destroy arrow, play `snd_bump`
+- **Out of bounds:** Auto-destroy
+
+**Key Files:**
+- `/scripts/player_attacking/player_attacking.gml` - Windup and spawn logic (lines 193-300)
+- `/objects/obj_arrow/Create_0.gml` - Arrow initialization
+- `/objects/obj_arrow/Step_0.gml` - Range falloff and collision
+- `/scripts/scr_projectile_range_profiles/scr_projectile_range_profiles.gml` - Range profiles
+
+#### Enemy Ranged Attacks
+
+**Configuration:**
+Enemies with `is_ranged_attacker = true` have ranged attack stats:
+```gml
+ranged_attack = {
+    damage: ranged_damage,
+    damage_type: ranged_damage_type,
+    chance_to_stun: 0.03,        // Lower than melee
+    chance_to_stagger: 0.08,
+    stun_duration: 1.2,
+    stagger_duration: 0.8,
+    range: attack_range
+};
+```
+
+**Attack Flow:**
+1. Enter `EnemyState.ranged_attacking`
+2. Aim at player (update `facing_dir`)
+3. Play ranged attack animation
+4. Spawn projectile (default: `obj_enemy_arrow`)
+5. **Can move while shooting** (unlike melee attacks)
+6. Return to targeting after cooldown
+
+**Enemy Arrow Properties:**
+- **Speed:** 4 pixels/frame (faster than player arrows)
+- **Damage:** Enemy ranged damage × status modifier × crit multiplier
+- **Crit System:** Enemies can crit player with their ranged attacks
+- **Collision:** Applies player trait resistance + ranged DR
+
+**Special Feature - Wind Deflection:**
+- Hola companion (affinity 5+) deflects arrows with aura
+- Deflection scales with proximity and affinity
+- Max 15° deflection per frame at close range with max affinity
+- Gradually bends trajectory away from player
+
+**Dual-Mode Integration:**
+- Enemies with `enable_dual_mode = true` switch between melee and ranged
+- Decision based on distance, formation role, and cooldowns
+- Separate cooldowns for each attack mode
+
+**Key Differences:**
+
+| Feature | Player Arrows | Enemy Arrows |
+|---------|--------------|--------------|
+| Speed | 2 px/frame | 4 px/frame |
+| Ammo | Requires arrows | Unlimited |
+| Movement | No (attacking state) | Yes (can kite) |
+| Crit System | No crits | Enemy can crit |
+| Special | Range profiles | Wind deflection aura |
+
+**Key Files:**
+- `/scripts/enemy_handle_ranged_attack/enemy_handle_ranged_attack.gml` - Enemy firing
+- `/objects/obj_enemy_arrow/Create_0.gml` - Enemy arrow init
+- `/objects/obj_enemy_arrow/Step_0.gml` - Wind deflection and collision
+- `/scripts/scr_enemy_state_ranged_attacking/scr_enemy_state_ranged_attacking.gml` - Attack state
+
+---
+
+### Chain Boss System
+
+**Boss Identity:** `obj_chain_boss_parent` (Fire variant: `obj_chain_boss`)
+
+**Core Concept:** Boss is physically chained to 2-5 auxiliary minions (Fire Imps for fire variant)
+
+#### Chain Mechanics
+
+**Chain Constraints:**
+- Auxiliaries spawn in circular formation at 50% of `chain_max_length` (96 pixels default)
+- **Hard Boundary:** Auxiliaries cannot move beyond chain length
+- Position clamped using circular constraint after movement
+- Pathfinding stops when hitting chain boundary
+
+**Visual Chains:**
+- Drawn with parabolic sag effect (tension-based)
+- Tension < 0.7: Visible sag (up to 20 pixels)
+- Tension ≥ 0.7: Taut/straight chains
+- Chain sprite: `spr_chain` (4×8 pixel links)
+- Chains drawn before boss (boss appears on top)
+
+**Auxiliary-Based DR:**
+- Each living auxiliary grants +2 DR to boss (configurable)
+- Example: 4 auxiliaries = +8 DR
+- DR bonus dynamically decreases as auxiliaries die
+- Applied in damage calculation pipeline
+
+#### Boss Phases
+
+**Enrage Phase (all auxiliaries dead):**
+- **Attack Speed:** ×1.5
+- **Move Speed:** ×1.3
+- **Damage:** ×1.2 (melee and ranged)
+- **Visual:** Boss turns red (`image_blend = c_red`)
+- **Sound:** Plays enrage sound
+
+#### Advanced Attack #1: Throw Attack
+
+**Configuration:**
+```gml
+enable_throw_attack = true;
+throw_cooldown = 300;           // 5 seconds
+throw_windup_time = 30;         // 0.5 seconds
+throw_range_min = 64;
+throw_range_max = 256;
+throw_projectile_speed = 4;
+throw_return_speed = 3;
+```
+
+**Mechanics:**
+1. Boss selects available auxiliary (not stunned, idle state)
+2. Windup animation (30 frames)
+3. Auxiliary "thrown" toward player's position
+4. Auxiliary deals collision damage during flight
+5. Returns to boss when hitting max chain length OR player
+6. Cooldown starts when auxiliary returns
+
+**States:**
+- Boss: `"none"` → `"winding_up"` → `"throwing"` → `"none"`
+- Auxiliary: `"idle"` → `"being_thrown"` → `"returning"` → `"idle"`
+
+**Sounds:** `snd_throw_start`, `snd_throwing` (looping), `snd_throw_hit`
+
+#### Advanced Attack #2: Spin Attack
+
+**Configuration:**
+```gml
+enable_spin_attack = true;
+spin_cooldown = 480;            // 8 seconds
+spin_windup_time = 45;          // 0.75 seconds
+spin_duration = 180;            // 3 seconds
+spin_rotation_speed = 8;        // Degrees/frame
+spin_range = 200;               // Player must be within range
+```
+
+**Requirements:** Minimum 2 living auxiliaries
+
+**Mechanics:**
+1. Boss checks range and auxiliary count
+2. Windup animation (45 frames)
+3. All auxiliaries enter "spinning" state
+4. Auxiliaries orbit boss at max chain length (96 pixels)
+5. Evenly spaced, rotating continuously (8°/frame)
+6. Each auxiliary deals collision damage
+7. After 3 seconds, spin ends
+
+**States:**
+- Boss: `"none"` → `"winding_up"` → `"spinning"` → `"none"`
+- Auxiliaries: `"idle"` → `"spinning"` → `"idle"`
+
+**Sounds:** `snd_spin_start`, `snd_spinning` (looping), `snd_spin_end`
+
+#### Fire Boss Variant
+
+**Stats:**
+- HP: 100
+- Fire immunity, ice vulnerability (fireborne tag)
+- 4 Fire Imp auxiliaries
+
+**Fire Imp Stats:**
+- HP: 8
+- Attack Damage: 1 (fire)
+- Collision Damage: 2 (fire)
+- Move Speed: 0.75
+- 50% chance to apply burning on melee hit
+
+**Room:** `room_greenwood_forest_4` at (544, 304)
+
+**Key Files:**
+- `/objects/obj_chain_boss_parent/Create_0.gml` - Core init (lines 99-136)
+- `/objects/obj_chain_boss_parent/Step_0.gml` - Enrage, throw, spin logic
+- `/objects/obj_chain_boss_parent/Draw_0.gml` - Chain rendering
+- `/objects/obj_chain_boss/Create_0.gml` - Fire variant
+- `/scripts/player_attack_helpers/player_attack_helpers.gml` - Auxiliary DR (lines 122-130)
+
+---
+
+### Hazard Spawning System
+
+**Purpose:** Projectile-based delivery system for persistent area-of-effect hazards (primarily used by bosses)
+
+#### Hazard Types
+
+**Fire Hazard (obj_fire):**
+- **Damage Mode:** Continuous (ticks every 0.5s)
+- **Damage Type:** DamageType.fire
+- **Effect:** Applies "burning" status on entry
+- **Immunity:** fire_immunity, ground_hazard_immunity
+- **Visual:** spr_fire (4-frame animation)
+
+**Poison Hazard (obj_poison):**
+- **Damage Mode:** None (status-only)
+- **Effect:** Applies "poisoned" status on entry
+- **Immunity:** poison_immunity, ground_hazard_immunity
+- **Visual:** spr_poison_pool (animated)
+
+#### Hazard Parent System (obj_hazard_parent)
+
+**Damage Modes:**
+- **"none"** - No direct damage (effect-only)
+- **"continuous"** - Tick-based damage every `damage_interval` seconds
+- **"on_enter"** - One-time damage on entry
+
+**Effect Modes:**
+- **"none"** - No effects
+- **"trait"** - Applies timed trait (fire_resistance, etc.)
+- **"status"** - Applies status effect (burning, poisoned, slowed)
+
+**Entity Tracking:**
+- `entities_inside` - DS list of entities currently in hazard
+- `damage_immunity_map` - Per-entity damage immunity timers
+- `effect_immunity_map` - Per-entity effect immunity timers
+- Automatic cleanup of exited/destroyed entities
+
+**Damage Pipeline (Continuous Mode):**
+1. Check damage interval elapsed
+2. For each entity: Check immunity → Apply trait modifier → Apply equipment DR → Calculate final damage (min 1)
+3. Apply damage, visual feedback, set immunity timer
+
+#### Hazard Projectile System (obj_hazard_projectile)
+
+**Movement:**
+- `move_speed` - Default 3 pixels/frame
+- `travel_distance` - Max distance before landing (default 128)
+- `direction` - Angle in degrees
+
+**Damage:**
+- `damage_amount` - Collision damage (default 2)
+- `damage_type` - DamageType enum
+- `attack_category` - AttackCategory.ranged
+- `status_effects_on_hit` - Array of effects
+
+**Hazard Spawning:**
+- `hazard_object` - Object to spawn (e.g., obj_fire)
+- `hazard_lifetime` - Duration in seconds (-1 = permanent)
+
+**Explosion (Optional):**
+- `explosion_enabled` - Toggle
+- `explosion_object` - obj_explosion
+- `explosion_damage` - Damage amount
+- `explosion_damage_type` - Damage type
+
+**Behavior:**
+1. Move in direction at `move_speed`
+2. Track distance from spawn point
+3. Apply range profile damage multiplier
+4. On reaching travel_distance OR wall collision → spawn hazard
+5. On player collision → deal damage, spawn hazard, apply status effects
+6. Auto-cull if beyond max range + buffer
+
+#### Range Profile System
+
+**Hazard Projectile Profile:**
+- Point blank (0-48px): 0.6x damage
+- Optimal (60-140px): 1.0x damage
+- Long range (140-200px): 0.5x damage
+- Overshoot buffer: 32px
+
+**Damage Curve:**
+- 0-48px: Ramps 0.6x → 1.0x
+- 48-140px: Full damage
+- 140-200px: Falls 1.0x → 0.5x
+- 200-232px: Auto-culled
+
+#### Explosion System (obj_explosion)
+
+**Configuration:**
+- Damage: 3 (default)
+- Type: DamageType.fire
+- Animation: 4 frames at 0.5 speed
+- **One-Hit:** `has_damaged` flag prevents multiple hits
+
+**Behavior:**
+1. Initialize damage config
+2. Play animation
+3. On player collision: Apply damage with trait/DR modifiers, knockback 3px
+4. Auto-destroy when animation completes
+
+#### Visual Telegraph System
+
+**Hazard Target Indicator (obj_hazard_target_indicator):**
+- Shows where hazard will land
+- Created during windup at player's current position
+- Animated 4-frame loop (spr_target)
+- Destroyed when projectile spawns
+- Gives player reaction time (~0.5-0.8s)
+
+#### Enemy Integration
+
+**Configuration Variables:**
+```gml
+enable_hazard_spawning = false;           // Master toggle
+hazard_spawn_cooldown = 180;              // 3 seconds
+hazard_spawn_windup_time = 30;            // 0.5 seconds
+hazard_projectile_distance = 128;
+hazard_projectile_speed = 3;
+hazard_projectile_damage = 2;
+hazard_spawn_object = obj_fire;
+hazard_lifetime = -1;                     // Permanent
+hazard_explosion_enabled = false;
+```
+
+**State Machine (EnemyState.hazard_spawning):**
+
+**Phase 1 - Windup:**
+- Stop movement
+- Decrement windup timer
+- Play vocalization and windup sounds
+- Create target indicator at player position
+- Store target position
+
+**Phase 2 - Spawn Projectile:**
+- Call `spawn_hazard_projectile()`
+- Destroy target indicator
+- Start cooldown
+- Set Alarm[5] for 10 frames
+
+**Phase 3 - Return to Targeting:**
+- Alarm[5] triggers
+- Reset windup timer
+- Transition to targeting state
+
+#### Fire Boss Integration
+
+**Multi-Attack System:**
+```gml
+enable_dual_mode = true;           // Melee + ranged
+enable_hazard_spawning = true;     // Hazard attacks
+allow_multi_attack = true;         // Boss multi-attack
+```
+
+**Attack Cooldowns:**
+- Melee: ~90 frames (1.5s) - Shortest
+- Ranged: ~180 frames (3s) - Medium
+- Hazard: 480 frames (8s) - Longest
+
+**Hazard Config:**
+```gml
+hazard_spawn_cooldown = 480;
+hazard_priority = 40;              // Weight 40 (higher priority)
+hazard_spawn_windup_time = 50;     // 0.83s
+hazard_projectile_speed = 4;       // Fast
+hazard_projectile_damage = 3;      // High
+hazard_spawn_object = obj_fire;
+hazard_lifetime = 5;               // 5 seconds
+hazard_status_effects = [{trait: "burning"}];
+```
+
+**Sound Config:**
+```gml
+enemy_sounds.on_hazard_vocalize = snd_fire_boss_roar;
+enemy_sounds.on_hazard_windup = snd_fire_boss_cast;
+```
+
+#### Layered Damage System
+
+**Three Damage Opportunities:**
+1. **Projectile Hit:** Damage on collision with player (ranged DR applied)
+2. **Explosion:** Optional AOE damage at landing (ranged DR applied)
+3. **Persistent Hazard:** Continuous tick damage (general DR + trait modifiers)
+
+**Key Files:**
+- `/objects/obj_hazard_parent/` - Base hazard system
+- `/objects/obj_hazard_projectile/` - Projectile delivery
+- `/objects/obj_hazard_target_indicator/` - Visual telegraph
+- `/objects/obj_explosion/` - Explosion effect
+- `/objects/obj_fire/Create_0.gml` - Fire hazard implementation
+- `/objects/obj_fire_boss/Create_0.gml` - Boss hazard integration
+- `/scripts/scr_enemy_state_hazard_spawning/scr_enemy_state_hazard_spawning.gml` - State machine
+- `/scripts/movement_profile_hazard_spawner_update/movement_profile_hazard_spawner_update.gml` - Movement AI
+- `/scripts/scr_projectile_range_profiles/scr_projectile_range_profiles.gml` - Range profiles
+
+---
+
 ## Trait System V2.0 (Stacking Mechanics)
 
 ### Core Concept

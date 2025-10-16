@@ -99,7 +99,8 @@ draw_self();
 draw_stun_particles(self);
 
 // Health bar above enemy
-if (hp < hp_total && state != EnemyState.dead) { // Only show when damaged and alive
+// Only show when damaged and alive
+if (hp < hp_total && state != EnemyState.dead) {
     var bar_x1 = x - 8;
     var bar_y1 = bbox_top - 8;
     var bar_x2 = x + 8;

@@ -52,7 +52,7 @@
         {"$GMRFlexPanel":"","%Name":"FlexPanel_5","alignItems":1,"alignSelf":1,"children":[
             {"$GMRInstance":"v2","%Name":"inst_5574F98E","colour":4294967295,"flexProperties":{"$InstanceFlexProps":"v1","anchor":0,"resourceType":"InstanceFlexProps",},"frozen":false,"hasCreationCode":false,"ignore":false,"imageIndex":0,"imageSpeed":1.0,"inheritCode":false,"inheritedItemId":null,"inheritItemSettings":false,"isDnd":false,"name":"inst_5574F98E","objectId":{"name":"obj_round_hud","path":"objects/obj_round_hud/obj_round_hud.yy",},"properties":[],"resourceType":"GMRInstance","resourceVersion":"2.0","rotation":0.0,"scaleX":1.0,"scaleY":1.0,"x":0.0,"y":0.0,},
           ],"flexDirection":0,"height":{"unit":3,"value":1445.0,},"justifyContent":0,"name":"FlexPanel_5","nodeColour":4282970851,"positionType":2,"resourceType":"GMRFlexPanel","resourceVersion":"2.0","width":{"unit":3,"value":2561.0,},},
-      ],"flexDirection":0,"gridX":32,"gridY":32,"justifyContent":0,"name":"HUD","nodeColour":4294095432,"resourceType":"GMRUILayer","resourceVersion":"2.0",},
+      ],"flexDirection":0,"gridX":32,"gridY":32,"justifyContent":0,"name":"HUD","nodeColour":4294095432,"resourceType":"GMRUILayer","resourceVersion":"2.0","visible":false,},
   ],
   "locked":false,
   "name":"RoomUI",

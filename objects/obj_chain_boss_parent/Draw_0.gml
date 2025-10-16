@@ -104,3 +104,9 @@ for (var i = 0; i < array_length(auxiliaries); i++) {
 // ============================================
 // Draw boss normally after chains (so boss appears on top)
 draw_self();
+
+// ============================================
+// CALL PARENT DRAW EVENT
+// ============================================
+// This handles health bar, status effects, and other parent rendering
+event_inherited();
