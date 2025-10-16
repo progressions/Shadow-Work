@@ -153,6 +153,14 @@ stagger_resistance = 0;  // 0.0 to 1.0 (can be modified by traits)
 // Stun star overlay
 stun_star_state = undefined;
 
+// Collision Damage System
+// Enemies can damage player on contact (configurable per enemy type)
+collision_damage_enabled = false;        // Enable/disable collision damage
+collision_damage_amount = 2;             // Base damage on collision
+collision_damage_type = DamageType.physical;  // Damage type
+collision_damage_cooldown = 30;          // Frames between collision hits (0.5s)
+collision_damage_timer = 0;              // Current cooldown timer
+
 // Trait system v2.0 - Stacking traits
 tags = []; // Thematic descriptors (fireborne, venomous, etc.) - set by child enemies
 permanent_traits = {}; // From tags (applied at creation)

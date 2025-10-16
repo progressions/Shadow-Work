@@ -26,6 +26,48 @@ enrage_attack_speed_multiplier = 1.5;     // Attack speed increase when enraged 
 enrage_move_speed_multiplier = 1.3;       // Movement speed increase when enraged (1.3x)
 enrage_damage_multiplier = 1.2;           // Damage increase when enraged (1.2x)
 
+// Auxiliary-Based Damage Reduction
+auxiliary_dr_bonus = 2;                   // DR bonus per living auxiliary (default 2 DR per aux)
+
+// ============================================
+// THROW ATTACK CONFIGURATION
+// ============================================
+
+// Throw Attack Behavior
+enable_throw_attack = false;              // Enable throw attack ability (set to true in child)
+throw_cooldown = 300;                     // Frames between throws (5 seconds default)
+throw_windup_time = 30;                   // Frames for windup animation (0.5 seconds)
+throw_speed = 4;                          // Pixels per frame for thrown auxiliary
+throw_damage = 3;                         // Damage dealt on hit
+throw_damage_type = DamageType.physical;  // Damage type for throw impact
+throw_range_min = 64;                     // Minimum distance to player to trigger throw
+throw_range_max = 256;                    // Maximum distance to player to trigger throw
+throw_return_speed = 3;                   // Speed auxiliary returns to boss
+
+// Throw Attack Sounds (configurable per boss)
+throw_sound_start = snd_throw_start;      // Sound when throw begins
+throw_sound_flying = snd_throwing;        // Sound during flight (looping)
+throw_sound_hit = snd_throw_hit;          // Sound when projectile hits player
+
+// ============================================
+// SPIN ATTACK CONFIGURATION
+// ============================================
+
+// Spin Attack Behavior
+enable_spin_attack = false;               // Enable spin attack ability (set to true in child)
+spin_cooldown = 480;                      // Frames between spins (8 seconds default)
+spin_windup_time = 45;                    // Frames for windup animation (0.75 seconds)
+spin_duration = 180;                      // Frames for full spin (3 seconds)
+spin_rotation_speed = 6;                  // Degrees per frame (360 degrees = 60 frames = 1 second)
+spin_damage = 4;                          // Damage dealt per auxiliary hit
+spin_damage_type = DamageType.physical;   // Damage type for spin attack
+spin_range_max = 200;                     // Maximum distance to player to trigger spin
+
+// Spin Attack Sounds (configurable per boss)
+spin_sound_start = snd_spin_start;        // Sound when spin begins
+spin_sound_spinning = snd_spinning;       // Sound during spin (looping)
+spin_sound_end = snd_spin_end;            // Sound when spin ends
+
 // ============================================
 // STATE TRACKING
 // ============================================
@@ -37,6 +79,19 @@ chain_data = [];                          // Array of chain state structs
 // Enrage state
 auxiliaries_alive = auxiliary_count;      // Counter for living auxiliaries
 is_enraged = false;                       // Whether boss has entered enrage phase
+
+// Throw attack state
+throw_state = "none";                     // "none", "selecting", "winding_up", "throwing"
+throw_target_auxiliary = noone;           // Which auxiliary is being thrown
+throw_windup_timer = 0;                   // Countdown timer for windup
+throw_cooldown_timer = 0;                 // Cooldown timer between throws
+
+// Spin attack state
+spin_state = "none";                      // "none", "winding_up", "spinning"
+spin_windup_timer = 0;                    // Countdown timer for windup
+spin_duration_timer = 0;                  // Duration timer for active spin
+spin_cooldown_timer = 0;                  // Cooldown timer between spins
+spin_current_angle = 0;                   // Current rotation angle for spin
 
 // ============================================
 // SPAWN AUXILIARIES IN CIRCULAR FORMATION
@@ -57,6 +112,16 @@ for (var i = 0; i < auxiliary_count; i++) {
 
     // Set bidirectional reference: auxiliary → boss
     _aux.chain_boss = self;
+
+    // Initialize throw state on auxiliary
+    _aux.throw_state = "idle";                    // "idle", "being_thrown", "returning"
+    _aux.throw_velocity_x = 0;                    // Throw velocity X
+    _aux.throw_velocity_y = 0;                    // Throw velocity Y
+    _aux.original_collision_damage_enabled = _aux.collision_damage_enabled; // Save original state
+
+    // Initialize spin state on auxiliary
+    _aux.spin_state = "idle";                     // "idle", "spinning"
+    _aux.spin_orbit_angle = _angle;               // Starting angle for orbital position
 
     // Add auxiliary to boss's tracking arrays
     array_push(auxiliaries, _aux);

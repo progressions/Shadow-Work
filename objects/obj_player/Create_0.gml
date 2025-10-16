@@ -49,6 +49,11 @@ stagger_resistance = 0;  // 0.0 to 1.0 (can be modified by traits)
 // Stun star overlay
 stun_star_state = undefined;
 
+// Invulnerability system (prevents multi-hit from collision damage)
+invulnerable = false;                    // Invulnerability flag
+invulnerability_duration = 30;           // Frames of invulnerability (0.5s default)
+invulnerability_timer = 0;               // Current invulnerability counter
+
 #endregion Stats
 
 move_dir = "right";
@@ -238,6 +243,12 @@ function start_dash(_direction, _preserve_facing) {
 // Check if player is in active combat (for companion evading behavior)
 function is_in_combat() {
     return combat_timer < combat_cooldown;
+}
+
+// Trigger invulnerability frames (prevents multi-hit from collision damage)
+function trigger_invulnerability(duration) {
+    invulnerable = true;
+    invulnerability_timer = duration;
 }
 
 

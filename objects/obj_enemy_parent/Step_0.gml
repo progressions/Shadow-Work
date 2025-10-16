@@ -44,6 +44,70 @@ tick_status_effects();
 // Apply terrain effects (traits and speed modifier)
 apply_terrain_effects();
 
+// ============================================
+// AUXILIARY THROW STATE MACHINE
+// ============================================
+// Handle auxiliary being thrown by chain boss
+if (variable_instance_exists(self, "throw_state")) {
+    // Skip AI if auxiliary is spinning
+    if (variable_instance_exists(self, "spin_state") && spin_state == "spinning") {
+        // Position is controlled by boss during spin attack
+        return;
+    }
+
+    if (throw_state == "being_thrown") {
+        // Move auxiliary along throw velocity
+        x += throw_velocity_x;
+        y += throw_velocity_y;
+
+        // Check if reached chain max length (abort throw and return)
+        if (variable_instance_exists(self, "chain_boss") && instance_exists(chain_boss)) {
+            var _dist_to_boss = point_distance(x, y, chain_boss.x, chain_boss.y);
+            if (_dist_to_boss >= chain_boss.chain_max_length) {
+                // Reached max chain length, start returning
+                throw_state = "returning";
+
+                // Stop flying sound
+                if (audio_exists(chain_boss.throw_sound_flying)) {
+                    stop_looped_sfx(chain_boss.throw_sound_flying);
+                }
+
+                show_debug_message("Auxiliary reached chain limit, returning to boss");
+            }
+        }
+
+        // Skip normal AI when being thrown
+        return;
+    } else if (throw_state == "returning") {
+        // Move back toward boss
+        if (variable_instance_exists(self, "chain_boss") && instance_exists(chain_boss)) {
+            var _angle_to_boss = point_direction(x, y, chain_boss.x, chain_boss.y);
+            var _return_speed = chain_boss.throw_return_speed;
+
+            x += lengthdir_x(_return_speed, _angle_to_boss);
+            y += lengthdir_y(_return_speed, _angle_to_boss);
+
+            // Check if reached boss
+            var _dist_to_boss = point_distance(x, y, chain_boss.x, chain_boss.y);
+            if (_dist_to_boss < 32) {
+                // Reached boss, reset to idle
+                throw_state = "idle";
+                collision_damage_enabled = original_collision_damage_enabled;
+
+                // Boss can throw again
+                chain_boss.throw_state = "none";
+                chain_boss.throw_target_auxiliary = noone;
+                chain_boss.throw_cooldown_timer = chain_boss.throw_cooldown;
+
+                show_debug_message("Auxiliary returned to boss, throw cooldown started");
+            }
+        }
+
+        // Skip normal AI when returning
+        return;
+    }
+}
+
 // Track state transitions for approach variation reset
 if (!variable_instance_exists(self, "previous_state")) {
     previous_state = state;
@@ -374,6 +438,11 @@ if (hazard_spawn_cooldown_timer > 0) {
 // Retreat cooldown (for dual-mode enemies)
 if (retreat_cooldown > 0) {
     retreat_cooldown--;
+}
+
+// Collision damage cooldown
+if (collision_damage_timer > 0) {
+    collision_damage_timer--;
 }
 
 // ============================================

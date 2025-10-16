@@ -1,0 +1,25 @@
+{
+  "$GMSound":"",
+  "%Name":"snd_throwing",
+  "audioGroupId":{
+    "name":"audiogroup_sfx_world",
+    "path":"audiogroups/audiogroup_sfx_world",
+  },
+  "bitDepth":1,
+  "bitRate":128,
+  "compression":0,
+  "conversionMode":0,
+  "duration":5.245533,
+  "name":"snd_throwing",
+  "parent":{
+    "name":"world",
+    "path":"folders/Sounds/sfx/world.yy",
+  },
+  "preload":false,
+  "resourceType":"GMSound",
+  "resourceVersion":"2.0",
+  "sampleRate":44100,
+  "soundFile":"snd_throwing.wav",
+  "type":0,
+  "volume":1.0,
+}

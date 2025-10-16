@@ -249,13 +249,20 @@ if (can_attack && equipped.right_hand != undefined) {
 
 function draw_player_with_equipment() {
     var _base_frame = image_index;
-	if (global.game_paused) _base_frame = paused_frame; 
-    
+	if (global.game_paused) _base_frame = paused_frame;
+
     var _x_offset = 0;
     var _y_offset = 0;
-    
+
     var _item_x = x + _x_offset;
-    
+
+    // Calculate alpha for invulnerability flashing
+    var _draw_alpha = 1;
+    if (invulnerable && invulnerability_timer > 0) {
+        // Alternate between 0.3 and 1.0 alpha every 4 frames (fast flashing)
+        _draw_alpha = (floor(invulnerability_timer / 4) % 2 == 0) ? 0.3 : 1.0;
+    }
+
     // Different layering for each direction
     switch(facing_dir) {
         case "up":
@@ -270,7 +277,7 @@ function draw_player_with_equipment() {
             }
 
             // Player
-            draw_sprite_ext(sprite_index, _base_frame, x, y + y_offset, image_xscale, image_yscale, 0, image_blend, 1);
+            draw_sprite_ext(sprite_index, _base_frame, x, y + y_offset, image_xscale, image_yscale, 0, image_blend, _draw_alpha);
 
             // Draw hands conditionally
             draw_player_hands(_base_frame);
@@ -282,7 +289,7 @@ function draw_player_with_equipment() {
         case "right":
         case "down":
             // Player first
-            draw_sprite_ext(sprite_index, _base_frame, x, y + y_offset, image_xscale, image_yscale, 0, image_blend, 1);
+            draw_sprite_ext(sprite_index, _base_frame, x, y + y_offset, image_xscale, image_yscale, 0, image_blend, _draw_alpha);
             
             // Draw hands conditionally
             draw_player_hands(_base_frame);
@@ -302,7 +309,7 @@ function draw_player_with_equipment() {
             
         case "left":
             // Player
-            draw_sprite_ext(sprite_index, _base_frame, x, y + y_offset, image_xscale, image_yscale, 0, image_blend, 1);
+            draw_sprite_ext(sprite_index, _base_frame, x, y + y_offset, image_xscale, image_yscale, 0, image_blend, _draw_alpha);
             
             // Draw hands conditionally
             draw_player_hands(_base_frame);

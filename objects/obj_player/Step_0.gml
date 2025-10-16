@@ -5,6 +5,15 @@ if (global.game_paused) exit;
 // Update stun/stagger timers
 update_stun_stagger_timers(self);
 
+// Update invulnerability timer
+if (invulnerability_timer > 0) {
+    invulnerability_timer--;
+    if (invulnerability_timer <= 0) {
+        invulnerable = false;
+        invulnerability_timer = 0;
+    }
+}
+
 // Maintain stun/stagger color overlays
 if (is_stunned) {
     image_blend = c_yellow;

@@ -119,6 +119,16 @@ function player_attack_apply_damage(_attacker, _enemy, _info) {
             _raw_dr = ranged_damage_resistance;
         }
 
+        // Add auxiliary-based DR bonus for chain bosses
+        if (variable_instance_exists(self, "auxiliary_dr_bonus") && variable_instance_exists(self, "auxiliaries_alive")) {
+            var _aux_dr = auxiliary_dr_bonus * auxiliaries_alive;
+            _raw_dr += _aux_dr;
+
+            if (variable_global_exists("debug_mode") && global.debug_damage_reduction) {
+                show_debug_message("Chain Boss Auxiliary DR: +" + string(_aux_dr) + " DR from " + string(auxiliaries_alive) + " auxiliaries");
+            }
+        }
+
         var _effective_dr = max(0, _raw_dr - _armor_pierce);
         var _final_damage = max(0, _damage_after_resistance - _effective_dr);
 

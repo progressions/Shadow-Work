@@ -27,6 +27,12 @@ enemy_sounds = {
     on_status_effect: undefined             // Default: snd_status_effect_generic
 };
 
+// Enable collision damage (fire imps deal contact damage)
+collision_damage_enabled = true;
+collision_damage_amount = 2;
+collision_damage_type = DamageType.fire;
+collision_damage_cooldown = 30; // 0.5 seconds
+
 // Fire imp loot table - fire-themed items
 drop_chance = 0.4; // 40% chance to drop loot
 loot_table = [
