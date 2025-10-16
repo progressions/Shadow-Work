@@ -8,9 +8,30 @@ y += lengthdir_y(move_speed, direction);
 // Calculate distance traveled from spawn point
 distance_traveled = point_distance(starting_x, starting_y, x, y);
 
+// Update range profile if spawning code assigned a new id
+if (!variable_instance_exists(self, "range_profile_id_cached")) {
+    range_profile_id_cached = range_profile_id;
+}
+
+if (range_profile == undefined || range_profile_id_cached != range_profile_id) {
+    range_profile = projectile_get_range_profile(range_profile_id);
+    range_profile_id_cached = range_profile_id;
+    max_travel_distance = range_profile.max_distance + range_profile.overshoot_buffer;
+}
+
+// Track damage multiplier based on distance
+previous_damage_multiplier = current_damage_multiplier;
+current_damage_multiplier = projectile_calculate_damage_multiplier(range_profile, distance_traveled);
+
 // Check if reached max travel distance - spawn hazard and destroy
 if (distance_traveled >= travel_distance && !hazard_spawned) {
     spawn_hazard_and_destroy();
+    exit;
+}
+
+// Auto-destroy if beyond allowable travel distance
+if (projectile_distance_should_cull(range_profile, distance_traveled)) {
+    instance_destroy();
     exit;
 }
 
@@ -36,6 +57,7 @@ if (x < -32 || x > room_width + 32 || y < -32 || y > room_height + 32) {
 
 /// @function spawn_hazard_and_destroy
 /// @description Spawns explosion (if enabled), then hazard, then destroys projectile
+/// Applies range profile damage multiplier to explosion and hazard damage
 function spawn_hazard_and_destroy() {
     hazard_spawned = true;
 
@@ -44,8 +66,8 @@ function spawn_hazard_and_destroy() {
         var _explosion = instance_create_depth(x, y, depth - 1, explosion_object);
 
         if (instance_exists(_explosion)) {
-            // Pass damage configuration to explosion
-            _explosion.damage_amount = explosion_damage;
+            // Pass damage configuration to explosion with range multiplier applied
+            _explosion.damage_amount = explosion_damage * current_damage_multiplier;
             _explosion.damage_type = explosion_damage_type;
             _explosion.creator = creator;
         }
@@ -63,6 +85,11 @@ function spawn_hazard_and_destroy() {
         // Optional: Pass damage type to hazard if it supports it
         if (instance_exists(_hazard) && variable_instance_exists(_hazard, "damage_type")) {
             _hazard.damage_type = damage_type;
+        }
+
+        // Pass damage multiplier to hazard so it can scale continuous damage
+        if (instance_exists(_hazard) && variable_instance_exists(_hazard, "damage_amount")) {
+            _hazard.damage_amount = _hazard.damage_amount * current_damage_multiplier;
         }
 
         // Pass lifetime to hazard if configured

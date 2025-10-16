@@ -72,16 +72,10 @@ hazard_spawn_windup_time = 50;         // 0.83 second windup (longer for boss)
 hazard_projectile_object = obj_hazard_projectile;
 hazard_projectile_distance = 100;      // Longer range than normal
 hazard_projectile_speed = 4;           // Fast projectile
-hazard_projectile_damage = 5;          // High damage
+hazard_projectile_damage = 3;          // High damage
 hazard_projectile_damage_type = DamageType.fire;
 hazard_projectile_direction_offset = 0;  // Straight ahead
 hazard_spawn_object = obj_fire;   // Spawns fire hazard at landing
-hazard_lifetime = 8;  // Fire lasts 8 seconds before disappearing
-
-// Explosion configuration
-hazard_explosion_enabled = true;              // Enable explosion at landing
-hazard_explosion_damage = 4;                  // Explosion deals 4 damage
-hazard_explosion_damage_type = DamageType.fire;  // Fire explosion damage
 
 // Optional: Apply burning status effect on projectile hit
 hazard_status_effects = [
@@ -111,11 +105,11 @@ apply_tag_traits();
 // ============================================
 // SOUND EFFECTS
 // ============================================
-// Override default sounds with boss-specific sounds
+// Override default sounds with boss-specific sounds (if available)
 // enemy_sounds.on_melee_attack = snd_fire_boss_melee;
 // enemy_sounds.on_ranged_attack = snd_fire_boss_ranged;
 enemy_sounds.on_hazard_windup = snd_fire_boss_cast;  // Casting sound for hazard windup
-enemy_sounds.on_hit = snd_fire_boss_hit;  // Boss hit sound
+// enemy_sounds.on_hit = snd_fire_boss_hit;
 // enemy_sounds.on_death = snd_fire_boss_death;
 // enemy_sounds.on_aggro = snd_fire_boss_roar;
 

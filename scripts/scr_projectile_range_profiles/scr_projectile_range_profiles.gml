@@ -7,7 +7,8 @@ enum RangeProfile {
     longbow,
     crossbow,
     heavy_crossbow,
-    enemy_shortbow
+    enemy_shortbow,
+    hazard_projectile
 }
 
 /// @function projectile_range_profiles_init(_force)
@@ -87,6 +88,17 @@ function projectile_range_profiles_init(_force = false) {
             optimal_end: 140,
             max_distance: 220,
             long_range_multiplier: 0.55,
+            overshoot_buffer: 32
+        },
+        {
+            id: RangeProfile.hazard_projectile,
+            name: "hazard_projectile",
+            point_blank_distance: 48,
+            point_blank_multiplier: 0.6,
+            optimal_start: 60,
+            optimal_end: 140,
+            max_distance: 200,
+            long_range_multiplier: 0.5,
             overshoot_buffer: 32
         }
     ];
@@ -245,7 +257,8 @@ function projectile_range_profiles_self_test() {
         RangeProfile.longbow,
         RangeProfile.crossbow,
         RangeProfile.heavy_crossbow,
-        RangeProfile.enemy_shortbow
+        RangeProfile.enemy_shortbow,
+        RangeProfile.hazard_projectile
     ];
 
     var _results = [];

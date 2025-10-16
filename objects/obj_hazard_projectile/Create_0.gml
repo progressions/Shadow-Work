@@ -39,3 +39,19 @@ depth = -y;                  // Draw above ground
 
 // Status effects (optional)
 status_effects_on_hit = [];  // Status effects to apply on player hit
+
+// ==============================
+// RANGE PROFILE CONFIGURATION
+// ==============================
+
+// Initialize range profile system
+projectile_range_profiles_init();
+range_profile_id = RangeProfile.hazard_projectile;
+range_profile_id_cached = range_profile_id;
+range_profile = projectile_get_range_profile(range_profile_id);
+if (range_profile == undefined) {
+    range_profile = projectile_create_default_profile();
+}
+current_damage_multiplier = 1.0;
+previous_damage_multiplier = current_damage_multiplier;
+max_travel_distance = range_profile.max_distance + range_profile.overshoot_buffer;

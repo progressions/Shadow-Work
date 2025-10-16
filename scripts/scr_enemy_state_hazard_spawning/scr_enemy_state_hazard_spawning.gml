@@ -45,24 +45,18 @@ function enemy_state_hazard_spawning() {
 }
 
 /// @function spawn_hazard_projectile
-/// @description Spawns a hazard projectile in the facing direction
+/// @description Spawns a hazard projectile targeting the player's current location
 function spawn_hazard_projectile() {
-    // Convert facing_dir string to numeric angle
-    var _base_angle = 0;
-    switch (facing_dir) {
-        case "right": _base_angle = 0; break;
-        case "up": _base_angle = 90; break;
-        case "left": _base_angle = 180; break;
-        case "down": _base_angle = 270; break;
-    }
+    // Calculate angle toward player's current position
+    var _projectile_dir = point_direction(x, y, obj_player.x, obj_player.y);
 
-    // Calculate projectile direction (base angle + configured offset)
-    var _projectile_dir = _base_angle + hazard_projectile_direction_offset;
+    // Add configured offset if needed
+    _projectile_dir += hazard_projectile_direction_offset;
 
-    // Calculate spawn position slightly in front of enemy
+    // Calculate spawn position slightly in front of enemy (toward player)
     var _spawn_offset = 16;
-    var _spawn_x = x + lengthdir_x(_spawn_offset, _base_angle);
-    var _spawn_y = y + lengthdir_y(_spawn_offset, _base_angle);
+    var _spawn_x = x + lengthdir_x(_spawn_offset, _projectile_dir);
+    var _spawn_y = y + lengthdir_y(_spawn_offset, _projectile_dir);
 
     // Create the projectile (use depth instead of layer to avoid layer issues)
     var _projectile = instance_create_depth(_spawn_x, _spawn_y, depth, hazard_projectile_object);
