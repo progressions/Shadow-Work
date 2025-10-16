@@ -1,25 +1,48 @@
 function player_handle_animation() {
-    // Build animation key and look it up
+    // Build animation key based on state (single source of truth)
     var anim_key;
-    if (state == PlayerState.attacking) {
-        anim_key = "attack_" + facing_dir;
-    } else if (move_dir == "idle") {
-        anim_key = "idle_" + facing_dir;
-    } else if (state == PlayerState.dashing) {
-        anim_key = "dash_" + facing_dir;
-    } else {
-        anim_key = "walk_" + facing_dir;
+
+    // State-based animation selection
+    switch (state) {
+        case PlayerState.attacking:
+            anim_key = "attack_" + facing_dir;
+            break;
+
+        case PlayerState.dashing:
+            anim_key = "dash_" + facing_dir;
+            break;
+
+        case PlayerState.shielding:
+            anim_key = "shielding_" + facing_dir;
+            break;
+
+        case PlayerState.idle:
+        case PlayerState.walking:
+        default:
+            // Use move_dir to determine idle vs walk
+            if (move_dir == "idle") {
+                anim_key = "idle_" + facing_dir;
+            } else {
+                anim_key = "walk_" + facing_dir;
+            }
+            break;
     }
 
     // Check if animation changed
     if (anim_key != current_anim) {
         current_anim = anim_key;
         var anim_info = anim_data[$ anim_key];
+
+        if (anim_info == undefined) {
+            show_debug_message("ERROR: No anim_data found for key: " + anim_key);
+            return;
+        }
+
         current_anim_start = anim_info.start;
         current_anim_length = anim_info.length;
 
         // Reset animation frame on state changes
-        if (state == PlayerState.attacking || move_dir != "idle") {
+        if (state == PlayerState.attacking || state == PlayerState.shielding || move_dir != "idle") {
             anim_frame = 0;
         } else {
             anim_frame = global.idle_bob_timer % current_anim_length;
@@ -28,46 +51,88 @@ function player_handle_animation() {
         show_debug_message("Switched to: " + anim_key + " (frames " + string(current_anim_start) + "-" + string(current_anim_start + current_anim_length - 1) + ")");
     }
 
-    if (state == PlayerState.attacking) {
-        // Attack animations play once and don't loop
-        var _attack_speed_mult = 1.5; // Slightly faster for attack animations
+    // State-specific animation advancement
+    switch (state) {
+        case PlayerState.attacking:
+            // Attack animations play once and don't loop
+            var _attack_speed_mult = 1.5; // Slightly faster for attack animations
 
-        // Apply ranged windup speed modifier during windup phase
-        if (ranged_windup_active && !ranged_windup_complete) {
-            _attack_speed_mult = _attack_speed_mult * ranged_windup_speed; // Slow down during windup
-        }
-
-        anim_frame += anim_speed_walk * _attack_speed_mult;
-
-        // Handle ranged attack windup completion
-        if (ranged_windup_active && !ranged_windup_complete && anim_frame >= current_anim_length) {
-            // Windup animation cycle complete - spawn arrow
-            ranged_windup_complete = true;
-            spawn_player_arrow(ranged_windup_direction);
-            anim_frame = 0; // Reset for any remaining animation
-            ranged_windup_active = false; // Clear windup flag
-
-            if (variable_global_exists("debug_mode") && global.debug_damage_reduction) {
-                show_debug_message("PLAYER WINDUP COMPLETE - Arrow spawned after " + string(current_anim_length) + " frames");
+            // Apply ranged windup speed modifier during windup phase
+            if (ranged_windup_active && !ranged_windup_complete) {
+                _attack_speed_mult = _attack_speed_mult * ranged_windup_speed; // Slow down during windup
             }
-        }
 
-        if (anim_frame >= current_anim_length) {
-            // Attack animation finished, return to idle state
-            state = PlayerState.idle;
-            anim_frame = 0;
-            ranged_windup_active = false; // Ensure flags are reset
-            ranged_windup_complete = false;
-        }
-    } else if (move_dir == "idle") {
-        // For idle, sync with global timer but keep it in the idle animation range
-        anim_frame = global.idle_bob_timer % current_anim_length;
-    } else {
-        // Normal walking animation (also handles dash)
-        anim_frame += anim_speed_walk;
-        if (anim_frame >= current_anim_length) {
-            anim_frame = anim_frame % current_anim_length;
-        }
+            anim_frame += anim_speed_walk * _attack_speed_mult;
+
+            // Handle ranged attack windup completion
+            if (ranged_windup_active && !ranged_windup_complete && anim_frame >= current_anim_length) {
+                // Windup animation cycle complete - spawn arrow
+                ranged_windup_complete = true;
+                spawn_player_arrow(ranged_windup_direction);
+                anim_frame = 0; // Reset for any remaining animation
+                ranged_windup_active = false; // Clear windup flag
+
+                if (variable_global_exists("debug_mode") && global.debug_damage_reduction) {
+                    show_debug_message("PLAYER WINDUP COMPLETE - Arrow spawned after " + string(current_anim_length) + " frames");
+                }
+            }
+
+            if (anim_frame >= current_anim_length) {
+                // Attack animation finished, return to idle state
+                state = PlayerState.idle;
+                anim_frame = 0;
+                ranged_windup_active = false; // Ensure flags are reset
+                ranged_windup_complete = false;
+            }
+            break;
+
+        case PlayerState.shielding:
+            // Shield animations play once then hold on final frame
+            anim_frame += 0.2;  // Faster than idle - shield raise is quick
+
+            // Check if animation complete
+            if (anim_frame >= current_anim_length) {
+                shield_raise_complete = true;
+                anim_frame = current_anim_length - 0.01;  // Hold on final frame
+            }
+
+            // Manage perfect block window
+            if (shield_raise_complete) {
+                if (perfect_block_window <= 0) {
+                    perfect_block_window = perfect_block_window_duration;
+                } else {
+                    perfect_block_window--;
+                }
+            }
+
+            // Optional: Add sprite flash when perfect block window opens
+            if (perfect_block_window == perfect_block_window_duration) {
+                image_blend = c_yellow;
+                alarm[0] = 6;  // Flash for 6 frames
+            }
+            break;
+
+        case PlayerState.idle:
+        case PlayerState.walking:
+            if (move_dir == "idle") {
+                // For idle, sync with global timer but keep it in the idle animation range
+                anim_frame = global.idle_bob_timer % current_anim_length;
+            } else {
+                // Normal walking animation (also handles dash)
+                anim_frame += anim_speed_walk;
+                if (anim_frame >= current_anim_length) {
+                    anim_frame = anim_frame % current_anim_length;
+                }
+            }
+            break;
+
+        case PlayerState.dashing:
+            // Dash animation loops
+            anim_frame += anim_speed_walk;
+            if (anim_frame >= current_anim_length) {
+                anim_frame = anim_frame % current_anim_length;
+            }
+            break;
     }
 
     image_index = current_anim_start + floor(anim_frame);

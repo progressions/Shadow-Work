@@ -6,6 +6,19 @@ function player_state_walking() {
         return;
     }
 
+    // Check for shield block input
+    if (keyboard_check_pressed(ord("O"))) {
+        // Check if shield is equipped
+        if (equipped[$ "left_hand"] != undefined && block_cooldown <= 0) {
+            // Enter shielding state
+            state = PlayerState.shielding;
+            shield_facing_dir = facing_dir;  // Lock to current facing direction
+            shield_raise_complete = false;
+            play_sfx(snd_shield_raise, 0.8);
+            return;
+        }
+    }
+
     // Check for dash input first
     if (player_handle_dash_input()) {
         return; // Dash was triggered, state changed

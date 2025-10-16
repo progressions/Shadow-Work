@@ -14,6 +14,11 @@ if (invulnerability_timer > 0) {
     }
 }
 
+// Update shield block cooldown
+if (block_cooldown > 0) {
+    block_cooldown--;
+}
+
 // Maintain stun/stagger color overlays
 if (is_stunned) {
     image_blend = c_yellow;
@@ -69,6 +74,10 @@ switch (state) {
 
     case PlayerState.attacking:
         player_state_attacking();
+        break;
+
+    case PlayerState.shielding:
+        player_state_shielding();
         break;
 
     case PlayerState.on_grid:
@@ -275,7 +284,7 @@ if (keyboard_check_pressed(ord("P"))) {
     show_debug_message("Cleared all tags and permanent traits from player");
 }
 
-if (keyboard_check_pressed(ord("O"))) {
+if (keyboard_check_pressed(ord("T"))) {
     show_debug_message("=== PLAYER TRAIT STATUS ===");
     show_debug_message("Tags: " + json_stringify(tags));
     show_debug_message("Permanent Traits: " + json_stringify(permanent_traits));

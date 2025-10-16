@@ -177,7 +177,16 @@ anim_data = {
     attack_down: {start: 42, length: 4},
     attack_right: {start: 46, length: 4},
     attack_left: {start: 50, length: 4},
-    attack_up: {start: 54, length: 4}
+    attack_up: {start: 54, length: 4},
+
+    // Dead animation (3 frames)
+    dead: {start: 58, length: 3},
+
+    // Shield animations (3 frames each - raise and hold)
+    shielding_down: {start: 61, length: 3},
+    shielding_right: {start: 64, length: 3},
+    shielding_left: {start: 67, length: 3},
+    shielding_up: {start: 70, length: 3}
 };
 
 // State tracking
@@ -201,6 +210,16 @@ previous_y_offset = 0;
 // Attack system
 attack_cooldown = 0;
 can_attack = true;
+
+// Shield block system
+block_cooldown = 0;              // Frames remaining before can block again
+block_cooldown_max = 60;         // Default cooldown after normal block (1 second)
+block_cooldown_perfect_max = 30; // Shorter cooldown after perfect block (0.5 seconds)
+perfect_block_window = 0;        // Frames when perfect block is active
+perfect_block_window_duration = 18;  // Window duration in frames (~0.3s at 60fps)
+shield_raise_complete = false;   // Has shield animation finished playing?
+shield_facing_dir = "down";      // Direction player is shielding (locked)
+shield_anim_frame = 0;           // Current frame of shield animation (for drawing)
 
 // Ranged attack windup system (telegraph/anticipation before projectile spawn)
 // Creates visual and audio telegraph by slowing attack animation and delaying projectile spawn

@@ -4,11 +4,14 @@
 
 // Helper functions first
 function get_shield_position(_facing) {
+    // Move shield forward when actively shielding
+    var _offset = (state == PlayerState.shielding) ? 6 : 0;
+
     switch(_facing) {
-        case "down":  return {x: 0, y: 0, angle: 0};
-        case "up":    return {x: 0, y: 0, angle: 0};
-        case "left":  return {x: 10, y: 0, angle: 0};
-        case "right": return {x: 0, y: 0, angle: 0};
+        case "down":  return {x: 0, y: _offset, angle: 0};
+        case "up":    return {x: 0, y: -_offset, angle: 0};
+        case "left":  return {x: 10 - _offset, y: 0, angle: 0};
+        case "right": return {x: _offset, y: 0, angle: 0};
     }
     return {x: 0, y: 0, angle: 0};
 }
@@ -28,7 +31,7 @@ function get_melee_weapon_position(_facing) {
         case "down":  return {x: 0, y: 2, angle: 0};
         case "up":    return {x: 0, y: 2, angle: 90};
         case "left":  return {x: 0, y: 0, angle: 90};
-        case "right": return {x: 0, y: 2, angle: 0};
+        case "right": return {x: 0, y: 0, angle: 0};
     }
     return {x: 0, y: 0, angle: 0};
 }
@@ -56,22 +59,23 @@ function draw_left_hand_item(_item, _facing, _player_x, _player_y) {
 function draw_torch_simple(_item, _facing, _player_x, _player_y) {
     var _torch_sprite = get_equipped_sprite(_item.definition.equipped_sprite_key);
     if (_torch_sprite == -1) return;
-    
+
     var _pos = get_torch_position(_facing);
     var _tx = _player_x + _pos.x;
     var _ty = _player_y + _pos.y;
-    
-	
-    // Add bobbing
-    if (move_dir == "idle") {
-        if (floor(global.idle_bob_timer) % 2 == 1) {
-            _ty += 1;
-        }
-    } else if (state != PlayerState.dashing) {
-        var _bob = (floor(anim_frame) % 2) * 1;
-        _ty += _bob;
 
-	}
+
+    // Add bobbing (but not during shielding or dashing)
+    if (state != PlayerState.shielding && state != PlayerState.dashing) {
+        if (move_dir == "idle") {
+            if (floor(global.idle_bob_timer) % 2 == 1) {
+                _ty += 1;
+            }
+        } else {
+            var _bob = (floor(anim_frame) % 2) * 1;
+            _ty += _bob;
+        }
+    }
     
 	var _torch_frame = 0;
 	if (!global.game_paused) {
@@ -86,19 +90,21 @@ function draw_torch_simple(_item, _facing, _player_x, _player_y) {
 function draw_shield_simple(_item, _facing, _player_x, _player_y) {
     var _shield_sprite = get_equipped_sprite(_item.definition.equipped_sprite_key);
     if (_shield_sprite == -1) return;
-    
+
     var _pos = get_shield_position(_facing);
     var _sx = _player_x + _pos.x;
     var _sy = _player_y + _pos.y;
-    
-    // Add bobbing
-    if (move_dir == "idle") {
-        if (floor(global.idle_bob_timer) % 2 == 1) {
-            _sy += 1;
+
+    // Add bobbing (but not during shielding or dashing)
+    if (state != PlayerState.shielding && state != PlayerState.dashing) {
+        if (move_dir == "idle") {
+            if (floor(global.idle_bob_timer) % 2 == 1) {
+                _sy += 1;
+            }
+        } else {
+            var _bob = (floor(anim_frame) % 2) * 1;
+            _sy += _bob;
         }
-    } else if (state != PlayerState.dashing) {
-        var _bob = (floor(anim_frame) % 2) * 1;
-        _sy += _bob;
     }
     
     draw_sprite_ext(_shield_sprite, 0, _sx, _sy, 1, 1, _pos.angle, image_blend, 1);
@@ -121,14 +127,16 @@ function draw_weapon_simple(_item, _facing, _player_x, _player_y) {
     var _wx = _player_x + _pos.x;
     var _wy = _player_y + _pos.y;
 
-    // Add bobbing
-    if (move_dir == "idle") {
-        if (floor(global.idle_bob_timer) % 2 == 1) {
-            _wy += 1;
+    // Add bobbing (but not during shielding or dashing)
+    if (state != PlayerState.shielding && state != PlayerState.dashing) {
+        if (move_dir == "idle") {
+            if (floor(global.idle_bob_timer) % 2 == 1) {
+                _wy += 1;
+            }
+        } else {
+            var _bob = (floor(anim_frame) % 2) * 1;
+            _wy += _bob;
         }
-    } else if (state != PlayerState.dashing) {
-        var _bob = (floor(anim_frame) % 2) * 1;
-        _wy += _bob;
     }
 
     // Adjust angle and scale for bows when facing left
@@ -144,6 +152,7 @@ function draw_weapon_simple(_item, _facing, _player_x, _player_y) {
 
 // FIXED FUNCTION: Selective hand drawing
 function draw_player_hands(_base_frame) {
+	// Don't draw hands during attacking - they're part of the attack animation
 	if (state == PlayerState.attacking) return;
 
     // Determine which hands to show
@@ -239,6 +248,7 @@ function draw_player_hands(_base_frame) {
 
 // Draw shadow first
 draw_sprite_ext(spr_shadow, image_index, x, y + 2 + y_offset, 1, 0.5, 0, c_black, 0.3);
+
 
 // Attack ready indicator
 if (can_attack && equipped.right_hand != undefined) {

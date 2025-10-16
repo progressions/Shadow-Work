@@ -7,6 +7,7 @@ enum PlayerState {
 	walking,
 	dashing,
 	attacking,
+	shielding,
 	on_grid,
 	dead,
 }
