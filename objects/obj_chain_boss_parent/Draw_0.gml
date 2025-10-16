@@ -69,6 +69,10 @@ function draw_chain_segment(x1, y1, x2, y2, sprite, tension) {
     }
 }
 
+// Calculate boss center position from bounding box
+var _boss_center_x = (bbox_left + bbox_right) / 2;
+var _boss_center_y = (bbox_top + bbox_bottom) / 2;
+
 // Draw chains for each auxiliary
 for (var i = 0; i < array_length(auxiliaries); i++) {
     var _aux = auxiliaries[i];
@@ -76,14 +80,18 @@ for (var i = 0; i < array_length(auxiliaries); i++) {
     // Skip if auxiliary doesn't exist
     if (!instance_exists(_aux)) continue;
 
-    // Calculate distance and tension
-    var _dist = point_distance(x, y, _aux.x, _aux.y);
-    var _angle = point_direction(x, y, _aux.x, _aux.y);
+    // Calculate auxiliary center position from bounding box
+    var _aux_center_x = (_aux.bbox_left + _aux.bbox_right) / 2;
+    var _aux_center_y = (_aux.bbox_top + _aux.bbox_bottom) / 2;
+
+    // Calculate distance and tension from boss center to auxiliary center
+    var _dist = point_distance(_boss_center_x, _boss_center_y, _aux_center_x, _aux_center_y);
+    var _angle = point_direction(_boss_center_x, _boss_center_y, _aux_center_x, _aux_center_y);
     var _tension_ratio = _dist / chain_max_length;  // 0.0 to 1.0
 
-    // Draw chain with smooth sagging curve
+    // Draw chain with smooth sagging curve from boss center to auxiliary center
     // Tension parameter controls sag: 0.0 = very slack, 1.0 = taut
-    draw_chain_segment(x, y, _aux.x, _aux.y, chain_sprite, _tension_ratio);
+    draw_chain_segment(_boss_center_x, _boss_center_y, _aux_center_x, _aux_center_y, chain_sprite, _tension_ratio);
 
     // Update chain data struct (for potential future use)
     chain_data[i].tension = _tension_ratio;
