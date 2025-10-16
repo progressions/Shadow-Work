@@ -16,7 +16,8 @@ enum EnemyState {
 	targeting,
 	attacking,
 	ranged_attacking,
-	dead = 4,
+	hazard_spawning,
+	dead = 5,
 	wander,
 }
 

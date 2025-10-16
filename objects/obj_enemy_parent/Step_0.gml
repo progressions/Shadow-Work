@@ -204,6 +204,15 @@ if (is_stunned && is_staggered) {
             }
             break;
 
+        case EnemyState.hazard_spawning:
+            // If stunned, can't perform hazard spawn
+            if (!is_stunned) {
+                enemy_state_hazard_spawning();
+            } else {
+                enemy_state_idle();
+            }
+            break;
+
         case EnemyState.wander:
             // If staggered, can't wander
             if (!is_staggered) {
@@ -357,9 +366,34 @@ if (state == EnemyState.ranged_attacking && ranged_attack_cooldown <= 0) {
     ranged_windup_complete = false; // Reset windup flag for next attack
 }
 
+// Hazard spawning cooldown
+if (hazard_spawn_cooldown_timer > 0) {
+    hazard_spawn_cooldown_timer--;
+}
+
 // Retreat cooldown (for dual-mode enemies)
 if (retreat_cooldown > 0) {
     retreat_cooldown--;
+}
+
+// ============================================
+// CHAIN CONSTRAINT SYSTEM
+// Applied after all movement to keep auxiliaries tethered to chain boss
+// ============================================
+if (variable_instance_exists(self, "chain_boss") && instance_exists(chain_boss)) {
+    var _dist = point_distance(x, y, chain_boss.x, chain_boss.y);
+
+    // If auxiliary exceeded chain length, clamp to boundary
+    if (_dist > chain_boss.chain_max_length) {
+        var _angle = point_direction(chain_boss.x, chain_boss.y, x, y);
+        x = chain_boss.x + lengthdir_x(chain_boss.chain_max_length, _angle);
+        y = chain_boss.y + lengthdir_y(chain_boss.chain_max_length, _angle);
+
+        // Stop pathfinding when hitting chain limit
+        if (path_exists(path)) {
+            path_end();
+        }
+    }
 }
 
 // Update previous state for next frame's transition detection

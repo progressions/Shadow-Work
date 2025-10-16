@@ -69,8 +69,83 @@ function enemy_state_targeting() {
     }
     last_alarm_value = alarm[0];
 
+    // Multi-Attack Boss System (melee + ranged + hazard spawning)
+    // Takes precedence over dual-mode and single-mode systems
+    if (allow_multi_attack) {
+        // Check which attacks are available (off cooldown and in range/conditions met)
+        var _can_melee = can_attack && (_dist_to_player <= _melee_range);
+        var _can_ranged = can_ranged_attack && (_dist_to_player <= _ranged_range) && enemy_has_line_of_sight(_player_x, _player_y);
+        var _can_hazard = enable_hazard_spawning &&
+                          (hazard_spawn_cooldown_timer <= 0) &&
+                          (_dist_to_player <= ideal_range) &&
+                          enemy_has_line_of_sight(_player_x, _player_y);
+
+        // If at least one attack is available, use weighted selection
+        if (_can_melee || _can_ranged || _can_hazard) {
+            // Build weighted attack array
+            var _attack_options = [];
+            var _total_weight = 0;
+
+            if (_can_melee) {
+                var _melee_weight = 40;  // Base weight for melee
+                array_push(_attack_options, {type: "melee", weight: _melee_weight});
+                _total_weight += _melee_weight;
+            }
+
+            if (_can_ranged) {
+                var _ranged_weight = 30;  // Base weight for ranged
+                array_push(_attack_options, {type: "ranged", weight: _ranged_weight});
+                _total_weight += _ranged_weight;
+            }
+
+            if (_can_hazard) {
+                var _hazard_weight = hazard_priority;  // Configurable weight
+                array_push(_attack_options, {type: "hazard", weight: _hazard_weight});
+                _total_weight += _hazard_weight;
+            }
+
+            // Weighted random selection
+            var _random_value = random(_total_weight);
+            var _accumulated_weight = 0;
+            var _chosen_attack = "melee";  // Fallback
+
+            for (var i = 0; i < array_length(_attack_options); i++) {
+                _accumulated_weight += _attack_options[i].weight;
+                if (_random_value <= _accumulated_weight) {
+                    _chosen_attack = _attack_options[i].type;
+                    break;
+                }
+            }
+
+            // Execute chosen attack
+            if (_chosen_attack == "hazard") {
+                // Trigger hazard spawning state
+                state = EnemyState.hazard_spawning;
+                hazard_spawn_windup_timer = hazard_spawn_windup_time;
+                if (path_exists(path)) {
+                    path_end();
+                }
+                return;
+            } else if (_chosen_attack == "ranged") {
+                // Execute ranged attack
+                enemy_handle_ranged_attack();
+                return;
+            } else {  // melee
+                // Execute melee attack
+                state = EnemyState.attacking;
+                attack_cooldown = round(90 / attack_speed);
+                can_attack = false;
+                alarm[2] = 15;
+                if (path_exists(path)) {
+                    path_end();
+                }
+                return;
+            }
+        }
+        // If no attacks are available, continue with normal pathfinding below
+    }
     // Dual-mode attack decision system
-    if (enable_dual_mode) {
+    else if (enable_dual_mode) {
         // Determine which attack mode to use based on distance and preference
         var _use_ranged = false;
         var _use_melee = false;

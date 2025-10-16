@@ -107,6 +107,38 @@ retreat_cooldown = 0;                  // Cooldown timer to prevent retreat path
 // Party formation integration (optional, set by party controller)
 formation_role = undefined;            // Formation role: "rear", "front", "support" - influences attack mode selection
 
+// Hazard Spawning System
+// Enemies can spawn projectiles that create persistent hazards (fire pools, poison clouds, etc)
+enable_hazard_spawning = false;                  // Enable hazard spawning ability
+hazard_spawn_cooldown = 180;                     // Frames between spawns (3 seconds at 60fps, default)
+hazard_spawn_cooldown_timer = 0;                 // Current cooldown counter (counts up to hazard_spawn_cooldown)
+hazard_spawn_windup_time = 30;                   // Frames for windup animation (0.5 seconds default)
+hazard_spawn_windup_timer = 30;                  // Current windup counter (counts down from hazard_spawn_windup_time)
+
+// Projectile Configuration
+hazard_projectile_object = obj_hazard_projectile;     // Projectile object to spawn
+hazard_projectile_distance = 128;                     // Pixels projectile travels before landing
+hazard_projectile_speed = 3;                          // Movement speed (pixels per frame)
+hazard_projectile_damage = 2;                         // Damage on player hit
+hazard_projectile_damage_type = DamageType.fire;      // Damage type (fire, poison, etc)
+hazard_projectile_direction_offset = 0;               // Degrees offset from facing_dir
+
+// Hazard Configuration
+hazard_spawn_object = obj_fire;                       // Object created at landing point
+hazard_status_effects = [];                           // Optional status effects to apply on hit
+hazard_lifetime = -1;                                 // Hazard duration in seconds (-1 = permanent)
+
+// Explosion Configuration (optional blast when projectile lands)
+hazard_explosion_enabled = false;                     // Enable explosion at landing point
+hazard_explosion_object = obj_explosion;              // Explosion visual/damage object
+hazard_explosion_damage = 3;                          // Explosion damage
+hazard_explosion_damage_type = DamageType.fire;       // Explosion damage type
+
+// Multi-Attack Boss Support
+// Allows boss enemies to use melee, ranged, AND hazard spawning attacks with independent cooldowns
+allow_multi_attack = false;                           // Enable multiple attack types
+hazard_priority = 30;                                 // Weight for hazard attack in decision making (0-100)
+
 // Status effects system
 init_status_effects();
 
@@ -137,6 +169,7 @@ enemy_sounds = {
     on_melee_attack: undefined,   // Default: snd_enemy_attack_generic
     on_ranged_attack: undefined,  // Default: snd_bow_attack
     on_ranged_windup: undefined,  // Default: snd_ranged_windup (plays when ranged attack animation starts)
+    on_hazard_windup: undefined,  // Default: snd_enemy_attack_generic or snd_ranged_attack (hazard spawn telegraph)
     on_hit: undefined,            // Default: snd_enemy_hit_generic
     on_death: undefined,          // Default: snd_enemy_death
     on_aggro: undefined,          // Default: undefined (no sound)

@@ -1,0 +1,13 @@
+{
+  "$GMScript":"",
+  "%Name":"movement_profile_hazard_spawner_update",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"movement_profile_hazard_spawner_update",
+  "parent":{
+    "name":"enemies",
+    "path":"folders/Scripts/enemies.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

@@ -66,6 +66,26 @@ function get_enemy_anim(state, dir_index) {
         return enemy_anim_get(fallback_key);
     }
 
+    if (state == EnemyState.hazard_spawning) {
+        // Priority 1: Use ranged_attack animation if available
+        var hazard_ranged_key = "ranged_attack_" + dir_names[dir_index];
+        var hazard_ranged_anim = enemy_anim_lookup(hazard_ranged_key);
+        if (hazard_ranged_anim != undefined) {
+            return hazard_ranged_anim;
+        }
+
+        // Priority 2: Fall back to melee attack animation
+        var hazard_attack_key = "attack_" + dir_names[dir_index];
+        var hazard_attack_anim = enemy_anim_lookup(hazard_attack_key);
+        if (hazard_attack_anim != undefined) {
+            return hazard_attack_anim;
+        }
+
+        // Priority 3: Fall back to idle animation (last resort)
+        var hazard_idle_key = "idle_" + dir_names[dir_index];
+        return enemy_anim_get(hazard_idle_key);
+    }
+
     switch(state) {
         case EnemyState.idle:
             return enemy_anim_get("idle_" + dir_names[dir_index]);

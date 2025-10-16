@@ -1,0 +1,25 @@
+{
+  "$GMSound":"",
+  "%Name":"snd_fire_boss_hit",
+  "audioGroupId":{
+    "name":"audiogroup_sfx_world",
+    "path":"audiogroups/audiogroup_sfx_world",
+  },
+  "bitDepth":1,
+  "bitRate":128,
+  "compression":0,
+  "conversionMode":0,
+  "duration":4.928571,
+  "name":"snd_fire_boss_hit",
+  "parent":{
+    "name":"world",
+    "path":"folders/Sounds/sfx/world.yy",
+  },
+  "preload":false,
+  "resourceType":"GMSound",
+  "resourceVersion":"2.0",
+  "sampleRate":44100,
+  "soundFile":"snd_fire_boss_hit.wav",
+  "type":0,
+  "volume":1.0,
+}
