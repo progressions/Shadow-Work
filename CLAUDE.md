@@ -244,6 +244,12 @@ Traits stack up to 5 times and can cancel each other. Opposite traits cancel sta
 - `/scripts/scr_quest_system/scr_quest_system.gml` - All quest functions
 - `/objects/obj_game_controller/Create_0.gml` - Quest database initialization
 
+### Dialogue Functions (Chatterbox/Yarn)
+
+**Functions**: Inventory (`has_item`, `give_item`, `remove_item`, `inventory_count`), Affinity (`get_affinity`), Quest Progress (`objective_complete`, `quest_progress`)
+
+**See:** `/docs/DIALOGUE_FUNCTIONS.md` for complete Chatterbox function reference and Yarn examples
+
 ### Item & Inventory System
 
 **Item Types**: weapon, shield, armor (head/torso/legs), consumable, quest_item, material, key

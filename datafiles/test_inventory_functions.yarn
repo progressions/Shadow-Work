@@ -1,0 +1,156 @@
+title: Start
+---
+Merchant: Welcome to my shop! Let me test these fancy inventory functions.
+
+// Test inventory_count function
+Merchant: You currently have <<inventory_count("arrows")>> arrows.
+Merchant: You currently have <<inventory_count("small_health_potion")>> health potions.
+
+    -> Test has_item function
+        <<jump TestHasItem>>
+    -> Test give_item function
+        <<jump TestGiveItem>>
+    -> Test remove_item function
+        <<jump TestRemoveItem>>
+    -> Test error handling (invalid item)
+        <<jump TestInvalidItem>>
+    -> Leave
+        <<jump Exit>>
+===
+
+title: TestHasItem
+---
+Merchant: Let's check if you have certain items...
+
+<<if has_item("rusty_dagger")>>
+    Merchant: You have a rusty dagger!
+<<else>>
+    Merchant: You don't have a rusty dagger.
+<<endif>>
+
+<<if has_item("arrows", 10)>>
+    Merchant: You have at least 10 arrows!
+<<else>>
+    Merchant: You don't have 10 arrows.
+<<endif>>
+
+<<if has_item("small_health_potion", 3)>>
+    Merchant: You have at least 3 health potions!
+<<else>>
+    Merchant: You don't have 3 health potions.
+<<endif>>
+
+    -> Back to main menu
+        <<jump Start>>
+===
+
+title: TestGiveItem
+---
+Merchant: Let me give you some items for testing!
+
+    -> Give me 5 arrows
+        <<if give_item("arrows", 5)>>
+            Merchant: Here are 5 arrows! You now have <<inventory_count("arrows")>> total.
+        <<else>>
+            Merchant: Couldn't give you arrows (inventory full?)
+        <<endif>>
+        <<jump TestGiveItem>>
+
+    -> Give me a health potion
+        <<if give_item("small_health_potion")>>
+            Merchant: Here's a health potion! You now have <<inventory_count("small_health_potion")>> total.
+        <<else>>
+            Merchant: Couldn't give you a potion (inventory full?)
+        <<endif>>
+        <<jump TestGiveItem>>
+
+    -> Give me a sword
+        <<if give_item("short_sword")>>
+            Merchant: Here's a short sword!
+        <<else>>
+            Merchant: Couldn't give you a sword (inventory full?)
+        <<endif>>
+        <<jump TestGiveItem>>
+
+    -> Back to main menu
+        <<jump Start>>
+===
+
+title: TestRemoveItem
+---
+Merchant: Let's try removing some items...
+
+<<if has_item("arrows")>>
+    Merchant: You have <<inventory_count("arrows")>> arrows.
+    -> Remove 1 arrow
+        <<if remove_item("arrows", 1)>>
+            Merchant: Removed 1 arrow! You now have <<inventory_count("arrows")>>.
+        <<else>>
+            Merchant: Couldn't remove arrow.
+        <<endif>>
+        <<jump TestRemoveItem>>
+    -> Remove 5 arrows
+        <<if has_item("arrows", 5)>>
+            <<if remove_item("arrows", 5)>>
+                Merchant: Removed 5 arrows! You now have <<inventory_count("arrows")>>.
+            <<else>>
+                Merchant: Couldn't remove 5 arrows.
+            <<endif>>
+        <<else>>
+            Merchant: You don't have 5 arrows to remove!
+        <<endif>>
+        <<jump TestRemoveItem>>
+<<else>>
+    Merchant: You don't have any arrows to remove.
+<<endif>>
+
+<<if has_item("small_health_potion")>>
+    Merchant: You have <<inventory_count("small_health_potion")>> health potions.
+    -> Remove 1 health potion
+        <<if remove_item("small_health_potion", 1)>>
+            Merchant: Removed 1 potion! You now have <<inventory_count("small_health_potion")>>.
+        <<else>>
+            Merchant: Couldn't remove potion.
+        <<endif>>
+        <<jump TestRemoveItem>>
+<<else>>
+    Merchant: You don't have any health potions to remove.
+<<endif>>
+
+    -> Back to main menu
+        <<jump Start>>
+===
+
+title: TestInvalidItem
+---
+Merchant: Let's test error handling with invalid items...
+
+// These should all fail gracefully and return false
+<<if has_item("nonexistent_item")>>
+    Merchant: ERROR: has_item should have returned false!
+<<else>>
+    Merchant: Good! has_item returned false for invalid item.
+<<endif>>
+
+<<if give_item("fake_item_id")>>
+    Merchant: ERROR: give_item should have returned false!
+<<else>>
+    Merchant: Good! give_item returned false for invalid item.
+<<endif>>
+
+<<if remove_item("another_fake_item", 5)>>
+    Merchant: Good! remove_item returned true (nothing to remove).
+<<else>>
+    Merchant: Unexpected: remove_item returned false.
+<<endif>>
+
+Merchant: inventory_count for invalid item: <<inventory_count("invalid")>> (should be 0)
+
+    -> Back to main menu
+        <<jump Start>>
+===
+
+title: Exit
+---
+Merchant: Thanks for testing! Goodbye!
+===

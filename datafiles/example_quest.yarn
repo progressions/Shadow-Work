@@ -1,0 +1,182 @@
+title: Start
+---
+Captain Aldric: Greetings, adventurer. I command the town guard here.
+
+<<if quest_is_complete("bandit_threat")>>
+    Captain Aldric: Thanks again for dealing with those bandits. The roads are much safer now!
+    <<jump AvailableQuests>>
+<<elseif quest_is_active("bandit_threat")>>
+    Captain Aldric: Ah, you're back! How goes the fight against the bandits?
+    <<jump QuestCheckIn>>
+<<else>>
+    Captain Aldric: We could use someone with your skills. I have work if you're interested.
+    <<jump AvailableQuests>>
+<<endif>>
+===
+
+title: AvailableQuests
+---
+Captain Aldric: Here's what needs doing:
+
+<<if quest_can_accept("bandit_threat")>>
+    -> [NEW] Bandit Threat on the Roads
+        <<jump BanditQuestOffer>>
+<<endif>>
+
+<<if quest_is_complete("bandit_threat") && quest_can_accept("rescue_mission")>>
+    -> [NEW] Rescue Mission
+        <<jump RescueMissionOffer>>
+<<endif>>
+
+<<if !quest_can_accept("bandit_threat") && !quest_can_accept("rescue_mission")>>
+    Captain Aldric: That's all I have for now. Check back later!
+<<endif>>
+
+    -> Just passing through
+        <<jump Exit>>
+===
+
+title: BanditQuestOffer
+---
+Captain Aldric: The roads north of here have become dangerous.
+Captain Aldric: A band of bandits has been ambushing travelers and stealing their goods.
+Captain Aldric: I need you to track them down and deal with them.
+
+Captain Aldric: There are reports of at least 5 bandits in the area. Defeat them all, and I'll make it worth your while.
+
+    -> I'll handle it (Accept Quest)
+        <<quest_accept("bandit_threat")>>
+        Captain Aldric: Excellent! The merchants will sleep easier knowing you're on the case.
+        Captain Aldric: Return when you've dealt with all the bandits. Be careful out there!
+        <<jump Exit>>
+
+    -> What's the reward?
+        Captain Aldric: I'll pay you 100 gold pieces for clearing out the bandit camp.
+        Captain Aldric: Plus, anything you find on the bandits is yours to keep.
+
+        -> Alright, I'll do it (Accept Quest)
+            <<quest_accept("bandit_threat")>>
+            Captain Aldric: Splendid! Come back when the job's done.
+            <<jump Exit>>
+
+        -> I need to think about it
+            Captain Aldric: Fair enough. The offer stands if you change your mind.
+            <<jump Start>>
+
+    -> Not right now
+        Captain Aldric: Understandable. The offer stands if you change your mind.
+        <<jump Start>>
+===
+
+title: QuestCheckIn
+---
+Captain Aldric: How's the bandit hunting going?
+
+// Check objective 0: Defeat 5 bandits
+<<if objective_complete("bandit_threat", 0)>>
+    Captain Aldric: My scouts report that all the bandits have been dealt with! Excellent work!
+
+    // Check if player has collected the bandit leader's token
+    <<if has_item("bandit_leader_token")>>
+        Captain Aldric: And I see you have the bandit leader's token as proof. Perfect!
+        -> Turn in quest
+            <<jump BanditQuestTurnIn>>
+    <<else>>
+        Captain Aldric: However, I need proof that you defeated their leader.
+        Captain Aldric: Retrieve the bandit leader's token and bring it back to me.
+        -> I'll go get it
+            <<jump Exit>>
+    <<endif>>
+
+<<else>>
+    <<set $bandits_killed = quest_progress("bandit_threat", 0)>>
+    Captain Aldric: You've defeated <<$bandits_killed>> out of 5 bandits so far.
+
+    <<if $bandits_killed >= 3>>
+        Captain Aldric: You're more than halfway there! Keep up the good work!
+    <<elseif $bandits_killed >= 1>>
+        Captain Aldric: Good progress! But there are still more bandits out there.
+    <<else>>
+        Captain Aldric: Haven't found them yet? They're usually on the north road near the old mill.
+    <<endif>>
+
+    -> I'll keep hunting
+        Captain Aldric: Good luck out there! Be on your guard.
+        <<jump Exit>>
+
+    -> Any tips?
+        Captain Aldric: The bandits tend to ambush travelers in groups of 2 or 3.
+        Captain Aldric: Don't try to take them all on at once if you can help it.
+        Captain Aldric: And watch out for their leader - he's a skilled swordsman.
+        <<jump Exit>>
+<<endif>>
+===
+
+title: BanditQuestTurnIn
+---
+<<if remove_item("bandit_leader_token")>>
+    <<quest_complete("bandit_threat")>>
+    <<give_item("gold", 100)>>
+
+    Captain Aldric: Outstanding work, adventurer! The roads are safe once again.
+    Captain Aldric: Here's your reward: 100 gold pieces, as promised.
+    Captain Aldric: You've earned every coin.
+
+    Captain Aldric: With the bandits dealt with, I have another urgent matter that requires your attention...
+    Captain Aldric: But perhaps you should rest first. Come talk to me when you're ready.
+
+    <<jump Exit>>
+<<else>>
+    Captain Aldric: Wait, where's the bandit leader's token? I need proof of the deed!
+    <<jump Exit>>
+<<endif>>
+===
+
+title: RescueMissionOffer
+---
+Captain Aldric: I have an urgent mission for someone I trust. That would be you.
+Captain Aldric: One of our supply caravans was ambushed by a group of orcs last night.
+Captain Aldric: The guards are missing, and we believe they've been taken to the orc camp in the eastern hills.
+
+Captain Aldric: I need you to:
+Captain Aldric: 1. Locate the orc camp
+Captain Aldric: 2. Rescue the three captured guards
+Captain Aldric: 3. Eliminate any orc leaders you encounter
+
+    -> I'll rescue them (Accept Quest)
+        <<quest_accept("rescue_mission")>>
+        Captain Aldric: Thank you. Those guards have families counting on them.
+        Captain Aldric: Be careful - orcs are far more dangerous than bandits.
+        Captain Aldric: Take this health potion. You might need it.
+        <<give_item("medium_health_potion")>>
+        <<jump Exit>>
+
+    -> This sounds dangerous
+        Captain Aldric: It is. But you've already proven you can handle yourself.
+        Captain Aldric: I wouldn't ask if it wasn't important.
+
+        -> Alright, I'll do it (Accept Quest)
+            <<quest_accept("rescue_mission")>>
+            Captain Aldric: I knew I could count on you. Here, take this for the journey.
+            <<give_item("medium_health_potion")>>
+            <<jump Exit>>
+
+        -> I'm not ready for that
+            Captain Aldric: I understand. When you feel ready, come find me.
+            <<jump Start>>
+
+    -> Not interested
+        Captain Aldric: That's... disappointing. I hope someone else steps up.
+        <<jump Start>>
+===
+
+title: Exit
+---
+<<if quest_is_active("bandit_threat")>>
+    Captain Aldric: Safe travels. And watch out for those bandits!
+<<elseif quest_is_active("rescue_mission")>>
+    Captain Aldric: Bring our guards home safely. Good luck!
+<<else>>
+    Captain Aldric: Farewell, traveler. Stay safe out there.
+<<endif>>
+===

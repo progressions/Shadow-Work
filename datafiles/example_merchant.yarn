@@ -1,0 +1,214 @@
+title: Start
+---
+Merchant: Welcome to my humble shop, traveler! I've got quality goods at fair prices.
+
+<<if inventory_count("arrows") > 0>>
+    Merchant: I see you have <<inventory_count("arrows")>> arrows. Running low? I can sell you more!
+<<endif>>
+
+    -> Browse your wares
+        <<jump BrowseShop>>
+    -> Sell items to you
+        <<jump SellMenu>>
+    -> Just browsing
+        Merchant: Take your time! Let me know if you need anything.
+        <<jump Exit>>
+===
+
+title: BrowseShop
+---
+Merchant: Here's what I have in stock today:
+
+    -> Arrows (10 arrows - 5 gold) <<if has_item("gold", 5)>>
+        <<jump BuyArrows>>
+    -> Small Health Potion (25 gold) <<if has_item("gold", 25)>>
+        <<jump BuyHealthPotion>>
+    -> Short Sword (100 gold) <<if has_item("gold", 100)>>
+        <<jump BuyShortSword>>
+    -> Leather Armor (150 gold) <<if has_item("gold", 150)>>
+        <<jump BuyLeatherArmor>>
+    -> Back to main menu
+        <<jump Start>>
+===
+
+title: BuyArrows
+---
+Merchant: Arrows, a fine choice! 10 arrows for 5 gold pieces.
+
+    -> Buy arrows (5 gold)
+        <<if remove_item("gold", 5)>>
+            <<if give_item("arrows", 10)>>
+                Merchant: Here's your bundle of arrows! May they fly true!
+                Merchant: You now have <<inventory_count("arrows")>> arrows total.
+            <<else>>
+                Merchant: Hmm, your pack seems full. Make some room and come back!
+                <<give_item("gold", 5)>>
+            <<endif>>
+        <<else>>
+            Merchant: Looks like you don't have enough gold for that.
+        <<endif>>
+        <<jump BrowseShop>>
+    -> Never mind
+        <<jump BrowseShop>>
+===
+
+title: BuyHealthPotion
+---
+Merchant: A health potion! Essential for any adventurer. 25 gold.
+
+    -> Buy health potion (25 gold)
+        <<if remove_item("gold", 25)>>
+            <<if give_item("small_health_potion")>>
+                Merchant: One health potion, freshly brewed! It'll restore some vitality when you need it.
+                Merchant: You have <<inventory_count("small_health_potion")>> health potions now.
+            <<else>>
+                Merchant: Your inventory is full! Clear some space first.
+                <<give_item("gold", 25)>>
+            <<endif>>
+        <<else>>
+            Merchant: You'll need 25 gold pieces for that, friend.
+        <<endif>>
+        <<jump BrowseShop>>
+    -> Not now
+        <<jump BrowseShop>>
+===
+
+title: BuyShortSword
+---
+Merchant: Ah, interested in the short sword? Quality steel, well-balanced. 100 gold.
+
+    -> Buy short sword (100 gold)
+        <<if remove_item("gold", 100)>>
+            <<if give_item("short_sword")>>
+                Merchant: An excellent choice! This blade has served many warriors well.
+                Merchant: May it protect you on your journeys!
+            <<else>>
+                Merchant: Hmm, seems your pack is too full for a sword. Make some room!
+                <<give_item("gold", 100)>>
+            <<endif>>
+        <<else>>
+            Merchant: That's a premium item - 100 gold pieces.
+        <<endif>>
+        <<jump BrowseShop>>
+    -> Maybe later
+        <<jump BrowseShop>>
+===
+
+title: BuyLeatherArmor
+---
+Merchant: Leather armor, sturdy and flexible! Perfect for protection without weighing you down. 150 gold.
+
+    -> Buy leather armor (150 gold)
+        <<if remove_item("gold", 150)>>
+            <<if give_item("leather_armor")>>
+                Merchant: Now that's a wise investment! This armor will serve you well.
+                Merchant: It'll keep you safe without slowing you down.
+            <<else>>
+                Merchant: Your inventory is completely full! Clear some space first.
+                <<give_item("gold", 150)>>
+            <<endif>>
+        <<else>>
+            Merchant: That's a premium piece - 150 gold pieces.
+        <<endif>>
+        <<jump BrowseShop>>
+    -> Not today
+        <<jump BrowseShop>>
+===
+
+title: SellMenu
+---
+Merchant: Let's see what you have to sell...
+
+<<if has_item("wolf_pelt")>>
+    Merchant: I see you have <<inventory_count("wolf_pelt")>> wolf pelts. I'll pay 20 gold each!
+    -> Sell wolf pelt (20 gold each)
+        <<jump SellWolfPelt>>
+<<endif>>
+
+<<if has_item("arrows")>>
+    Merchant: You have <<inventory_count("arrows")>> arrows. I'll buy them back at 3 gold per 10 arrows.
+    -> Sell 10 arrows (3 gold)
+        <<jump SellArrows>>
+<<endif>>
+
+<<if has_item("small_health_potion")>>
+    Merchant: Health potions? I'll buy those for 15 gold each.
+    -> Sell health potion (15 gold)
+        <<jump SellHealthPotion>>
+<<endif>>
+
+<<if !has_item("wolf_pelt") && !has_item("arrows") && !has_item("small_health_potion")>>
+    Merchant: Hmm, I don't see anything I'm interested in buying right now.
+    Merchant: Come back when you have wolf pelts, arrows, or potions to sell!
+<<endif>>
+
+    -> Back to main menu
+        <<jump Start>>
+===
+
+title: SellWolfPelt
+---
+Merchant: Wolf pelts are always in demand! I'll give you 20 gold for each one.
+
+    -> Sell 1 wolf pelt (get 20 gold)
+        <<if remove_item("wolf_pelt", 1)>>
+            <<give_item("gold", 20)>>
+            Merchant: Excellent! Here's your 20 gold pieces.
+            Merchant: You now have <<inventory_count("gold")>> gold total.
+        <<else>>
+            Merchant: Hmm, seems you don't actually have a wolf pelt to sell.
+        <<endif>>
+        <<jump SellMenu>>
+    -> Sell all wolf pelts (<<inventory_count("wolf_pelt")>> pelts = <<inventory_count("wolf_pelt") * 20>> gold)
+        <<if has_item("wolf_pelt")>>
+            <<set $pelt_count = inventory_count("wolf_pelt")>>
+            <<set $gold_earned = $pelt_count * 20>>
+            <<if remove_item("wolf_pelt", $pelt_count)>>
+                <<give_item("gold", $gold_earned)>>
+                Merchant: Sold! <<$pelt_count>> pelts for <<$gold_earned>> gold. A fine haul!
+                Merchant: You now have <<inventory_count("gold")>> gold total.
+            <<endif>>
+        <<endif>>
+        <<jump SellMenu>>
+    -> Never mind
+        <<jump SellMenu>>
+===
+
+title: SellArrows
+---
+Merchant: I'll buy arrows at 3 gold per 10 arrows.
+
+<<if has_item("arrows", 10)>>
+    -> Sell 10 arrows (get 3 gold)
+        <<if remove_item("arrows", 10)>>
+            <<give_item("gold", 3)>>
+            Merchant: Done! Here's your 3 gold.
+            Merchant: You have <<inventory_count("arrows")>> arrows left.
+        <<endif>>
+        <<jump SellMenu>>
+<<else>>
+    Merchant: You don't have 10 arrows to sell. Come back when you have more!
+    -> Back to sell menu
+        <<jump SellMenu>>
+<<endif>>
+===
+
+title: SellHealthPotion
+---
+Merchant: I'll buy health potions at 15 gold each.
+
+    -> Sell 1 health potion (get 15 gold)
+        <<if remove_item("small_health_potion", 1)>>
+            <<give_item("gold", 15)>>
+            Merchant: Thank you! Here's your 15 gold.
+            Merchant: You have <<inventory_count("small_health_potion")>> potions left.
+        <<endif>>
+        <<jump SellMenu>>
+    -> Back to sell menu
+        <<jump SellMenu>>
+===
+
+title: Exit
+---
+Merchant: Safe travels, friend! Come back anytime!
+===

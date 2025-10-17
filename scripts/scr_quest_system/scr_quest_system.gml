@@ -38,6 +38,76 @@ function init_quest_database() {
             chain_next: undefined
         };
 
+        // ============================================
+        // EXAMPLE QUEST 1: Bandit Threat
+        // ============================================
+        global.quest_database.bandit_threat = {
+            quest_id: "bandit_threat",
+            quest_name: "Bandit Threat on the Roads",
+            quest_giver: "obj_example_captain",
+            objectives: [
+                {
+                    type: "kill",
+                    target: "obj_bandit",
+                    count: 5,
+                    current: 0,
+                    description: "Defeat 5 bandits"
+                }
+            ],
+            rewards: {
+                affinity_rewards: [],
+                item_rewards: [],
+                gold_reward: 100
+            },
+            prerequisites: [],
+            completion_flag: "quest_bandit_threat_complete",
+            requires_turnin: true,
+            turnin_npc: "obj_example_captain",
+            chain_next: "rescue_mission"
+        };
+
+        // ============================================
+        // EXAMPLE QUEST 2: Rescue Mission
+        // ============================================
+        global.quest_database.rescue_mission = {
+            quest_id: "rescue_mission",
+            quest_name: "Rescue Mission",
+            quest_giver: "obj_example_captain",
+            objectives: [
+                {
+                    type: "location",
+                    target: "orc_camp",
+                    count: 1,
+                    current: 0,
+                    description: "Find the orc camp"
+                },
+                {
+                    type: "spawn_kill",
+                    target: "obj_orc_guard",
+                    count: 3,
+                    current: 0,
+                    description: "Rescue 3 guards"
+                },
+                {
+                    type: "kill",
+                    target: "obj_orc_leader",
+                    count: 1,
+                    current: 0,
+                    description: "Defeat the orc leader"
+                }
+            ],
+            rewards: {
+                affinity_rewards: [],
+                item_rewards: ["medium_health_potion", "medium_health_potion"],
+                gold_reward: 200
+            },
+            prerequisites: ["bandit_threat"],
+            completion_flag: "quest_rescue_mission_complete",
+            requires_turnin: true,
+            turnin_npc: "obj_example_captain",
+            chain_next: undefined
+        };
+
         show_debug_message("Quest database initialized with " + string(variable_struct_names_count(global.quest_database)) + " quests");
     }
 }
@@ -523,4 +593,56 @@ function spawn_quest_enemy(enemy_object, spawn_x, spawn_y, spawn_room, quest_id)
 
     show_debug_message("Spawned quest enemy for quest: " + quest_id);
     return enemy_instance;
+}
+
+/// @function quest_objective_complete(quest_id, objective_index)
+/// @description Check if a specific quest objective is complete
+/// @param {string} quest_id The ID of the quest
+/// @param {real} objective_index Index of the objective to check (0-based)
+/// @return {bool} True if objective is complete, false otherwise
+function quest_objective_complete(quest_id, objective_index) {
+    // Validate quest exists and is active
+    if (!quest_is_active(quest_id)) {
+        return false;
+    }
+
+    with (obj_player) {
+        var quest = active_quests[$ quest_id];
+
+        // Validate objective index
+        if (objective_index < 0 || objective_index >= array_length(quest.objectives)) {
+            return false;
+        }
+
+        var objective = quest.objectives[objective_index];
+        return (objective.current >= objective.count);
+    }
+
+    return false;
+}
+
+/// @function quest_objective_progress(quest_id, objective_index)
+/// @description Get the current progress count for a specific quest objective
+/// @param {string} quest_id The ID of the quest
+/// @param {real} objective_index Index of the objective to check (0-based)
+/// @return {real} Current progress count, or 0 if quest/objective is invalid
+function quest_objective_progress(quest_id, objective_index) {
+    // Validate quest exists and is active
+    if (!quest_is_active(quest_id)) {
+        return 0;
+    }
+
+    with (obj_player) {
+        var quest = active_quests[$ quest_id];
+
+        // Validate objective index
+        if (objective_index < 0 || objective_index >= array_length(quest.objectives)) {
+            return 0;
+        }
+
+        var objective = quest.objectives[objective_index];
+        return objective.current;
+    }
+
+    return 0;
 }

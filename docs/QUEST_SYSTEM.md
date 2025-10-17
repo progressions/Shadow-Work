@@ -321,6 +321,10 @@ These functions are registered with Chatterbox in `obj_game_controller`:
 - `quest_is_active(quest_id)` - Check if quest is active
 - `quest_is_complete(quest_id)` - Check if quest is complete
 - `quest_can_accept(quest_id)` - Check if quest can be accepted
+- `objective_complete(quest_id, objective_index)` - Check if specific objective is complete (returns boolean)
+- `quest_progress(quest_id, objective_index)` - Get current progress count for objective (returns number)
+
+**See:** `/docs/DIALOGUE_FUNCTIONS.md` for complete function reference with examples
 
 ### Dialogue Example
 

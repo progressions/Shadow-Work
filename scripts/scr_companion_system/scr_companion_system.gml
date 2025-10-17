@@ -2,6 +2,26 @@
 // COMPANION SYSTEM - Helper functions for companion management
 // ============================================
 
+/// @function get_companion_by_name(companion_name)
+/// @description Find a companion instance by their name (case-insensitive)
+/// @param {string} companion_name The companion's name ("Canopy", "Hola", "Yorna")
+/// @return {Id.Instance} The companion instance, or noone if not found
+function get_companion_by_name(companion_name) {
+    if (companion_name == undefined) return noone;
+
+    // Normalize to lowercase for case-insensitive comparison
+    var _search_name = string_lower(companion_name);
+
+    // Search all companion instances
+    with (obj_companion_parent) {
+        if (string_lower(companion_name) == _search_name) {
+            return id;
+        }
+    }
+
+    return noone;
+}
+
 /// @function get_affinity_aura_multiplier(affinity)
 /// @description Calculate aura effectiveness multiplier based on affinity level
 /// @param {real} affinity The companion's affinity level (3.0 to 10.0)

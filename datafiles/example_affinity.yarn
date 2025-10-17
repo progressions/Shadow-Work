@@ -1,0 +1,193 @@
+title: Start
+---
+<<set $affinity = get_affinity("Canopy")>>
+
+<<if $affinity >= 10>>
+    Canopy: My dearest friend... I'm so glad you're here.
+<<elseif $affinity >= 8>>
+    Canopy: You've become very special to me, you know.
+<<elseif $affinity >= 5>>
+    Canopy: It's good to see you! I feel like we're really getting to know each other.
+<<elseif $affinity >= 3>>
+    Canopy: Hello! Ready for another adventure?
+<<else>>
+    Canopy: Oh, hello there.
+<<endif>>
+
+    -> How are you feeling?
+        <<jump GeneralChat>>
+    -> Tell me about yourself <<if get_affinity("Canopy") >= 5>>
+        <<jump Backstory>>
+    -> I wanted to talk about us... <<if get_affinity("Canopy") >= 8>>
+        <<jump RomanceConversation>>
+    -> What's your deepest secret? <<if get_affinity("Canopy") >= 10>>
+        <<jump DeepestSecret>>
+    -> Want to train together? <<if get_affinity("Canopy") >= 3>>
+        <<jump TrainingOffer>>
+    -> Just checking in
+        <<jump Exit>>
+===
+
+title: GeneralChat
+---
+<<set $affinity = get_affinity("Canopy")>>
+
+<<if $affinity >= 8>>
+    Canopy: I'm doing well, especially now that you're here.
+    Canopy: Sometimes I think about how much has changed since we first met...
+    Canopy: Back then, I wasn't sure if I could trust you. Now? I can't imagine my life without you in it.
+<<elseif $affinity >= 5>>
+    Canopy: I'm good! Being part of this group has been... healing, in a way.
+    Canopy: I spent so long alone, protecting the forest from the shadows.
+    Canopy: Having companions again reminds me what I was fighting for all along.
+<<elseif $affinity >= 3>>
+    Canopy: I'm adapting to traveling with a group. It's... different than being alone.
+    Canopy: But I think it's a good different.
+<<else>>
+    Canopy: I'm fine. Just keeping watch, as always.
+<<endif>>
+
+    -> Back to main menu
+        <<jump Start>>
+===
+
+title: Backstory
+---
+Canopy: You want to know about my past?
+
+<<if get_affinity("Canopy") >= 8>>
+    Canopy: I suppose we're close enough now that I can share the full story...
+    Canopy: I wasn't always a lone guardian. Once, I had a whole order of forest protectors with me.
+    Canopy: We were sworn to defend the sacred groves from those who would corrupt them.
+    Canopy: But there was a betrayal. Someone from within led our enemies right to our sanctuary.
+    Canopy: I was the only one who survived. And I've spent years trying to figure out who betrayed us... and why.
+    Canopy: That's why I'm so careful about trust. But you... you've proven yourself time and again.
+<<elseif get_affinity("Canopy") >= 5>>
+    Canopy: I spent many years as a guardian of the ancient forest.
+    Canopy: It's a sacred place, full of old magic and older secrets.
+    Canopy: I learned to fight not for glory, but for protection. To be a shield for those who cannot defend themselves.
+    Canopy: That's why I'm here with you now - I see that same protective spirit in you.
+<<else>>
+    Canopy: Perhaps another time. I'm not quite ready to share that yet.
+    Canopy: (Need Affinity 5+ to unlock this conversation)
+<<endif>>
+
+    -> That must have been hard
+        <<if get_affinity("Canopy") >= 8>>
+            Canopy: It was. But meeting you... it's helped me heal those old wounds.
+            Canopy: Thank you for listening.
+        <<endif>>
+        <<jump Start>>
+    -> Back to main menu
+        <<jump Start>>
+===
+
+title: RomanceConversation
+---
+Canopy: About us? What did you want to say?
+
+<<if get_affinity("Canopy") >= 10>>
+    -> I love you, Canopy
+        Canopy: ...
+        Canopy: I love you too. I think I have for a while now, but I was afraid to say it.
+        Canopy: After everything I've lost, the thought of losing you terrified me.
+        Canopy: But I realize now that fear was holding me back from something beautiful.
+        Canopy: Whatever comes next, we'll face it together.
+        <<jump Start>>
+<<endif>>
+
+    -> I care about you deeply
+        Canopy: I... I care about you too. More than I thought possible.
+        Canopy: You've shown me that it's okay to let someone in again.
+        Canopy: To trust, to hope, to dream of a future beyond just survival.
+
+        <<if get_affinity("Canopy") >= 10>>
+            Canopy: There's something I've wanted to tell you for a while now...
+            Canopy: But I think I'll wait for the right moment.
+        <<else>>
+            Canopy: Thank you for being patient with me. It means more than you know.
+            Canopy: (Reach Affinity 10 to unlock deeper romance options)
+        <<endif>>
+        <<jump Start>>
+
+    -> Never mind
+        Canopy: Alright. If you ever want to talk, I'm here.
+        <<jump Start>>
+===
+
+title: DeepestSecret
+---
+Canopy: My deepest secret?
+Canopy: ...
+Canopy: I've never told anyone this. Not even the others in my old order.
+Canopy: The forest I protected... it wasn't just any forest. It was the birthplace of the first druids.
+Canopy: And hidden within it is an artifact of immense power - the Seed of the World Tree.
+Canopy: In the wrong hands, it could be used to corrupt all of nature itself.
+Canopy: I've kept its location secret all these years, even when it meant being hunted, being called paranoid.
+Canopy: But I trust you. If anything ever happens to me... promise me you'll protect it.
+
+    -> I promise
+        Canopy: Thank you. That... that means everything to me.
+        Canopy: I've carried this burden alone for so long. Knowing I can share it with you...
+        Canopy: It's like a weight has been lifted from my shoulders.
+        <<jump Start>>
+
+    -> That's a heavy burden
+        Canopy: It is. But with you by my side, it doesn't feel quite so heavy anymore.
+        Canopy: We'll protect it together, no matter what comes.
+        <<jump Start>>
+===
+
+title: TrainingOffer
+---
+<<set $affinity = get_affinity("Canopy")>>
+
+<<if $affinity >= 5>>
+    Canopy: Training together? I'd love that!
+    Canopy: I could teach you some of the defensive techniques I learned as a guardian.
+    Canopy: Or we could work on your combat timing - I've noticed you sometimes overextend during fights.
+
+    -> Learn defensive techniques
+        Canopy: Excellent choice! Defense is the foundation of all combat.
+        Canopy: Here, watch my stance. See how I keep my weight balanced? This allows me to react quickly to attacks from any direction.
+        Canopy: Now you try!
+        Canopy: *you spend some time training with Canopy*
+        Canopy: You're a quick learner! Keep practicing that, and you'll be much harder to hit.
+        <<jump Start>>
+
+    -> Work on combat timing
+        Canopy: Smart! Knowing when to strike is just as important as how to strike.
+        Canopy: Watch the enemy's movements. Every attack has a tell, a moment of commitment where they're vulnerable.
+        Canopy: That's your opening.
+        Canopy: *you spar with Canopy, learning to read attack patterns*
+        Canopy: Much better! I can already see improvement in your reactions.
+        <<jump Start>>
+
+<<elseif $affinity >= 3>>
+    Canopy: Sure, I could show you a few basic moves.
+    Canopy: *you practice some basic combat drills with Canopy*
+    Canopy: Not bad! You've got good instincts.
+    Canopy: (Reach Affinity 5+ for advanced training options)
+    <<jump Start>>
+
+<<else>>
+    Canopy: Maybe once we know each other better.
+    Canopy: (Need Affinity 3+ to train together)
+    <<jump Start>>
+<<endif>>
+===
+
+title: Exit
+---
+<<set $affinity = get_affinity("Canopy")>>
+
+<<if $affinity >= 8>>
+    Canopy: Be safe out there. I'll be watching your back.
+<<elseif $affinity >= 5>>
+    Canopy: Take care! Let me know if you need anything.
+<<elseif $affinity >= 3>>
+    Canopy: See you around.
+<<else>>
+    Canopy: Farewell.
+<<endif>>
+===

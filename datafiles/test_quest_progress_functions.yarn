@@ -1,0 +1,189 @@
+title: Start
+---
+Quest Master: Greetings, adventurer! I can help you track your quest progress.
+
+    -> Check quest status
+        <<jump CheckQuestStatus>>
+    -> Test quest progress display
+        <<jump TestProgressDisplay>>
+    -> Test error handling
+        <<jump TestErrorHandling>>
+    -> Accept test quest (if available)
+        <<jump AcceptTestQuest>>
+    -> Leave
+        <<jump Exit>>
+===
+
+title: CheckQuestStatus
+---
+Quest Master: Let me check your active quests...
+
+// Check Hola's "Find Yorna" quest
+<<if quest_is_active("hola_find_yorna")>>
+    Quest Master: Quest "Find Yorna" is active!
+
+    <<if objective_complete("hola_find_yorna", 0)>>
+        Quest Master: ✓ Objective 0: Complete! (Yorna has been recruited)
+        Quest Master: You can complete this quest now!
+        -> Turn in quest
+            <<quest_complete("hola_find_yorna")>>
+            Quest Master: Quest complete! Well done!
+            <<jump Start>>
+    <<else>>
+        Quest Master: ○ Objective 0: Incomplete (Recruit Yorna)
+        Quest Master: Progress: <<quest_progress("hola_find_yorna", 0)>>/1
+    <<endif>>
+<<else>>
+    Quest Master: "Find Yorna" quest is not active.
+<<endif>>
+
+// Space for testing other quests when they're added
+Quest Master: (More quests will appear here as you accept them)
+
+    -> Back to main menu
+        <<jump Start>>
+===
+
+title: TestProgressDisplay
+---
+Quest Master: Here's how you can display quest progress in dialogue...
+
+// Example: Multi-objective quest display (simulated)
+Quest Master: For a quest with multiple objectives, you can show:
+
+<<if quest_is_active("hola_find_yorna")>>
+    Quest Master: Quest: Find Yorna
+    Quest Master: - Recruit Yorna: <<quest_progress("hola_find_yorna", 0)>>/1 <<if objective_complete("hola_find_yorna", 0)>>[COMPLETE]<<endif>>
+<<else>>
+    Quest Master: (No active quests to display)
+<<endif>>
+
+Quest Master: This creates a nice progress tracker!
+
+    -> Show different progress formats
+        <<jump ProgressFormats>>
+    -> Back to main menu
+        <<jump Start>>
+===
+
+title: ProgressFormats
+---
+Quest Master: Here are different ways to display quest progress:
+
+<<if quest_is_active("hola_find_yorna")>>
+    // Format 1: Simple count
+    Quest Master: Format 1 - Simple: You've completed <<quest_progress("hola_find_yorna", 0)>> out of 1 objectives.
+
+    // Format 2: Fraction
+    Quest Master: Format 2 - Fraction: Progress: <<quest_progress("hola_find_yorna", 0)>>/1
+
+    // Format 3: Conditional message
+    <<if objective_complete("hola_find_yorna", 0)>>
+        Quest Master: Format 3 - Status: All objectives complete! Return to quest giver.
+    <<else>>
+        Quest Master: Format 3 - Status: Still working on objectives...
+    <<endif>>
+
+    // Format 4: Progress bar (text-based)
+    <<if quest_progress("hola_find_yorna", 0) >= 1>>
+        Quest Master: Format 4 - Bar: [■■■■■] Complete!
+    <<else>>
+        Quest Master: Format 4 - Bar: [□□□□□] 0% Complete
+    <<endif>>
+<<else>>
+    Quest Master: (Accept a quest first to see progress formats)
+<<endif>>
+
+    -> Back to progress display
+        <<jump TestProgressDisplay>>
+===
+
+title: AcceptTestQuest
+---
+<<if quest_can_accept("hola_find_yorna")>>
+    Quest Master: I have a quest for you: Find and recruit Yorna!
+    Quest Master: She was last seen in the forest. Bring her back safely.
+
+    -> Accept "Find Yorna" quest
+        <<quest_accept("hola_find_yorna")>>
+        Quest Master: Quest accepted! Go forth and find Yorna!
+        Quest Master: Talk to Hola when you're ready.
+        <<jump Start>>
+    -> Maybe later
+        <<jump Start>>
+<<else>>
+    <<if quest_is_complete("hola_find_yorna")>>
+        Quest Master: You've already completed the "Find Yorna" quest!
+    <<elseif quest_is_active("hola_find_yorna")>>
+        Quest Master: You already have the "Find Yorna" quest active.
+    <<else>>
+        Quest Master: No quests available right now. (Prerequisites not met)
+    <<endif>>
+
+    -> Back to main menu
+        <<jump Start>>
+<<endif>>
+===
+
+title: TestErrorHandling
+---
+Quest Master: Now let's test error handling with invalid inputs...
+
+// Test invalid quest ID
+<<set $invalid_progress = quest_progress("fake_quest_id", 0)>>
+Quest Master: Invalid quest ID progress: <<$invalid_progress>> (should be 0)
+
+<<if objective_complete("fake_quest_id", 0)>>
+    Quest Master: ERROR: objective_complete should return false!
+<<else>>
+    Quest Master: ✓ Invalid quest ID returns false correctly
+<<endif>>
+
+// Test invalid objective index (too high)
+<<if quest_is_active("hola_find_yorna")>>
+    <<set $invalid_index_progress = quest_progress("hola_find_yorna", 999)>>
+    Quest Master: Invalid objective index (999): <<$invalid_index_progress>> (should be 0)
+
+    <<if objective_complete("hola_find_yorna", 999)>>
+        Quest Master: ERROR: objective_complete should return false for invalid index!
+    <<else>>
+        Quest Master: ✓ Invalid objective index returns false correctly
+    <<endif>>
+<<else>>
+    Quest Master: (Accept "Find Yorna" quest to test invalid index handling)
+<<endif>>
+
+// Test negative objective index
+<<if quest_is_active("hola_find_yorna")>>
+    <<set $negative_index = quest_progress("hola_find_yorna", -1)>>
+    Quest Master: Negative objective index (-1): <<$negative_index>> (should be 0)
+
+    <<if objective_complete("hola_find_yorna", -1)>>
+        Quest Master: ERROR: objective_complete should return false for negative index!
+    <<else>>
+        Quest Master: ✓ Negative objective index returns false correctly
+    <<endif>>
+<<endif>>
+
+// Test quest that's not active
+<<if !quest_is_active("hola_find_yorna")>>
+    <<set $inactive_progress = quest_progress("hola_find_yorna", 0)>>
+    Quest Master: Inactive quest progress: <<$inactive_progress>> (should be 0)
+
+    <<if objective_complete("hola_find_yorna", 0)>>
+        Quest Master: ERROR: Should return false for inactive quest!
+    <<else>>
+        Quest Master: ✓ Inactive quest returns false correctly
+    <<endif>>
+<<endif>>
+
+Quest Master: Error handling tests complete! All edge cases handled gracefully.
+
+    -> Back to main menu
+        <<jump Start>>
+===
+
+title: Exit
+---
+Quest Master: May your quests be ever fruitful, adventurer! Farewell!
+===

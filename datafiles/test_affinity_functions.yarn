@@ -1,0 +1,158 @@
+title: Start
+---
+Sage: Welcome, traveler. I can sense the bonds you share with your companions.
+Sage: Let me reveal the strength of these connections...
+
+    -> Check all companion affinities
+        <<jump CheckAllAffinities>>
+    -> Test affinity-gated dialogue (Canopy)
+        <<jump TestAffinityGates>>
+    -> Test error handling (invalid names)
+        <<jump TestInvalidNames>>
+    -> Leave
+        <<jump Exit>>
+===
+
+title: CheckAllAffinities
+---
+Sage: Let me examine your relationships...
+
+Sage: Canopy's affinity: <<get_affinity("Canopy")>>
+<<if get_affinity("Canopy") > 0>>
+    Sage: You have formed a bond with Canopy.
+<<else>>
+    Sage: Canopy has not yet joined you, or you have not built a connection.
+<<endif>>
+
+Sage: Hola's affinity: <<get_affinity("Hola")>>
+<<if get_affinity("Hola") > 0>>
+    Sage: You have formed a bond with Hola.
+<<else>>
+    Sage: Hola has not yet joined you, or you have not built a connection.
+<<endif>>
+
+Sage: Yorna's affinity: <<get_affinity("Yorna")>>
+<<if get_affinity("Yorna") > 0>>
+    Sage: You have formed a bond with Yorna.
+<<else>>
+    Sage: Yorna has not yet joined you, or you have not built a connection.
+<<endif>>
+
+    -> Check affinities again
+        <<jump CheckAllAffinities>>
+    -> Back to main menu
+        <<jump Start>>
+===
+
+title: TestAffinityGates
+---
+Sage: Let me test how Canopy might respond based on different affinity levels...
+
+<<set $canopy_affinity = get_affinity("Canopy")>>
+
+<<if $canopy_affinity >= 10>>
+    Sage: At affinity 10, Canopy would share their deepest secrets with you.
+    Sage: (Ultimate tier - Maximum trust)
+<<elseif $canopy_affinity >= 8>>
+    Sage: At affinity <<$canopy_affinity>>, Canopy would offer romance conversations.
+    Sage: (Advanced tier - Deep bond)
+<<elseif $canopy_affinity >= 5>>
+    Sage: At affinity <<$canopy_affinity>>, Canopy would share backstory reveals.
+    Sage: (Mid tier - Growing trust)
+<<elseif $canopy_affinity >= 3>>
+    Sage: At affinity <<$canopy_affinity>>, Canopy would offer training sessions.
+    Sage: (Base tier - Initial bond)
+<<elseif $canopy_affinity > 0>>
+    Sage: At affinity <<$canopy_affinity>>, Canopy is still getting to know you.
+    Sage: (Below base tier)
+<<else>>
+    Sage: Canopy has not yet joined your party or is not recruited.
+<<endif>>
+
+Sage: This demonstrates how you can gate dialogue based on relationship progress!
+
+    -> Test Hola's affinity gates
+        <<jump TestHolaGates>>
+    -> Test Yorna's affinity gates
+        <<jump TestYornaGates>>
+    -> Back to main menu
+        <<jump Start>>
+===
+
+title: TestHolaGates
+---
+Sage: Examining Hola's bond with you...
+
+<<set $hola_affinity = get_affinity("Hola")>>
+
+<<if $hola_affinity >= 8>>
+    Sage: Hola's affinity is <<$hola_affinity>> - she would share personal revelations.
+<<elseif $hola_affinity >= 5>>
+    Sage: Hola's affinity is <<$hola_affinity>> - she would discuss her past.
+<<elseif $hola_affinity >= 3>>
+    Sage: Hola's affinity is <<$hola_affinity>> - she would offer combat training.
+<<elseif $hola_affinity > 0>>
+    Sage: Hola's affinity is <<$hola_affinity>> - still building trust.
+<<else>>
+    Sage: Hola has not joined you yet.
+<<endif>>
+
+    -> Back to affinity gates
+        <<jump TestAffinityGates>>
+===
+
+title: TestYornaGates
+---
+Sage: Examining Yorna's bond with you...
+
+<<set $yorna_affinity = get_affinity("Yorna")>>
+
+<<if $yorna_affinity >= 8>>
+    Sage: Yorna's affinity is <<$yorna_affinity>> - she would share her deepest thoughts.
+<<elseif $yorna_affinity >= 5>>
+    Sage: Yorna's affinity is <<$yorna_affinity>> - she would reveal her history.
+<<elseif $yorna_affinity >= 3>>
+    Sage: Yorna's affinity is <<$yorna_affinity>> - she would teach you skills.
+<<elseif $yorna_affinity > 0>>
+    Sage: Yorna's affinity is <<$yorna_affinity>> - relationship developing.
+<<else>>
+    Sage: Yorna has not joined you yet.
+<<endif>>
+
+    -> Back to affinity gates
+        <<jump TestAffinityGates>>
+===
+
+title: TestInvalidNames
+---
+Sage: Now let me test what happens with invalid companion names...
+
+// Test invalid/non-existent companion names
+<<set $invalid_affinity = get_affinity("InvalidCompanion")>>
+Sage: Affinity for "InvalidCompanion": <<$invalid_affinity>> (should be 0)
+
+<<set $empty_affinity = get_affinity("")>>
+Sage: Affinity for empty string: <<$empty_affinity>> (should be 0)
+
+<<set $typo_affinity = get_affinity("Canpoy")>>
+Sage: Affinity for "Canpoy" (typo): <<$typo_affinity>> (should be 0)
+
+// Test case sensitivity
+<<set $lower_affinity = get_affinity("canopy")>>
+<<set $upper_affinity = get_affinity("CANOPY")>>
+<<set $mixed_affinity = get_affinity("CaNoPy")>>
+Sage: Case sensitivity test - lowercase "canopy": <<$lower_affinity>>
+Sage: Case sensitivity test - uppercase "CANOPY": <<$upper_affinity>>
+Sage: Case sensitivity test - mixed "CaNoPy": <<$mixed_affinity>>
+Sage: (All should return the same value as Canopy's actual affinity)
+
+Sage: Error handling works! All invalid names return 0, and case doesn't matter.
+
+    -> Back to main menu
+        <<jump Start>>
+===
+
+title: Exit
+---
+Sage: May your bonds grow ever stronger, traveler. Farewell!
+===
