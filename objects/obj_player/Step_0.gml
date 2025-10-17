@@ -160,6 +160,8 @@ if (state != PlayerState.dead) {
                 show_debug_message("[Q] Swapped active loadout to " + string(_active_key));
             }
         }
+        // Action tracker: loadout swapped
+        action_tracker_log("loadout_swapped");
     }
 
     // Open companion talk menu with C key
@@ -222,6 +224,8 @@ if (state != PlayerState.dead) {
                         player_remove_torch_from_loadouts();
                         torch_active = false;
                         torch_time_remaining = 0;
+                        // Action tracker: torch given to companion
+                        action_tracker_log("torch_given");
                     }
                 }
             }

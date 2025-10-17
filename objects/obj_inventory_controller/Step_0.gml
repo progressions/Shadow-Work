@@ -12,13 +12,17 @@ if (keyboard_check_pressed(ord("I"))) {
     global.game_paused = is_open;
 
     _play_ui_sfx(is_open ? snd_open_inventory : snd_close_inventory);
-	
+
 	if (is_open) {
 		audio_group_set_gain(audiogroup_sfx_world, 0, 0);
 	} else {
 		audio_group_set_gain(audiogroup_sfx_world, 1, 0);
 	}
 
+    // Action tracker: inventory opened
+    if (is_open) {
+        action_tracker_log("inventory_opened");
+    }
 }
 
 // Navigation only when inventory is open

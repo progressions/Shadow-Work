@@ -23,3 +23,4 @@ if (obj_player.equipped.right_hand != undefined) {
 	draw_sprite_stretched(spr_items, _frame, x - 12, y + 50, 72, 72);
 }
 
+

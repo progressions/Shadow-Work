@@ -81,6 +81,8 @@ function player_execute_attack(_focus_info) {
     if (_dash_attack_ready) {
         is_dash_attacking = true;
         apply_timed_trait("defense_vulnerability", 1.0);
+        // Action tracker: dash attack performed
+        action_tracker_log("dash_attack");
     } else {
         is_dash_attacking = false;
     }

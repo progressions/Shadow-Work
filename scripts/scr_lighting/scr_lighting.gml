@@ -178,6 +178,8 @@ function player_update_torch_state() {
             }
             player_play_torch_sfx("snd_torch_equip");
             set_torch_carrier("player");
+            // Action tracker: torch lit
+            action_tracker_log("torch_lit");
         }
 
         player_start_torch_loop();

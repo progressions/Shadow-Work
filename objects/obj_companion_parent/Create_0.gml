@@ -459,6 +459,8 @@ function can_interact() {
 function on_interact() {
     // Trigger VN dialogue system (only for recruitment)
     if (instance_exists(obj_player) && !is_recruited) {
+        // Action tracker: talked to NPC/companion (use specific action name)
+        action_tracker_log("npc_interaction_" + companion_id);
         start_vn_dialogue(id, companion_id + ".yarn", "Start");
     }
 }

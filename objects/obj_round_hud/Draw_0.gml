@@ -168,3 +168,23 @@ if (instance_exists(obj_player)) {
             .draw(x + 8, y + _sprite_height + 180);
     }
 }
+
+// Draw onboarding quest text using Scribble
+// Debug: Check quest status
+if (global.onboarding_quests.current_quest != undefined) {
+	var _quest_text = onboarding_get_current_quest_text();
+	var _text_x = display_get_gui_width() / 2;
+	var _text_y = 60;  // Below health bars
+
+	// Use Scribble for advanced text rendering with fnt_quest font and alpha
+	// Format: [fnt_quest] for font, [c_white] for color
+	var _scribble_text = "[fnt_quest][c_white]" + _quest_text;
+
+	draw_set_alpha(onboarding_quest_alpha);
+	scribble(_scribble_text)
+		.starting_format("fnt_quest", c_white)
+		.align(fa_center, fa_top)
+		.scale(0.4)
+		.draw(_text_x, _text_y);
+	draw_set_alpha(1);
+}

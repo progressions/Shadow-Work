@@ -117,6 +117,9 @@ global.idle_bob_timer = 0;  // Global timer that everyone uses
 // Initialize companion system
 init_companion_global_data();
 
+// Initialize action tracker system (used by room-based quests)
+action_tracker_initialize();
+
 // Environmental debris particle system (leaves/wood chunks)
 if (!variable_global_exists("debris_system")) {
     global.debris_system = part_system_create();
@@ -205,6 +208,11 @@ ChatterboxVariableDefault("canopy_recruited", false);
 ChatterboxVariableDefault("hola_recruited", false);
 ChatterboxVariableDefault("yorna_recruited", false);
 ChatterboxVariableDefault("hola_thanked_for_yorna", false);
+
+// Companion availability for talk menu (tracks which companions can be talked to)
+ChatterboxVariableDefault("canopy_available", false);
+ChatterboxVariableDefault("hola_available", false);
+ChatterboxVariableDefault("yorna_available", false);
 
 // Initialize quest system
 global.quest_flags = {};      // Boolean quest flags (struct instead of ds_map for JSON compatibility)

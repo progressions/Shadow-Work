@@ -194,6 +194,8 @@ function can_interact() {
 /// @function on_interact()
 /// @description Override - trigger container opening when interacted
 function on_interact() {
+    // Action tracker: chest opened
+    action_tracker_log("chest_opened");
     open_container();
     // Destroy prompt when opened
     if (instance_exists(interaction_prompt)) {

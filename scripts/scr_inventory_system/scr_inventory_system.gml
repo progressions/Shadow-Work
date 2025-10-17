@@ -37,6 +37,9 @@ function inventory_add_item(_item_def, _count = 1) {
 
         array_push(inventory, _item_instance);
         _count -= _this_stack;
+
+        // Action tracker: item picked up (use specific action name to avoid overwriting)
+        action_tracker_log("item_pickup_" + _item_def.item_id);
     }
 
     // Check if this is a quest item and update quest objectives
