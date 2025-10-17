@@ -21,8 +21,8 @@ function enemy_state_wander() {
         }
     }
 
-    var _center_x = variable_instance_exists(self, "wander_center_x") ? wander_center_x : xstart;
-    var _center_y = variable_instance_exists(self, "wander_center_y") ? wander_center_y : ystart;
+    var _center_x = variable_instance_exists(self, "wander_center_x") ? wander_center_x : (variable_instance_exists(self, "xstart") ? xstart : x);
+    var _center_y = variable_instance_exists(self, "wander_center_y") ? wander_center_y : (variable_instance_exists(self, "ystart") ? ystart : y);
     var _radius = variable_instance_exists(self, "wander_radius") ? wander_radius : 100;
 
     // Nudge back toward the home center if we drift too far

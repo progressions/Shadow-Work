@@ -11,12 +11,12 @@
 /// @param {real} y1 Start Y position
 /// @param {real} x2 End X position
 /// @param {real} y2 End Y position
-/// @param {asset} sprite Chain sprite to draw (4×8 single link)
+/// @param {Asset.GMSprite} sprite Chain sprite to draw (4×8 single link)
 /// @param {real} tension Tension ratio (0.0 = very slack, 1.0 = taut)
 function draw_chain_segment(x1, y1, x2, y2, sprite, tension) {
     var _dist = point_distance(x1, y1, x2, y2);
     var _base_angle = point_direction(x1, y1, x2, y2);
-    var _sprite_height = sprite_get_height(sprite);
+    var _sprite_height = is_real(sprite) ? sprite_get_height(sprite) : 8;
 
     // Calculate how many chain links to draw
     var _num_links = ceil(_dist / _sprite_height);

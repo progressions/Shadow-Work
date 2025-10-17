@@ -23,7 +23,7 @@ function enemy_state_targeting() {
     }
 
     // Unstuck mode - move directly in a random direction to get around obstacle
-    if (variable_instance_exists(self, "unstuck_mode") && unstuck_mode > 0) {
+    if (unstuck_mode > 0) {
         if (unstuck_mode == 44) { // Only log once at start
             show_debug_message("STEP: UNSTUCK MODE ACTIVE - unstuck_mode=" + string(unstuck_mode) + " direction=" + string(unstuck_direction));
         }

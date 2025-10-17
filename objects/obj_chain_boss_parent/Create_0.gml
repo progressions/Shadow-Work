@@ -1,5 +1,9 @@
+
+throw_state = -1;
+
 /// Chain Boss Parent - Create Event
 // Boss enemy with chained auxiliary minions
+
 event_inherited();
 
 // ============================================

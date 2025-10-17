@@ -36,6 +36,7 @@ if (!is_enraged && auxiliaries_alive <= 0) {
 
     // Play enrage sound if available
     if (variable_instance_exists(self, "enemy_sounds") &&
+        is_struct(enemy_sounds) &&
         variable_struct_exists(enemy_sounds, "on_enrage") &&
         audio_exists(enemy_sounds.on_enrage)) {
         play_sfx(enemy_sounds.on_enrage, 1, false);
@@ -57,7 +58,7 @@ if (throw_cooldown_timer > 0) {
 }
 
 // Only attempt throw if enabled and not currently throwing
-if (enable_throw_attack && throw_state == "none" && throw_cooldown_timer <= 0) {
+if (enable_throw_attack && variable_instance_exists(self, "throw_state") && throw_state == "none" && throw_cooldown_timer <= 0) {
     // Check if player exists and is in range
     if (instance_exists(obj_player)) {
         var _dist_to_player = point_distance(x, y, obj_player.x, obj_player.y);
@@ -101,7 +102,7 @@ if (enable_throw_attack && throw_state == "none" && throw_cooldown_timer <= 0) {
 }
 
 // Handle throw windup
-if (throw_state == "winding_up") {
+if (variable_instance_exists(self, "throw_state") && throw_state == "winding_up") {
     throw_windup_timer--;
 
     if (throw_windup_timer <= 0) {
@@ -129,11 +130,13 @@ if (throw_state == "winding_up") {
             }
 
             // Boss enters throwing state
+            if (!variable_instance_exists(self, "throw_state")) throw_state = "none";
             throw_state = "throwing";
 
             show_debug_message("Auxiliary launched at player!");
         } else {
             // Target lost, abort
+            if (!variable_instance_exists(self, "throw_state")) throw_state = "none";
             throw_state = "none";
             throw_target_auxiliary = noone;
         }
@@ -150,7 +153,7 @@ if (spin_cooldown_timer > 0) {
 }
 
 // Only attempt spin if enabled, not currently spinning or throwing
-if (enable_spin_attack && spin_state == "none" && throw_state == "none" && spin_cooldown_timer <= 0) {
+if (enable_spin_attack && variable_instance_exists(self, "spin_state") && spin_state == "none" && variable_instance_exists(self, "throw_state") && throw_state == "none" && spin_cooldown_timer <= 0) {
     // Check if player exists and is in range
     if (instance_exists(obj_player)) {
         var _dist_to_player = point_distance(x, y, obj_player.x, obj_player.y);

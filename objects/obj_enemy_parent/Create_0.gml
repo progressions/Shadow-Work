@@ -202,6 +202,9 @@ last_seen_player_y = 0;
 // Stuck detection
 stuck_check_x = x;
 stuck_check_y = y;
+unstuck_mode = 0;           // Frames remaining in unstuck movement
+unstuck_attempts = 0;       // Number of unstuck attempts
+unstuck_direction = 0;      // Direction to move when unstuck
 alarm[4] = 60; // Check if stuck every second
 
 // Movement profile system (specialized movement behaviors)
@@ -298,7 +301,7 @@ function serialize() {
     }
 
     // Serialize timed traits
-    if (variable_instance_exists(self, "timed_traits")) {
+    if (variable_instance_exists(self, "timed_traits") && is_array(timed_traits)) {
         for (var t = 0; t < array_length(timed_traits); t++) {
             var _entry = timed_traits[t];
             array_push(data.timed_traits, {

@@ -2,6 +2,7 @@
 if (global.game_paused) {
     // Save the path speed on first pause frame
     if (path_speed != 0) {
+        if (!variable_instance_exists(self, "saved_path_speed")) saved_path_speed = 0;
         saved_path_speed = path_speed;
         path_speed = 0;
     }
@@ -65,6 +66,7 @@ if (variable_instance_exists(self, "throw_state")) {
             var _dist_to_boss = point_distance(x, y, chain_boss.x, chain_boss.y);
             if (_dist_to_boss >= chain_boss.chain_max_length) {
                 // Reached max chain length, start returning
+                if (!variable_instance_exists(self, "throw_state")) throw_state = "idle";
                 throw_state = "returning";
 
                 // Stop flying sound
@@ -91,10 +93,12 @@ if (variable_instance_exists(self, "throw_state")) {
             var _dist_to_boss = point_distance(x, y, chain_boss.x, chain_boss.y);
             if (_dist_to_boss < 32) {
                 // Reached boss, reset to idle
+                if (!variable_instance_exists(self, "throw_state")) throw_state = "idle";
                 throw_state = "idle";
                 collision_damage_enabled = original_collision_damage_enabled;
 
                 // Boss can throw again
+                if (!variable_instance_exists(chain_boss, "throw_state")) chain_boss.throw_state = "none";
                 chain_boss.throw_state = "none";
                 chain_boss.throw_target_auxiliary = noone;
                 chain_boss.throw_cooldown_timer = chain_boss.throw_cooldown;

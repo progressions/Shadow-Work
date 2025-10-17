@@ -27,8 +27,8 @@ function enemy_state_party_formation() {
     }
 
     // Move toward formation position
-    var _target_x = objective_target_x;  // Set by party controller
-    var _target_y = objective_target_y;
+    var _target_x = variable_instance_exists(self, "objective_target_x") ? objective_target_x : x;  // Set by party controller
+    var _target_y = variable_instance_exists(self, "objective_target_y") ? objective_target_y : y;
 
     var _dist_to_formation = point_distance(x, y, _target_x, _target_y);
 

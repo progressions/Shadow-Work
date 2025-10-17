@@ -100,6 +100,7 @@ ranged_damage_resistance = 1;  // 1 DR against ranged
 // TRAITS & TAGS
 // ============================================
 // Fire-based boss with fire immunity
+if (!variable_instance_exists(self, "tags")) tags = [];
 array_push(tags, "fireborne");  // Grants fire_immunity, ice_vulnerability
 apply_tag_traits();
 

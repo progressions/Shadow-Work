@@ -19,6 +19,7 @@ if (variable_instance_exists(self, "throw_state") && throw_state == "being_throw
         }
 
         // Start returning to boss
+        if (!variable_instance_exists(self, "throw_state")) throw_state = "idle";
         throw_state = "returning";
 
         show_debug_message("Thrown auxiliary hit player!");
@@ -49,8 +50,9 @@ var _status_modified_damage = _base_damage * damage_modifier;
 
 // Apply damage type resistance multiplier using trait system v2.0
 var _resistance_multiplier = 1.0;
+var _damage_type = collision_damage_type;
 with (other) {
-    _resistance_multiplier = get_damage_modifier_for_type(other.collision_damage_type);
+    _resistance_multiplier = get_damage_modifier_for_type(_damage_type);
 }
 var _after_resistance = _status_modified_damage * _resistance_multiplier;
 

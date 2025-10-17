@@ -49,10 +49,10 @@ weight_modifiers = {
     player_in_aggro_range: 5.0  // Multiplier to attack weight when player in aggro radius
 };
 
-/// @function init_party(enemy_array, formation_template_key)
+/// @function init_party(_enemy_array, _formation_template_key)
 /// @description Initialize party with enemies and formation template
-/// @param {array} enemy_array - Array of enemy instances to add to party
-/// @param {string} formation_template_key - Key to formation in global.formation_database
+/// @param {array} _enemy_array - Array of enemy instances to add to party
+/// @param {string} _formation_template_key - Key to formation in global.formation_database
 function init_party(_enemy_array, _formation_template_key) {
     party_members = _enemy_array;
     initial_party_size = array_length(_enemy_array);
@@ -73,7 +73,7 @@ function init_party(_enemy_array, _formation_template_key) {
 /// @function assign_formation_roles()
 /// @description Assign roles and formation positions to party members
 function assign_formation_roles() {
-    if (!variable_struct_exists(global.formation_database, formation_template)) {
+    if (!is_struct(global.formation_database) || !variable_struct_exists(global.formation_database, formation_template)) {
         show_debug_message("Warning: Formation template '" + formation_template + "' not found in database");
         return;
     }
@@ -129,12 +129,12 @@ function assign_formation_roles() {
     }
 }
 
-/// @function get_formation_position(enemy_instance)
+/// @function get_formation_position(_enemy)
 /// @description Calculate target formation coordinates for an enemy
-/// @param {Id.Instance} enemy_instance - The enemy to get formation position for
+/// @param {Id.Instance} _enemy - The enemy to get formation position for
 /// @return {struct} Struct with x and y coordinates, or undefined if enemy not in party
 function get_formation_position(_enemy) {
-    if (!variable_struct_exists(formation_data, "assignments")) {
+    if (!is_struct(formation_data) || !variable_struct_exists(formation_data, "assignments") || !is_array(formation_data.assignments)) {
         return undefined;
     }
 
@@ -274,9 +274,9 @@ function update_party_state() {
     }
 }
 
-/// @function transition_to_state(new_state)
+/// @function transition_to_state(_new_state)
 /// @description Handle state transition with audio feedback
-/// @param {real} new_state - The state to transition to
+/// @param {real} _new_state - The state to transition to
 function transition_to_state(_new_state) {
     if (party_state == _new_state) return;
 
@@ -312,16 +312,16 @@ function transition_to_state(_new_state) {
     }
 }
 
-/// @function calculate_decision_weights(enemy_instance)
+/// @function calculate_decision_weights(_enemy)
 /// @description Calculate weighted objectives for individual enemy
-/// @param {Id.Instance} enemy_instance - The enemy to calculate weights for
+/// @param {Id.Instance} _enemy - The enemy to calculate weights for
 function calculate_decision_weights(_enemy) {
     if (!instance_exists(_enemy)) return;
     if (!instance_exists(obj_player)) return;
 
     // Get formation position
     var _form_pos = get_formation_position(_enemy);
-    if (_form_pos != undefined) {
+    if (is_struct(_form_pos) && _form_pos != undefined) {
         _enemy.formation_target_x = _form_pos.x;
         _enemy.formation_target_y = _form_pos.y;
     }
@@ -419,9 +419,9 @@ function calculate_decision_weights(_enemy) {
     }
 }
 
-/// @function on_member_death(enemy_instance)
+/// @function on_member_death(_enemy)
 /// @description Handle party member removal and formation adjustment
-/// @param {Id.Instance} enemy_instance - The enemy that died
+/// @param {Id.Instance} _enemy - The enemy that died
 function on_member_death(_enemy) {
     if (!instance_exists(_enemy)) return;
 
@@ -508,10 +508,10 @@ function serialize_party_data() {
     };
 }
 
-/// @function deserialize_party_data(data, enemy_lookup)
+/// @function deserialize_party_data(_data, _enemy_lookup)
 /// @description Restore party from saved data
-/// @param {struct} data - Saved party data
-/// @param {struct} enemy_lookup - Map of persistent_id to enemy instances
+/// @param {struct} _data - Saved party data
+/// @param {struct} _enemy_lookup - Map of persistent_id to enemy instances
 function deserialize_party_data(_data, _enemy_lookup) {
     party_state = _data.party_state;
     initial_party_size = _data.initial_party_size;

@@ -13,10 +13,10 @@ function action_tracker_initialize() {
     };
 }
 
-/// @function action_tracker_log(action_name, [value])
+/// @function action_tracker_log(_action_name, _value)
 /// @description Log an action that occurred (generic, not quest-specific)
-/// @param {string} action_name Name of the action (e.g., "chest_opened", "torch_lit")
-/// @param {any} [value] Optional value to associate with the action (e.g., item_id for pickups)
+/// @param {string} _action_name Name of the action (e.g., "chest_opened", "torch_lit")
+/// @param {any} _value Optional value to associate with the action (e.g., item_id for pickups)
 function action_tracker_log(_action_name, _value = true) {
     if (!variable_global_exists("action_tracker")) {
         action_tracker_initialize();
@@ -40,10 +40,10 @@ function action_tracker_log(_action_name, _value = true) {
     }
 }
 
-/// @function action_tracker_has(action_name, [expected_value])
+/// @function action_tracker_has(_action_name, _expected_value)
 /// @description Check if an action has occurred
-/// @param {string} action_name Name of the action to check
-/// @param {any} [expected_value] Optional value to match against (for specific items, etc.)
+/// @param {string} _action_name Name of the action to check
+/// @param {any} _expected_value Optional value to match against (for specific items, etc.)
 /// @return {bool} True if action occurred (and matches expected_value if provided)
 function action_tracker_has(_action_name, _expected_value = undefined) {
     if (!variable_global_exists("action_tracker")) {

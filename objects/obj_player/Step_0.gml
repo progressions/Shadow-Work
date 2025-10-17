@@ -44,6 +44,7 @@ if (elevation_source != noone) {
 }
 
 if (instance_exists(obj_grid_controller)) {
+    if (!variable_instance_exists(self, "GRID_Y_OFFSET")) GRID_Y_OFFSET = 0;
     GRID_Y_OFFSET = obj_grid_controller.GRID_Y_OFFSET;
 }
 

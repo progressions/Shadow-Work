@@ -3,7 +3,7 @@ if (global.game_paused) exit;
 
 if (state == EnemyState.targeting) {
     // Don't re-trigger if already in unstuck mode
-    if (variable_instance_exists(self, "unstuck_mode") && unstuck_mode > 0) {
+    if (unstuck_mode > 0) {
         // Still unsticking, wait
         alarm[4] = 60;
         return;
@@ -21,14 +21,6 @@ if (state == EnemyState.targeting) {
         }
 
         // Enter unstuck mode - move in random direction
-        if (!variable_instance_exists(self, "unstuck_mode")) {
-            unstuck_mode = 0;
-        }
-
-        if (!variable_instance_exists(self, "unstuck_attempts")) {
-            unstuck_attempts = 0;
-        }
-
         unstuck_mode = 45; // Move for 45 frames (3/4 second)
         unstuck_attempts++;
 
@@ -42,9 +34,7 @@ if (state == EnemyState.targeting) {
         alarm[0] = 50;
     } else {
         // Moved successfully, reset attempt counter
-        if (variable_instance_exists(self, "unstuck_attempts")) {
-            unstuck_attempts = 0;
-        }
+        unstuck_attempts = 0;
     }
 }
 

@@ -105,12 +105,7 @@ function player_state_walking() {
     }
 
     // Get footstep sound for current terrain
-    var _footstep_sound = global.terrain_footstep_sounds[$ _terrain];
-
-    // Fallback to grass sound if terrain has no defined sound
-    if (_footstep_sound == undefined) {
-        _footstep_sound = snd_footsteps_grass;
-    }
+    var _footstep_sound = global.terrain_footstep_sounds[$ _terrain] ?? snd_footsteps_grass;
 
     // Play appropriate footstep sound
     play_sfx(_footstep_sound, 0.3, 4, true);

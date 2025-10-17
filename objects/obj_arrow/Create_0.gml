@@ -26,10 +26,7 @@ depth = -y;
 projectile_range_profiles_init();
 range_profile_id = RangeProfile.generic_arrow;
 range_profile_id_cached = range_profile_id;
-range_profile = projectile_get_range_profile(range_profile_id);
-if (range_profile == undefined) {
-    range_profile = projectile_create_default_profile();
-}
+range_profile = projectile_get_range_profile(range_profile_id) ?? projectile_create_default_profile();
 current_damage_multiplier = 1.0;
 previous_damage_multiplier = current_damage_multiplier;
 distance_travelled = 0;

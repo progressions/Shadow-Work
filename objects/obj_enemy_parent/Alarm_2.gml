@@ -28,8 +28,10 @@ if (state == EnemyState.attacking) {
 
             // Apply damage type resistance multiplier using trait system v2.0
             var _resistance_multiplier = 1.0;
-            with (_player) {
-                _resistance_multiplier = get_damage_modifier_for_type(other.attack_damage_type);
+            if (instance_exists(_player)) {
+                with (_player) {
+                    _resistance_multiplier = get_damage_modifier_for_type(other.attack_damage_type);
+                }
             }
             var _after_resistance = _status_modified_damage * _resistance_multiplier;
 
@@ -111,10 +113,11 @@ if (state == EnemyState.attacking) {
             play_sfx(snd_attack_hit, 1, false);
 
             // Apply attack status effects (like burning from fire imp)
-            if (variable_instance_exists(self, "attack_status_effects")) {
-                show_debug_message("Checking " + string(array_length(attack_status_effects)) + " status effects");
-                for (var i = 0; i < array_length(attack_status_effects); i++) {
-                    var effect_data = attack_status_effects[i];
+            if (variable_instance_exists(self, "attack_status_effects") && is_array(attack_status_effects)) {
+                var _status_effects = attack_status_effects;
+                show_debug_message("Checking " + string(array_length(_status_effects)) + " status effects");
+                for (var i = 0; i < array_length(_status_effects); i++) {
+                    var effect_data = _status_effects[i];
                     var _trait_key = status_effect_resolve_trait(effect_data);
                     var _chance = effect_data.chance;
                     var _roll = random(1);

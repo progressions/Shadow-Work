@@ -17,9 +17,9 @@ function onboarding_initialize() {
     };
 }
 
-/// @function onboarding_initialize_for_room(quest_definitions)
+/// @function onboarding_initialize_for_room(_quest_definitions)
 /// @description Initialize onboarding quests for a specific room (call from Room Creation Code)
-/// @param {array} quest_definitions Array of quest definition structs
+/// @param {array} _quest_definitions Array of quest definition structs
 function onboarding_initialize_for_room(_quest_definitions) {
     // Initialize system if not already done
     if (!variable_global_exists("onboarding_quests")) {

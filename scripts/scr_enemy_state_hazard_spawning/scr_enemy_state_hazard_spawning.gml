@@ -71,8 +71,8 @@ function enemy_state_hazard_spawning() {
 /// @description Spawns a hazard projectile toward the stored target position
 function spawn_hazard_projectile() {
     // Use stored target position (where player was during windup)
-    var _target_x = hazard_target_x;
-    var _target_y = hazard_target_y;
+    var _target_x = variable_instance_exists(self, "hazard_target_x") ? hazard_target_x : (instance_exists(obj_player) ? obj_player.x : x);
+    var _target_y = variable_instance_exists(self, "hazard_target_y") ? hazard_target_y : (instance_exists(obj_player) ? obj_player.y : y);
 
     // Calculate angle toward target position
     var _projectile_dir = point_direction(x, y, _target_x, _target_y);

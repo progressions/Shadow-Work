@@ -53,8 +53,7 @@ function player_handle_attack_input() {
         var _focus_info = player_focus_consume_for_attack(self);
         player_execute_attack(_focus_info);
     } else if (_attack_pressed && !focus_enabled && can_attack) {
-        var _fallback_vec = player_focus_resolve_direction_from_label(facing_dir);
-        if (_fallback_vec == undefined) _fallback_vec = { x: 0, y: 0 };
+        var _fallback_vec = player_focus_resolve_direction_from_label(facing_dir) ?? { x: 0, y: 0 };
         var _fallback_info = {
             use_focus: false,
             aim_direction: facing_dir,
