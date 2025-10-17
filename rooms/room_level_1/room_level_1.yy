@@ -16,6 +16,7 @@
     {"name":"inst_37EF0784","path":"rooms/room_level_1/room_level_1.yy",},
     {"name":"inst_1DED7A43","path":"rooms/room_level_1/room_level_1.yy",},
     {"name":"inst_3D339800","path":"rooms/room_level_1/room_level_1.yy",},
+    {"name":"inst_2A2D065","path":"rooms/room_level_1/room_level_1.yy",},
   ],
   "isDnd":false,
   "layers":[
@@ -31,6 +32,7 @@
         {"$GMRInstance":"v2","%Name":"inst_37EF0784","colour":4294967295,"frozen":false,"hasCreationCode":false,"ignore":false,"imageIndex":0,"imageSpeed":1.0,"inheritCode":false,"inheritedItemId":null,"inheritItemSettings":false,"isDnd":false,"name":"inst_37EF0784","objectId":{"name":"obj_greenwood_bandit","path":"objects/obj_greenwood_bandit/obj_greenwood_bandit.yy",},"properties":[],"resourceType":"GMRInstance","resourceVersion":"2.0","rotation":0.0,"scaleX":1.0,"scaleY":1.0,"x":1199.0,"y":42.0,},
         {"$GMRInstance":"v2","%Name":"inst_1DED7A43","colour":4294967295,"frozen":false,"hasCreationCode":true,"ignore":false,"imageIndex":0,"imageSpeed":1.0,"inheritCode":false,"inheritedItemId":null,"inheritItemSettings":false,"isDnd":false,"name":"inst_1DED7A43","objectId":{"name":"obj_greenwood_bandit","path":"objects/obj_greenwood_bandit/obj_greenwood_bandit.yy",},"properties":[],"resourceType":"GMRInstance","resourceVersion":"2.0","rotation":0.0,"scaleX":1.0,"scaleY":1.0,"x":148.0,"y":39.0,},
         {"$GMRInstance":"v2","%Name":"inst_3D339800","colour":4294967295,"frozen":false,"hasCreationCode":true,"ignore":false,"imageIndex":0,"imageSpeed":1.0,"inheritCode":false,"inheritedItemId":null,"inheritItemSettings":false,"isDnd":false,"name":"inst_3D339800","objectId":{"name":"obj_greenwood_bandit","path":"objects/obj_greenwood_bandit/obj_greenwood_bandit.yy",},"properties":[],"resourceType":"GMRInstance","resourceVersion":"2.0","rotation":0.0,"scaleX":1.0,"scaleY":1.0,"x":118.0,"y":85.0,},
+        {"$GMRInstance":"v2","%Name":"inst_2A2D065","colour":4294967295,"frozen":false,"hasCreationCode":false,"ignore":false,"imageIndex":0,"imageSpeed":1.0,"inheritCode":false,"inheritedItemId":null,"inheritItemSettings":false,"isDnd":false,"name":"inst_2A2D065","objectId":{"name":"obj_fire_boss","path":"objects/obj_fire_boss/obj_fire_boss.yy",},"properties":[],"resourceType":"GMRInstance","resourceVersion":"2.0","rotation":0.0,"scaleX":1.0,"scaleY":1.0,"x":540.0,"y":249.0,},
       ],"layers":[],"name":"Instances","properties":[],"resourceType":"GMRInstanceLayer","resourceVersion":"2.0","userdefinedDepth":false,"visible":true,},
     {"$GMRTileLayer":"","%Name":"Tiles_Col","depth":200,"effectEnabled":true,"effectType":null,"gridX":32,"gridY":32,"hierarchyFrozen":false,"inheritLayerDepth":false,"inheritLayerSettings":false,"inheritSubLayers":true,"inheritVisibility":true,"layers":[],"name":"Tiles_Col","properties":[],"resourceType":"GMRTileLayer","resourceVersion":"2.0","tiles":{"SerialiseHeight":45,"SerialiseWidth":80,"TileCompressedData":[
           17,15,16,16,17,16,17,19,7,8,7,8,7,8,7,8,9,20,-3,21,3,22,23,20,-3,21,3,22,23,20,-3,21,3,22,23,20,-3,21,

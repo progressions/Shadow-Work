@@ -1,15 +1,7 @@
 /// @description Update party state each frame
 
-// DEBUG: Check if Step event is running
-if (object_index == obj_canopy_threat) {
-    show_debug_message("CANOPY THREAT STEP EVENT RUNNING - patrol_original_state=" + string(patrol_original_state));
-}
-
 // Evaluate weighted decision for patrol vs engage
 if (patrol_original_state == PartyState.patrolling || patrol_original_state == PartyState.protecting) {
-    if (object_index == obj_canopy_threat) {
-        show_debug_message("About to call evaluate_patrol_decision");
-    }
     var _decision = evaluate_patrol_decision();
 
     if (_decision == "engage") {

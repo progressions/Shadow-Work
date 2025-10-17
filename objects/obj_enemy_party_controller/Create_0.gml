@@ -220,15 +220,6 @@ function evaluate_patrol_decision() {
     // Choose highest weighted objective
     var _decision = (_w_engage > _w_patrol) ? "engage" : "patrol";
 
-    // Debug output - TEMPORARILY ENABLED FOR CANOPY THREAT DEBUG
-    if (object_index == obj_canopy_threat) {
-        show_debug_message("Party Decision: " + _decision +
-                         " (engage=" + string(_w_engage) +
-                         ", patrol=" + string(_w_patrol) +
-                         ", dist=" + string(_dist_to_player) +
-                         ", aggro_radius=" + string(patrol_aggro_radius) + ")");
-    }
-
     return _decision;
 }
 
