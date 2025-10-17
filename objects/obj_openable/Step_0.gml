@@ -28,3 +28,6 @@ if (is_opened && image_index < 3) {
         spawn_loot();
     }
 }
+
+// Y-sorted depth for proper rendering order
+depth = -bbox_bottom;

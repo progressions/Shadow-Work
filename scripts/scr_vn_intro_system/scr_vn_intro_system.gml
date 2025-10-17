@@ -64,6 +64,7 @@ function check_vn_intro_triggers() {
 		var _start_node = variable_instance_exists(id, "vn_intro_node") ? vn_intro_node : "Start";
 		var _character_name = variable_instance_exists(id, "vn_intro_character_name") ? vn_intro_character_name : "";
 		var _portrait_sprite = variable_instance_exists(id, "vn_intro_portrait_sprite") ? vn_intro_portrait_sprite : noone;
+		var _video_path = variable_instance_exists(id, "vn_intro_video_path") ? vn_intro_video_path : "";
 		var _intro_sfx = variable_instance_exists(id, "vn_intro_sfx") ? vn_intro_sfx : snd_vn_intro_discovered;
 
 		// Validate yarn file exists
@@ -92,6 +93,7 @@ function check_vn_intro_triggers() {
 			start_node: _start_node,
 			character_name: _character_name,
 			portrait_sprite: _portrait_sprite,
+			video_path: _video_path,
 			intro_id: _intro_id
 		}, function() {
 			show_debug_message("=== CAMERA PAN CALLBACK EXECUTING ===");
@@ -100,7 +102,7 @@ function check_vn_intro_triggers() {
 			var _inst = instance_exists(intro_inst_id) ? intro_inst_id : noone;
 
 			// Start the VN intro
-			start_vn_intro(_inst, yarn_file, start_node, character_name, portrait_sprite);
+			start_vn_intro(_inst, yarn_file, start_node, character_name, portrait_sprite, video_path);
 
 			// Mark as seen after VN is opened
 			if (!variable_global_exists("vn_intro_seen")) {

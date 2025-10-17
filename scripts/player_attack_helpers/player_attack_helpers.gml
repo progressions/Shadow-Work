@@ -219,7 +219,7 @@ function player_attack_apply_damage(_attacker, _enemy, _info) {
         var _enemy_dead = (hp <= 0);
         if (_enemy_dead) {
             if (_attacker_id.object_index == obj_player) {
-                var xp_reward = 5;
+                var xp_reward = 1;
                 with (_attacker_id) {
                     gain_xp(xp_reward);
                 }

@@ -19,4 +19,4 @@ offset_y = 0;
 
 // Font setup
 draw_font = -1;
-text_scale = 0.25; // Make text smaller (50% of original size)
+text_scale = 0.1; // Default Scribble scale for readable text

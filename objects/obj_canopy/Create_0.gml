@@ -74,7 +74,8 @@ triggers = {
 // Animation data inherited from obj_companion_parent (18-frame structure)
 
 // VN system
-vn_sprite = spr_vn_canopy_1; // Portrait sprite for VN dialogue
+vn_sprite = spr_vn_canopy_1; // Portrait sprite for VN dialogue (fallback if no video)
+vn_video_path = "companions/Canopy/Canopy video.mp4"; // Video for VN dialogue
 theme_song = noone; //snd_canopy_theme; // Theme music for VN dialogue
 
 // VN intro on first sight
@@ -84,6 +85,7 @@ vn_intro_yarn_file = "canopy_intro.yarn";
 vn_intro_node = "Start";
 vn_intro_character_name = "";  // No speaker name (just narration)
 vn_intro_portrait_sprite = noone;  // No portrait for simple narration
+vn_intro_video_path = "companions/Canopy/Canopy running scared.mp4";  // Video for intro scene
 vn_intro_sfx = snd_vn_intro_discovered;  // Sound to play when intro triggers
 
 show_debug_message("=== CANOPY CREATE EVENT ===");

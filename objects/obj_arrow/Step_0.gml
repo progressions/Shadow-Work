@@ -92,7 +92,7 @@ if (_hit_enemy != noone) {
             if (hp <= 0) {
                 var attacker = other.creator;
                 if (attacker != noone && attacker.object_index == obj_player) {
-                    var xp_reward = 5;
+                    var xp_reward = 1;
                     with (attacker) {
                         gain_xp(xp_reward);
                     }

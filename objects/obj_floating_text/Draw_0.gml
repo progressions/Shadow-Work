@@ -1,38 +1,20 @@
-// Draw floating text with outline for readability
+// Draw floating text using Scribble
 var _draw_x = x;
 var _draw_y = y - y_offset;
 
-// Store current draw settings
-var _prev_font = draw_get_font();
-var _prev_halign = draw_get_halign();
-var _prev_valign = draw_get_valign();
-var _prev_alpha = draw_get_alpha();
-var _prev_color = draw_get_color();
-
-// Set font if specified
+// Use custom font if specified, otherwise use default
+var _font_name = "fnt_quest"; // Default font
 if (draw_font != -1 && font_exists(draw_font)) {
-    draw_set_font(draw_font);
+    _font_name = font_get_name(draw_font);
 }
 
-// Set alignment
-draw_set_halign(fa_center);
-draw_set_valign(fa_middle);
+// Store current alpha for restoration
+var _prev_alpha = draw_get_alpha();
 
-// Draw black outline (4-way) with scaling
-draw_set_alpha(alpha);
-draw_set_color(c_black);
-draw_text_transformed(_draw_x - 1, _draw_y, text, text_scale, text_scale, 0);
-draw_text_transformed(_draw_x + 1, _draw_y, text, text_scale, text_scale, 0);
-draw_text_transformed(_draw_x, _draw_y - 1, text, text_scale, text_scale, 0);
-draw_text_transformed(_draw_x, _draw_y + 1, text, text_scale, text_scale, 0);
-
-// Draw main text with scaling
-draw_set_color(text_color);
-draw_text_transformed(_draw_x, _draw_y, text, text_scale, text_scale, 0);
-
-// Restore previous draw settings
-draw_set_font(_prev_font);
-draw_set_halign(_prev_halign);
-draw_set_valign(_prev_valign);
-draw_set_alpha(_prev_alpha);
-draw_set_color(_prev_color);
+// Draw text with Scribble (color passed directly to starting_format)
+scribble(text)
+    .starting_format(_font_name, text_color)
+    .align(fa_center, fa_middle)
+    .scale(text_scale)
+	.sdf_outline(c_black, 2)
+    .draw(_draw_x, _draw_y);

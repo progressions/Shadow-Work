@@ -9,7 +9,7 @@ onboarding_initialize_for_room([
         check_completion: function() {
             return action_tracker_has("torch_lit");
         },
-        xp_reward: 50,
+        xp_reward: 5,
         completed: false
     },
 
@@ -20,7 +20,7 @@ onboarding_initialize_for_room([
         check_completion: function() {
             return action_tracker_has("chest_opened");
         },
-        xp_reward: 75,
+        xp_reward: 5,
         completed: false,
         marker_location: {x: 331, y: 245}
     },
@@ -32,7 +32,7 @@ onboarding_initialize_for_room([
         check_completion: function() {
             return action_tracker_has("item_pickup_rusty_dagger");
         },
-        xp_reward: 75,
+        xp_reward: 5,
         completed: false
     },
 
@@ -43,7 +43,7 @@ onboarding_initialize_for_room([
         check_completion: function() {
             return action_tracker_has("npc_interaction_canopy");
         },
-        xp_reward: 100,
+        xp_reward: 5,
         completed: false,
         marker_location: {target: instance_find(obj_canopy, 0), offset_x: -8, offset_y: -32}
     },
@@ -55,7 +55,7 @@ onboarding_initialize_for_room([
         check_completion: function() {
             return action_tracker_has("torch_given");
         },
-        xp_reward: 50,
+        xp_reward: 5,
         completed: false
     },
 
@@ -66,7 +66,7 @@ onboarding_initialize_for_room([
         check_completion: function() {
             return action_tracker_has("dash_attack");
         },
-        xp_reward: 100,
+        xp_reward: 5,
         completed: false
     },
 
@@ -77,7 +77,7 @@ onboarding_initialize_for_room([
         check_completion: function() {
             return action_tracker_has("inventory_opened");
         },
-        xp_reward: 50,
+        xp_reward: 5,
         completed: false
     },
 
@@ -88,7 +88,7 @@ onboarding_initialize_for_room([
         check_completion: function() {
             return action_tracker_has("loadout_swapped");
         },
-        xp_reward: 50,
+        xp_reward: 5,
         completed: false
     }
 ]);

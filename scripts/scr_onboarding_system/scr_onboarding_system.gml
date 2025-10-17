@@ -81,11 +81,11 @@ function onboarding_complete_quest(_quest_id) {
     // Mark as completed
     _quest.completed = true;
 
-    // Award XP to player
+    // Award XP to player using unified gain_xp() function
     if (instance_exists(obj_player) && variable_struct_exists(_quest, "xp_reward")) {
-        obj_player.xp += _quest.xp_reward;
-        // Show floating text for XP reward
-        spawn_floating_text(obj_player.x, obj_player.y, "+" + string(_quest.xp_reward) + " XP", c_yellow);
+        with (obj_player) {
+            gain_xp(_quest.xp_reward);
+        }
     }
 
     // Play quest resolved sound

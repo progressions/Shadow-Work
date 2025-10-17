@@ -105,3 +105,8 @@ dialogue_typist.function_per_char(method(self, function(_scope, _char_index, _ty
 	var _sound_asset = dialogue_typist_sound_bank[_sound_idx];
 	play_sfx(_sound_asset, dialogue_typist_gain);
 }));
+
+// Video playback support for VN portraits
+vn_video = -1;  // Video handle (-1 means no video active)
+vn_video_path = "";  // Path to current video file
+vn_video_surface = -1;  // Surface containing video frame

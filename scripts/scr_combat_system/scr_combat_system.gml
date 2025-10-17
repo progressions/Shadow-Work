@@ -86,6 +86,9 @@ function gain_xp(_amount) {
     xp += _amount;
     show_debug_message("Gained " + string(_amount) + " XP");
 
+    // Show floating text for XP gain (unified size for all XP sources)
+    spawn_xp_text(x, y - 16, _amount, id);
+
     // Check for level ups
     while (xp >= xp_to_next) {
         xp -= xp_to_next;

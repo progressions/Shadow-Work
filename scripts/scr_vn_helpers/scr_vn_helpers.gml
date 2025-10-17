@@ -78,6 +78,27 @@ function start_vn_dialogue(_companion_instance, _yarn_file, _start_node) {
 	global.vn_yarn_file = _yarn_file;
 	vn_reset_typist_state();
 
+	// Open video if companion has one
+	if (_companion_instance != noone && instance_exists(_companion_instance)) {
+		if (variable_instance_exists(_companion_instance, "vn_video_path") && _companion_instance.vn_video_path != "") {
+			if (instance_exists(obj_vn_controller)) {
+				with (obj_vn_controller) {
+					// Close any existing video first
+					if (vn_video != -1) {
+						video_close();
+						vn_video = -1;
+					}
+
+					// Open new video
+					vn_video_path = _companion_instance.vn_video_path;
+					vn_video = video_open(vn_video_path);
+					video_enable_loop(true);
+					show_debug_message("Opened VN dialogue video: " + vn_video_path);
+				}
+			}
+		}
+	}
+
 	// Stop all currently playing looped sounds (footsteps, etc.)
 	stop_all_footstep_sounds();
 	audio_group_set_gain(audiogroup_sfx_world, 0, 0);
@@ -149,6 +170,18 @@ function stop_vn_dialogue() {
 		}
 	}
 
+	// Close video if one is playing (only if not reopening another VN)
+	if (!will_reopen_vn && instance_exists(obj_vn_controller)) {
+		with (obj_vn_controller) {
+			if (vn_video != -1) {
+				video_close();
+				vn_video = -1;
+				vn_video_path = "";
+				show_debug_message("Closed VN dialogue video");
+			}
+		}
+	}
+
 	global.vn_active = false;
 	global.game_paused = false;
 	global.vn_companion = undefined;
@@ -205,14 +238,15 @@ function open_companion_talk_menu() {
 	start_vn_dialogue(noone, "CompanionTalkMenu.yarn", "Start");
 }
 
-/// @function start_vn_intro(_instance, _yarn_file, _start_node, _character_name, _portrait_sprite)
+/// @function start_vn_intro(_instance, _yarn_file, _start_node, _character_name, _portrait_sprite, _video_path)
 /// @description Start VN dialogue for non-companion intro (no theme song, recruitment vars)
 /// @param _instance The instance triggering the intro (can be noone for environmental triggers)
 /// @param _yarn_file Yarn file to load
 /// @param _start_node Starting node name
 /// @param _character_name Speaker name (use "" for no speaker)
 /// @param _portrait_sprite Portrait sprite index (use noone for no portrait)
-function start_vn_intro(_instance, _yarn_file, _start_node, _character_name = "", _portrait_sprite = noone) {
+/// @param _video_path Video file path (use "" for no video)
+function start_vn_intro(_instance, _yarn_file, _start_node, _character_name = "", _portrait_sprite = noone, _video_path = "") {
 	// Try to load yarn file - handle error if file doesn't exist
 	try {
 		ChatterboxLoadFromFile(_yarn_file);
@@ -250,6 +284,24 @@ function start_vn_intro(_instance, _yarn_file, _start_node, _character_name = ""
 	// Store character name and portrait for VN controller to use
 	global.vn_intro_character_name = _character_name;
 	global.vn_intro_portrait_sprite = _portrait_sprite;
+	global.vn_intro_video_path = _video_path;
+
+	// Open video if a path is provided
+	if (_video_path != "" && instance_exists(obj_vn_controller)) {
+		with (obj_vn_controller) {
+			// Close any existing video first
+			if (vn_video != -1) {
+				video_close();
+				vn_video = -1;
+			}
+
+			// Open new video
+			vn_video_path = _video_path;
+			vn_video = video_open(vn_video_path);
+			video_enable_loop(true);
+			show_debug_message("Opened VN video: " + vn_video_path);
+		}
+	}
 
 	// Stop all currently playing looped sounds (footsteps, etc.)
 	stop_all_footstep_sounds();
@@ -279,6 +331,18 @@ function stop_vn_intro() {
 	// Play VN close sound
 	play_sfx(snd_vn_close, 1);
 
+	// Close video if one is playing
+	if (instance_exists(obj_vn_controller)) {
+		with (obj_vn_controller) {
+			if (vn_video != -1) {
+				video_close();
+				vn_video = -1;
+				vn_video_path = "";
+				show_debug_message("Closed VN video");
+			}
+		}
+	}
+
 	// Clear VN state FIRST (before starting pan)
 	global.vn_active = false;
 	global.vn_intro_instance = undefined;
@@ -286,6 +350,7 @@ function stop_vn_intro() {
 	global.vn_yarn_file = "";
 	global.vn_intro_character_name = "";
 	global.vn_intro_portrait_sprite = noone;
+	global.vn_intro_video_path = "";
 	audio_group_set_gain(audiogroup_sfx_world, 1, 0);
 
 	// Trigger camera pan back to player (this will keep game paused during pan)

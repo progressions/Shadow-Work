@@ -24,33 +24,78 @@ draw_rectangle(dialogue_box_x, dialogue_box_y, dialogue_box_x + dialogue_box_wid
 draw_set_color(c_ltgray);
 draw_rectangle(dialogue_box_x, dialogue_box_y, dialogue_box_x + dialogue_box_width, dialogue_box_y + dialogue_box_height, true);
 
-// Draw tall portrait on left side (fit inside box with border visible)
-// Check for companion portrait first, then intro portrait
+// Draw portrait on left side - bottom aligned with dialogue box
+// Priority: video > companion portrait > intro portrait
 var _portrait_sprite = noone;
+var _has_video = (vn_video != -1);
 
-if (global.vn_companion != undefined && global.vn_companion != noone && instance_exists(global.vn_companion) && global.vn_companion.vn_sprite != undefined) {
-	_portrait_sprite = global.vn_companion.vn_sprite;
-} else if (variable_global_exists("vn_intro_portrait_sprite") && global.vn_intro_portrait_sprite != noone) {
-	_portrait_sprite = global.vn_intro_portrait_sprite;
+// Calculate bottom alignment position (match dialogue box bottom)
+var _bottom_y = dialogue_box_y + dialogue_box_height;
+var _available_width = portrait_width;
+
+// Check for video first
+if (_has_video) {
+	var _video_data = video_draw();
+	var _video_status = _video_data[0];
+
+	if (_video_status == 0) {
+		// Video is playing successfully
+		var _video_surface = _video_data[1];
+
+		if (surface_exists(_video_surface)) {
+			var _surf_width = surface_get_width(_video_surface);
+			var _surf_height = surface_get_height(_video_surface);
+
+			// Calculate scale to fit video width (let height be determined by aspect ratio)
+			var _scale = _available_width / _surf_width;
+
+			// Calculate scaled dimensions
+			var _scaled_width = _surf_width * _scale;
+			var _scaled_height = _surf_height * _scale;
+
+			// Position: centered horizontally, bottom-aligned
+			var _draw_x = portrait_x;
+			var _draw_y = _bottom_y - _scaled_height;
+
+			// Draw video surface
+			draw_surface_ext(_video_surface, _draw_x, _draw_y, _scale, _scale, 0, c_white, 1);
+
+			// Draw portrait border around the actual video dimensions
+			draw_set_color(c_white);
+			draw_rectangle(_draw_x, _draw_y, _draw_x + _scaled_width, _draw_y + _scaled_height, true);
+		}
+	}
 }
+// If no video, check for sprite portrait
+else {
+	if (global.vn_companion != undefined && global.vn_companion != noone && instance_exists(global.vn_companion) && global.vn_companion.vn_sprite != undefined) {
+		_portrait_sprite = global.vn_companion.vn_sprite;
+	} else if (variable_global_exists("vn_intro_portrait_sprite") && global.vn_intro_portrait_sprite != noone) {
+		_portrait_sprite = global.vn_intro_portrait_sprite;
+	}
 
-if (_portrait_sprite != noone && sprite_exists(_portrait_sprite)) {
-	var _sprite_width = sprite_get_width(_portrait_sprite);
-	var _sprite_height = sprite_get_height(_portrait_sprite);
+	if (_portrait_sprite != noone && sprite_exists(_portrait_sprite)) {
+		var _sprite_width = sprite_get_width(_portrait_sprite);
+		var _sprite_height = sprite_get_height(_portrait_sprite);
 
-	// Calculate scale to fit portrait inside box (use min to keep it within bounds)
-	var _available_width = portrait_width - 4;  // Leave space for border
-	var _available_height = portrait_height - 4;
-	var _scale = min(_available_width / _sprite_width, _available_height / _sprite_height);
+		// Calculate scale to fit width (let height be determined by aspect ratio)
+		var _scale = _available_width / _sprite_width;
 
-	// Draw portrait centered in left panel
-	var _draw_x = portrait_x + (portrait_width / 2);
-	var _draw_y = portrait_y + (portrait_height / 2);
-	draw_sprite_ext(_portrait_sprite, 0, _draw_x, _draw_y, _scale, _scale, 0, c_white, 1);
+		// Calculate scaled dimensions
+		var _scaled_width = _sprite_width * _scale;
+		var _scaled_height = _sprite_height * _scale;
 
-	// Draw portrait border
-	draw_set_color(c_white);
-	draw_rectangle(portrait_x, portrait_y, portrait_x + portrait_width, portrait_y + portrait_height, true);
+		// Position: left edge aligned, bottom-aligned
+		var _draw_x = portrait_x;
+		var _draw_y = _bottom_y - _scaled_height;
+
+		// Draw portrait sprite
+		draw_sprite_ext(_portrait_sprite, 0, _draw_x, _draw_y, _scale, _scale, 0, c_white, 1);
+
+		// Draw portrait border around actual sprite dimensions
+		draw_set_color(c_white);
+		draw_rectangle(_draw_x, _draw_y, _draw_x + _scaled_width, _draw_y + _scaled_height, true);
+	}
 }
 
 // Draw name tag above dialogue box

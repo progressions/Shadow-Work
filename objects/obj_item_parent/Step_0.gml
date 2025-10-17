@@ -29,3 +29,6 @@ else if (instance_exists(interaction_prompt)) {
     instance_destroy(interaction_prompt);
     interaction_prompt = noone;
 }
+
+// Y-sorted depth for proper rendering order
+depth = -bbox_bottom;

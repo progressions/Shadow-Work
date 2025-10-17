@@ -30,7 +30,24 @@ function spawn_immune_text(_x, _y, _parent_instance = noone) {
     var _floating_text = instance_create_layer(_x, _y, "Instances", obj_floating_text);
     _floating_text.text = "IMMUNE!";
     _floating_text.text_color = c_gray;
-    _floating_text.text_scale = 0.35; // Slightly larger than normal damage numbers
+    _floating_text.text_scale = 0.12; // Slightly larger than normal damage numbers
+
+    // Set parent instance to follow
+    if (_parent_instance != noone && instance_exists(_parent_instance)) {
+        _floating_text.parent_instance = _parent_instance;
+        _floating_text.offset_x = _x - _parent_instance.x;
+        _floating_text.offset_y = _y - _parent_instance.y;
+    }
+
+    return _floating_text;
+}
+
+// Spawn XP reward text
+function spawn_xp_text(_x, _y, _xp_amount, _parent_instance = noone) {
+    var _floating_text = instance_create_layer(_x, _y, "Instances", obj_floating_text);
+    _floating_text.text = "+" + string(_xp_amount) + " XP";
+    _floating_text.text_color = c_yellow;
+    _floating_text.text_scale = 0.1; // Scribble scale for readable text size
 
     // Set parent instance to follow
     if (_parent_instance != noone && instance_exists(_parent_instance)) {
