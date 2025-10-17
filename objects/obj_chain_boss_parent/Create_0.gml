@@ -78,6 +78,8 @@ chain_data = [];                          // Array of chain state structs
 
 // Auxiliary respawning
 enable_auxiliary_respawn = false;         // If true, boss will respawn auxiliaries when all are defeated
+auxiliary_respawn_cooldown = 480;         // Frames between respawns (8 seconds default)
+auxiliary_respawn_cooldown_timer = 0;     // Current respawn cooldown timer
 
 // Enrage state
 auxiliaries_alive = auxiliary_count;      // Counter for living auxiliaries

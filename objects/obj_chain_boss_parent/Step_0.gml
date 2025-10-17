@@ -5,6 +5,15 @@
 event_inherited();
 
 // ============================================
+// AUXILIARY RESPAWN COOLDOWN
+// ============================================
+
+// Countdown auxiliary respawn cooldown
+if (auxiliary_respawn_cooldown_timer > 0) {
+    auxiliary_respawn_cooldown_timer--;
+}
+
+// ============================================
 // ENRAGE PHASE SYSTEM
 // ============================================
 
@@ -55,9 +64,10 @@ if (enable_throw_attack && throw_state == "none" && throw_cooldown_timer <= 0) {
 
         // Check if player is in throw range
         if (_dist_to_player >= throw_range_min && _dist_to_player <= throw_range_max) {
-            // If no auxiliaries left and respawn enabled, respawn them first
-            if (auxiliaries_alive <= 0 && enable_auxiliary_respawn) {
+            // If no auxiliaries left and respawn enabled and cooldown elapsed, respawn them first
+            if (auxiliaries_alive <= 0 && enable_auxiliary_respawn && auxiliary_respawn_cooldown_timer <= 0) {
                 chain_boss_respawn_auxiliaries();
+                auxiliary_respawn_cooldown_timer = auxiliary_respawn_cooldown;
             }
 
             // Find an available auxiliary (not stunned, not already being thrown)
@@ -145,9 +155,10 @@ if (enable_spin_attack && spin_state == "none" && throw_state == "none" && spin_
     if (instance_exists(obj_player)) {
         var _dist_to_player = point_distance(x, y, obj_player.x, obj_player.y);
 
-        // If not enough auxiliaries and respawn enabled, respawn them first
-        if (auxiliaries_alive < 2 && enable_auxiliary_respawn) {
+        // If not enough auxiliaries and respawn enabled and cooldown elapsed, respawn them first
+        if (auxiliaries_alive < 2 && enable_auxiliary_respawn && auxiliary_respawn_cooldown_timer <= 0) {
             chain_boss_respawn_auxiliaries();
+            auxiliary_respawn_cooldown_timer = auxiliary_respawn_cooldown;
         }
 
         // Check if player is in spin range and boss has at least 2 living auxiliaries
