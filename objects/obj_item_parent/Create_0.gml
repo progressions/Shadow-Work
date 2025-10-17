@@ -81,7 +81,24 @@ function on_interact() {
                     // Determine if we should auto-equip based on slot
                     switch(other.item_def.equip_slot) {
                         case EquipSlot.right_hand:
-                            _should_equip = (equipped.right_hand == undefined);
+                            // Check if this is a ranged weapon
+                            var _is_ranged_weapon = false;
+                            var _stats = other.item_def.stats;
+                            if (_stats != undefined) {
+                                if (_stats[$ "is_ranged"] != undefined) {
+                                    _is_ranged_weapon = _stats[$ "is_ranged"];
+                                } else if (_stats[$ "requires_ammo"] != undefined) {
+                                    _is_ranged_weapon = true;
+                                }
+                            }
+
+                            // For ranged weapons, check the ranged loadout
+                            if (_is_ranged_weapon && variable_struct_exists(loadouts, "ranged")) {
+                                _should_equip = (loadouts.ranged.right_hand == undefined);
+                            } else {
+                                // For melee weapons, check the current equipped slot
+                                _should_equip = (equipped.right_hand == undefined);
+                            }
                             break;
 
                         case EquipSlot.left_hand:

@@ -31,10 +31,7 @@
   "resourceType":"GMObject",
   "resourceVersion":"2.0",
   "solid":false,
-  "spriteId":{
-    "name":"round_hud_frame",
-    "path":"sprites/round_hud_frame/round_hud_frame.yy",
-  },
+  "spriteId":null,
   "spriteMaskId":null,
   "visible":true,
 }

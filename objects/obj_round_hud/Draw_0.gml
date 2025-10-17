@@ -4,6 +4,34 @@ draw_self();
 var _sprite_height = sprite_get_height(round_hud_hp_bar);
 var _sprite_width = sprite_get_width(round_hud_hp_bar);
 
+// Draw simple red healthbar
+if (instance_exists(obj_player)) {
+    var _hp_bar_x1 = x + 24;
+    var _hp_bar_y1 = y + 90;
+    var _hp_bar_x2 = _hp_bar_x1 + 200;
+    var _hp_bar_y2 = _hp_bar_y1 + 20;
+
+    // Calculate HP percentage (0-100)
+    var _hp_percent = (obj_player.hp / obj_player.hp_total) * 100;
+
+    draw_healthbar(_hp_bar_x1, _hp_bar_y1, _hp_bar_x2, _hp_bar_y2, _hp_percent,
+                   c_dkgray,  // background color
+                   c_red,     // min color (low HP)
+                   c_red,     // max color (full HP)
+                   0,         // direction: 0 = left to right
+                   true,      // show background
+                   true);     // show border
+}
+
+// Draw dynamic HP text showing current/total HP
+if (instance_exists(obj_player)) {
+    scribble(string(obj_player.hp) + "/" + string(obj_player.hp_total))
+        .starting_format("fnt_quest", c_white)
+        .scale(0.5)
+        .draw(x+24, y+115);
+}
+
+/*
 // Draw all HUD elements at the object's GUI position
 draw_sprite(round_hud_xp_frame, 0, x+24, y+110);
 
@@ -26,9 +54,10 @@ if (instance_exists(obj_player)) {
         y + 110              // y position
     );
 }
+*/
+// draw_sprite(round_hud_hp_bar_bg, 0, x+24, y+20);
 
-draw_sprite(round_hud_hp_bar_bg, 0, x+24, y+20);
-
+/*
 // Draw HP bar filled from bottom to top based on player HP
 if (instance_exists(obj_player)) {
 
@@ -48,7 +77,9 @@ if (instance_exists(obj_player)) {
 }
 
 draw_sprite(round_hud_level, 0, x+20, y+106);
+*/
 
+/*
 // Draw player level
 if (instance_exists(obj_player)) {
     // Draw text at normal size (create a larger font resource if you need bigger text)
@@ -58,6 +89,7 @@ if (instance_exists(obj_player)) {
 		.draw(x + 32, y + _sprite_height - 12)
 
 }
+*/
 
 // Draw melee loadout weapon slot
 draw_sprite(round_hud_melee_slot, 0, x + 20, y + 180);
@@ -104,7 +136,7 @@ if (instance_exists(obj_player)) {
         }
     }
 
-    draw_sprite_ext(spr_dash_icon, _dash_frame, x + 8, y + _sprite_height + 150, 1, 1, 0, _dash_color, 1);
+    draw_sprite_ext(spr_dash_icon, _dash_frame, x + 8, y + _sprite_height + 150, 2, 2, 0, _dash_color, 1);
 }
 
 // Build status effect display string
