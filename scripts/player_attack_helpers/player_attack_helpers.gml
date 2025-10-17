@@ -186,6 +186,7 @@ function player_attack_apply_damage(_attacker, _enemy, _info) {
                 process_attack_cc_effects(_attacker_id, self, _weapon_stats_primary);
             }
 
+            // Only apply status effects from the attacking weapon (right hand for melee attacks)
             if (variable_instance_exists(_attacker_id, "equipped") && _attacker_id.equipped != undefined) {
                 if (_attacker_id.equipped.right_hand != undefined) {
                     var _right_stats = _attacker_id.equipped.right_hand.definition.stats;
@@ -198,22 +199,6 @@ function player_attack_apply_damage(_attacker, _enemy, _info) {
 
                             if (variable_global_exists("debug_mode") && global.debug_damage_reduction) {
                                 show_debug_message("Weapon applied trait effect: " + string(status_effect_resolve_trait(_effect)));
-                            }
-                        }
-                    }
-                }
-
-                if (_attacker_id.equipped.left_hand != undefined) {
-                    var _left_stats = _attacker_id.equipped.left_hand.definition.stats;
-                    var _left_effects = get_weapon_status_effects(_left_stats);
-
-                    for (var _j = 0; _j < array_length(_left_effects); _j++) {
-                        var _left_effect = _left_effects[_j];
-                        if (random(1) < _left_effect.chance) {
-                            apply_status_effect(_left_effect);
-
-                            if (variable_global_exists("debug_mode") && global.debug_damage_reduction) {
-                                show_debug_message("Offhand applied trait effect: " + string(status_effect_resolve_trait(_left_effect)));
                             }
                         }
                     }
