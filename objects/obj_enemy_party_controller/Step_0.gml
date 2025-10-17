@@ -1,7 +1,15 @@
 /// @description Update party state each frame
 
+// DEBUG: Check if Step event is running
+if (object_index == obj_canopy_threat) {
+    show_debug_message("CANOPY THREAT STEP EVENT RUNNING - patrol_original_state=" + string(patrol_original_state));
+}
+
 // Evaluate weighted decision for patrol vs engage
 if (patrol_original_state == PartyState.patrolling || patrol_original_state == PartyState.protecting) {
+    if (object_index == obj_canopy_threat) {
+        show_debug_message("About to call evaluate_patrol_decision");
+    }
     var _decision = evaluate_patrol_decision();
 
     if (_decision == "engage") {
@@ -59,7 +67,46 @@ if (patrol_original_state == PartyState.patrolling || patrol_original_state == P
 update_party_state();
 
 // Update decision weights for party members (staggered round-robin)
-if (array_length(party_members) > 0) {
+// OR put them in party_formation state if in patrol/protect mode
+var _should_calculate_weights = true;
+
+if (patrol_original_state == PartyState.patrolling || patrol_original_state == PartyState.protecting) {
+    var _decision = evaluate_patrol_decision();
+    if (_decision == "patrol") {
+        // Party is staying on patrol - put all enemies in party_formation state
+        _should_calculate_weights = false;
+
+        // Set all enemies to party_formation state
+        for (var i = 0; i < array_length(party_members); i++) {
+            var _enemy = party_members[i];
+            if (instance_exists(_enemy)) {
+                // Put enemy in party_formation state
+                if (_enemy.state != EnemyState.party_formation) {
+                    _enemy.state = EnemyState.party_formation;
+                }
+
+                // Set formation position as target
+                var _form_pos = get_formation_position(_enemy);
+                if (_form_pos != undefined) {
+                    _enemy.formation_target_x = _form_pos.x;
+                    _enemy.formation_target_y = _form_pos.y;
+                    _enemy.objective_target_x = _form_pos.x;
+                    _enemy.objective_target_y = _form_pos.y;
+                }
+            }
+        }
+    } else {
+        // Party is engaging - transition enemies out of party_formation state
+        for (var i = 0; i < array_length(party_members); i++) {
+            var _enemy = party_members[i];
+            if (instance_exists(_enemy) && _enemy.state == EnemyState.party_formation) {
+                _enemy.state = EnemyState.targeting;
+            }
+        }
+    }
+}
+
+if (_should_calculate_weights && array_length(party_members) > 0) {
     // Calculate how many to update this frame (1-2 members)
     var _updates_per_frame = min(2, array_length(party_members));
 

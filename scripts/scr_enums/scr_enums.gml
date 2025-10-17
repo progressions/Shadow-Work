@@ -20,6 +20,7 @@ enum EnemyState {
 	hazard_spawning,
 	dead = 5,
 	wander,
+	party_formation,  // Following formation position in patrol/protect party
 }
 
 enum CompanionState {

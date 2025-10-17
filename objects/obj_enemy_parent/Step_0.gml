@@ -286,6 +286,15 @@ if (is_stunned && is_staggered) {
             }
             break;
 
+        case EnemyState.party_formation:
+            // Following formation position in patrol/protect party
+            if (!is_staggered) {
+                enemy_state_party_formation();
+            } else {
+                enemy_state_idle();
+            }
+            break;
+
         case EnemyState.idle:
             enemy_state_idle();
             break;

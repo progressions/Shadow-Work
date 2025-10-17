@@ -1,0 +1,20 @@
+{
+  "$GMPath":"",
+  "%Name":"path_canopy_guard_idle",
+  "closed":true,
+  "kind":1,
+  "name":"path_canopy_guard_idle",
+  "parent":{
+    "name":"Paths",
+    "path":"folders/Paths.yy",
+  },
+  "points":[
+    {"speed":100.0,"x":649.29175,"y":403.92706,},
+    {"speed":100.0,"x":743.29175,"y":447.92706,},
+    {"speed":100.0,"x":640.29175,"y":511.92706,},
+    {"speed":100.0,"x":601.3696,"y":434.72943,},
+  ],
+  "precision":4,
+  "resourceType":"GMPath",
+  "resourceVersion":"2.0",
+}
