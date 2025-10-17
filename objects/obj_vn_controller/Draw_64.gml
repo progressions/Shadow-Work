@@ -69,11 +69,16 @@ if (current_speaker != "") {
 	draw_set_color(c_white);
 	draw_set_halign(fa_center);
 	draw_set_valign(fa_middle);
-	
+
+	// Draw name centered in name box
+	var _name_center_x = name_tag_x + _name_width / 2;
+	var _name_center_y = name_tag_y + name_tag_height / 2;
+
 	scribble(current_speaker)
 		.starting_format("fnt_vn", c_white)
+		.align(fa_center, fa_middle)
 		.scale(0.5)
-		.draw(name_tag_x, name_tag_y)
+		.draw(_name_center_x, _name_center_y)
 }
 
 // Draw dialogue text with Scribble + typist animation
