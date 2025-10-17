@@ -1,5 +1,18 @@
 /// Quest Marker Step Event
-/// Handle animation looping and quest completion detection
+/// Handle animation looping, target tracking, and quest completion detection
+
+// Track moving target if assigned
+if (tracked_instance != noone) {
+    if (instance_exists(tracked_instance)) {
+        // Update position to follow target with offset
+        x = tracked_instance.x + target_offset_x;
+        y = tracked_instance.y + target_offset_y;
+    } else {
+        // Target destroyed - destroy marker
+        instance_destroy();
+        exit;
+    }
+}
 
 // Update animation frame
 image_index += image_speed;

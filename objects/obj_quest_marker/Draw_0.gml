@@ -34,28 +34,27 @@ if (_on_screen) {
         var _norm_y = _dir_y / _dist;
 
         // Position arrow at screen edge, pointing toward marker
-        var _arrow_x = _screen_center_x + _norm_x * (_cam_w / 2 - offscreen_arrow_distance);
-        var _arrow_y = _screen_center_y + _norm_y * (_cam_h / 2 - offscreen_arrow_distance);
+        var _arrow_x = _screen_center_x + _norm_x * (_cam_w / 2 - 5);
+        var _arrow_y = _screen_center_y + _norm_y * (_cam_h / 2 - 5);
 
-        // Draw arrow pointing toward marker
+        // Draw arrow sprite pointing toward marker
         var _angle = point_direction(_screen_center_x, _screen_center_y, _marker_x, _marker_y);
 
-        draw_set_alpha(offscreen_arrow_alpha);
-        draw_set_color(offscreen_arrow_color);
+        // Sprite naturally points up, add 90° to align with GameMaker's rotation
+        // Add 180° to flip direction (was pointing opposite)
+        var _rotation = _angle - 90;
 
-        // Draw simple arrow shape pointing toward marker
-        // Center triangle pointing in direction of marker
-        var _arrow_size = 16;
-        var _arrow_tip_x = _arrow_x + lengthdir_x(_arrow_size, _angle);
-        var _arrow_tip_y = _arrow_y + lengthdir_y(_arrow_size, _angle);
-        var _arrow_left_x = _arrow_x + lengthdir_x(_arrow_size * 0.7, _angle + 140);
-        var _arrow_left_y = _arrow_y + lengthdir_y(_arrow_size * 0.7, _angle + 140);
-        var _arrow_right_x = _arrow_x + lengthdir_x(_arrow_size * 0.7, _angle - 140);
-        var _arrow_right_y = _arrow_y + lengthdir_y(_arrow_size * 0.7, _angle - 140);
-
-        draw_triangle(_arrow_tip_x, _arrow_tip_y, _arrow_left_x, _arrow_left_y, _arrow_right_x, _arrow_right_y, false);
-
-        draw_set_alpha(1);
-        draw_set_color(c_white);
+        // Draw arrow sprite with rotation, color, and alpha
+        draw_sprite_ext(
+            spr_quest_pointer,          // Arrow sprite
+            0,                          // Frame (use first frame)
+            _arrow_x,                   // X position
+            _arrow_y,                   // Y position
+            1,                          // X scale
+            1,                          // Y scale
+            _rotation,                  // Rotation angle
+            offscreen_arrow_color,      // Color blend
+            offscreen_arrow_alpha       // Alpha transparency
+        );
     }
 }

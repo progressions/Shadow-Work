@@ -21,7 +21,8 @@ onboarding_initialize_for_room([
             return action_tracker_has("chest_opened");
         },
         xp_reward: 75,
-        completed: false
+        completed: false,
+        marker_location: {x: 331, y: 245}
     },
 
     // Quest 3: Pick up a weapon
@@ -43,7 +44,8 @@ onboarding_initialize_for_room([
             return action_tracker_has("npc_interaction_canopy");
         },
         xp_reward: 100,
-        completed: false
+        completed: false,
+        marker_location: {target: instance_find(obj_canopy, 0), offset_x: -8, offset_y: -32}
     },
 
     // Quest 5: Give torch to Canopy

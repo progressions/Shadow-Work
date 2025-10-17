@@ -25,7 +25,7 @@ if (instance_exists(obj_player)) {
 
 // Draw dynamic HP text showing current/total HP
 if (instance_exists(obj_player)) {
-    scribble(string(obj_player.hp) + "/" + string(obj_player.hp_total))
+    scribble(string(floor(obj_player.hp)) + "/" + string(floor(obj_player.hp_total)))
         .starting_format("fnt_quest", c_white)
         .scale(0.5)
         .draw(x+24, y+115);

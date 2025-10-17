@@ -142,11 +142,36 @@ function onboarding_advance_to_next_quest() {
     if (variable_struct_exists(global.onboarding_quests.current_quest, "marker_location")) {
         var _marker_loc = global.onboarding_quests.current_quest.marker_location;
         if (_marker_loc != undefined) {
-            onboarding_spawn_marker(
-                global.onboarding_quests.current_quest.quest_id,
-                _marker_loc.x,
-                _marker_loc.y
-            );
+            // Support static position {x, y} OR dynamic target {target: instance}
+            if (variable_struct_exists(_marker_loc, "target")) {
+                // Dynamic target tracking
+                var _target = _marker_loc.target;
+                if (instance_exists(_target)) {
+                    var _marker = onboarding_spawn_marker(
+                        global.onboarding_quests.current_quest.quest_id,
+                        _target.x,
+                        _target.y - 24
+                    );
+
+                    // Use 'with' to safely set variables on newly created instance
+                    with (_marker) {
+                        tracked_instance = _target;
+                        if (variable_struct_exists(_marker_loc, "offset_x")) {
+                            target_offset_x = _marker_loc.offset_x;
+                        }
+                        if (variable_struct_exists(_marker_loc, "offset_y")) {
+                            target_offset_y = _marker_loc.offset_y;
+                        }
+                    }
+                }
+            } else {
+                // Static position
+                onboarding_spawn_marker(
+                    global.onboarding_quests.current_quest.quest_id,
+                    _marker_loc.x,
+                    _marker_loc.y
+                );
+            }
         }
     }
 }
@@ -183,11 +208,36 @@ function onboarding_start_sequence() {
     if (variable_struct_exists(global.onboarding_quests.current_quest, "marker_location")) {
         var _marker_loc = global.onboarding_quests.current_quest.marker_location;
         if (_marker_loc != undefined) {
-            onboarding_spawn_marker(
-                global.onboarding_quests.current_quest.quest_id,
-                _marker_loc.x,
-                _marker_loc.y
-            );
+            // Support static position {x, y} OR dynamic target {target: instance}
+            if (variable_struct_exists(_marker_loc, "target")) {
+                // Dynamic target tracking
+                var _target = _marker_loc.target;
+                if (instance_exists(_target)) {
+                    var _marker = onboarding_spawn_marker(
+                        global.onboarding_quests.current_quest.quest_id,
+                        _target.x,
+                        _target.y - 24
+                    );
+
+                    // Use 'with' to safely set variables on newly created instance
+                    with (_marker) {
+                        tracked_instance = _target;
+                        if (variable_struct_exists(_marker_loc, "offset_x")) {
+                            target_offset_x = _marker_loc.offset_x;
+                        }
+                        if (variable_struct_exists(_marker_loc, "offset_y")) {
+                            target_offset_y = _marker_loc.offset_y;
+                        }
+                    }
+                }
+            } else {
+                // Static position
+                onboarding_spawn_marker(
+                    global.onboarding_quests.current_quest.quest_id,
+                    _marker_loc.x,
+                    _marker_loc.y
+                );
+            }
         }
     }
 }
@@ -225,8 +275,9 @@ function onboarding_is_complete() {
 /// @param {real} marker_y Y position for the marker
 /// @return {id} Instance ID of created marker, or noone if failed
 function onboarding_spawn_marker(_quest_id, _marker_x, _marker_y) {
-    if (!instance_exists(obj_quest_marker)) {
-        show_debug_message("[Onboarding] Error: obj_quest_marker does not exist");
+    // Check if the object type exists (not instance)
+    if (!object_exists(obj_quest_marker)) {
+        show_debug_message("[Onboarding] Error: obj_quest_marker object does not exist");
         return noone;
     }
 

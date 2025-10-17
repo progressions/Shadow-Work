@@ -40,3 +40,6 @@ enemy_anim_overrides = {
     ranged_attack_left: {start: 42, length: 4},
     ranged_attack_up: {start: 46, length: 3}
 };
+
+ state = EnemyState.wander;
+ aggro_distance = 90;
