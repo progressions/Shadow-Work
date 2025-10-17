@@ -15,7 +15,7 @@ This is a GameMaker Studio 2 project for a top-down action RPG called "Shadow Wo
 - **Sounds**: `/sounds/` - Audio files with variant randomization support
 - **Rooms**: `/rooms/` - Game levels/scenes
 - **Tilesets**: `/tilesets/` - Tile-based level building assets
-- **Documentation**: `/docs/` - System documentation (party system, containers, traits, etc.)
+- **Documentation**: `/docs/` - System documentation (see below for complete list)
 
 ## Development Commands
 
@@ -67,1008 +67,191 @@ Key global variables that coordinate systems:
 - **Step Events** - State machines, animation updates, AI logic
 - **Draw Events** - Custom rendering (HP bars, effects, UI overlays)
 
-## Combat System Architecture
+## Core Gameplay Systems
 
-### Damage Calculation Pipeline (Player Attacks)
-1. **Base Damage** → Get from equipped weapon stats (with versatile/dual-wield modifiers)
-2. **Status Effect Modifiers** → Apply damage buffs/debuffs via `get_status_effect_modifier("damage")`
-3. **Companion Bonuses** → Add attack bonuses from companion auras via `get_companion_attack_bonus()`
-4. **Critical Hit Roll** → Roll against `crit_chance`, multiply by `crit_multiplier` if successful
-5. **Dash Attack Bonus** → Apply 1.5x multiplier if `is_dash_attacking` is true
+### Combat System
 
-### Damage Reduction Pipeline (When Hit)
-1. **Damage Type Modifier** → Apply trait-based resistance/vulnerability via `get_damage_modifier_for_type()`
-2. **Equipment DR** → Subtract general + category-specific DR (melee or ranged)
-3. **Companion DR** → Add DR bonuses from companion auras
-4. **Defense Trait Modifier** → Multiply total DR by defense modifier from traits (bolstered/sundered)
-5. **Chip Damage** → If final damage ≤ 0, apply 1 chip damage minimum
+The combat system features layered damage calculation and reduction pipelines with trait-based modifiers.
 
-### Attack Categories
-- **AttackCategory.melee** - Sword swings, dagger strikes, unarmed attacks
-- **AttackCategory.ranged** - Arrows, thrown weapons, projectiles
-- Affects which DR calculation to use (`get_equipment_melee_dr()` vs `get_equipment_ranged_dr()`)
+**Quick Reference:**
+- **Damage Pipeline**: Base Damage → Status Modifiers → Companion Bonuses → Dash Multiplier → Critical Hit
+- **Reduction Pipeline**: Trait Modifier → Equipment DR → Companion DR → Defense Traits → Chip Damage
+- **Attack Categories**: melee (swords, daggers) vs ranged (arrows, projectiles)
 
-### Combat Visual Feedback
-- **Freeze Frame** - 2-4 frame pause on hit (`freeze_frame(duration)`)
-- **Screen Shake** - Intensity based on weapon (daggers=2, swords=4, two-handed=8)
-- **Enemy Flash** - White flash (normal hit) or red flash (crit) via `enemy_flash(color, duration)`
-- **Hit Sparkles** - Spray particles away from impact using `spawn_hit_effect(x, y, direction)`
-- **Slow-Mo** - 0.5s bullet-time on companion triggers via `activate_slowmo(0.5)`
-- **Damage Numbers** - Color-coded floating text showing damage amount and type
+**See:** `/docs/COMBAT_SYSTEM.md` for complete damage calculation documentation
 
 **Key Files:**
-- `/scripts/scr_combat_system/scr_combat_system.gml` - Core damage calculation and combat helpers
-- `/objects/obj_attack/Create_0.gml` - Melee attack instance creation
-- `/objects/obj_arrow/Create_0.gml` - Ranged attack projectile
-- `/objects/obj_enemy_parent/Collision_obj_attack.gml` - Damage application to enemies
+- `/scripts/scr_combat_system/scr_combat_system.gml` - Core damage calculation
+- `/objects/obj_attack/Create_0.gml` - Melee attack instances
+- `/objects/obj_arrow/Create_0.gml` - Ranged attack projectiles
+- `/objects/obj_enemy_parent/Collision_obj_attack.gml` - Damage application
 
-## Major Gameplay Behaviors
+### Damage Type System
 
-### Dashing System
+Nine damage types with trait-based resistance/vulnerability/immunity system.
 
-**Trigger:** Double-tap W/A/S/D within 300ms window
+**Damage Types**: physical, magical, fire, ice, lightning, poison, disease, holy, unholy
 
-**Core Mechanics:**
-- **Duration:** 8 frames (~0.13 seconds)
-- **Speed:** 6 pixels/frame (modified by terrain and status effects)
-- **Cooldown:** 75 frames (~1.25 seconds)
-- **Momentum:** 60% of dash speed carries over as velocity after dash ends
-- **Direction:** Based on `facing_dir` or `dash_override_direction` (for retreat dashes)
+**See:** `/docs/DAMAGE_TYPE_SYSTEM.md` for complete damage type documentation
 
-**Dash Properties:**
-- Interrupted by stagger effects
-- Uses `move_and_collide()` for wall collision
-- Notifies companions via `companion_on_player_dash()` for reactive triggers
-- Cooldown reduced by companion auras (Hola's Slipstream: 10-30%)
+**Key Files:**
+- `/scripts/scr_enums/scr_enums.gml` - DamageType enum
+- `/scripts/scr_damage_type_helpers/scr_damage_type_helpers.gml` - Conversion and color functions
 
-**Animation:**
-- Dedicated 4-frame animations per direction (frames 26-41 in player sprite)
-- Manual frame control with `image_speed = 0`
+### Player Mechanics
 
-**Key Variables:**
-```gml
-dash_speed = 6;                  // Base dash speed
-dash_duration = 8;               // Frames
-dash_cooldown_time = 75;         // Frames between dashes
-dash_override_direction = "";    // For retreat/focus dashes
-last_dash_direction = "";        // Tracks dash direction
-```
+**Dashing**: Double-tap movement for 8-frame burst (6 px/frame) with 60% momentum carryover
+**Dash Attack**: Collision damage during dash + 0.4s attack window after (1.5x damage, -25% DR trade-off)
+**Shield Blocking**: Partially implemented (animations complete, damage blocking not yet implemented)
+
+**See:** `/docs/PLAYER_MECHANICS.md` for complete player mechanics documentation
 
 **Key Files:**
 - `/scripts/player_handle_dash_input/player_handle_dash_input.gml` - Double-tap detection
-- `/scripts/player_state_dashing/player_state_dashing.gml` - Movement logic
-- `/scripts/player_handle_dash_cooldown/player_handle_dash_cooldown.gml` - Cooldown reduction
-- `/objects/obj_player/Create_0.gml` - `start_dash()` function (lines 243-260)
+- `/scripts/player_state_dashing/player_state_dashing.gml` - Dash movement
+- `/scripts/player_dash_attack/player_dash_attack.gml` - Dash attack system
+- `/scripts/player_state_shielding/player_state_shielding.gml` - Shield blocking
 
----
+### Ranged Combat
 
-### Dash Attack System
+**Player**: Bows require ammo, range profiles for damage falloff, speed 2 px/frame
+**Enemy**: Unlimited ammo, can move while shooting, speed 4 px/frame, can crit player
+**Special**: Hola companion wind deflection aura bends enemy arrows away from player
 
-**Two Attack Types:**
-
-**1. Collision Damage (During Dash):**
-- Damages enemies by dashing through them
-- Target cap scales with player level (1-4 enemies)
-- 1.5x damage multiplier applied
-- Respects normal damage calculations (crits, traits, equipment)
-- Uses line collision detection to prevent tunneling
-- Sound: `snd_dash_attack` on first hit
-
-**2. Post-Dash Attack Window:**
-- **Window Duration:** 0.4 seconds after dash completes
-- **Activation:** Attack within window AND in same direction as dash
-- **Damage Bonus:** 1.5x multiplier
-- **Trade-off:** Applies defense vulnerability (-25% DR) for 1 second
-- **Cancellation:** Window cancelled if player changes direction
-
-**Damage Calculation Order:**
-1. Base weapon damage → Status effects → **Dash multiplier (1.5x)** → Companion bonuses → Execution bonus → Critical hit
-
-**Target Cap by Level:**
-- Level 1-4: 1 enemy
-- Level 5-9: 2 enemies
-- Level 10-14: 3 enemies
-- Level 15+: 4 enemies
-
-**Visual Feedback:**
-- Screen shake (2-8 pixels based on weapon handedness)
-- Hit sparkles spray from impact
-- Enemy flash (white/red for crit)
-- Damage numbers
-
-**Key Variables:**
-```gml
-is_dash_attacking = false;              // Flag for damage calculation
-dash_attack_window = 0;                 // Timer for post-dash window
-dash_attack_window_duration = 0.4;      // Window length in seconds
-dash_attack_damage_multiplier = 1.5;    // +50% damage
-dash_attack_defense_penalty = 0.75;     // -25% DR penalty
-dash_hit_enemies = -1;                  // DS list of hit enemies
-dash_target_cap = 1;                    // Max targets (scales with level)
-```
+**See:** `/docs/RANGED_ATTACK_SYSTEM_TECHNICAL.md` for complete ranged combat documentation
 
 **Key Files:**
-- `/scripts/player_dash_attack/player_dash_attack.gml` - Collision damage and tracking
-- `/scripts/player_attacking/player_attacking.gml` - Post-dash window logic (lines 69-88)
-- `/scripts/scr_combat_system/scr_combat_system.gml` - Damage multiplier application (lines 36-40)
-- `/docs/dash_attack.md` - Complete dash attack documentation
-
----
-
-### Shield Blocking System
-
-**Status:** Partially implemented (animations and state complete, damage blocking NOT implemented)
-
-**Trigger:** Hold **O** key with shield equipped in left hand
-
-**Current Implementation:**
-- **State Management:** `PlayerState.shielding` entry/exit functional
-- **Animation:** Shield raise animation (frames 61-73, 3 frames per direction)
-- **Movement:** Omnidirectional strafing while shield is raised
-- **Facing Lock:** Shield direction locked on entry, player can strafe
-- **Perfect Block Window:** 18 frames (~0.3s) tracked after animation completes
-- **Cooldown System:** 60 frames normal, 30 frames perfect block
-- **Visual Polish:** Shield moves 6 pixels forward when blocking
-
-**NOT Implemented:**
-- ❌ Damage reduction on block
-- ❌ Projectile collision detection
-- ❌ Perfect block projectile destruction
-- ❌ Directional blocking (front arc checks)
-- ❌ Shield-specific properties (block arc, DR amounts)
-- ❌ Integration with hazard/arrow collision events
-
-**Animation Frames:**
-- shielding_down: 61-63
-- shielding_right: 64-66
-- shielding_left: 67-69
-- shielding_up: 70-72
-
-**Key Variables:**
-```gml
-block_cooldown = 0;                      // Current cooldown
-block_cooldown_max = 60;                 // Normal cooldown (1s)
-block_cooldown_perfect_max = 30;         // Perfect block cooldown (0.5s)
-perfect_block_window = 0;                // Perfect block active frames
-perfect_block_window_duration = 18;      // Perfect block window (~0.3s)
-shield_raise_complete = false;           // Animation finished?
-shield_facing_dir = "down";              // Locked direction
-```
-
-**Key Files:**
-- `/scripts/player_state_shielding/player_state_shielding.gml` - State logic
-- `/scripts/player_handle_animation/player_handle_animation.gml` - Animation (lines 89-113)
-- `/objects/obj_player/Create_0.gml` - Variable initialization (lines 214-222)
-
-**Implementation Note:** Shield blocking requires Task 2-6 from spec in `.agent-os/specs/2025-10-16-shield-block-system/` to become functional for actual damage mitigation.
-
----
-
-### Ranged Attack System
-
-#### Player Ranged Attacks
-
-**Equipment:**
-- **Wooden Bow:** 2 damage, 1.2 speed, 120 range
-- **Longbow:** 5 damage, 1.0 speed, 150 range
-- **Crossbow:** 3 damage, 0.6 speed, 140 range (one-handed)
-- **Heavy Crossbow:** 6 damage, 0.4 speed, 160 range, 30% armor pen
-
-**Ammo System:**
-- Requires arrows in inventory (stackable, max 99)
-- Ammo consumed at start of windup (prevents waste if interrupted)
-- Check via `has_ammo("arrows")`, consume via `consume_ammo("arrows", 1)`
-
-**Attack Flow:**
-1. **Windup Phase:** Enter attacking state, play `snd_ranged_windup`, consume ammo
-2. **Animation:** Ranged attack animation plays
-3. **Arrow Spawn:** Create `obj_arrow` when animation completes
-4. **Spawn Position:** Direction-based offsets (right: +16/+8, up: +16/-16, etc.)
-5. **Properties:** Damage from `get_total_damage()`, speed 2 px/frame, range profile applied
-
-**Range Profile System:**
-Range profiles control distance-based damage falloff with 3 zones:
-- **Point Blank:** Reduced damage (0.5x-0.7x) at close range
-- **Optimal Range:** Full 1.0x damage in sweet spot
-- **Long Range:** Falloff to 0.4x-0.6x at max distance
-
-Example (Longbow):
-- Point blank: 0-148px @ 0.5x damage
-- Optimal: 160-260px @ 1.0x damage
-- Max: 340px @ 0.6x damage
-
-**Arrow Collision:**
-- **Enemies:** Apply ranged damage with range multiplier, enemy ranged DR subtraction
-- **Walls:** Destroy arrow, play `snd_bump`
-- **Out of bounds:** Auto-destroy
-
-**Key Files:**
-- `/scripts/player_attacking/player_attacking.gml` - Windup and spawn logic (lines 193-300)
-- `/objects/obj_arrow/Create_0.gml` - Arrow initialization
-- `/objects/obj_arrow/Step_0.gml` - Range falloff and collision
+- `/scripts/player_attacking/player_attacking.gml` - Player ranged attack windup
+- `/objects/obj_arrow/` - Player arrow projectile
+- `/objects/obj_enemy_arrow/` - Enemy arrow projectile
 - `/scripts/scr_projectile_range_profiles/scr_projectile_range_profiles.gml` - Range profiles
 
-#### Enemy Ranged Attacks
+### Boss Mechanics
 
-**Configuration:**
-Enemies with `is_ranged_attacker = true` have ranged attack stats:
-```gml
-ranged_attack = {
-    damage: ranged_damage,
-    damage_type: ranged_damage_type,
-    chance_to_stun: 0.03,        // Lower than melee
-    chance_to_stagger: 0.08,
-    stun_duration: 1.2,
-    stagger_duration: 0.8,
-    range: attack_range
-};
-```
+**Chain Boss**: Boss physically chained to 2-5 auxiliaries. Auxiliaries grant DR, boss enrages when all die. Special attacks: Throw Attack (launches auxiliary), Spin Attack (orbital collision damage).
 
-**Attack Flow:**
-1. Enter `EnemyState.ranged_attacking`
-2. Aim at player (update `facing_dir`)
-3. Play ranged attack animation
-4. Spawn projectile (default: `obj_enemy_arrow`)
-5. **Can move while shooting** (unlike melee attacks)
-6. Return to targeting after cooldown
+**Hazard Spawning**: Projectile delivery system for persistent AOE hazards. Visual telegraph, range-based damage, optional explosion, layered damage opportunities.
 
-**Enemy Arrow Properties:**
-- **Speed:** 4 pixels/frame (faster than player arrows)
-- **Damage:** Enemy ranged damage × status modifier × crit multiplier
-- **Crit System:** Enemies can crit player with their ranged attacks
-- **Collision:** Applies player trait resistance + ranged DR
-
-**Special Feature - Wind Deflection:**
-- Hola companion (affinity 5+) deflects arrows with aura
-- Deflection scales with proximity and affinity
-- Max 15° deflection per frame at close range with max affinity
-- Gradually bends trajectory away from player
-
-**Dual-Mode Integration:**
-- Enemies with `enable_dual_mode = true` switch between melee and ranged
-- Decision based on distance, formation role, and cooldowns
-- Separate cooldowns for each attack mode
-
-**Key Differences:**
-
-| Feature | Player Arrows | Enemy Arrows |
-|---------|--------------|--------------|
-| Speed | 2 px/frame | 4 px/frame |
-| Ammo | Requires arrows | Unlimited |
-| Movement | No (attacking state) | Yes (can kite) |
-| Crit System | No crits | Enemy can crit |
-| Special | Range profiles | Wind deflection aura |
+**See:** `/docs/BOSS_MECHANICS.md` for complete boss mechanics documentation
 
 **Key Files:**
-- `/scripts/enemy_handle_ranged_attack/enemy_handle_ranged_attack.gml` - Enemy firing
-- `/objects/obj_enemy_arrow/Create_0.gml` - Enemy arrow init
-- `/objects/obj_enemy_arrow/Step_0.gml` - Wind deflection and collision
-- `/scripts/scr_enemy_state_ranged_attacking/scr_enemy_state_ranged_attacking.gml` - Attack state
-
----
-
-### Chain Boss System
-
-**Boss Identity:** `obj_chain_boss_parent` (Fire variant: `obj_chain_boss`)
-
-**Core Concept:** Boss is physically chained to 2-5 auxiliary minions (Fire Imps for fire variant)
-
-#### Chain Mechanics
-
-**Chain Constraints:**
-- Auxiliaries spawn in circular formation at 50% of `chain_max_length` (96 pixels default)
-- **Hard Boundary:** Auxiliaries cannot move beyond chain length
-- Position clamped using circular constraint after movement
-- Pathfinding stops when hitting chain boundary
-
-**Visual Chains:**
-- Drawn with parabolic sag effect (tension-based)
-- Tension < 0.7: Visible sag (up to 20 pixels)
-- Tension ≥ 0.7: Taut/straight chains
-- Chain sprite: `spr_chain` (4×8 pixel links)
-- Chains drawn before boss (boss appears on top)
-
-**Auxiliary-Based DR:**
-- Each living auxiliary grants +2 DR to boss (configurable)
-- Example: 4 auxiliaries = +8 DR
-- DR bonus dynamically decreases as auxiliaries die
-- Applied in damage calculation pipeline
-
-#### Boss Phases
-
-**Enrage Phase (all auxiliaries dead):**
-- **Attack Speed:** ×1.5
-- **Move Speed:** ×1.3
-- **Damage:** ×1.2 (melee and ranged)
-- **Visual:** Boss turns red (`image_blend = c_red`)
-- **Sound:** Plays enrage sound
-
-#### Advanced Attack #1: Throw Attack
-
-**Configuration:**
-```gml
-enable_throw_attack = true;
-throw_cooldown = 300;           // 5 seconds
-throw_windup_time = 30;         // 0.5 seconds
-throw_range_min = 64;
-throw_range_max = 256;
-throw_projectile_speed = 4;
-throw_return_speed = 3;
-```
-
-**Mechanics:**
-1. Boss selects available auxiliary (not stunned, idle state)
-2. Windup animation (30 frames)
-3. Auxiliary "thrown" toward player's position
-4. Auxiliary deals collision damage during flight
-5. Returns to boss when hitting max chain length OR player
-6. Cooldown starts when auxiliary returns
-
-**States:**
-- Boss: `"none"` → `"winding_up"` → `"throwing"` → `"none"`
-- Auxiliary: `"idle"` → `"being_thrown"` → `"returning"` → `"idle"`
-
-**Sounds:** `snd_throw_start`, `snd_throwing` (looping), `snd_throw_hit`
-
-#### Advanced Attack #2: Spin Attack
-
-**Configuration:**
-```gml
-enable_spin_attack = true;
-spin_cooldown = 480;            // 8 seconds
-spin_windup_time = 45;          // 0.75 seconds
-spin_duration = 180;            // 3 seconds
-spin_rotation_speed = 8;        // Degrees/frame
-spin_range = 200;               // Player must be within range
-```
-
-**Requirements:** Minimum 2 living auxiliaries
-
-**Mechanics:**
-1. Boss checks range and auxiliary count
-2. Windup animation (45 frames)
-3. All auxiliaries enter "spinning" state
-4. Auxiliaries orbit boss at max chain length (96 pixels)
-5. Evenly spaced, rotating continuously (8°/frame)
-6. Each auxiliary deals collision damage
-7. After 3 seconds, spin ends
-
-**States:**
-- Boss: `"none"` → `"winding_up"` → `"spinning"` → `"none"`
-- Auxiliaries: `"idle"` → `"spinning"` → `"idle"`
-
-**Sounds:** `snd_spin_start`, `snd_spinning` (looping), `snd_spin_end`
-
-#### Fire Boss Variant
-
-**Stats:**
-- HP: 100
-- Fire immunity, ice vulnerability (fireborne tag)
-- 4 Fire Imp auxiliaries
-
-**Fire Imp Stats:**
-- HP: 8
-- Attack Damage: 1 (fire)
-- Collision Damage: 2 (fire)
-- Move Speed: 0.75
-- 50% chance to apply burning on melee hit
-
-**Room:** `room_greenwood_forest_4` at (544, 304)
-
-**Key Files:**
-- `/objects/obj_chain_boss_parent/Create_0.gml` - Core init (lines 99-136)
-- `/objects/obj_chain_boss_parent/Step_0.gml` - Enrage, throw, spin logic
-- `/objects/obj_chain_boss_parent/Draw_0.gml` - Chain rendering
-- `/objects/obj_chain_boss/Create_0.gml` - Fire variant
-- `/scripts/player_attack_helpers/player_attack_helpers.gml` - Auxiliary DR (lines 122-130)
-
----
-
-### Hazard Spawning System
-
-**Purpose:** Projectile-based delivery system for persistent area-of-effect hazards (primarily used by bosses)
-
-#### Hazard Types
-
-**Fire Hazard (obj_fire):**
-- **Damage Mode:** Continuous (ticks every 0.5s)
-- **Damage Type:** DamageType.fire
-- **Effect:** Applies "burning" status on entry
-- **Immunity:** fire_immunity, ground_hazard_immunity
-- **Visual:** spr_fire (4-frame animation)
-
-**Poison Hazard (obj_poison):**
-- **Damage Mode:** None (status-only)
-- **Effect:** Applies "poisoned" status on entry
-- **Immunity:** poison_immunity, ground_hazard_immunity
-- **Visual:** spr_poison_pool (animated)
-
-#### Hazard Parent System (obj_hazard_parent)
-
-**Damage Modes:**
-- **"none"** - No direct damage (effect-only)
-- **"continuous"** - Tick-based damage every `damage_interval` seconds
-- **"on_enter"** - One-time damage on entry
-
-**Effect Modes:**
-- **"none"** - No effects
-- **"trait"** - Applies timed trait (fire_resistance, etc.)
-- **"status"** - Applies status effect (burning, poisoned, slowed)
-
-**Entity Tracking:**
-- `entities_inside` - DS list of entities currently in hazard
-- `damage_immunity_map` - Per-entity damage immunity timers
-- `effect_immunity_map` - Per-entity effect immunity timers
-- Automatic cleanup of exited/destroyed entities
-
-**Damage Pipeline (Continuous Mode):**
-1. Check damage interval elapsed
-2. For each entity: Check immunity → Apply trait modifier → Apply equipment DR → Calculate final damage (min 1)
-3. Apply damage, visual feedback, set immunity timer
-
-#### Hazard Projectile System (obj_hazard_projectile)
-
-**Movement:**
-- `move_speed` - Default 3 pixels/frame
-- `travel_distance` - Max distance before landing (default 128)
-- `direction` - Angle in degrees
-
-**Damage:**
-- `damage_amount` - Collision damage (default 2)
-- `damage_type` - DamageType enum
-- `attack_category` - AttackCategory.ranged
-- `status_effects_on_hit` - Array of effects
-
-**Hazard Spawning:**
-- `hazard_object` - Object to spawn (e.g., obj_fire)
-- `hazard_lifetime` - Duration in seconds (-1 = permanent)
-
-**Explosion (Optional):**
-- `explosion_enabled` - Toggle
-- `explosion_object` - obj_explosion
-- `explosion_damage` - Damage amount
-- `explosion_damage_type` - Damage type
-
-**Behavior:**
-1. Move in direction at `move_speed`
-2. Track distance from spawn point
-3. Apply range profile damage multiplier
-4. On reaching travel_distance OR wall collision → spawn hazard
-5. On player collision → deal damage, spawn hazard, apply status effects
-6. Auto-cull if beyond max range + buffer
-
-#### Range Profile System
-
-**Hazard Projectile Profile:**
-- Point blank (0-48px): 0.6x damage
-- Optimal (60-140px): 1.0x damage
-- Long range (140-200px): 0.5x damage
-- Overshoot buffer: 32px
-
-**Damage Curve:**
-- 0-48px: Ramps 0.6x → 1.0x
-- 48-140px: Full damage
-- 140-200px: Falls 1.0x → 0.5x
-- 200-232px: Auto-culled
-
-#### Explosion System (obj_explosion)
-
-**Configuration:**
-- Damage: 3 (default)
-- Type: DamageType.fire
-- Animation: 4 frames at 0.5 speed
-- **One-Hit:** `has_damaged` flag prevents multiple hits
-
-**Behavior:**
-1. Initialize damage config
-2. Play animation
-3. On player collision: Apply damage with trait/DR modifiers, knockback 3px
-4. Auto-destroy when animation completes
-
-#### Visual Telegraph System
-
-**Hazard Target Indicator (obj_hazard_target_indicator):**
-- Shows where hazard will land
-- Created during windup at player's current position
-- Animated 4-frame loop (spr_target)
-- Destroyed when projectile spawns
-- Gives player reaction time (~0.5-0.8s)
-
-#### Enemy Integration
-
-**Configuration Variables:**
-```gml
-enable_hazard_spawning = false;           // Master toggle
-hazard_spawn_cooldown = 180;              // 3 seconds
-hazard_spawn_windup_time = 30;            // 0.5 seconds
-hazard_projectile_distance = 128;
-hazard_projectile_speed = 3;
-hazard_projectile_damage = 2;
-hazard_spawn_object = obj_fire;
-hazard_lifetime = -1;                     // Permanent
-hazard_explosion_enabled = false;
-```
-
-**State Machine (EnemyState.hazard_spawning):**
-
-**Phase 1 - Windup:**
-- Stop movement
-- Decrement windup timer
-- Play vocalization and windup sounds
-- Create target indicator at player position
-- Store target position
-
-**Phase 2 - Spawn Projectile:**
-- Call `spawn_hazard_projectile()`
-- Destroy target indicator
-- Start cooldown
-- Set Alarm[5] for 10 frames
-
-**Phase 3 - Return to Targeting:**
-- Alarm[5] triggers
-- Reset windup timer
-- Transition to targeting state
-
-#### Fire Boss Integration
-
-**Multi-Attack System:**
-```gml
-enable_dual_mode = true;           // Melee + ranged
-enable_hazard_spawning = true;     // Hazard attacks
-allow_multi_attack = true;         // Boss multi-attack
-```
-
-**Attack Cooldowns:**
-- Melee: ~90 frames (1.5s) - Shortest
-- Ranged: ~180 frames (3s) - Medium
-- Hazard: 480 frames (8s) - Longest
-
-**Hazard Config:**
-```gml
-hazard_spawn_cooldown = 480;
-hazard_priority = 40;              // Weight 40 (higher priority)
-hazard_spawn_windup_time = 50;     // 0.83s
-hazard_projectile_speed = 4;       // Fast
-hazard_projectile_damage = 3;      // High
-hazard_spawn_object = obj_fire;
-hazard_lifetime = 5;               // 5 seconds
-hazard_status_effects = [{trait: "burning"}];
-```
-
-**Sound Config:**
-```gml
-enemy_sounds.on_hazard_vocalize = snd_fire_boss_roar;
-enemy_sounds.on_hazard_windup = snd_fire_boss_cast;
-```
-
-#### Layered Damage System
-
-**Three Damage Opportunities:**
-1. **Projectile Hit:** Damage on collision with player (ranged DR applied)
-2. **Explosion:** Optional AOE damage at landing (ranged DR applied)
-3. **Persistent Hazard:** Continuous tick damage (general DR + trait modifiers)
-
-**Key Files:**
+- `/objects/obj_chain_boss_parent/` - Base chain boss system
 - `/objects/obj_hazard_parent/` - Base hazard system
-- `/objects/obj_hazard_projectile/` - Projectile delivery
-- `/objects/obj_hazard_target_indicator/` - Visual telegraph
-- `/objects/obj_explosion/` - Explosion effect
-- `/objects/obj_fire/Create_0.gml` - Fire hazard implementation
-- `/objects/obj_fire_boss/Create_0.gml` - Boss hazard integration
-- `/scripts/scr_enemy_state_hazard_spawning/scr_enemy_state_hazard_spawning.gml` - State machine
-- `/scripts/movement_profile_hazard_spawner_update/movement_profile_hazard_spawner_update.gml` - Movement AI
-- `/scripts/scr_projectile_range_profiles/scr_projectile_range_profiles.gml` - Range profiles
+- `/objects/obj_hazard_projectile/` - Hazard delivery
+- `/scripts/scr_enemy_state_hazard_spawning/scr_enemy_state_hazard_spawning.gml` - Hazard state
 
----
+### Trait System
 
-## Trait System V2.0 (Stacking Mechanics)
+Traits stack up to 5 times and can cancel each other. Opposite traits cancel stack-by-stack (3 fire_resistance + 2 fire_vulnerability = 1 fire_resistance).
 
-### Core Concept
-Traits are modifiers that stack up to 5 times and can cancel each other out. Each entity has:
-- **permanent_traits** - From tags, quests, permanent equipment
-- **temporary_traits** - From equipment, companions, timed buffs
+**Trait Categories**:
+- Damage type (resistance/vulnerability/immunity)
+- Defense (bolstered/sundered affecting all DR)
+- Status immunity
 
-### Tag System
-Tags are thematic descriptors that grant trait bundles. Apply with `apply_tag_traits()`:
-- **fireborne** → `["fire_immunity", "ice_vulnerability"]`
-- **venomous** → `["poison_immunity", "deals_poison_damage"]`
-- **arboreal** → `["fire_vulnerability", "poison_resistance"]`
-- **aquatic** → `["lightning_vulnerability", "fire_resistance"]`
-- **glacial** → `["ice_immunity", "fire_vulnerability"]`
-- **swampridden** → `["poison_immunity", "disease_resistance"]`
-- **sandcrawler** → `["fire_resistance", "heat_adapted"]`
-
-### Trait Stacking Rules
-- **Stack Cancellation** - Opposite traits cancel stack-by-stack (e.g., 3 fire_resistance + 2 fire_vulnerability = 1 fire_resistance)
-- **Immunity Override** - Immunity traits (0.0 multiplier) can be cancelled by vulnerability stacks
-- **Defense Traits** - `defense_resistance` (bolstered) vs `defense_vulnerability` (sundered) affect all DR
-  - Bolstered: `1.33^stacks` multiplier to DR
-  - Sundered: `0.75^stacks` multiplier to DR
-- **Damage Type Traits** - Resistance (`0.75^stacks`), Vulnerability (`1.5^stacks`), Immunity (0.0)
-
-### Key Functions
-- `get_total_trait_stacks(trait_key)` - Returns combined permanent + temporary stacks (capped at 5)
-- `get_damage_modifier_for_type(damage_type)` - Calculates final multiplier with cancellation logic
-- `apply_tag_traits()` - Applies all traits from tags array as permanent traits
-- `apply_timed_trait(trait_key, duration_seconds)` - Temporary trait with auto-removal alarm
+**See:** `/docs/TRAIT_SYSTEM.md` for complete trait system documentation
 
 **Key Files:**
-- `/scripts/trait_system/trait_system.gml` - All trait system functions
-- `/objects/obj_game_controller/Create_0.gml` - Tag and trait database initialization
-- `/docs/TRAIT_SYSTEM.md` - Complete trait system documentation
+- `/scripts/trait_system/trait_system.gml` - All trait functions
+- `/objects/obj_game_controller/Create_0.gml` - Trait and tag databases
 
-## Damage Type System
+### Status Effects System
 
-### DamageType Enum
-```gml
-enum DamageType {
-    physical, magical, fire, ice, lightning,
-    poison, disease, holy, unholy
-}
-```
+**Effects**: burning, wet, empowered, weakened, swift, slowed
+**Mechanics**: Opposing effects neutralize, duration refresh on reapply, trait immunity blocking
 
-### Integration Points
-1. **Weapons** - Each weapon has `damage_type` in stats (defaults to physical)
-2. **Status Effects** - Burning applies fire damage, certain effects trigger type-specific damage
-3. **Traits** - Damage type resistance/vulnerability/immunity traits modify incoming damage
-4. **Visual Feedback** - Damage numbers color-coded by type via `damage_type_to_color()`
-
-**Key Files:**
-- `/scripts/scr_damage_type_helpers/scr_damage_type_helpers.gml` - Conversion and color functions
-- `/scripts/scr_enums/scr_enums.gml` - DamageType enum definition
-
-## Status Effects System
-
-### Status Effect Types
-- **burning** - DoT: 1 damage every 0.5s for 3s (fire damage type)
-- **wet** - -10% speed for 5s (increases ice damage taken)
-- **empowered** - +50% damage for 10s
-- **weakened** - -30% damage for 10s
-- **swift** - +30% speed for 8s
-- **slowed** - -40% speed for 5s
-
-### Opposing Effects System
-- **Neutralization** - Opposing effects neutralize each other (e.g., burning + wet = both neutralized)
-- **Duration Refresh** - Reapplying same effect refreshes duration
-- **Trait Immunity** - Traits can block status effects (e.g., `fire_immunity` blocks burning)
-
-### Wielder Effects
-Equipment can apply permanent status effects while equipped:
-```gml
-wielder_effects: [
-    {trait: "empowered"}
-]
-```
+**See:** `/docs/status-effects-system.md` for complete status effects documentation
 
 **Key Files:**
 - `/scripts/scr_status_effects/scr_status_effects.gml` - All status effect functions
-- `/docs/status-effects-system.md` - Complete status effects documentation
 
-## Enemy AI Architecture
+### Enemy AI
 
-### State Machine (EnemyState Enum)
-```gml
-enum EnemyState {
-    idle,             // Standing still
-    targeting,        // Pursuing player with pathfinding
-    attacking,        // Executing melee attack
-    ranged_attacking, // Firing projectile, can move while shooting
-    dead,             // Death state with animation
-    wander            // Random movement within radius
-}
-```
+**State Machine**: idle → targeting → attacking/ranged_attacking → dead
+**Pathfinding**: mp_grid with obstacle detection, throttled updates (2s or 64px player movement)
+**Dual-Mode**: Context-based switching between melee and ranged based on distance, formation, cooldowns
+**Flanking**: 40% chance to approach from behind player (opposite of facing_dir + ±30° variance)
 
-### Pathfinding System
-- **mp_grid Pathfinding** - Uses GameMaker's built-in pathfinding with obstacle detection
-- **Path Update Throttling** - Recalculates every 120 frames (2 seconds) or when player moves 64+ pixels
-- **Ideal Range** - Enemies maintain optimal distance (melee: attack_range, ranged: 75-80% of attack_range)
-- **LOS Checks** - Ranged enemies require clear line of sight via `enemy_has_line_of_sight()`
-- **Unstuck System** - Alarm[4] detects stuck enemies and forces random direction movement
-
-### Dual-Mode Combat System
-Enemies with `enable_dual_mode = true` can switch between melee and ranged based on context:
-
-**Attack Mode Decision Logic:**
-1. **Distance Check** - If beyond ideal_range → ranged, if below melee_range_threshold → melee
-2. **Formation Role Override** - "rear"/"support" forces ranged, "front"/"vanguard" forces melee
-3. **Cooldown Gate** - Can't use mode if on cooldown, fallback to other mode if available
-4. **Retreat Behavior** - Ranged-preferring enemies retreat if player breaches ideal_range
-
-**Key Configuration Variables:**
-```gml
-enable_dual_mode = true;                    // Toggle context-based switching
-preferred_attack_mode = "ranged";           // "none", "melee", or "ranged"
-melee_range_threshold = attack_range * 0.5; // Distance below which melee is preferred
-retreat_when_close = true;                  // Retreat when player gets too close
-retreat_cooldown = 0;                       // Prevents pathfinding spam (60 frames)
-formation_role = undefined;                 // Set by party controller: "rear", "front", "support"
-```
-
-### Flanking & Approach Variation
-- **Flank Trigger Distance** - 120 pixels default (configurable via `flank_trigger_distance`)
-- **Flank Chance** - 40% probability default (configurable via `flank_chance`)
-- **Flank Calculation** - Approaches from behind player (opposite of facing_dir + random ±30° variance)
-- **One-Time Selection** - Approach chosen once per aggro cycle, resets when losing aggro
+**See:** `/docs/ENEMY_AI_ARCHITECTURE.md` for complete AI documentation
+**See:** `/docs/ENEMY_AI_PATHFINDING_AND_RANGED_BEHAVIOR.md` for advanced AI behaviors
 
 **Key Files:**
-- `/objects/obj_enemy_parent/Create_0.gml` - Enemy initialization and variables
 - `/objects/obj_enemy_parent/Step_0.gml` - State machine dispatcher
-- `/scripts/scr_enemy_state_targeting/scr_enemy_state_targeting.gml` - Pathfinding, targeting, dual-mode logic
-- `/scripts/scr_enemy_state_ranged_attacking/scr_enemy_state_ranged_attacking.gml` - Ranged attack state
+- `/scripts/scr_enemy_state_targeting/scr_enemy_state_targeting.gml` - Pathfinding and targeting
+- `/scripts/scr_enemy_state_attacking/scr_enemy_state_attacking.gml` - Melee attacks
+- `/scripts/scr_enemy_state_ranged_attacking/scr_enemy_state_ranged_attacking.gml` - Ranged attacks
 
-## Enemy Party System
+### Enemy Party System
 
-### Party States (PartyState Enum)
-```gml
-enum PartyState {
-    protecting,   // Guard location, limited pursuit
-    aggressive,   // Chase and attack player
-    cautious,     // Maintain formation, defensive
-    desperate,    // Low health, high flee priority
-    emboldened,   // Player weak, increased aggression
-    retreating,   // Fleeing as a group
-    patrolling    // Follow path until player detected
-}
-```
+**States**: protecting, aggressive, cautious, desperate, emboldened, retreating, patrolling
+**Formations**: line_3, wedge_5, circle_4, protective_3 (defined in `global.formation_database`)
+**Decision Weights**: Parties use weighted random selection for attack/formation/flee priorities
 
-### Formation System
-Formations defined in `global.formation_database`:
-- **line_3** - Horizontal line formation (3 members)
-- **wedge_5** - V-shaped attack formation (5 members)
-- **circle_4** - Defensive circle (4 members)
-- **protective_3** - Guard formation (3 members)
-
-Each formation has position offsets from controller center:
-```gml
-{
-    name: "wedge_5",
-    offsets: [
-        {x: 0, y: -32},    // Leader (front)
-        {x: -24, y: 0},    // Left flank
-        {x: 24, y: 0},     // Right flank
-        {x: -48, y: 32},   // Left rear
-        {x: 48, y: 32}     // Right rear
-    ]
-}
-```
-
-### Decision Weight System
-Parties use weighted random selection for objectives:
-- **weight_attack** (0-100) - Priority for attacking player
-- **weight_formation** (0-100) - Priority for maintaining formation
-- **weight_flee** (0-100) - Priority for fleeing combat
-
-Dynamic adjustments based on party state:
-- `desperate` state → flee_weight × 3, attack_weight × 0.5
-- `cautious` state → formation_weight × 1.5, attack_weight × 0.7
-- `emboldened` state → attack_weight × 1.5, formation_weight × 0.7
-
-### Auto-Spawning Pattern
-Party controllers spawn their own members:
-```gml
-var enemies = [
-    instance_create_layer(x - 48, y, layer, obj_burglar),
-    instance_create_layer(x, y, layer, obj_burglar),
-    instance_create_layer(x + 48, y, layer, obj_burglar)
-];
-init_party(enemies, "line_3");
-```
+**See:** `/docs/ENEMY_PARTY_SYSTEM.md` for complete party system documentation
 
 **Key Files:**
-- `/objects/obj_enemy_party_controller/` - Base party controller with all logic
-- `/docs/ENEMY_PARTY_SYSTEM.md` - Complete party system documentation
+- `/objects/obj_enemy_party_controller/` - Base party controller
 
-## Companion System
+### Companion System
 
-### Companion States
-```gml
-enum CompanionState {
-    waiting,    // Not recruited, at spawn position
-    following,  // Following player (default after recruitment)
-    casting,    // Performing trigger animation
-    evading     // Maintaining distance from combat
-}
-```
+**States**: waiting (not recruited) → following → evading (during combat) → casting (triggers)
+**Evasion**: Maintains 64-128px from player, avoids enemies within 200px radius
+**Affinity Scaling**: 3.0-10.0 scale with square root multiplier (0.6x to 3.0x bonus)
+**Triggers**: 4 tiers (base, mid @5+, advanced @8+, ultimate @10) with cooldowns
 
-### Combat Evasion Behavior
-When player enters combat (combat_timer < combat_cooldown), companions automatically switch to evading:
-- **Distance Range** - Maintains 64-128 pixels from player
-- **Enemy Avoidance** - Detects enemies within 200 pixels and moves away
-- **Recalculation Throttle** - Updates position every 20 frames (~333ms)
-- **Hysteresis Buffer** - 0.5 second delay before returning to following (prevents state flicker)
-
-### Affinity System & Aura Scaling
-Companion auras scale with affinity (3.0 to 10.0):
-- **Multiplier Formula** - `0.6 + (2.4 * sqrt((affinity - 3.0) / 7.0))`
-- **Result Range** - 0.6x at affinity 3.0, 3.0x at affinity 10.0
-- **Diminishing Returns** - Square root provides stronger early gains
-
-### Trigger System
-Companions have active abilities (triggers) with affinity-based unlocks:
-- **Base Trigger** - Unlocked at affinity 0+ (always available)
-- **Mid Trigger** - Unlocks at affinity 5+
-- **Advanced Trigger** - Unlocks at affinity 8+
-- **Ultimate Trigger** - Unlocks at affinity 10
-
-**Trigger Activation Flow:**
-1. Check trigger unlock status and cooldown
-2. Check player HP threshold for trigger condition
-3. Set `state = CompanionState.casting`
-4. Play casting animation (3 frames × 200ms = 600ms)
-5. Apply effect (DR bonus, heal, damage buff, slow-mo, etc.)
-6. Start cooldown timer
-7. Return to previous state (following or evading)
-
-### Companion Animation (18-frame layout)
-- Frames 0-1: idle_down (also idle_right)
-- Frames 2-3: idle_left
-- Frames 4-5: idle_up
-- Frames 6-8: casting_down
-- Frames 9-11: casting_right
-- Frames 12-14: casting_left
-- Frames 15-17: casting_up
+**See:** `/docs/COMPANION_SYSTEM_TECHNICAL.md` for technical implementation
+**See:** `/docs/COMPANION_GUIDE.md` for high-level companion design
 
 **Key Files:**
 - `/objects/obj_companion_parent/Create_0.gml` - Companion initialization
-- `/objects/obj_companion_parent/Step_0.gml` - Following, evading, and trigger logic
-- `/scripts/scr_companion_system/scr_companion_system.gml` - Helper functions for bonuses
+- `/objects/obj_companion_parent/Step_0.gml` - States and triggers
+- `/scripts/scr_companion_system/scr_companion_system.gml` - Helper functions
 
-## Sound System
+### Sound System
 
-### Sound Variant Randomization
-The sound system supports automatic variant selection for variety:
-- **Variant Naming** - Base sound + numbered variants (e.g., `snd_sword_hit`, `snd_sword_hit_1`, `snd_sword_hit_2`)
-- **Cache Lookup** - `global.sound_variant_lookup[sound_name]` stores variant count
-- **Random Selection** - `play_sfx()` automatically picks random variant if available
-- **Debug Mode** - `global.debug_sound_variants` flag for logging variant selection
+**Variant Randomization**: Automatic random selection from numbered variants (e.g., `snd_sword_hit_1`, `snd_sword_hit_2`)
+**Enemy Sounds**: Separate sounds for melee vs ranged attacks with fallback defaults
+**Functions**: `play_sfx()` with variant support, `play_enemy_sfx()` with custom/fallback logic
 
-### Enemy Sound Configuration
-Enemies have separate sound events for melee vs ranged attacks:
-```gml
-enemy_sounds = {
-    on_melee_attack: undefined,   // Defaults to snd_enemy_attack_generic
-    on_ranged_attack: undefined,  // Defaults to snd_bow_attack
-    on_hit: undefined,            // Defaults to snd_enemy_hit_generic
-    on_death: undefined,          // Defaults to snd_enemy_death
-    on_aggro: undefined,          // No default (optional)
-    on_footstep: undefined,       // No default (optional)
-    on_status_effect: undefined   // Defaults to snd_status_effect_generic
-}
-```
-
-Override in child enemy Create events:
-```gml
-enemy_sounds.on_melee_attack = snd_orc_attack;
-enemy_sounds.on_ranged_attack = snd_bow_attack;
-```
-
-### Sound Functions
-- `play_sfx(sound, volume, priority, loop, fade_in, fade_out)` - Main sound function with variant support
-- `play_enemy_sfx(event_name)` - Plays enemy sound with custom/fallback logic
-- `stop_looped_sfx(sound)` - Stops looping sound via controller
+**See:** `/docs/SOUND_SYSTEM.md` for complete sound system documentation
 
 **Key Files:**
 - `/scripts/scr_sfx_functions/scr_sfx_functions.gml` - Sound playback functions
-- `/objects/obj_sfx_controller/Create_0.gml` - Sound controller initialization
+- `/objects/obj_sfx_controller/Create_0.gml` - Sound controller
 
-## Animation Systems
+### Animation Systems
 
-### Player Animation (Custom Frame-Based)
-Player uses `anim_data` struct with manual frame control for 58-frame sprite:
-- **Animation Types** - Idle (2 frames), Walk (4-5 frames), Dash (4 frames), Attack (4 frames)
-- **Frame Advancement** - `anim_frame += anim_speed_walk` or `anim_speed_idle`
-- **Manual Control** - `image_speed = 0`, set `image_index` directly based on state
+**Player**: Custom frame-based with `anim_data` struct, manual control (`image_speed = 0`), 58+ frames
+**Enemy**: State-based with global idle bob timer, 35-frame layout (melee-only) or 47-frame (dual-mode)
+**Override System**: Enemies can override default animations with `enemy_anim_overrides` struct
 
-### Enemy Animation (State-Based)
-Enemy animation uses global frame tracker and state lookups:
-
-**Standard Enemy Layout (35 frames for melee-only):**
-- Frames 0-1: idle_down, 2-3: idle_right, 4-5: idle_left, 6-7: idle_up
-- Frames 8-10: walk_down, 11-13: walk_right, 14-16: walk_left, 17-19: walk_up
-- Frames 20-22: attack_down, 23-25: attack_right, 26-28: attack_left, 29-31: attack_up
-- Frames 32-34: dying
-
-**Extended Layout (47 frames for dual-mode with ranged attacks):**
-- Frames 0-34: Standard layout above
-- Frames 35-37: ranged_attack_down (3 frames)
-- Frames 38-41: ranged_attack_right (4 frames)
-- Frames 42-45: ranged_attack_left (4 frames)
-- Frames 46-48: ranged_attack_up (3 frames)
-
-**Animation Override System:**
-Enemies can override with `enemy_anim_overrides` struct:
-```gml
-enemy_anim_overrides = {
-    ranged_attack_down: {start: 35, length: 3},
-    ranged_attack_right: {start: 38, length: 4},
-    ranged_attack_left: {start: 42, length: 4},
-    ranged_attack_up: {start: 46, length: 3}
-};
-```
+**See:** `/docs/ANIMATION_SYSTEM.md` for complete animation documentation
 
 **Key Files:**
-- `/scripts/scr_animation_helpers/scr_animation_helpers.gml` - Enemy animation data and lookup
-- `/objects/obj_enemy_parent/Step_0.gml` - Animation frame calculation
+- `/scripts/scr_animation_helpers/scr_animation_helpers.gml` - Enemy animation data
+- `/scripts/player_handle_animation/player_handle_animation.gml` - Player animation
 - `/objects/obj_player/Create_0.gml` - Player anim_data struct
 
-## Quest System
+### Quest System
 
-### Quest Database
-All quests defined in `global.quest_database` via `init_quest_database()`:
-```gml
-{
-    quest_id: "protect_canopy_village",
-    quest_name: "Protect Canopy Village",
-    quest_giver: "hola",
-    description: "Defeat 5 bandits threatening the village",
-    objectives: [
-        {type: "kill", target: "obj_burglar", required: 5, current: 0}
-    ],
-    rewards: {xp: 100, items: ["rusty_dagger"]},
-    prerequisites: [],
-    completion_flag: "quest_protect_canopy_complete"
-}
-```
+**Objective Types**: recruit_companion, kill, collect, deliver, location, spawn_kill (all auto-tracking)
+**Integration**: Yarn dialogue with Chatterbox functions (`quest_can_accept()`, `quest_accept()`, etc.)
+**Rewards**: XP, items, affinity increases, gold
 
-### Objective Types (Auto-Tracking)
-- **recruit_companion** - Tracks when companions join (auto-tracked in `recruit_companion()`)
-- **kill** - Tracks enemy kills (auto-tracked in `enemy_state_dead()`)
-- **collect** - Tracks quest item pickup (auto-tracked in `inventory_add_item()`)
-- **deliver** - Manual call to `quest_check_delivery(object_name)` when player talks to NPC
-- **location** - Create `obj_quest_marker` and call `quest_check_location_reached(quest_id)` in collision
-- **spawn_kill** - Use `spawn_quest_enemy(obj, x, y, room, quest_id)` to spawn, auto-tracked on death
-
-### Yarn Dialogue Integration
-Quests are offered through Yarn dialogue files using Chatterbox functions:
-```yarn
-<<if quest_can_accept("protect_canopy_village")>>
-    -> Accept the quest
-        <<quest_accept("protect_canopy_village")>>
-        I'll help you!
-<<endif>>
-
-<<if quest_is_active("protect_canopy_village")>>
-    -> Check quest progress
-        <<quest_get_progress("protect_canopy_village")>>
-<<endif>>
-```
+**See:** `/docs/QUEST_SYSTEM.md` for complete quest system documentation
 
 **Key Files:**
 - `/scripts/scr_quest_system/scr_quest_system.gml` - All quest functions
-- `/objects/obj_player/Create_0.gml` - Active quests storage
+- `/objects/obj_game_controller/Create_0.gml` - Quest database initialization
 
-## Item & Inventory System
+### Item & Inventory System
 
-### Item Database
-All items defined in `global.item_database` in `/scripts/scripts.gml`:
-```gml
-rusty_dagger: {
-    item_id: "rusty_dagger",
-    type: ItemType.weapon,
-    handedness: WeaponHandedness.one_handed,
-    stats: {
-        attack_damage: 2,
-        attack_speed: 1.2,
-        attack_range: 20
-    },
-    world_sprite_frame: 0,
-    equipped_sprite_key: "rusty_dagger"
-}
-```
+**Item Types**: weapon, shield, armor (head/torso/legs), consumable, quest_item, material, key
+**Equipment**: 5 slots (right_hand, left_hand, head, torso, legs)
+**Loadouts**: Separate melee and ranged loadouts with auto-equip rules
+**Systems**: Two-handing (+50% damage), dual-wielding (-25% each), wielder effects
 
-### Equipment System
-- **Equipment slots**: right_hand, left_hand, head, torso, legs
-- **Loadout System** - Switch between melee and ranged loadouts
-- **Two-Handing** - Versatile weapons can be two-handed for damage bonus
-- **Wielder Effects** - Equipment can apply permanent status effects while equipped
-
-**Key Functions:**
-- `inventory_add_item(item_key, quantity)` - Add item to inventory
-- `equip_item(item_key, slot)` - Equip item to slot
-- `unequip_item(slot)` - Remove item from slot
-- `get_total_damage()` - Calculate total player damage with all modifiers
-- `get_attack_range()` - Calculate total attack range
-- `is_two_handing()` - Check if player is two-handing versatile weapon
+**See:** `/docs/ITEM_INVENTORY_SYSTEM.md` for complete item system documentation
 
 **Key Files:**
 - `/scripts/scripts.gml` - Item database initialization
@@ -1079,66 +262,41 @@ rusty_dagger: {
 
 ### Adding New Damage Types
 1. Add to `DamageType` enum in `/scripts/scr_enums/scr_enums.gml`
-2. Add color mapping in `damage_type_to_color()` in `/scripts/scr_damage_type_helpers/scr_damage_type_helpers.gml`
+2. Add color mapping in `damage_type_to_color()` (see `/docs/DAMAGE_TYPE_SYSTEM.md`)
 3. Create immunity/resistance/vulnerability traits in `global.trait_database`
 4. Add to relevant tags in `global.tag_database`
 
 ### Creating Dual-Mode Enemies
 1. Inherit from `obj_enemy_parent`
-2. Set dual-mode configuration in Create event:
-```gml
-enable_dual_mode = true;
-preferred_attack_mode = "ranged";  // or "melee" or "none"
-retreat_when_close = true;
-melee_range_threshold = 32;
-ideal_range = attack_range * 0.75;
-```
-3. Configure both melee and ranged stats (attack_damage, ranged_damage, etc.)
-4. Use 47-frame sprite with ranged attack animations (frames 35-48)
-5. Override `enemy_anim_overrides` if using custom layout
-6. Set separate sounds for melee vs ranged:
-```gml
-enemy_sounds.on_melee_attack = snd_sword_swing;
-enemy_sounds.on_ranged_attack = snd_bow_attack;
-```
+2. Set `enable_dual_mode = true` and configure attack preferences
+3. Configure both melee and ranged stats
+4. Use 47-frame sprite with ranged animations
+5. Set separate sounds for melee vs ranged attacks
+
+See `/docs/ENEMY_AI_ARCHITECTURE.md` for complete dual-mode configuration.
 
 ### Creating New Enemies
 1. Create object inheriting from `obj_enemy_parent`
-2. Override Create event to set stats:
-```gml
-event_inherited();
-
-hp = 10;
-hp_total = hp;
-attack_damage = 3;
-attack_speed = 0.8;
-attack_range = 25;
-move_speed = 1.0;
-```
+2. Override Create event: call `event_inherited()` then set stats (hp, attack_damage, move_speed, etc.)
 3. Apply tags for trait bundles: `array_push(tags, "fireborne"); apply_tag_traits();`
-4. Configure flank behavior: `flank_chance = 0.6; flank_trigger_distance = 120;`
-5. Add sprite with appropriate animation frames (35 or 47-frame layout)
+4. Configure flank behavior via `flank_chance` and `flank_trigger_distance`
+5. Add sprite with 35-frame (melee-only) or 47-frame (dual-mode) layout
 
 ### Creating Enemy Parties
-See `/docs/ENEMY_PARTY_SYSTEM.md` for detailed instructions. Quick overview:
 1. Create object inheriting from `obj_enemy_party_controller`
 2. Configure party state, formation, and weights in Create event
 3. Auto-spawn members with `init_party(enemies_array, formation_key)`
 4. Optional: Configure patrol path or protect point
 
+See `/docs/ENEMY_PARTY_SYSTEM.md` for detailed instructions.
+
 ### Creating Openable Containers
-See `/docs/OPENABLE_CONTAINERS.md` for detailed instructions. Quick overview:
 1. Create object inheriting from `obj_openable`
 2. Create 4-frame sprite (closed → opening → open → open)
-3. Configure loot mode and loot table in Create event:
-```gml
-loot_mode = "random_weighted";
-loot_table = [
-    {item_key: "rusty_dagger", weight: 2},
-    {item_key: "small_health_potion", weight: 3}
-];
-```
+3. Configure loot mode and loot table in Create event
 4. Container persists automatically via save/load system
+
+See `/docs/OPENABLE_CONTAINERS.md` for detailed instructions.
 
 ### Adding New Items
 1. Add item definition to `global.item_database` in `/scripts/scripts.gml`
@@ -1147,23 +305,61 @@ loot_table = [
 4. For weapons: Set damage_type, attack_damage, attack_speed, attack_range
 5. For armor: Set melee_dr, ranged_dr, general_dr
 
+See `/docs/ITEM_INVENTORY_SYSTEM.md` for item structure details.
+
 ### Creating New Quests
 1. Add quest definition to `init_quest_database()` in `/scripts/scr_quest_system/scr_quest_system.gml`
 2. Define quest properties: quest_id, quest_name, quest_giver, objectives, rewards
 3. Add quest dialogue to companion's Yarn file using quest functions
-4. Objective types auto-track through gameplay (no manual progress calls needed for kill/collect)
+4. Objective types auto-track through gameplay (no manual progress calls needed)
+
+See `/docs/QUEST_SYSTEM.md` for objective types and integration.
 
 ### Creating Quest Marker Objects
 For location objectives:
 1. Create object (inheriting from parent or standalone)
 2. Add variable `quest_id` (string) - set to the quest this marker is for
-3. Add Collision event with `obj_player`:
-```gml
-if (quest_check_location_reached(quest_id)) {
-    instance_destroy();
-}
-```
+3. Add Collision event with `obj_player`: `if (quest_check_location_reached(quest_id)) { instance_destroy(); }`
 4. Place marker in room where player should go
+
+## Documentation Reference
+
+### Player Systems
+- `/docs/PLAYER_MECHANICS.md` - Dashing, dash attack, shield blocking
+- `/docs/COMBAT_SYSTEM.md` - Damage calculation and reduction pipelines
+- `/docs/ITEM_INVENTORY_SYSTEM.md` - Items, equipment, loadouts
+
+### Enemy Systems
+- `/docs/ENEMY_AI_ARCHITECTURE.md` - State machine, pathfinding, dual-mode, flanking
+- `/docs/ENEMY_AI_PATHFINDING_AND_RANGED_BEHAVIOR.md` - Advanced AI behaviors
+- `/docs/ENEMY_PARTY_SYSTEM.md` - Party formations, states, decision weights
+- `/docs/BOSS_MECHANICS.md` - Chain boss system, hazard spawning system
+
+### Companion Systems
+- `/docs/COMPANION_SYSTEM_TECHNICAL.md` - States, evasion, affinity, triggers, animation
+- `/docs/COMPANION_GUIDE.md` - High-level companion design and relationships
+- `/docs/AFFINITY_SYSTEM_DESIGN.md` - Affinity mechanics and scaling
+- `/docs/Companion_Affinity_Triggers.md` - Trigger design documentation
+
+### Core Systems
+- `/docs/TRAIT_SYSTEM.md` - Trait stacking, tag system, trait functions
+- `/docs/DAMAGE_TYPE_SYSTEM.md` - Damage types, integration, visual feedback
+- `/docs/status-effects-system.md` - Status effects, opposing effects, wielder effects
+- `/docs/QUEST_SYSTEM.md` - Quest database, objective types, Yarn integration
+- `/docs/OPENABLE_CONTAINERS.md` - Container system, loot tables, persistence
+
+### Technical Systems
+- `/docs/SOUND_SYSTEM.md` - Sound variants, enemy sounds, playback functions
+- `/docs/ANIMATION_SYSTEM.md` - Player and enemy animation systems
+- `/docs/RANGED_ATTACK_SYSTEM_TECHNICAL.md` - Player and enemy ranged attacks
+- `/docs/SAVE_SYSTEM.md` - Save/load architecture
+- `/docs/COMBAT_FEEL_AND_IMPACT.md` - Visual feedback and game feel
+
+### Design Documents
+- `/docs/GAME_STORY_BIBLE.md` - Overall game story and lore
+- `/docs/NARRATIVE_TONE_GUIDE.md` - Writing and narrative guidelines
+- `/docs/ENEMIES.md` - Enemy design reference
+- `/docs/LEVEL_THEMES_AND_MECHANICS.md` - Level design guidelines
 
 ## Performance Considerations
 
@@ -1180,3 +376,5 @@ The item system uses string keys (`equipped_sprite_key`) for save/load compatibi
 - Persistent objects inherit from `obj_persistent_parent` with `serialize()` and `deserialize()` methods
 - Container states persist automatically via openable system
 - Quest completion flags stored as global variables (e.g., `global.quest_protect_canopy_complete`)
+
+See `/docs/SAVE_SYSTEM.md` for complete save/load documentation.
