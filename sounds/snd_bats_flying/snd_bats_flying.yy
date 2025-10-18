@@ -2,8 +2,8 @@
   "$GMSound":"v2",
   "%Name":"snd_bats_flying",
   "audioGroupId":{
-    "name":"audiogroup_default",
-    "path":"audiogroups/audiogroup_default",
+    "name":"audiogroup_sfx_world",
+    "path":"audiogroups/audiogroup_sfx_world",
   },
   "bitDepth":1,
   "channelFormat":0,

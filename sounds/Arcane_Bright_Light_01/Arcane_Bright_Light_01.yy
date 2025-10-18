@@ -2,8 +2,8 @@
   "$GMSound":"v2",
   "%Name":"Arcane_Bright_Light_01",
   "audioGroupId":{
-    "name":"audiogroup_default",
-    "path":"audiogroups/audiogroup_default",
+    "name":"audiogroup_sfx_world",
+    "path":"audiogroups/audiogroup_sfx_world",
   },
   "bitDepth":1,
   "channelFormat":0,
