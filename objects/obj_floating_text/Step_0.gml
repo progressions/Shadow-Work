@@ -1,3 +1,6 @@
+// Pause floating text when game is paused
+if (global.game_paused) return;
+
 // Follow parent instance if it exists
 if (instance_exists(parent_instance)) {
     x = parent_instance.x + offset_x;
