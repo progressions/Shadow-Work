@@ -1,15 +1,17 @@
 {
-  "$GMSound":"",
+  "$GMSound":"v2",
   "%Name":"snd_vn_typing_1",
   "audioGroupId":{
     "name":"audiogroup_sfx_ui",
     "path":"audiogroups/audiogroup_sfx_ui",
   },
   "bitDepth":1,
-  "bitRate":128,
+  "channelFormat":0,
   "compression":0,
+  "compressionQuality":4,
   "conversionMode":0,
   "duration":0.39,
+  "exportDir":"",
   "name":"snd_vn_typing_1",
   "parent":{
     "name":"ui",
@@ -20,6 +22,5 @@
   "resourceVersion":"2.0",
   "sampleRate":44100,
   "soundFile":"snd_vn_typing_1.wav",
-  "type":0,
   "volume":1.0,
 }

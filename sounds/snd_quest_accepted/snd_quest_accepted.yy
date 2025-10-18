@@ -1,15 +1,17 @@
 {
-  "$GMSound":"",
+  "$GMSound":"v2",
   "%Name":"snd_quest_accepted",
   "audioGroupId":{
     "name":"audiogroup_sfx_world",
     "path":"audiogroups/audiogroup_sfx_world",
   },
   "bitDepth":1,
-  "bitRate":128,
+  "channelFormat":0,
   "compression":0,
+  "compressionQuality":4,
   "conversionMode":0,
   "duration":1.9508617,
+  "exportDir":"",
   "name":"snd_quest_accepted",
   "parent":{
     "name":"world",
@@ -20,6 +22,5 @@
   "resourceVersion":"2.0",
   "sampleRate":44100,
   "soundFile":"snd_quest_accepted.wav",
-  "type":0,
   "volume":1.0,
 }

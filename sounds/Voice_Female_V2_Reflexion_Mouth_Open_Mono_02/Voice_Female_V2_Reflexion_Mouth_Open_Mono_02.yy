@@ -1,15 +1,17 @@
 {
-  "$GMSound":"",
+  "$GMSound":"v2",
   "%Name":"Voice_Female_V2_Reflexion_Mouth_Open_Mono_02",
   "audioGroupId":{
     "name":"audiogroup_sfx_world",
     "path":"audiogroups/audiogroup_sfx_world",
   },
   "bitDepth":1,
-  "bitRate":128,
+  "channelFormat":0,
   "compression":0,
+  "compressionQuality":4,
   "conversionMode":0,
   "duration":0.51886624,
+  "exportDir":"",
   "name":"Voice_Female_V2_Reflexion_Mouth_Open_Mono_02",
   "parent":{
     "name":"world",
@@ -20,6 +22,5 @@
   "resourceVersion":"2.0",
   "sampleRate":44100,
   "soundFile":"Voice_Female_V2_Reflexion_Mouth_Open_Mono_02.wav",
-  "type":0,
   "volume":1.0,
 }
