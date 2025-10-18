@@ -209,6 +209,7 @@
     {"id":{"name":"obj_orc_raiding_party","path":"objects/obj_orc_raiding_party/obj_orc_raiding_party.yy",},},
     {"id":{"name":"obj_orc","path":"objects/obj_orc/obj_orc.yy",},},
     {"id":{"name":"obj_pathfinding_controller","path":"objects/obj_pathfinding_controller/obj_pathfinding_controller.yy",},},
+    {"id":{"name":"obj_pause_controller","path":"objects/obj_pause_controller/obj_pause_controller.yy",},},
     {"id":{"name":"obj_persistent_parent","path":"objects/obj_persistent_parent/obj_persistent_parent.yy",},},
     {"id":{"name":"obj_player_hands","path":"objects/obj_player_hands/obj_player_hands.yy",},},
     {"id":{"name":"obj_player","path":"objects/obj_player/obj_player.yy",},},
