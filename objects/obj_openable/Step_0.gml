@@ -1,5 +1,15 @@
 /// @description Handle player interaction and animation
 
+// Don't process interactions when game is paused
+if (global.game_paused) {
+	// Clean up any existing prompt
+	if (instance_exists(interaction_prompt)) {
+		instance_destroy(interaction_prompt);
+		interaction_prompt = noone;
+	}
+	exit;
+}
+
 // Show interaction prompt only if this is the active interactive object
 if (!is_opened && global.active_interactive == id) {
     show_interaction_prompt(interaction_radius, 0, -24, interaction_key, interaction_action);

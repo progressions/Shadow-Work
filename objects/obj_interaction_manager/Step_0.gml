@@ -1,5 +1,11 @@
 // Find and select the highest priority interactive object near the player
 
+// Don't process interactions when game is paused
+if (global.game_paused) {
+	global.active_interactive = noone;
+	exit;
+}
+
 // Reset active interactive
 global.active_interactive = noone;
 
