@@ -26,14 +26,7 @@ if (is_active && !_was_active) {
 
 	// Initialize the button list
 	init_buttons(_button_instances);
-
-	show_debug_message("Pause Nav Controller: Menu opened, found " + string(array_length(button_list)) + " buttons");
 }
 
 // Call parent Step event to handle navigation input
 event_inherited();
-
-// Debug: Show active state
-if (keyboard_check_pressed(ord("W")) || keyboard_check_pressed(ord("S"))) {
-	show_debug_message("Pause Nav Controller: is_active=" + string(is_active) + ", button_list length=" + string(array_length(button_list)));
-}

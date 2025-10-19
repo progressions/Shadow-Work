@@ -4,8 +4,6 @@
 // Call parent Create event
 event_inherited();
 
-show_debug_message("Pause Nav Controller: Created");
-
 // Override the button activation handler
 on_button_activated = function(_button_id) {
 	switch (_button_id) {
