@@ -1,18 +1,22 @@
 {
   "$GMObject":"",
-  "%Name":"obj_button",
+  "%Name":"obj_pause_nav_controller",
   "eventList":[
     {"$GMEvent":"v1","%Name":"","collisionObjectId":null,"eventNum":0,"eventType":0,"isDnD":false,"name":"","resourceType":"GMEvent","resourceVersion":"2.0",},
+    {"$GMEvent":"v1","%Name":"","collisionObjectId":null,"eventNum":0,"eventType":3,"isDnD":false,"name":"","resourceType":"GMEvent","resourceVersion":"2.0",},
   ],
   "managed":true,
-  "name":"obj_button",
+  "name":"obj_pause_nav_controller",
   "overriddenProperties":[],
   "parent":{
-    "name":"ui",
-    "path":"folders/Objects/ui.yy",
+    "name":"controllers",
+    "path":"folders/Objects/controllers.yy",
   },
-  "parentObjectId":null,
-  "persistent":false,
+  "parentObjectId":{
+    "name":"obj_ui_controller",
+    "path":"objects/obj_ui_controller/obj_ui_controller.yy",
+  },
+  "persistent":true,
   "physicsAngularDamping":0.1,
   "physicsDensity":0.5,
   "physicsFriction":0.2,
@@ -25,16 +29,11 @@
   "physicsShape":1,
   "physicsShapePoints":[],
   "physicsStartAwake":true,
-  "properties":[
-    {"$GMObjectProperty":"v2","%Name":"button_id","filters":[],"listItems":[],"multiselect":false,"name":"button_id","rangeEnabled":false,"rangeMax":10.0,"rangeMin":0.0,"resourceType":"GMObjectProperty","resourceVersion":"2.0","value":"0","varType":1,},
-  ],
+  "properties":[],
   "resourceType":"GMObject",
   "resourceVersion":"2.0",
   "solid":false,
-  "spriteId":{
-    "name":"spr_button",
-    "path":"sprites/spr_button/spr_button.yy",
-  },
+  "spriteId":null,
   "spriteMaskId":null,
   "visible":true,
 }
