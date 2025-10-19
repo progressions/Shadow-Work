@@ -31,16 +31,7 @@ if (is_active && !_was_active) {
 	if (selected_index_to_restore >= 0) {
 		selected_index = selected_index_to_restore;
 		update_button_visuals();
-		show_debug_message("Pause Nav: Restoring selection to index " + string(selected_index));
 		selected_index_to_restore = -1; // Reset for next time
-	}
-
-	show_debug_message("Pause Nav: Found " + string(array_length(button_list)) + " buttons");
-	for (var i = 0; i < array_length(button_list); i++) {
-		var _btn = button_list[i];
-		if (instance_exists(_btn)) {
-			show_debug_message("  Button " + string(i) + ": ID=" + string(_btn.button_id));
-		}
 	}
 
 	// Skip input processing this frame to avoid consuming the keypress that opened/returned to this menu

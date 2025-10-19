@@ -50,13 +50,8 @@ activate_selected_button = function() {
 	if (array_length(button_list) > 0 && selected_index >= 0 && selected_index < array_length(button_list)) {
 		var _button = button_list[selected_index];
 		if (instance_exists(_button)) {
-			show_debug_message("UI Controller: Calling on_button_activated with button_id=" + string(_button.button_id));
 			on_button_activated(_button.button_id);
-		} else {
-			show_debug_message("UI Controller: Button instance does not exist");
 		}
-	} else {
-		show_debug_message("UI Controller: Invalid state - button_list length=" + string(array_length(button_list)) + ", selected_index=" + string(selected_index));
 	}
 }
 
@@ -66,7 +61,6 @@ open_child_panel = function(_child_layer) {
 	selected_index_to_restore = selected_index;
 	layer_set_visible(_child_layer, true);
 	layer_set_visible(my_layer, false);
-	show_debug_message("UI Controller (" + my_layer + "): Opening child panel " + _child_layer + ", saving selection index " + string(selected_index));
 }
 
 // Close this panel and return to parent
@@ -74,7 +68,6 @@ open_child_panel = function(_child_layer) {
 close_and_return_to_parent = function(_parent_layer) {
 	layer_set_visible(my_layer, false);
 	layer_set_visible(_parent_layer, true);
-	show_debug_message("UI Controller (" + my_layer + "): Closing and returning to " + _parent_layer);
 }
 
 // Override this function in child classes to define button actions

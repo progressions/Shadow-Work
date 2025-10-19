@@ -9,7 +9,6 @@ my_layer = "PauseLayer";
 
 // Override the button activation handler
 on_button_activated = function(_button_id) {
-	show_debug_message("Pause Nav: Button activated: " + string(_button_id));
 	switch (_button_id) {
 		case 0: // Resume button
 			global.game_paused = false;
