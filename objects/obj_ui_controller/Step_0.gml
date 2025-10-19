@@ -15,5 +15,6 @@ if (keyboard_check_pressed(ord("S")) || keyboard_check_pressed(ord("D"))) {
 
 // Activate selected button (Enter or E)
 if (keyboard_check_pressed(vk_enter) || keyboard_check_pressed(ord("E"))) {
+	show_debug_message("UI Controller: Activating button at index " + string(selected_index));
 	activate_selected_button();
 }
