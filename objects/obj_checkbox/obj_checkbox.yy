@@ -6,12 +6,17 @@
   ],
   "managed":true,
   "name":"obj_checkbox",
-  "overriddenProperties":[],
+  "overriddenProperties":[
+    {"$GMOverriddenProperty":"v1","%Name":"","name":"","objectId":{"name":"obj_button","path":"objects/obj_button/obj_button.yy",},"propertyId":{"name":"button_id","path":"objects/obj_button/obj_button.yy",},"resourceType":"GMOverriddenProperty","resourceVersion":"2.0","value":"4",},
+  ],
   "parent":{
     "name":"ui",
     "path":"folders/Objects/ui.yy",
   },
-  "parentObjectId":null,
+  "parentObjectId":{
+    "name":"obj_button",
+    "path":"objects/obj_button/obj_button.yy",
+  },
   "persistent":false,
   "physicsAngularDamping":0.1,
   "physicsDensity":0.5,

@@ -22,7 +22,15 @@ update_button_visuals = function() {
 	for (var i = 0; i < array_length(button_list); i++) {
 		var _button = button_list[i];
 		if (instance_exists(_button)) {
-			_button.image_index = (i == selected_index) ? 1 : 0;
+			var _is_selected = (i == selected_index);
+
+			// Check if button has custom visual update (for checkboxes, etc.)
+			if (variable_instance_exists(_button, "custom_visual_update")) {
+				_button.custom_visual_update(_is_selected);
+			} else {
+				// Standard button: frame 0 = normal, frame 1 = highlighted
+				_button.image_index = _is_selected ? 1 : 0;
+			}
 		}
 	}
 }
@@ -50,7 +58,13 @@ activate_selected_button = function() {
 	if (array_length(button_list) > 0 && selected_index >= 0 && selected_index < array_length(button_list)) {
 		var _button = button_list[selected_index];
 		if (instance_exists(_button)) {
-			on_button_activated(_button.button_id);
+			// Check if this button has a toggle method (for checkboxes, etc.)
+			if (variable_instance_exists(_button, "toggle")) {
+				_button.toggle();
+			} else {
+				// Regular button - call the activation handler
+				on_button_activated(_button.button_id);
+			}
 		}
 	}
 }

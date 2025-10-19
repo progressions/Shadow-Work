@@ -4,13 +4,18 @@ is_active = layer_get_visible("PauseLayer");
 
 // When pause menu opens, refresh button list
 if (is_active && !_was_active) {
-	// Find all buttons and order them by button_id
+	// Find all buttons on MY layer and order them by button_id
 	var _all_buttons = [];
+	var _my_layer_id = layer_get_id(my_layer);
+
 	with (obj_button) {
-		array_push(_all_buttons, {
-			instance: id,
-			button_id: button_id
-		});
+		// Only include buttons that are on this controller's layer
+		if (layer_get_id(layer_get_name(layer)) == _my_layer_id) {
+			array_push(_all_buttons, {
+				instance: id,
+				button_id: button_id
+			});
+		}
 	}
 
 	// Sort buttons by button_id to ensure correct ordering
