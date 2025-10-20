@@ -130,7 +130,7 @@ function spawner_spawn_enemy(spawner) {
 
         // Play spawn sound if configured
         if (spawn_sound != noone && audio_exists(spawn_sound)) {
-            audio_play_sound(spawn_sound, 1, false);
+            play_sfx(spawn_sound, 1, 1);
         }
 
         // Reset spawn timer

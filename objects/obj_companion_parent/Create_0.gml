@@ -196,6 +196,9 @@ function companion_start_torch_loop() {
 
     if (torch_looping) return;
 
+    // Check if SFX is enabled
+    if (!global.audio_config.sfx_enabled) return;
+
     if (audio_exists(snd_torch_burning_loop)) {
         audio_emitter_position(torch_sound_emitter, x, y, 0);
         torch_sound_loop_instance = audio_play_sound_on(torch_sound_emitter, snd_torch_burning_loop, 0, true);

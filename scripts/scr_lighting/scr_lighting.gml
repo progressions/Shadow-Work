@@ -16,6 +16,9 @@ function player_start_torch_loop() {
 
     if (torch_looping) return;
 
+    // Check if SFX is enabled
+    if (!global.audio_config.sfx_enabled) return;
+
     var _loop_sound = asset_get_index("snd_torch_burning_loop");
     if (_loop_sound != -1) {
         audio_emitter_position(torch_sound_emitter, x, y, 0);

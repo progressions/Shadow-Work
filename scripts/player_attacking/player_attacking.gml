@@ -33,7 +33,7 @@ function player_handle_attack_input() {
 
     // Play ready sound when weapon becomes available (transition from not ready to ready)
     if (!_was_ready && can_attack && equipped.right_hand != undefined) {
-        audio_play_sound(snd_player_ready, 5, false);
+        play_sfx(snd_player_ready, 1, 5);
     }
 
     var _attack_pressed = keyboard_check_pressed(ord("J"));
