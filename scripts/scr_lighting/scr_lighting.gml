@@ -10,29 +10,35 @@ function player_play_torch_sfx(_asset_name) {
 }
 
 function player_start_torch_loop() {
-    if (!audio_emitter_exists(torch_sound_emitter)) {
-        torch_sound_emitter = audio_emitter_create();
-    }
+    // Always run in player context
+    if (!instance_exists(obj_player)) return;
 
-    if (torch_looping) return;
+    with (obj_player) {
+        // Only start loop if not already playing
+        if (torch_looping) return;
 
-    // Check if SFX is enabled
-    if (!global.audio_config.sfx_enabled) return;
-
-    var _loop_sound = asset_get_index("snd_torch_burning_loop");
-    if (_loop_sound != -1) {
-        audio_emitter_position(torch_sound_emitter, x, y, 0);
-        torch_sound_loop_instance = audio_play_sound_on(torch_sound_emitter, _loop_sound, 0, true);
-        torch_looping = true;
+        var _loop_sound = asset_get_index("snd_torch_burning_loop");
+        if (_loop_sound != -1) {
+            play_sfx(_loop_sound, 1, 8, true);
+            torch_looping = true;
+        }
     }
 }
 
 function player_stop_torch_loop() {
-    if (torch_sound_loop_instance != -1) {
-        audio_stop_sound(torch_sound_loop_instance);
-        torch_sound_loop_instance = -1;
+    // Always run in player context
+    if (!instance_exists(obj_player)) return;
+
+    with (obj_player) {
+        // Only stop if currently looping
+        if (!torch_looping) return;
+
+        var _loop_sound = asset_get_index("snd_torch_burning_loop");
+        if (_loop_sound != -1) {
+            stop_looped_sfx(_loop_sound);
+        }
+        torch_looping = false;
     }
-    torch_looping = false;
 }
 
 function player_supply_companion_torch() {
@@ -186,10 +192,6 @@ function player_update_torch_state() {
         }
 
         player_start_torch_loop();
-
-        if (audio_emitter_exists(torch_sound_emitter)) {
-            audio_emitter_position(torch_sound_emitter, x, y, 0);
-        }
 
         torch_time_remaining = max(0, torch_time_remaining - 1);
 

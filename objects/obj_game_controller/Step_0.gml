@@ -12,6 +12,7 @@ if (!instance_exists(obj_lighting_controller)) {
 
 // Apply camera pan position override BEFORE anything draws
 if (global.camera_pan_state.active) {
+	
 	// Disable room's automatic camera following during pan
 	var _cam = view_camera[0];
 	camera_set_view_target(_cam, noone);
@@ -32,6 +33,7 @@ if (global.camera_pan_state.active) {
 	// Keep camera detached during VN (it's positioned at the target from the pan)
 	camera_set_view_target(view_camera[0], noone);
 } else {
+	
 	// Re-enable camera following player when not panning and VN not active
 	var _player = instance_find(obj_player, 0);
 	if (instance_exists(_player)) {
@@ -45,56 +47,10 @@ if (keyboard_check_pressed(ord("M"))) {
 	global.audio_config.music_enabled = !global.audio_config.music_enabled;
 }
 
-// F3 key to toggle VN intro debug overlay - works even when paused
-if (keyboard_check_pressed(vk_f3)) {
-	global.debug_vn_intro = !global.debug_vn_intro;
-	show_debug_message("VN Intro Debug: " + (global.debug_vn_intro ? "ON" : "OFF"));
-}
-
-// F4 key to toggle enemy approach variation debug visualization
-if (keyboard_check_pressed(vk_f4)) {
-	global.debug_enemy_approach = !global.debug_enemy_approach;
-	show_debug_message("Enemy Approach Debug: " + (global.debug_enemy_approach ? "ON" : "OFF"));
-}
-
-// F1 key to run death event broadcasting test suite
-if (keyboard_check_pressed(vk_f1)) {
-	show_debug_message("Running Death Event Broadcasting Test Suite (F1)...");
-	test_death_event_broadcasting();
-}
-
-// F2 key to run sound variant detection test suite
-if (keyboard_check_pressed(vk_f2)) {
-	show_debug_message("Running Sound Variant Detection Test Suite (F2)...");
-	test_sound_variants();
-}
-
-// F5 key to run play_sfx variant randomization test suite
-if (keyboard_check_pressed(vk_f5)) {
-	show_debug_message("Running play_sfx() Variant Randomization Test Suite (F5)...");
-	test_play_sfx_variants();
-}
-
-// F7 key to run AI event bus test suite
-if (keyboard_check_pressed(vk_f7)) {
-	show_debug_message("Running AI Event Bus Test Suite (F7)...");
-	test_ai_event_bus();
-}
-
-// F11 key to run AI memory system test suite
-if (keyboard_check_pressed(vk_f11)) {
-	show_debug_message("Running AI Memory System Test Suite (F11)...");
-	test_ai_memory_system();
-}
-
-// F12 key to run party memory & morale test suite
-if (keyboard_check_pressed(vk_f12)) {
-	show_debug_message("Running Party Memory & Morale Test Suite (F12)...");
-	test_party_memory_morale();
-}
 
 // Update camera pan state (increment timer, detect completion)
 // IMPORTANT: This must run even when paused so VN intros work correctly
+
 if (global.camera_pan_state.active) {
 	global.camera_pan_state.timer++;
 

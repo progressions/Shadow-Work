@@ -392,9 +392,6 @@ function deserialize_companions(data) {
             with (companion) {
                 companion_stop_torch_loop();
                 companion_start_torch_loop();
-                if (audio_emitter_exists(torch_sound_emitter)) {
-                    audio_emitter_position(torch_sound_emitter, x, y, 0);
-                }
             }
             set_torch_carrier(companion.companion_id);
         } else {
@@ -640,9 +637,13 @@ function serialize_room_state(room_index) {
             continue;
         }
 
-        // Skip companions - they're handled by room transition companion spawning
+        // Skip recruited companions - they're handled by companion serialization and room transition spawning
+        // But save unrecruited companions as part of room state
         if (object_index == obj_companion_parent || object_is_ancestor(object_index, obj_companion_parent)) {
-            continue;
+            if (is_recruited) {
+                continue; // Skip recruited companions
+            }
+            // Fall through to save unrecruited companions
         }
 
         array_push(instances_array, serialize());
@@ -709,13 +710,13 @@ function deserialize_room_state(room_index) {
             continue;
         }
 
-        show_debug_message("  Spawning: " + inst_data.object_type + " at (" + string(inst_data.x) + ", " + string(inst_data.y) + ")");
-
         // Create instance
         var inst = instance_create_depth(inst_data.x, inst_data.y, -50, obj_index);
+        show_debug_message("  Created: " + inst_data.object_type + " at (" + string(inst_data.x) + ", " + string(inst_data.y) + ")");
 
         // Restore its state
         inst.deserialize(inst_data);
+        show_debug_message("  Deserialized: " + inst_data.object_type);
 
         // Add to enemy lookup if it's an enemy
         if (object_is_ancestor(obj_index, obj_enemy_parent) || obj_index == obj_enemy_parent) {
@@ -816,6 +817,15 @@ function save_game(slot) {
         quest_data: serialize_quest_data(),
         room_states: global.room_states,
         visited_rooms: global.visited_rooms,
+
+        // Audio settings
+        audio_config: {
+            master_volume: global.audio_config.master_volume,
+            music_enabled: global.audio_config.music_enabled,
+            music_volume: global.audio_config.music_volume,
+            sfx_enabled: global.audio_config.sfx_enabled,
+            sfx_volume: global.audio_config.sfx_volume
+        },
 
         // VN intro system
         vn_intro_seen: global.vn_intro_seen,
@@ -950,9 +960,6 @@ function restore_save_data(save_data) {
         if (torch_active) {
             player_stop_torch_loop();
             player_start_torch_loop();
-            if (audio_emitter_exists(torch_sound_emitter)) {
-                audio_emitter_position(torch_sound_emitter, x, y, 0);
-            }
         }
     }
 
@@ -984,12 +991,63 @@ function restore_save_data(save_data) {
         show_debug_message("Chatterbox variables restored");
     }
 
+    // Restore audio settings
+    if (variable_struct_exists(save_data, "audio_config")) {
+        global.audio_config.master_volume = save_data.audio_config.master_volume;
+        global.audio_config.music_enabled = save_data.audio_config.music_enabled;
+        global.audio_config.music_volume = save_data.audio_config.music_volume;
+        global.audio_config.sfx_enabled = save_data.audio_config.sfx_enabled;
+        global.audio_config.sfx_volume = save_data.audio_config.sfx_volume;
+        show_debug_message("Audio settings restored - SFX enabled: " + string(global.audio_config.sfx_enabled));
+    }
+
+
     // Clear pending save data
     if (variable_global_exists("pending_save_data")) {
         global.pending_save_data = undefined;
     }
 
     show_debug_message("=== GAME STATE RESTORED SUCCESSFULLY ===");
+
+    // Reinitialize camera to snap to player's restored position
+    if (instance_exists(obj_camera) && instance_exists(obj_player)) {
+        with (obj_camera) {
+            x = obj_player.x;
+            y = obj_player.y;
+            x_to = x;
+            y_to = y;
+            camera_set_view_pos(cam, x - (cam_width * 0.5), y - (cam_height * 0.5));
+            show_debug_message("Camera reinitialized to player position after load: " + string(x) + ", " + string(y));
+        }
+    }
+
+    // Make sure all menu layers are closed and game is unpaused
+    if (layer_exists("SaveLoadLayer")) {
+        layer_set_visible("SaveLoadLayer", false);
+        show_debug_message("SaveLoadLayer hidden after load");
+    }
+    if (layer_exists("PauseLayer")) {
+        layer_set_visible("PauseLayer", false);
+        show_debug_message("PauseLayer hidden after load");
+    }
+    if (layer_exists("SettingsLayer")) {
+        layer_set_visible("SettingsLayer", false);
+        show_debug_message("SettingsLayer hidden after load");
+    }
+    if (layer_exists("VNLayer")) {
+        layer_set_visible("VNLayer", false);
+        show_debug_message("VNLayer hidden after load");
+    }
+
+    global.game_paused = false;
+    show_debug_message("Game unpaused after load - all layers should be hidden");
+
+    // Force clear any transition layer/sequence that might be stuck
+    if (layer_exists("transition")) {
+        layer_destroy("transition");
+        show_debug_message("Destroyed stuck transition layer");
+    }
+    global.mid_transition = false;
 
     // Clear loading flag
     global.is_loading = false;

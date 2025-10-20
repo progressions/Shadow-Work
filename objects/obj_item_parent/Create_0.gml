@@ -30,9 +30,69 @@ function can_interact() {
     return item_def != undefined; // Can interact if item has valid definition
 }
 
+/// @function serialize()
+/// @description Save item state for persistence
+function serialize() {
+    // Create base data struct (from obj_persistent_parent)
+    var data = {
+        object_type: object_get_name(object_index),
+        x: x,
+        y: y,
+        persistent_id: persistent_id
+    };
+
+    // Add item-specific data
+    if (item_def != undefined) {
+        data.item_id = item_def.item_id;
+    } else {
+        data.item_id = undefined;
+    }
+    data.count = count;
+    data.base_y = base_y;
+    data.item_spawn_id = item_spawn_id;
+
+    return data;
+}
+
+/// @function deserialize(data)
+/// @description Restore item state from save data
+function deserialize(data) {
+    // Restore base data (from obj_persistent_parent)
+    x = data.x;
+    y = data.y;
+
+    // Restore item-specific data (check if field exists first)
+    if (variable_struct_exists(data, "item_id") && data.item_id != undefined && variable_global_exists("item_database")) {
+        // Restore item_def reference from global database
+        item_def = global.item_database[$ data.item_id];
+
+        if (item_def != undefined) {
+            // Set sprite frame based on item_id
+            image_index = item_def.world_sprite_frame;
+        }
+    } else {
+        item_def = undefined;
+    }
+
+    if (variable_struct_exists(data, "count")) {
+        count = data.count;
+    }
+
+    if (variable_struct_exists(data, "base_y")) {
+        base_y = data.base_y;
+    }
+
+    if (variable_struct_exists(data, "item_spawn_id")) {
+        item_spawn_id = data.item_spawn_id;
+    }
+}
+
 /// @function on_interact()
 /// @description Called when player presses spacebar to pick up item
 function on_interact() {
+    show_debug_message("on_interact called on: " + object_get_name(object_index));
+    show_debug_message("item_def: " + (item_def != undefined ? item_def.name : "undefined"));
+
     var _player = instance_find(obj_player, 0);
     if (_player == noone) return;
 
@@ -44,7 +104,9 @@ function on_interact() {
 
     if (_added_to_inventory) {
         // Play pickup sound
-        play_sfx(snd_item_pickup, 1, false);
+        show_debug_message("About to call play_sfx from item");
+        play_sfx(snd_item_pickup);
+        show_debug_message("play_sfx call completed");
 
         show_debug_message("Picked up " + string(count) + " " + item_def.name);
 

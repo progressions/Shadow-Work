@@ -66,11 +66,17 @@ open_menu = function(_mode = "save") {
 }
 
 /// @function close_menu()
-/// @description Close save/load menu and return to pause menu
+/// @description Close all menus and return to gameplay
 close_menu = function() {
     is_active = false;
+
+    // Close all menu layers
     layer_set_visible(my_layer, false);
-    layer_set_visible("PauseLayer", true);
+    layer_set_visible("PauseLayer", false);
+    layer_set_visible("SettingsLayer", false);
+
+    // Unpause the game
+    global.game_paused = false;
 }
 
 /// @function switch_mode(new_mode)
@@ -125,7 +131,13 @@ perform_load = function(_slot) {
     if (save_slot_data[_slot] != undefined) {
         if (load_game(_slot)) {
             show_debug_message("Game loaded from slot " + string(_slot));
-            // Menu will close automatically after transition
+
+            // Close all menus and unpause the game
+            is_active = false;
+            layer_set_visible(my_layer, false);
+            layer_set_visible("PauseLayer", false);
+            layer_set_visible("SettingsLayer", false);
+            global.game_paused = false;
         } else {
             show_debug_message("Failed to load from slot " + string(_slot));
         }

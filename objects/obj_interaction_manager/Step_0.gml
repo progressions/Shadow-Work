@@ -11,7 +11,10 @@ global.active_interactive = noone;
 
 // Find player
 var _player = instance_exists(obj_player) ? obj_player : noone;
-if (_player == noone) exit;
+if (_player == noone) {
+	// show_debug_message("INTERACTION MANAGER: No player found");
+	exit;
+}
 
 // Create list to store nearby interactable objects
 var _interactive_list = ds_list_create();
@@ -27,6 +30,11 @@ var _found_count = collision_circle_list(
     _interactive_list,
     false
 );
+
+// Debug logging (only when items found)
+if (_found_count > 0) {
+	// show_debug_message("INTERACTION MANAGER: Found " + string(_found_count) + " interactables near player");
+}
 
 if (_found_count == 0) {
     ds_list_destroy(_interactive_list);
@@ -61,6 +69,12 @@ for (var i = 0; i < _found_count; i++) {
 
 // Store the best candidate
 global.active_interactive = _best_candidate;
+
+if (_best_candidate != noone) {
+	// show_debug_message("INTERACTION MANAGER: Selected " + object_get_name(_best_candidate.object_index) + " at distance " + string(point_distance(_player.x, _player.y, _best_candidate.x, _best_candidate.y)));
+} else {
+	// show_debug_message("INTERACTION MANAGER: No valid candidate (all failed can_interact check or out of range)");
+}
 
 // Clean up
 ds_list_destroy(_interactive_list);

@@ -188,6 +188,17 @@ function evaluate_patrol_decision() {
         return "patrol";
     }
 
+    // Ensure weight_modifiers exists (important during initialization)
+    if (!variable_instance_exists(id, "weight_modifiers")) {
+        weight_modifiers = {
+            low_party_survival: 3.0,
+            low_player_hp: 2.0,
+            low_self_hp: 2.5,
+            isolated: 1.5,
+            player_in_aggro_range: 5.0
+        };
+    }
+
     // Calculate distance to player
     var _dist_to_player = point_distance(x, y, obj_player.x, obj_player.y);
 
@@ -309,6 +320,17 @@ function transition_to_state(_new_state) {
 function calculate_decision_weights(_enemy) {
     if (!instance_exists(_enemy)) return;
     if (!instance_exists(obj_player)) return;
+
+    // Ensure weight_modifiers exists (important during initialization)
+    if (!variable_instance_exists(id, "weight_modifiers")) {
+        weight_modifiers = {
+            low_party_survival: 3.0,
+            low_player_hp: 2.0,
+            low_self_hp: 2.5,
+            isolated: 1.5,
+            player_in_aggro_range: 5.0
+        };
+    }
 
     // Get formation position
     var _form_pos = get_formation_position(_enemy);
@@ -489,7 +511,8 @@ function serialize_party_data() {
             low_party_survival: weight_modifiers.low_party_survival,
             low_player_hp: weight_modifiers.low_player_hp,
             low_self_hp: weight_modifiers.low_self_hp,
-            isolated: weight_modifiers.isolated
+            isolated: weight_modifiers.isolated,
+            player_in_aggro_range: weight_modifiers.player_in_aggro_range
         },
         desperate_threshold: desperate_threshold,
         cautious_threshold: cautious_threshold,
@@ -518,7 +541,10 @@ function deserialize_party_data(_data, _enemy_lookup) {
         low_party_survival: _data.weight_modifiers.low_party_survival,
         low_player_hp: _data.weight_modifiers.low_player_hp,
         low_self_hp: _data.weight_modifiers.low_self_hp,
-        isolated: _data.weight_modifiers.isolated
+        isolated: _data.weight_modifiers.isolated,
+        player_in_aggro_range: variable_struct_exists(_data.weight_modifiers, "player_in_aggro_range")
+            ? _data.weight_modifiers.player_in_aggro_range
+            : 5.0
     };
 
     desperate_threshold = _data.desperate_threshold;

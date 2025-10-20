@@ -178,8 +178,6 @@ torch_light_radius = (_torch_stats != undefined && variable_struct_exists(_torch
     ? _torch_stats[$ "light_radius"]
     : 100;
 
-torch_sound_emitter = audio_emitter_create();
-torch_sound_loop_instance = -1;
 torch_looping = false;
 
 function companion_play_torch_sfx(_asset_name) {
@@ -190,26 +188,21 @@ function companion_play_torch_sfx(_asset_name) {
 }
 
 function companion_start_torch_loop() {
-    if (!audio_emitter_exists(torch_sound_emitter)) {
-        torch_sound_emitter = audio_emitter_create();
-    }
-
+    // Only start loop if not already playing
     if (torch_looping) return;
 
-    // Check if SFX is enabled
-    if (!global.audio_config.sfx_enabled) return;
-
     if (audio_exists(snd_torch_burning_loop)) {
-        audio_emitter_position(torch_sound_emitter, x, y, 0);
-        torch_sound_loop_instance = audio_play_sound_on(torch_sound_emitter, snd_torch_burning_loop, 0, true);
+        play_sfx(snd_torch_burning_loop, 1, 8, true);
         torch_looping = true;
     }
 }
 
 function companion_stop_torch_loop() {
-    if (torch_sound_loop_instance != -1) {
-        audio_stop_sound(torch_sound_loop_instance);
-        torch_sound_loop_instance = -1;
+    // Only stop if currently looping
+    if (!torch_looping) return;
+
+    if (audio_exists(snd_torch_burning_loop)) {
+        stop_looped_sfx(snd_torch_burning_loop);
     }
     torch_looping = false;
 }
@@ -234,11 +227,6 @@ function companion_take_torch_from_player(_time_remaining, _light_radius) {
 
     companion_play_torch_sfx("snd_torch_equip");
     companion_start_torch_loop();
-
-    if (audio_emitter_exists(torch_sound_emitter)) {
-        audio_emitter_position(torch_sound_emitter, x, y, 0);
-    }
-
     set_torch_carrier(companion_id);
 }
 
@@ -264,10 +252,6 @@ function companion_handle_torch_burnout() {
 
 function companion_update_torch_state() {
     if (carrying_torch) {
-        if (audio_emitter_exists(torch_sound_emitter)) {
-            audio_emitter_position(torch_sound_emitter, x, y, 0);
-        }
-
         torch_time_remaining = max(0, torch_time_remaining - 1);
 
         if (torch_time_remaining <= 0) {
