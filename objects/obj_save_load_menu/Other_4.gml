@@ -10,8 +10,5 @@ layer_set_visible("SettingsLayer", false);
 
 show_debug_message("Save/Load Menu Room Start - All UI layers hidden");
 
-// If we just loaded a game, make sure we're unpaused
-if (variable_global_exists("is_loading") && global.is_loading) {
-    global.game_paused = false;
-    show_debug_message("Game unpaused in save/load Room Start");
-}
+// Save system check removed during rebuild
+// Previously unpaused game after loading

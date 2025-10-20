@@ -1,6 +1,6 @@
 global.mid_transition = -1;
 global.room_target = -1;
-global.is_loading = false;
+// global.is_loading removed during save system rebuild
 
 function transition_place_sequence(_type) {
 	if (layer_exists("transition")) layer_destroy("transition");
@@ -22,14 +22,9 @@ function transition_start(_room_target, _type_out, _type_in) {
 }
 
 function transition_change_room() {
-	// Check if we're loading a save in the same room
-	if (variable_global_exists("pending_save_data") && global.pending_save_data != undefined && room == global.room_target) {
-		// Same room restore - call restore directly
-		restore_save_data(global.pending_save_data);
-	} else {
-		// Normal room transition
-		room_goto(global.room_target);
-	}
+	// Save system check removed during rebuild
+	// Always perform normal room transition
+	room_goto(global.room_target);
 }
 
 function transition_finished() {

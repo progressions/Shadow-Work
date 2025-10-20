@@ -160,30 +160,7 @@ function spawn_loot() {
     }
 }
 
-/// @function serialize()
-/// @description Serialize container state for save system
-/// @return {Struct} Serialized container data
-function serialize() {
-    return {
-        openable_id: openable_id,
-        is_opened: is_opened,
-        loot_spawned: loot_spawned,
-        x: x,
-        y: y,
-        object_type: object_get_name(object_index)
-    };
-}
-
-/// @function deserialize(_data)
-/// @description Restore container state from save data
-/// @param {Struct} _data Saved container state
-function deserialize(_data) {
-    is_opened = _data.is_opened;
-    loot_spawned = _data.loot_spawned ?? false;  // Handle old saves without this field
-
-    // Set sprite to correct frame
-    image_index = is_opened ? 3 : 0;
-}
+// Serialize/deserialize methods removed during save system rebuild
 
 /// @function can_interact()
 /// @description Override - container can be interacted with if not opened

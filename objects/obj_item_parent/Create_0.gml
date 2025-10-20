@@ -30,62 +30,7 @@ function can_interact() {
     return item_def != undefined; // Can interact if item has valid definition
 }
 
-/// @function serialize()
-/// @description Save item state for persistence
-function serialize() {
-    // Create base data struct (from obj_persistent_parent)
-    var data = {
-        object_type: object_get_name(object_index),
-        x: x,
-        y: y,
-        persistent_id: persistent_id
-    };
-
-    // Add item-specific data
-    if (item_def != undefined) {
-        data.item_id = item_def.item_id;
-    } else {
-        data.item_id = undefined;
-    }
-    data.count = count;
-    data.base_y = base_y;
-    data.item_spawn_id = item_spawn_id;
-
-    return data;
-}
-
-/// @function deserialize(data)
-/// @description Restore item state from save data
-function deserialize(data) {
-    // Restore base data (from obj_persistent_parent)
-    x = data.x;
-    y = data.y;
-
-    // Restore item-specific data (check if field exists first)
-    if (variable_struct_exists(data, "item_id") && data.item_id != undefined && variable_global_exists("item_database")) {
-        // Restore item_def reference from global database
-        item_def = global.item_database[$ data.item_id];
-
-        if (item_def != undefined) {
-            // Set sprite frame based on item_id
-            image_index = item_def.world_sprite_frame;
-        }
-    } else {
-        item_def = undefined;
-    }
-
-    if (variable_struct_exists(data, "count")) {
-        count = data.count;
-    }
-
-    if (variable_struct_exists(data, "base_y")) {
-        base_y = data.base_y;
-    }
-
-    if (variable_struct_exists(data, "item_spawn_id")) {
-        item_spawn_id = data.item_spawn_id;
-    }
-}
+// Serialize/deserialize methods removed during save system rebuild
 
 /// @function on_interact()
 /// @description Called when player presses spacebar to pick up item
@@ -114,12 +59,7 @@ function on_interact() {
         increment_quest_counter("items_collected", count);
         increment_quest_counter("item_" + item_def.item_id, count);
 
-        // Track picked up item for room state persistence
-        if (variable_instance_exists(id, "item_spawn_id")) {
-            show_debug_message("Tracking picked up item: " + item_spawn_id);
-            array_push(global.picked_up_items, item_spawn_id);
-            show_debug_message("Total picked up items tracked: " + string(array_length(global.picked_up_items)));
-        }
+        // Save system tracking removed during rebuild
 
         // Auto-equip logic (simplified from player_handle_pickup)
         with (_player) {

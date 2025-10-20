@@ -45,16 +45,6 @@ if (instance_exists(obj_player)) {
         global.pending_player_spawn.torch_state = torch_state;
     }
 
-    // Save current room state before leaving
-    var room_key = string(room);
-    show_debug_message("Room End: Saving room state for " + room_get_name(room));
-    global.room_states[$ room_key] = serialize_room_state(room);
-
-    // Mark this room as visited
-    if (array_get_index(global.visited_rooms, room) == -1) {
-        array_push(global.visited_rooms, room);
-    }
-
-    // Auto-save
-    auto_save();
+    // Save system hooks removed during rebuild
+    // Previously saved room state, marked room as visited, and performed auto-save
 }

@@ -299,14 +299,8 @@ global.quest_flags = {};      // Boolean quest flags (struct instead of ds_map f
 global.quest_counters = {};   // Numeric quest counters
 init_quest_database();        // Initialize quest database with quest definitions
 
-// Initialize room state persistence system
-global.room_states = {};      // Struct keyed by room name/index - stores state of each visited room
-global.visited_rooms = [];    // Array of visited room indices
-
-// Initialize world state tracking
-global.opened_chests = [];    // Array of opened chest IDs
-global.broken_breakables = []; // Array of broken breakable IDs
-global.picked_up_items = [];  // Array of picked-up item spawn IDs
+// Save system global variables removed during rebuild
+// Previously initialized: room_states, visited_rooms, opened_chests, broken_breakables, picked_up_items
 
 // Pathfinding debug visualization
 global.debug_pathfinding = false; // Set to false for production

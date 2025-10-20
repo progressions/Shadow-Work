@@ -173,10 +173,5 @@ if (variable_global_exists("pending_player_spawn") && global.pending_player_spaw
     global.pending_player_spawn = undefined;
 }
 
-// Check for pending save data (from load_game room transition)
-check_for_pending_save_restore();
-
-// If no pending save, restore room state if this room has been visited before
-if (!variable_global_exists("pending_save_data") || global.pending_save_data == undefined) {
-    restore_room_state_if_visited();
-}
+// Save system hooks removed during rebuild
+// Previously called: check_for_pending_save_restore() and restore_room_state_if_visited()

@@ -646,3 +646,69 @@ function quest_objective_progress(quest_id, objective_index) {
 
     return 0;
 }
+
+// ============================================
+// QUEST COUNTER AND FLAG HELPERS
+// ============================================
+
+/// @function increment_quest_counter
+/// @description Increment a global quest counter (used for quest tracking)
+/// @param {string} _counter_name The name of the counter
+/// @param {real} _amount The amount to increment by
+function increment_quest_counter(_counter_name, _amount) {
+    if (!variable_global_exists("quest_counters")) {
+        global.quest_counters = {};
+    }
+
+    // Get current value or 0 if doesn't exist
+    var current_value = variable_struct_exists(global.quest_counters, _counter_name)
+        ? global.quest_counters[$ _counter_name]
+        : 0;
+
+    // Increment and store
+    global.quest_counters[$ _counter_name] = current_value + _amount;
+
+    show_debug_message("Quest counter '" + _counter_name + "' incremented by " + string(_amount) + " to " + string(global.quest_counters[$ _counter_name]));
+}
+
+/// @function set_quest_flag
+/// @description Set a global quest flag (used for quest state tracking)
+/// @param {string} _flag_name The name of the flag
+/// @param {bool} _value The value to set (true/false)
+function set_quest_flag(_flag_name, _value) {
+    if (!variable_global_exists("quest_flags")) {
+        global.quest_flags = {};
+    }
+
+    global.quest_flags[$ _flag_name] = _value;
+
+    show_debug_message("Quest flag '" + _flag_name + "' set to " + string(_value));
+}
+
+/// @function get_quest_counter
+/// @description Get the value of a global quest counter
+/// @param {string} _counter_name The name of the counter
+/// @return {real} The counter value (0 if doesn't exist)
+function get_quest_counter(_counter_name) {
+    if (!variable_global_exists("quest_counters")) {
+        return 0;
+    }
+
+    return variable_struct_exists(global.quest_counters, _counter_name)
+        ? global.quest_counters[$ _counter_name]
+        : 0;
+}
+
+/// @function get_quest_flag
+/// @description Get the value of a global quest flag
+/// @param {string} _flag_name The name of the flag
+/// @return {bool} The flag value (false if doesn't exist)
+function get_quest_flag(_flag_name) {
+    if (!variable_global_exists("quest_flags")) {
+        return false;
+    }
+
+    return variable_struct_exists(global.quest_flags, _flag_name)
+        ? global.quest_flags[$ _flag_name]
+        : false;
+}
