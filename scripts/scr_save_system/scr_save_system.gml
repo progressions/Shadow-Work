@@ -1014,3 +1014,76 @@ function check_for_pending_save_restore() {
 function auto_save() {
     return save_game("autosave");
 }
+
+// ============================================
+// SAVE/LOAD MENU HELPER FUNCTIONS
+// ============================================
+
+/// @function get_save_slot_metadata(slot)
+/// @description Extract metadata from a save file without loading the full game
+/// @param {real|string} slot Slot number (1-5) or "autosave"
+/// @return {struct|undefined} Metadata struct or undefined if file doesn't exist
+function get_save_slot_metadata(slot) {
+    var filename = (slot == "autosave") ? "autosave.json" : ("save_slot_" + string(slot) + ".json");
+
+    if (!file_exists(filename)) {
+        return undefined;
+    }
+
+    try {
+        // Read JSON file
+        var file = file_text_open_read(filename);
+        var json_string = "";
+
+        while (!file_text_eof(file)) {
+            json_string += file_text_read_string(file);
+            file_text_readln(file);
+        }
+
+        file_text_close(file);
+
+        // Parse JSON
+        var save_data = json_parse(json_string);
+
+        // Extract metadata
+        var metadata = {
+            exists: true,
+            timestamp: save_data.timestamp,
+            current_room: save_data.current_room,
+            room_name: room_get_name(save_data.current_room),
+            player_level: save_data.player.level,
+            player_hp: save_data.player.hp,
+            player_hp_total: save_data.player.hp_total,
+            player_xp: save_data.player.xp,
+            save_version: save_data.save_version
+        };
+
+        return metadata;
+
+    } catch (error) {
+        show_debug_message("Error reading save slot " + string(slot) + ": " + string(error));
+        return undefined;
+    }
+}
+
+/// @function format_time_ago(timestamp)
+/// @description Format timestamp into readable "X ago" string
+/// @param {real} timestamp GameMaker timestamp value (from current_time)
+/// @return {string} Formatted time string
+function format_time_ago(timestamp) {
+    var diff_ms = current_time - timestamp;
+    var diff_seconds = diff_ms / 1000;
+
+    if (diff_seconds < 60) {
+        return "Just now";
+    } else if (diff_seconds < 3600) {
+        var mins = floor(diff_seconds / 60);
+        return string(mins) + " min" + (mins == 1 ? "" : "s") + " ago";
+    } else if (diff_seconds < 86400) {
+        var hours = floor(diff_seconds / 3600);
+        return string(hours) + " hour" + (hours == 1 ? "" : "s") + " ago";
+    } else {
+        var days = floor(diff_seconds / 86400);
+        return string(days) + " day" + (days == 1 ? "" : "s") + " ago";
+    }
+}
