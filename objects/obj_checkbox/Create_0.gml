@@ -7,10 +7,10 @@ is_selected = false; // Whether this checkbox is currently selected in navigatio
 
 // Initialize from global audio config for audio control checkboxes
 if (variable_global_exists("audio_config")) {
-	if (button_id == 4) {
+	if (button_id == 1) {
 		// Music checkbox
 		enabled = global.audio_config.music_enabled;
-	} else if (button_id == 5) {
+	} else if (button_id == 3) {
 		// SFX checkbox
 		enabled = global.audio_config.sfx_enabled;
 	}

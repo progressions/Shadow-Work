@@ -10,9 +10,15 @@ is_selected = false;   // Whether this slider is currently selected in navigatio
 
 // Initialize from global audio config for audio control sliders
 if (variable_global_exists("audio_config")) {
-	if (button_id == 6) {
+	if (button_id == 0) {
+		// Master volume slider
+		value = global.audio_config.master_volume;
+	} else if (button_id == 2) {
 		// Music volume slider
 		value = global.audio_config.music_volume;
+	} else if (button_id == 4) {
+		// SFX volume slider
+		value = global.audio_config.sfx_volume;
 	}
 }
 

@@ -10,6 +10,12 @@ is_active = false;       // Whether this controller is currently active
 my_layer = "";           // The layer this controller manages (set in child Create)
 selected_index_to_restore = -1;  // Index to restore when returning from child panel
 
+// Slider input timing (for held keys)
+slider_input_delay = 0;       // Frames to wait before next slider adjustment
+slider_initial_delay = 15;    // Initial delay before repeat starts (frames)
+slider_repeat_rate = 3;       // Frames between adjustments when holding key
+slider_first_input = false;   // Track if this is the first input
+
 // Initialize button list and select first button
 init_buttons = function(_button_list) {
 	button_list = _button_list;
