@@ -29,24 +29,22 @@ if (is_active && !_was_active) {
 		array_push(_button_instances, _all_buttons[i].instance);
 	}
 
-	// Initialize the button list
-	init_buttons(_button_instances);
-
-	// Initialize checkbox states from global audio config
-	for (var i = 0; i < array_length(button_list); i++) {
-		var _button = button_list[i];
+	// Initialize checkbox states from global audio config BEFORE calling init_buttons()
+	for (var i = 0; i < array_length(_button_instances); i++) {
+		var _button = _button_instances[i];
 		if (instance_exists(_button) && object_is_ancestor(_button.object_index, obj_checkbox)) {
 			if (_button.button_id == 4) {
 				// Music checkbox
 				_button.enabled = global.audio_config.music_enabled;
-				_button.update_checkbox_visuals();
 			} else if (_button.button_id == 5) {
 				// SFX checkbox
 				_button.enabled = global.audio_config.sfx_enabled;
-				_button.update_checkbox_visuals();
 			}
 		}
 	}
+
+	// Initialize the button list (this will call update_button_visuals which updates checkboxes)
+	init_buttons(_button_instances);
 
 	// Skip input processing this frame to avoid consuming the keypress that opened this menu
 	exit;
