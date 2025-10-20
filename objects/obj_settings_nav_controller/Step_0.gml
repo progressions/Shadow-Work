@@ -60,10 +60,16 @@ if (is_active) {
 		if (instance_exists(_button) && object_is_ancestor(_button.object_index, obj_checkbox)) {
 			if (_button.button_id == 4) {
 				// Music checkbox - sync to global config
-				global.audio_config.music_enabled = _button.enabled;
+				if (global.audio_config.music_enabled != _button.enabled) {
+					global.audio_config.music_enabled = _button.enabled;
+					show_debug_message("Settings: Music enabled set to " + string(_button.enabled));
+				}
 			} else if (_button.button_id == 5) {
 				// SFX checkbox - sync to global config
-				global.audio_config.sfx_enabled = _button.enabled;
+				if (global.audio_config.sfx_enabled != _button.enabled) {
+					global.audio_config.sfx_enabled = _button.enabled;
+					show_debug_message("Settings: SFX enabled set to " + string(_button.enabled));
+				}
 			}
 		}
 	}
