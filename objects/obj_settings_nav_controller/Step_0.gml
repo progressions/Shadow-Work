@@ -34,17 +34,15 @@ if (is_active && !_was_active) {
 	for (var i = 0; i < array_length(_button_instances); i++) {
 		var _button = _button_instances[i];
 		show_debug_message("  Button " + string(i) + ": button_id=" + string(_button.button_id) + " object=" + object_get_name(_button.object_index));
-		if (instance_exists(_button) && _button.object_index == obj_checkbox) {
-			show_debug_message("    -> Is checkbox");
-			if (_button.button_id == 4) {
-				// Music checkbox
-				_button.enabled = global.audio_config.music_enabled;
-				show_debug_message("    -> Initialized music checkbox to " + string(_button.enabled));
-			} else if (_button.button_id == 5) {
-				// SFX checkbox
-				_button.enabled = global.audio_config.sfx_enabled;
-				show_debug_message("    -> Initialized SFX checkbox to " + string(_button.enabled));
-			}
+
+		if (_button.button_id == 4) {
+			// Music checkbox
+			_button.enabled = global.audio_config.music_enabled;
+			show_debug_message("    -> Initialized music checkbox to " + string(_button.enabled));
+		} else if (_button.button_id == 5) {
+			// SFX checkbox
+			_button.enabled = global.audio_config.sfx_enabled;
+			show_debug_message("    -> Initialized SFX checkbox to " + string(_button.enabled));
 		}
 	}
 
@@ -62,19 +60,18 @@ event_inherited();
 if (is_active) {
 	for (var i = 0; i < array_length(button_list); i++) {
 		var _button = button_list[i];
-		if (instance_exists(_button) && _button.object_index == obj_checkbox) {
-			if (_button.button_id == 4) {
-				// Music checkbox - sync to global config
-				if (global.audio_config.music_enabled != _button.enabled) {
-					show_debug_message("SYNC: Music checkbox changed from " + string(global.audio_config.music_enabled) + " to " + string(_button.enabled));
-					global.audio_config.music_enabled = _button.enabled;
-				}
-			} else if (_button.button_id == 5) {
-				// SFX checkbox - sync to global config
-				if (global.audio_config.sfx_enabled != _button.enabled) {
-					show_debug_message("SYNC: SFX checkbox changed from " + string(global.audio_config.sfx_enabled) + " to " + string(_button.enabled));
-					global.audio_config.sfx_enabled = _button.enabled;
-				}
+
+		if (_button.button_id == 4) {
+			// Music checkbox - sync to global config
+			if (global.audio_config.music_enabled != _button.enabled) {
+				show_debug_message("SYNC: Music checkbox changed from " + string(global.audio_config.music_enabled) + " to " + string(_button.enabled));
+				global.audio_config.music_enabled = _button.enabled;
+			}
+		} else if (_button.button_id == 5) {
+			// SFX checkbox - sync to global config
+			if (global.audio_config.sfx_enabled != _button.enabled) {
+				show_debug_message("SYNC: SFX checkbox changed from " + string(global.audio_config.sfx_enabled) + " to " + string(_button.enabled));
+				global.audio_config.sfx_enabled = _button.enabled;
 			}
 		}
 	}
