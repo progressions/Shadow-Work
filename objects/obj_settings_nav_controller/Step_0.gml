@@ -29,7 +29,7 @@ if (is_active && !_was_active) {
 		array_push(_button_instances, _all_buttons[i].instance);
 	}
 
-	// Initialize checkbox states from global audio config BEFORE calling init_buttons()
+	// Initialize checkbox and slider states from global audio config BEFORE calling init_buttons()
 	show_debug_message("Settings menu opened - found " + string(array_length(_button_instances)) + " buttons");
 	for (var i = 0; i < array_length(_button_instances); i++) {
 		var _button = _button_instances[i];
@@ -43,6 +43,10 @@ if (is_active && !_was_active) {
 			// SFX checkbox
 			_button.enabled = global.audio_config.sfx_enabled;
 			show_debug_message("    -> Initialized SFX checkbox to " + string(_button.enabled));
+		} else if (_button.button_id == 6) {
+			// Music volume slider
+			_button.value = global.audio_config.music_volume;
+			show_debug_message("    -> Initialized music volume slider to " + string(_button.value));
 		}
 	}
 
@@ -56,7 +60,7 @@ if (is_active && !_was_active) {
 // Call parent Step event to handle navigation input
 event_inherited();
 
-// Sync checkbox states back to global audio config
+// Sync checkbox and slider states back to global audio config
 if (is_active) {
 	for (var i = 0; i < array_length(button_list); i++) {
 		var _button = button_list[i];
@@ -72,6 +76,12 @@ if (is_active) {
 			if (global.audio_config.sfx_enabled != _button.enabled) {
 				show_debug_message("SYNC: SFX checkbox changed from " + string(global.audio_config.sfx_enabled) + " to " + string(_button.enabled));
 				global.audio_config.sfx_enabled = _button.enabled;
+			}
+		} else if (_button.button_id == 6) {
+			// Music volume slider - sync to global config
+			if (global.audio_config.music_volume != _button.value) {
+				show_debug_message("SYNC: Music volume changed from " + string(global.audio_config.music_volume) + " to " + string(_button.value));
+				global.audio_config.music_volume = _button.value;
 			}
 		}
 	}
