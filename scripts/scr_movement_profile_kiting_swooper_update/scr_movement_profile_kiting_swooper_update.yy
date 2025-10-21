@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"scr_movement_profile_kiting_swooper_update",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"scr_movement_profile_kiting_swooper_update",
+  "parent":{
+    "name":"Scripts",
+    "path":"folders/Scripts.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

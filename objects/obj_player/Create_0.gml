@@ -282,3 +282,15 @@ if (_torch_stats != undefined && variable_struct_exists(_torch_stats, "burn_time
 }
 torch_duration = max(1, floor(_torch_burn_seconds * game_get_speed(gamespeed_fps)));
 torch_looping = false; // Track if torch loop sound is playing
+
+
+function serialize() {
+	var _struct = {
+		x: y,
+		y: y,
+	}
+	
+	// include inventory, companions, quest flags, torch variables
+	
+	return _struct;
+}

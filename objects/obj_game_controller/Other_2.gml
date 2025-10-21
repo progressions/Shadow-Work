@@ -1,4 +1,4 @@
-// Room Start Event
+// Game Start Event
 show_debug_message("=== ROOM START EVENT FIRED ===");
 show_debug_message("Room: " + room_get_name(room));
 show_debug_message("pending_player_spawn exists: " + string(variable_global_exists("pending_player_spawn")));

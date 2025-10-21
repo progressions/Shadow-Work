@@ -128,7 +128,7 @@ function enemy_state_targeting() {
                 return;
             } else if (_chosen_attack == "ranged") {
                 // Execute ranged attack
-                enemy_handle_ranged_attack();
+                scr_enemy_handle_ranged_attack();
                 return;
             } else {  // melee
                 // Execute melee attack
@@ -194,7 +194,7 @@ function enemy_state_targeting() {
         if (_use_ranged && _dist_to_player <= _ranged_range && can_ranged_attack) {
             var _has_los = enemy_has_line_of_sight(_player_x, _player_y);
             if (_has_los) {
-                enemy_handle_ranged_attack();
+                scr_enemy_handle_ranged_attack();
                 return;
             } else {
                 alarm[0] = 0;  // Force path recalc for LOS
@@ -235,7 +235,7 @@ function enemy_state_targeting() {
         if (_dist_to_player <= _ranged_range && can_ranged_attack) {
             var _has_los = enemy_has_line_of_sight(_player_x, _player_y);
             if (_has_los) {
-                enemy_handle_ranged_attack();
+                scr_enemy_handle_ranged_attack();
             } else {
                 // In range but no clear shot - force immediate path recalculation
                 alarm[0] = 0;

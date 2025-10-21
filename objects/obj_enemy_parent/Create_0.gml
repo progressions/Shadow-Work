@@ -265,3 +265,26 @@ flash_timer = 0;         // Countdown timer for flash duration
 flash_color = c_white;   // Current flash color (c_white for normal hit, c_red for crit)
 
 // Serialize/deserialize methods removed during save system rebuild
+function serialize() {
+    var _struct = {
+        // Base persistent_parent fields
+        object_type: object_get_name(object_index),
+        persistent_id: persistent_id,
+        x: x,
+        y: y,
+        room_name: room_get_name(room),
+        sprite_index: sprite_get_name(sprite_index),
+        image_index: image_index,
+        image_xscale: image_xscale,
+        image_yscale: image_yscale,
+
+        // Enemy-specific fields
+        hp: hp,
+        hp_total: hp_total,
+        state: state
+    };
+
+    return _struct;
+}
+  
+  

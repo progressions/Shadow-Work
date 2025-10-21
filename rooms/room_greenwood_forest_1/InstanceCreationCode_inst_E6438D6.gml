@@ -1,3 +1,3 @@
- target_room = room_greenwood_forest_2;
-  target_x = 16;  
-  target_y = 80;
+ target_room = room_level_1;
+  target_x = 340;  
+  target_y = 220;

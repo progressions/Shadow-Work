@@ -1,9 +1,9 @@
 {
   "$GMScript":"v1",
-  "%Name":"trait_system",
+  "%Name":"scr_trait_system",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"trait_system",
+  "name":"scr_trait_system",
   "parent":{
     "name":"Scripts",
     "path":"folders/Scripts.yy",

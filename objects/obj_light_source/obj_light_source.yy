@@ -2,16 +2,19 @@
   "$GMObject":"",
   "%Name":"obj_light_source",
   "eventList":[
-    {"$GMEvent":"v1","%Name":"","collisionObjectId":null,"eventNum":0,"eventType":0,"isDnD":false,"name":"","resourceType":"GMEvent","resourceVersion":"2.0",}
+    {"$GMEvent":"v1","%Name":"","collisionObjectId":null,"eventNum":0,"eventType":0,"isDnD":false,"name":"","resourceType":"GMEvent","resourceVersion":"2.0",},
   ],
   "managed":true,
   "name":"obj_light_source",
   "overriddenProperties":[],
   "parent":{
     "name":"environment",
-    "path":"folders/Objects/environment.yy"
+    "path":"folders/Objects/environment.yy",
   },
-  "parentObjectId":null,
+  "parentObjectId":{
+    "name":"obj_persistent_parent",
+    "path":"objects/obj_persistent_parent/obj_persistent_parent.yy",
+  },
   "persistent":false,
   "physicsAngularDamping":0.1,
   "physicsDensity":0.5,
@@ -31,5 +34,5 @@
   "solid":false,
   "spriteId":null,
   "spriteMaskId":null,
-  "visible":true
+  "visible":true,
 }

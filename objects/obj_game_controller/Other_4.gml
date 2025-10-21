@@ -175,3 +175,5 @@ if (variable_global_exists("pending_player_spawn") && global.pending_player_spaw
 
 // Save system hooks removed during rebuild
 // Previously called: check_for_pending_save_restore() and restore_room_state_if_visited()
+
+// load_room();

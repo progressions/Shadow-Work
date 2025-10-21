@@ -1,9 +1,9 @@
 {
   "$GMScript":"v1",
-  "%Name":"movement_profile_kiting_swooper_update",
+  "%Name":"scr_tag_database",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"movement_profile_kiting_swooper_update",
+  "name":"scr_tag_database",
   "parent":{
     "name":"Scripts",
     "path":"folders/Scripts.yy",

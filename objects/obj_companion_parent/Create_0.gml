@@ -66,7 +66,6 @@ quest_flags = {
 
 // Dialogue state
 dialogue_history = [];
-relationship_stage = 0; // 0=stranger, 1=acquaintance, 2=friend, 3=close, 4=romance
 
 // Auras (passive bonuses) - override in child objects
 auras = {
@@ -454,3 +453,25 @@ function on_interact() {
 
 // Persistent so companions persist across room changes
 persistent = true;
+
+function serialize() {
+    var _struct = {
+        // Base persistent_parent fields
+        object_type: object_get_name(object_index),
+        persistent_id: persistent_id,
+        x: x,
+        y: y,
+        room_name: room_get_name(room),
+        sprite_index: sprite_get_name(sprite_index),
+        image_index: image_index,
+        image_xscale: image_xscale,
+        image_yscale: image_yscale,
+
+        // Companion-specific fields
+        is_recruited: is_recruited,
+        affinity: affinity,
+        quest_flags: quest_flags
+    };
+
+    return _struct;
+}

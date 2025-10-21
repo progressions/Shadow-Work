@@ -1,9 +1,9 @@
 {
   "$GMScript":"v1",
-  "%Name":"enemy_handle_ranged_attack",
+  "%Name":"scr_movement_profile_database",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"enemy_handle_ranged_attack",
+  "name":"scr_movement_profile_database",
   "parent":{
     "name":"enemies",
     "path":"folders/Scripts/enemies.yy",

@@ -47,4 +47,6 @@ if (instance_exists(obj_player)) {
 
     // Save system hooks removed during rebuild
     // Previously saved room state, marked room as visited, and performed auto-save
+	
+	save_room();
 }
