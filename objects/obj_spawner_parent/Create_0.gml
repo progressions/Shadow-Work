@@ -58,4 +58,38 @@ show_debug_message("Spawner created at (" + string(x) + ", " + string(y) + ") - 
     " | Visible: " + (is_visible ? "Yes" : "No") +
     " | Damageable: " + (is_damageable ? "Yes" : "No"));
 
-// Serialize/deserialize methods removed during save system rebuild
+/// @function serialize()
+/// @description Serialize spawner state for save system
+function serialize() {
+    // Convert active enemy instance IDs to persistent_ids
+    var _enemy_ids = [];
+    for (var i = 0; i < array_length(active_spawned_enemies); i++) {
+        var _enemy = active_spawned_enemies[i];
+        if (instance_exists(_enemy) && variable_instance_exists(_enemy, "persistent_id")) {
+            array_push(_enemy_ids, _enemy.persistent_id);
+        }
+    }
+
+    var _struct = {
+        // Base persistent_parent fields
+        object_type: object_get_name(object_index),
+        persistent_id: persistent_id,
+        x: x,
+        y: y,
+        room_name: room_get_name(room),
+        sprite_index: sprite_get_name(sprite_index),
+        image_index: image_index,
+        image_xscale: image_xscale,
+        image_yscale: image_yscale,
+
+        // Spawner-specific state
+        spawned_count: spawned_count,
+        active_spawned_enemy_ids: _enemy_ids,  // Array of persistent_ids
+        is_active: is_active,
+        spawn_timer: spawn_timer,
+        is_destroyed: is_destroyed,
+        hp_current: hp_current
+    };
+
+    return _struct;
+}

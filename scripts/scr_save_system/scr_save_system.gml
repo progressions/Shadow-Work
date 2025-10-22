@@ -83,6 +83,7 @@ function load_room() {
 	if (variable_struct_exists(_room_struct, "objects") && is_array(_room_struct.objects)) {
 		var _objects_array = _room_struct.objects;
 		var _party_controllers_to_restore = []; // Track party controllers for second pass
+		var _spawners_to_restore = []; // Track spawners for second pass
 
 		// FIRST PASS: Create all objects and restore basic properties
 		for (var i = 0; i < array_length(_objects_array); i++) {
@@ -184,6 +185,35 @@ function load_room() {
 							instance_destroy(_instance);
 						}
 					}
+				}
+
+				// Spawner properties (excluding active_spawned_enemies - restored in second pass)
+				if (object_is_ancestor(_instance.object_index, obj_spawner_parent)) {
+					if (variable_struct_exists(_obj_data, "spawned_count")) {
+						_instance.spawned_count = _obj_data.spawned_count;
+					}
+					if (variable_struct_exists(_obj_data, "is_active")) {
+						_instance.is_active = _obj_data.is_active;
+					}
+					if (variable_struct_exists(_obj_data, "spawn_timer")) {
+						_instance.spawn_timer = _obj_data.spawn_timer;
+					}
+					if (variable_struct_exists(_obj_data, "is_destroyed")) {
+						_instance.is_destroyed = _obj_data.is_destroyed;
+						// If spawner was destroyed, destroy it immediately
+						if (_instance.is_destroyed) {
+							instance_destroy(_instance);
+						}
+					}
+					if (variable_struct_exists(_obj_data, "hp_current")) {
+						_instance.hp_current = _obj_data.hp_current;
+					}
+
+					// Store for second pass (to restore active_spawned_enemies references)
+					array_push(_spawners_to_restore, {
+						instance: _instance,
+						data: _obj_data
+					});
 				}
 
 				// Party controller properties (excluding party_members - restored in second pass)
@@ -289,6 +319,33 @@ function load_room() {
 			}
 
 			show_debug_message("Restored party controller with " + string(array_length(_controller.party_members)) + " members");
+		}
+
+		// THIRD PASS: Restore spawner -> enemy references
+		for (var i = 0; i < array_length(_spawners_to_restore); i++) {
+			var _restore_data = _spawners_to_restore[i];
+			var _spawner = _restore_data.instance;
+			var _data = _restore_data.data;
+
+			if (!instance_exists(_spawner)) continue;
+			if (!variable_struct_exists(_data, "active_spawned_enemy_ids")) continue;
+
+			var _enemy_ids = _data.active_spawned_enemy_ids;
+			_spawner.active_spawned_enemies = [];
+
+			// Find each spawned enemy by persistent_id and restore references
+			for (var j = 0; j < array_length(_enemy_ids); j++) {
+				var _persistent_id = _enemy_ids[j];
+
+				// Search for enemy with matching persistent_id
+				with (obj_enemy_parent) {
+					if (persistent_id == _persistent_id) {
+						array_push(_spawner.active_spawned_enemies, id);
+					}
+				}
+			}
+
+			show_debug_message("Restored spawner with " + string(array_length(_spawner.active_spawned_enemies)) + " active enemies");
 		}
 	}
 
