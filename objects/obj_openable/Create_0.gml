@@ -161,6 +161,26 @@ function spawn_loot() {
 }
 
 // Serialize/deserialize methods removed during save system rebuild
+function serialize() {
+    var _struct = {
+        // Base persistent_parent fields
+        object_type: object_get_name(object_index),
+        persistent_id: persistent_id,
+        x: x,
+        y: y,
+        room_name: room_get_name(room),
+        sprite_index: sprite_get_name(sprite_index),
+        image_index: image_index,
+        image_xscale: image_xscale,
+        image_yscale: image_yscale,
+
+        // Openable-specific fields
+        is_opened: is_opened,
+        loot_spawned: loot_spawned
+    };
+
+    return _struct;
+}
 
 /// @function can_interact()
 /// @description Override - container can be interacted with if not opened

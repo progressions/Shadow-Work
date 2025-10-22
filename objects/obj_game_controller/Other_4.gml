@@ -2,6 +2,11 @@
 
 show_debug_message("=== ROOM START EVENT FIRED ===");
 show_debug_message("Room: " + room_get_name(room));
+
+// CRITICAL: Load room state FIRST, before any other logic
+// This destroys room-placed instances and recreates them from save data
+load_room();
+
 show_debug_message("pending_player_spawn exists: " + string(variable_global_exists("pending_player_spawn")));
 if (variable_global_exists("pending_player_spawn")) {
     show_debug_message("pending_player_spawn value: " + string(global.pending_player_spawn));
@@ -175,5 +180,3 @@ if (variable_global_exists("pending_player_spawn") && global.pending_player_spaw
 
 // Save system hooks removed during rebuild
 // Previously called: check_for_pending_save_restore() and restore_room_state_if_visited()
-
-// load_room();

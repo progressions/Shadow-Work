@@ -1,10 +1,14 @@
 /// @description Party Controller Initialization
 
+// Call parent create event (obj_persistent_parent)
+event_inherited();
+
 // Party member tracking
 party_members = [];
 party_leader = noone;
 initial_party_size = 0;
 decision_update_index = 0;  // Tracks which party member updates next (for staggered updates)
+can_spawn_enemies = true;     // Set to false after spawning enemies (spawn once only)
 
 // Formation properties
 formation_template = "";
@@ -54,6 +58,14 @@ weight_modifiers = {
 /// @param {array} _enemy_array - Array of enemy instances to add to party
 /// @param {string} _formation_template_key - Key to formation in global.formation_database
 function init_party(_enemy_array, _formation_template_key) {
+    // Skip if already initialized
+    if (!can_spawn_enemies) {
+        show_debug_message("init_party: Already initialized");
+        return;
+    }
+
+	show_debug_message("party initializing, can_spawn_enemies: " + string(can_spawn_enemies));
+	
     party_members = _enemy_array;
     initial_party_size = array_length(_enemy_array);
     formation_template = _formation_template_key;
@@ -68,6 +80,9 @@ function init_party(_enemy_array, _formation_template_key) {
 
     // Assign formation roles and positions
     assign_formation_roles();
+
+    // Mark as spawned (never spawn again)
+    can_spawn_enemies = false;
 }
 
 /// @function assign_formation_roles()
@@ -475,3 +490,57 @@ function on_leader_death() {
 }
 
 // Serialize/deserialize methods removed during save system rebuild
+function serialize() {
+    // Convert party_members instance array to persistent_id array
+    var _member_ids = [];
+    for (var i = 0; i < array_length(party_members); i++) {
+        var _member = party_members[i];
+        if (instance_exists(_member)) {
+            array_push(_member_ids, _member.persistent_id);
+        }
+    }
+
+    var _struct = {
+        // Base persistent_parent fields
+        object_type: object_get_name(object_index),
+        persistent_id: persistent_id,
+        x: x,
+        y: y,
+        room_name: room_get_name(room),
+        sprite_index: sprite_get_name(sprite_index),
+        image_index: image_index,
+        image_xscale: image_xscale,
+        image_yscale: image_yscale,
+
+        // Party controller-specific fields
+        party_member_ids: _member_ids,  // Array of persistent_ids
+        party_state: party_state,
+        formation_template: formation_template,
+        initial_party_size: initial_party_size,
+        can_spawn_enemies: false,  // Always false when serialized - never spawn on load
+
+        // Protection properties
+        protect_x: protect_x,
+        protect_y: protect_y,
+        protect_radius: protect_radius,
+
+        // Patrol properties
+        patrol_path_name: (patrol_path != -1) ? path_get_name(patrol_path) : "",
+        patrol_speed: patrol_speed,
+        patrol_loop: patrol_loop,
+        patrol_position: patrol_position,
+        patrol_aggro_radius: patrol_aggro_radius,
+        patrol_return_radius: patrol_return_radius,
+        patrol_home_x: patrol_home_x,
+        patrol_home_y: patrol_home_y,
+        patrol_original_state: patrol_original_state,
+
+        // Decision weights
+        weight_attack: weight_attack,
+        weight_formation: weight_formation,
+        weight_flee: weight_flee,
+        weight_patrol: weight_patrol
+    };
+
+    return _struct;
+}

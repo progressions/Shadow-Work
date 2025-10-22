@@ -37,18 +37,21 @@ desperate_threshold = 0.2;   // Stay defensive even when low
 cautious_threshold = 0.5;    // Become cautious at half strength
 emboldened_player_hp_threshold = 0.25;  // Moderate emboldening
 
-// Auto-spawn 3 greenwood bandits around Canopy
-var enemies = [
-    instance_create_layer(protect_x - 48, protect_y, layer, obj_greenwood_bandit),      // Left
-    instance_create_layer(protect_x + 48, protect_y, layer, obj_greenwood_bandit),      // Right
-    instance_create_layer(protect_x, protect_y - 48, layer, obj_greenwood_bandit)       // Front
-];
+// Auto-spawn 3 greenwood bandits around Canopy (spawn once only)
+// Check both can_spawn_enemies AND global loading flag
+if (can_spawn_enemies && (!variable_global_exists("loading_from_save") || !global.loading_from_save)) {
+    var enemies = [
+        instance_create_layer(protect_x - 48, protect_y, layer, obj_greenwood_bandit),      // Left
+        instance_create_layer(protect_x + 48, protect_y, layer, obj_greenwood_bandit),      // Right
+        instance_create_layer(protect_x, protect_y - 48, layer, obj_greenwood_bandit)       // Front
+    ];
 
-// Party system will handle keeping them on patrol via patrol_aggro_radius
-// No special configuration needed - they're just normal enemies in a patrolling party
+    // Party system will handle keeping them on patrol via patrol_aggro_radius
+    // No special configuration needed - they're just normal enemies in a patrolling party
 
-// Initialize the party
-init_party(enemies, formation_template);
+    // Initialize the party
+    init_party(enemies, formation_template);
+}
 
 show_debug_message("=== CANOPY THREAT PARTY CREATED ===");
 show_debug_message("Position: (" + string(x) + ", " + string(y) + ")");

@@ -1,8 +1,11 @@
 persistent = true;
 
 global.save_data = {
-  room_level_1: 0,	
+  room_level_1: 0,
 };
+
+// Flag to prevent party controllers from spawning during load
+global.loading_from_save = false;
 
 // Initialize audio configuration
 global.audio_config = {

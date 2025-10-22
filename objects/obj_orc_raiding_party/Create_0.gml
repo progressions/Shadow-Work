@@ -31,14 +31,17 @@ function on_leader_death() {
     show_debug_message("Orc Raiding Party: Leader slain! Party enraged!");
 }
 
-// Auto-spawn party members in wedge formation
-var enemies = [
-    instance_create_layer(x, y - 48, layer, obj_orc),         // Front (leader)
-    instance_create_layer(x - 32, y - 16, layer, obj_burglar),    // Left flank
-    instance_create_layer(x + 32, y - 16, layer, obj_burglar),    // Right flank
-    instance_create_layer(x - 48, y + 16, layer, obj_burglar),    // Left rear
-    instance_create_layer(x + 48, y + 16, layer, obj_burglar)     // Right rear
-];
+// Auto-spawn party members in wedge formation (spawn once only)
+// Check both can_spawn_enemies AND global loading flag
+if (can_spawn_enemies && (!variable_global_exists("loading_from_save") || !global.loading_from_save)) {
+    var enemies = [
+        instance_create_layer(x, y - 48, layer, obj_orc),         // Front (leader)
+        instance_create_layer(x - 32, y - 16, layer, obj_burglar),    // Left flank
+        instance_create_layer(x + 32, y - 16, layer, obj_burglar),    // Right flank
+        instance_create_layer(x - 48, y + 16, layer, obj_burglar),    // Left rear
+        instance_create_layer(x + 48, y + 16, layer, obj_burglar)     // Right rear
+    ];
 
-// Initialize the party
-init_party(enemies, formation_template);
+    // Initialize the party
+    init_party(enemies, formation_template);
+}
