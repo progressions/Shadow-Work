@@ -166,6 +166,26 @@ function load_room() {
 					}
 				}
 
+				// Breakable properties (vases, boxes, grass, etc.)
+				if (object_is_ancestor(_instance.object_index, obj_breakable)) {
+					if (variable_struct_exists(_obj_data, "hp")) {
+						_instance.hp = _obj_data.hp;
+					}
+					if (variable_struct_exists(_obj_data, "hp_total")) {
+						_instance.hp_total = _obj_data.hp_total;
+					}
+					if (variable_struct_exists(_obj_data, "state")) {
+						_instance.state = _obj_data.state;
+					}
+					if (variable_struct_exists(_obj_data, "is_destroyed")) {
+						_instance.is_destroyed = _obj_data.is_destroyed;
+						// If breakable was destroyed, destroy it immediately
+						if (_instance.is_destroyed) {
+							instance_destroy(_instance);
+						}
+					}
+				}
+
 				// Party controller properties (excluding party_members - restored in second pass)
 				if (object_is_ancestor(_instance.object_index, obj_enemy_party_controller)) {
 					if (variable_struct_exists(_obj_data, "party_state")) {
