@@ -212,21 +212,41 @@ if (state != PlayerState.dead) {
 
     // Torch transfer to companions (L key)
     if (keyboard_check_pressed(ord("L"))) {
-        if (torch_active) {
+        // Check if player has an active torch OR a torch in inventory/equipped
+        var _has_active_torch = torch_active;
+        var _has_torch_available = player_has_torch_in_inventory() || player_has_equipped_torch();
+
+        if (_has_active_torch || _has_torch_available) {
             var _companions = get_active_companions();
             if (array_length(_companions) > 0) {
                 var _target = _companions[0];
                 if (!_target.carrying_torch) {
-                    var _remaining = torch_time_remaining;
+                    var _remaining = 0;
                     var _radius = player_get_torch_light_radius();
-                    if (companion_receive_torch(_target, _remaining, _radius)) {
-                        player_play_torch_sfx("snd_companion_torch_receive");
-                        player_stop_torch_loop();
-                        player_remove_torch_from_loadouts();
-                        torch_active = false;
-                        torch_time_remaining = 0;
-                        // Action tracker: torch given to companion
-                        action_tracker_log("torch_given");
+
+                    // If torch is active, transfer the burning torch with remaining time
+                    if (_has_active_torch) {
+                        _remaining = torch_time_remaining;
+                        if (companion_receive_torch(_target, _remaining, _radius)) {
+                            player_play_torch_sfx("snd_companion_torch_receive");
+                            player_stop_torch_loop();
+                            player_remove_torch_from_loadouts();
+                            torch_active = false;
+                            torch_time_remaining = 0;
+                            // Action tracker: torch given to companion
+                            action_tracker_log("torch_given");
+                        }
+                    }
+                    // Otherwise, consume a torch from inventory and give a fresh one
+                    else if (_has_torch_available) {
+                        if (player_supply_companion_torch()) {
+                            _remaining = torch_duration; // Give full duration torch
+                            if (companion_receive_torch(_target, _remaining, _radius)) {
+                                player_play_torch_sfx("snd_companion_torch_receive");
+                                // Action tracker: torch given to companion
+                                action_tracker_log("torch_given");
+                            }
+                        }
                     }
                 }
             }
