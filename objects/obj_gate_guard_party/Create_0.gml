@@ -45,15 +45,12 @@ function on_leader_death() {
     show_debug_message("Gate Guard Party: Leader fallen! Hold the line!");
 }
 
-// Auto-spawn party members (spawn once only)
-// Check both can_spawn_enemies AND global loading flag
-if (can_spawn_enemies && (!variable_global_exists("loading_from_save") || !global.loading_from_save)) {
-    var enemies = [
-        instance_create_layer(x - 48, y, layer, obj_burglar),  // Left guard
-        instance_create_layer(x, y, layer, obj_burglar),       // Center guard
-        instance_create_layer(x + 48, y, layer, obj_burglar)   // Right guard
-    ];
+// Define spawn data for party members
+var spawn_data = [
+    { x: x - 48, y: y, type: obj_burglar },  // Left guard
+    { x: x, y: y, type: obj_burglar },       // Center guard
+    { x: x + 48, y: y, type: obj_burglar }   // Right guard
+];
 
-    // Initialize the party
-    init_party(enemies, formation_template);
-}
+// Initialize the party (handles spawning and setup)
+init_party(spawn_data, formation_template);

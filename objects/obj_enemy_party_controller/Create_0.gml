@@ -53,36 +53,47 @@ weight_modifiers = {
     player_in_aggro_range: 5.0  // Multiplier to attack weight when player in aggro radius
 };
 
-/// @function init_party(_enemy_array, _formation_template_key)
-/// @description Initialize party with enemies and formation template
-/// @param {array} _enemy_array - Array of enemy instances to add to party
+/// @function init_party(_spawn_data_array, _formation_template_key)
+/// @description Initialize party by spawning enemies from spawn data
+/// @param {array} _spawn_data_array - Array of spawn structs with {x, y, type} properties
 /// @param {string} _formation_template_key - Key to formation in global.formation_database
-function init_party(_enemy_array, _formation_template_key) {
-    // Skip if already initialized
-    if (!can_spawn_enemies) {
-        show_debug_message("init_party: Already initialized");
+function init_party(_spawn_data_array, _formation_template_key) {
+    // Skip if already initialized or loading from save
+    if (!can_spawn_enemies || (variable_global_exists("loading_from_save") && global.loading_from_save)) {
+        show_debug_message("init_party: Skipping spawn (can_spawn_enemies=" + string(can_spawn_enemies) + ", loading=" + string(variable_global_exists("loading_from_save") && global.loading_from_save) + ")");
         return;
     }
 
-	show_debug_message("party initializing, can_spawn_enemies: " + string(can_spawn_enemies));
-	
-    party_members = _enemy_array;
-    initial_party_size = array_length(_enemy_array);
-    formation_template = _formation_template_key;
+    show_debug_message("init_party: Spawning " + string(array_length(_spawn_data_array)) + " enemies");
 
-    // Set party controller reference on each enemy
-    for (var i = 0; i < array_length(party_members); i++) {
-        var _enemy = party_members[i];
+    formation_template = _formation_template_key;
+    party_members = [];
+
+    // Create enemies from spawn data
+    for (var i = 0; i < array_length(_spawn_data_array); i++) {
+        var _spawn_data = _spawn_data_array[i];
+
+        // Create enemy instance
+        var _enemy = instance_create_layer(_spawn_data.x, _spawn_data.y, layer, _spawn_data.type);
+
+        // Add to party
+        array_push(party_members, _enemy);
+
+        // Set party controller reference
         if (instance_exists(_enemy)) {
             _enemy.party_controller = id;
         }
     }
+
+    initial_party_size = array_length(party_members);
 
     // Assign formation roles and positions
     assign_formation_roles();
 
     // Mark as spawned (never spawn again)
     can_spawn_enemies = false;
+
+    show_debug_message("init_party: Successfully spawned and initialized " + string(initial_party_size) + " party members");
 }
 
 /// @function assign_formation_roles()
