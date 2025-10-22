@@ -2,23 +2,12 @@
 /// Initialize onboarding quest sequence for this room
 
 onboarding_initialize_for_room([
-    // Quest 1: Light a torch
+    // Quest 1: Find and pick up a torch
     {
-        quest_id: "onboarding_light_torch",
-        display_text: "It's dark! Press T to light a torch.",
+        quest_id: "onboarding_find_torch",
+        display_text: "It's dark! Press SPACE/E to open a chest and pick up the torch!",
         check_completion: function() {
-            return action_tracker_has("torch_lit");
-        },
-        xp_reward: 5,
-        completed: false
-    },
-
-    // Quest 2: Find and open a chest
-    {
-        quest_id: "onboarding_find_chest",
-        display_text: "Find a chest and open it with SPACE.",
-        check_completion: function() {
-            return action_tracker_has("chest_opened");
+            return action_tracker_has("item_pickup_torch");
         },
         xp_reward: 5,
         completed: false,

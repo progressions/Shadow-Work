@@ -176,7 +176,16 @@ function serialize() {
 
         // Openable-specific fields
         is_opened: is_opened,
-        loot_spawned: loot_spawned
+        loot_spawned: loot_spawned,
+
+        // Loot configuration (must be preserved when recreating from save)
+        loot_mode: loot_mode,
+        loot_items: loot_items,
+        loot_table: loot_table,
+        loot_count: loot_count,
+        loot_count_min: loot_count_min,
+        loot_count_max: loot_count_max,
+        use_variable_quantity: use_variable_quantity
     };
 
     return _struct;

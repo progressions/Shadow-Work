@@ -281,7 +281,53 @@ function serialize() {
         // Enemy-specific fields
         hp: hp,
         hp_total: hp_total,
-        state: state
+        state: state,
+
+        // Movement and targeting
+        target_x: target_x,
+        target_y: target_y,
+        facing_dir: facing_dir,
+        last_dir_index: variable_instance_exists(self, "last_dir_index") ? last_dir_index : 0,
+
+        // Attack cooldowns
+        attack_cooldown: attack_cooldown,
+        ranged_attack_cooldown: ranged_attack_cooldown,
+        can_attack: can_attack,
+        can_ranged_attack: can_ranged_attack,
+        ranged_windup_complete: ranged_windup_complete,
+
+        // Animation state
+        anim_timer: variable_instance_exists(self, "anim_timer") ? anim_timer : 0,
+        prev_start_index: variable_instance_exists(self, "prev_start_index") ? prev_start_index : -1,
+
+        // Knockback state
+        kb_x: kb_x,
+        kb_y: kb_y,
+        knockback_timer: knockback_timer,
+
+        // Approach/flanking system
+        approach_chosen: variable_instance_exists(self, "approach_chosen") ? approach_chosen : false,
+        approach_mode: variable_instance_exists(self, "approach_mode") ? approach_mode : "direct",
+        flank_offset_angle: variable_instance_exists(self, "flank_offset_angle") ? flank_offset_angle : 0,
+
+        // Stun/stagger state
+        is_stunned: variable_instance_exists(self, "is_stunned") ? is_stunned : false,
+        is_staggered: variable_instance_exists(self, "is_staggered") ? is_staggered : false,
+        stun_timer: variable_instance_exists(self, "stun_timer") ? stun_timer : 0,
+        stagger_timer: variable_instance_exists(self, "stagger_timer") ? stagger_timer : 0,
+
+        // AI behavior settings
+        wander_center_x: wander_center_x,
+        wander_center_y: wander_center_y,
+        wander_radius: wander_radius,
+        aggro_distance: aggro_distance,
+        aggro_release_distance: aggro_release_distance,
+
+        // Traits (check if variable exists)
+        traits: variable_instance_exists(self, "traits") ? traits : [],
+
+        // Party controller reference (restored in second pass of load_room)
+        party_controller_id: instance_exists(party_controller) ? party_controller.persistent_id : ""
     };
 
     return _struct;

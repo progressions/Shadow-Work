@@ -142,6 +142,105 @@ function load_room() {
 					if (variable_struct_exists(_obj_data, "state")) {
 						_instance.state = _obj_data.state;
 					}
+
+					// Movement and targeting
+					if (variable_struct_exists(_obj_data, "target_x")) {
+						_instance.target_x = _obj_data.target_x;
+					}
+					if (variable_struct_exists(_obj_data, "target_y")) {
+						_instance.target_y = _obj_data.target_y;
+					}
+					if (variable_struct_exists(_obj_data, "facing_dir")) {
+						_instance.facing_dir = _obj_data.facing_dir;
+					}
+					if (variable_struct_exists(_obj_data, "last_dir_index")) {
+						_instance.last_dir_index = _obj_data.last_dir_index;
+					}
+
+					// Attack cooldowns
+					if (variable_struct_exists(_obj_data, "attack_cooldown")) {
+						_instance.attack_cooldown = _obj_data.attack_cooldown;
+					}
+					if (variable_struct_exists(_obj_data, "ranged_attack_cooldown")) {
+						_instance.ranged_attack_cooldown = _obj_data.ranged_attack_cooldown;
+					}
+					if (variable_struct_exists(_obj_data, "can_attack")) {
+						_instance.can_attack = _obj_data.can_attack;
+					}
+					if (variable_struct_exists(_obj_data, "can_ranged_attack")) {
+						_instance.can_ranged_attack = _obj_data.can_ranged_attack;
+					}
+					if (variable_struct_exists(_obj_data, "ranged_windup_complete")) {
+						_instance.ranged_windup_complete = _obj_data.ranged_windup_complete;
+					}
+
+					// Animation state
+					if (variable_struct_exists(_obj_data, "anim_timer")) {
+						_instance.anim_timer = _obj_data.anim_timer;
+					}
+					if (variable_struct_exists(_obj_data, "prev_start_index")) {
+						_instance.prev_start_index = _obj_data.prev_start_index;
+					}
+
+					// Knockback state
+					if (variable_struct_exists(_obj_data, "kb_x")) {
+						_instance.kb_x = _obj_data.kb_x;
+					}
+					if (variable_struct_exists(_obj_data, "kb_y")) {
+						_instance.kb_y = _obj_data.kb_y;
+					}
+					if (variable_struct_exists(_obj_data, "knockback_timer")) {
+						_instance.knockback_timer = _obj_data.knockback_timer;
+					}
+
+					// Approach/flanking system
+					if (variable_struct_exists(_obj_data, "approach_chosen")) {
+						_instance.approach_chosen = _obj_data.approach_chosen;
+					}
+					if (variable_struct_exists(_obj_data, "approach_mode")) {
+						_instance.approach_mode = _obj_data.approach_mode;
+					}
+					if (variable_struct_exists(_obj_data, "flank_offset_angle")) {
+						_instance.flank_offset_angle = _obj_data.flank_offset_angle;
+					}
+
+					// Stun/stagger state
+					if (variable_struct_exists(_obj_data, "is_stunned")) {
+						_instance.is_stunned = _obj_data.is_stunned;
+					}
+					if (variable_struct_exists(_obj_data, "is_staggered")) {
+						_instance.is_staggered = _obj_data.is_staggered;
+					}
+					if (variable_struct_exists(_obj_data, "stun_timer")) {
+						_instance.stun_timer = _obj_data.stun_timer;
+					}
+					if (variable_struct_exists(_obj_data, "stagger_timer")) {
+						_instance.stagger_timer = _obj_data.stagger_timer;
+					}
+
+					// AI behavior settings
+					if (variable_struct_exists(_obj_data, "wander_center_x")) {
+						_instance.wander_center_x = _obj_data.wander_center_x;
+					}
+					if (variable_struct_exists(_obj_data, "wander_center_y")) {
+						_instance.wander_center_y = _obj_data.wander_center_y;
+					}
+					if (variable_struct_exists(_obj_data, "wander_radius")) {
+						_instance.wander_radius = _obj_data.wander_radius;
+					}
+					if (variable_struct_exists(_obj_data, "aggro_distance")) {
+						_instance.aggro_distance = _obj_data.aggro_distance;
+					}
+					if (variable_struct_exists(_obj_data, "aggro_release_distance")) {
+						_instance.aggro_release_distance = _obj_data.aggro_release_distance;
+					}
+
+					// Traits
+					if (variable_struct_exists(_obj_data, "traits")) {
+						_instance.traits = _obj_data.traits;
+					}
+
+					// Party controller reference will be restored in second pass
 				}
 
 				// Companion properties
@@ -164,6 +263,28 @@ function load_room() {
 					}
 					if (variable_struct_exists(_obj_data, "loot_spawned")) {
 						_instance.loot_spawned = _obj_data.loot_spawned;
+					}
+					// Restore loot configuration (must preserve InstanceCreationCode settings)
+					if (variable_struct_exists(_obj_data, "loot_mode")) {
+						_instance.loot_mode = _obj_data.loot_mode;
+					}
+					if (variable_struct_exists(_obj_data, "loot_items")) {
+						_instance.loot_items = _obj_data.loot_items;
+					}
+					if (variable_struct_exists(_obj_data, "loot_table")) {
+						_instance.loot_table = _obj_data.loot_table;
+					}
+					if (variable_struct_exists(_obj_data, "loot_count")) {
+						_instance.loot_count = _obj_data.loot_count;
+					}
+					if (variable_struct_exists(_obj_data, "loot_count_min")) {
+						_instance.loot_count_min = _obj_data.loot_count_min;
+					}
+					if (variable_struct_exists(_obj_data, "loot_count_max")) {
+						_instance.loot_count_max = _obj_data.loot_count_max;
+					}
+					if (variable_struct_exists(_obj_data, "use_variable_quantity")) {
+						_instance.use_variable_quantity = _obj_data.use_variable_quantity;
 					}
 				}
 
