@@ -168,3 +168,16 @@ if (global.vn_intro_startup_delay > 0) {
 if (global.vn_intro_startup_delay <= 0) {
     check_vn_intro_triggers();
 }
+
+// Autosave timer (only when game is not paused and player exists)
+if (autosave_enabled && instance_exists(obj_player)) {
+    autosave_timer--;
+
+    if (autosave_timer <= 0) {
+        // Trigger autosave
+        auto_save();
+
+        // Reset timer
+        autosave_timer = autosave_interval;
+    }
+}

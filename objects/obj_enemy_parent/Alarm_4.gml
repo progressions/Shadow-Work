@@ -1,6 +1,15 @@
 // Stuck detection - if enemy hasn't moved in 1 second while targeting, try to unstick
 if (global.game_paused) exit;
 
+// Don't run stuck detection while loading from save
+if (global.loading_from_save) {
+    // Just update position and reset alarm
+    stuck_check_x = x;
+    stuck_check_y = y;
+    alarm[4] = 60;
+    exit;
+}
+
 if (state == EnemyState.targeting) {
     // Don't re-trigger if already in unstuck mode
     if (unstuck_mode > 0) {

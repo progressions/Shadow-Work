@@ -59,6 +59,50 @@ function spawn_xp_text(_x, _y, _xp_amount, _parent_instance = noone) {
     return _floating_text;
 }
 
+/// @function ui_show_top_message
+/// @description Display a temporary message at the top of the screen
+/// @param {string} _text Text to display
+/// @param {real} _color Optional colour (default white)
+/// @param {real} _display_frames Optional duration in frames before fade-out (default 180)
+/// @param {real} _y Optional GUI Y position (default 28)
+/// @param {real} _scale Optional Scribble scale (default 0.45)
+function ui_show_top_message(_text, _color = c_white, _display_frames = 180, _y = 28, _scale = 0.45) {
+    global.ui_top_message = {
+        text: string(_text),
+        color: _color,
+        timer: max(0, _display_frames),
+        fade_speed: 0.08,
+        alpha: 0,
+        y: _y,
+        scale: _scale
+    };
+}
+
+/// @function ui_draw_top_text
+/// @description Draw centered Scribble text at the top of the GUI layer
+/// @param {string} _text Text to render
+/// @param {real} _y GUI-space Y position
+/// @param {real} _alpha Alpha multiplier (0-1)
+/// @param {real} _color Optional colour (default white)
+/// @param {real} _scale Optional Scribble scale (default 0.45)
+function ui_draw_top_text(_text, _y, _alpha, _color = c_white, _scale = 0.45) {
+    var _message = string(_text);
+    if (_message == "") return;
+
+    var _draw_alpha = clamp(_alpha, 0, 1);
+    if (_draw_alpha <= 0) return;
+
+    var _gui_width = display_get_gui_width();
+
+    draw_set_alpha(_draw_alpha);
+    scribble(_message)
+        .starting_format("fnt_quest", _color)
+        .align(fa_center, fa_top)
+        .scale(_scale)
+        .draw(_gui_width * 0.5, _y);
+    draw_set_alpha(1);
+}
+
 function ui_draw_bar(_x, _y, _w, _h, _value, _value_max, _fill_color, _back_color, _border_color) {
     var _max_value = max(1, _value_max);
     var _pct = clamp(_value / _max_value, 0, 1);

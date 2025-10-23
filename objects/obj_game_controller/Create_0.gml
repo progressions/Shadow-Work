@@ -230,3 +230,8 @@ slowmo_target_speed = 60;  // Target game speed (60 = normal)
 slowmo_current_speed = 60; // Current interpolated speed
 slowmo_cooldown_timer = 0;   // Frames remaining until slow-mo can trigger again
 slowmo_cooldown_duration = 180; // 3 seconds at 60fps
+
+// Initialize autosave system
+autosave_enabled = true;         // Enable/disable autosave
+autosave_interval = 1800;        // 30 seconds at 60fps (30 * 60 = 1800 frames)
+autosave_timer = autosave_interval; // Start with full interval

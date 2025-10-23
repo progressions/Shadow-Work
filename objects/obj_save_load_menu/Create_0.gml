@@ -27,6 +27,7 @@ text_ids = {
 
 // Selection state (1-5 for slots)
 selected_slot = 1;
+input_cooldown = 0;
 
 // ============================================
 // POINTER POSITIONING
@@ -63,6 +64,9 @@ open_menu = function(_mode = "save") {
     // Scan save files and update UI
     scan_save_slots();
     update_ui_display();
+
+    // Short debounce to avoid immediately activating a slot from the same keypress
+    input_cooldown = 4;
 }
 
 /// @function close_menu()
@@ -116,8 +120,9 @@ perform_save = function(_slot) {
         scan_save_slots();
         update_ui_display();
 
-        // Show feedback to player (if you have a feedback system)
-        // spawn_floating_text(obj_player.x, obj_player.y - 32, "Game Saved", c_green, obj_player);
+        // Close menu and show top-of-screen confirmation
+        close_menu();
+        ui_show_top_message("Game saved to slot " + string(_slot), c_lime);
     } else {
         show_debug_message("Failed to save to slot " + string(_slot));
     }

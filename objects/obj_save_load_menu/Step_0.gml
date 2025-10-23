@@ -4,6 +4,12 @@ if (!is_active) exit;
 // Update pointer visibility every frame
 update_pointer_visibility();
 
+// Debounce input so opening the menu doesn't immediately activate a slot
+if (input_cooldown > 0) {
+    input_cooldown--;
+    exit;
+}
+
 // W/S to navigate slots
 if (keyboard_check_pressed(ord("W")) || keyboard_check_pressed(vk_up)) {
     selected_slot--;

@@ -6,7 +6,7 @@ var _final_volume = global.audio_config.sfx_enabled
 
 // Debug: log when SFX is disabled and sounds are queued
 if (!global.audio_config.sfx_enabled && array_length(sounds_to_play) > 0) {
-	show_debug_message("SFX Controller: SFX disabled, ignoring " + string(array_length(sounds_to_play)) + " queued sounds");
+	// show_debug_message("SFX Controller: SFX disabled, ignoring " + string(array_length(sounds_to_play)) + " queued sounds");
 }
 
 

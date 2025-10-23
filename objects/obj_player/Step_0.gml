@@ -2,6 +2,9 @@
 
 if (global.game_paused) exit;
 
+// Don't process player logic while loading from save
+if (global.loading_from_save) exit;
+
 // Update stun/stagger timers
 update_stun_stagger_timers(self);
 

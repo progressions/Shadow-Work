@@ -201,22 +201,20 @@ if (instance_exists(obj_player)) {
     }
 }
 
+// Draw transient top-of-screen messages
+var _hud_message = global.ui_top_message;
+if (is_struct(_hud_message)) {
+	var _message_text = _hud_message.text ?? "";
+	var _message_alpha = _hud_message.alpha ?? 0;
+	var _message_color = _hud_message.color ?? c_white;
+	var _message_y = _hud_message.y ?? 28;
+	var _message_scale = _hud_message.scale ?? 0.45;
+	ui_draw_top_text(_message_text, _message_y, _message_alpha, _message_color, _message_scale);
+}
+
 // Draw onboarding quest text using Scribble
 // Debug: Check quest status
 if (global.onboarding_quests.current_quest != undefined) {
 	var _quest_text = onboarding_get_current_quest_text();
-	var _text_x = display_get_gui_width() / 2;
-	var _text_y = 60;  // Below health bars
-
-	// Use Scribble for advanced text rendering with fnt_quest font and alpha
-	// Format: [fnt_quest] for font, [c_white] for color
-	var _scribble_text = "[fnt_quest][c_white]" + _quest_text;
-
-	draw_set_alpha(onboarding_quest_alpha);
-	scribble(_scribble_text)
-		.starting_format("fnt_quest", c_white)
-		.align(fa_center, fa_top)
-		.scale(0.4)
-		.draw(_text_x, _text_y);
-	draw_set_alpha(1);
+	ui_draw_top_text(_quest_text, 60, onboarding_quest_alpha, c_white, 0.4);
 }

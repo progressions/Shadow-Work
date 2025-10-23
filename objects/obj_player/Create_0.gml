@@ -284,13 +284,276 @@ torch_duration = max(1, floor(_torch_burn_seconds * game_get_speed(gamespeed_fps
 torch_looping = false; // Track if torch loop sound is playing
 
 
-function serialize() {
-	var _struct = {
-		x: y,
-		y: y,
+/// @function player_build_equipped_entry_from_save
+/// @description Convert saved equipment entry into runtime struct with definition/count/durability
+function player_build_equipped_entry_from_save(_source_value) {
+	if (_source_value == undefined) return undefined;
+
+	var _item_key = undefined;
+	var _count = 1;
+	var _durability = 100;
+
+	if (is_string(_source_value)) {
+		_item_key = _source_value;
+	} else if (is_struct(_source_value)) {
+		if (variable_struct_exists(_source_value, "item_key")) {
+			_item_key = _source_value.item_key;
+		}
+		if (variable_struct_exists(_source_value, "count")) {
+			_count = max(1, _source_value.count);
+		}
+		if (variable_struct_exists(_source_value, "durability")) {
+			_durability = _source_value.durability;
+		}
+		if (_item_key == undefined && variable_struct_exists(_source_value, "definition")) {
+			var _saved_def = _source_value.definition;
+			if (is_struct(_saved_def)) {
+				if (variable_struct_exists(_saved_def, "item_id")) {
+					_item_key = _saved_def.item_id;
+				} else if (variable_struct_exists(_saved_def, "item_key")) {
+					_item_key = _saved_def.item_key;
+				}
+			}
+		}
 	}
-	
-	// include inventory, companions, quest flags, torch variables
-	
-	return _struct;
+
+	if (_item_key == undefined) return undefined;
+	if (!variable_struct_exists(global.item_database, _item_key)) return undefined;
+
+	var _def = global.item_database[$ _item_key];
+
+	return {
+		definition: _def,
+		count: max(1, _count),
+		durability: _durability
+	};
 }
+
+function serialize() {
+	// Helper to get item key/id from inventory or equipped items
+	var _get_item_key = function(_item) {
+		if (_item == undefined) return undefined;
+		if (!is_struct(_item)) return undefined;
+
+		// Check if this is an equipped item (has item_key/item_id directly)
+		if (variable_struct_exists(_item, "item_key")) {
+			return _item.item_key;
+		}
+		if (variable_struct_exists(_item, "item_id")) {
+			return _item.item_id;
+		}
+
+		// Check if this is an inventory item (has definition with item_key/item_id)
+		if (variable_struct_exists(_item, "definition")) {
+			var _def = _item.definition;
+			if (is_struct(_def)) {
+				if (variable_struct_exists(_def, "item_key")) {
+					return _def.item_key;
+				}
+				if (variable_struct_exists(_def, "item_id")) {
+					return _def.item_id;
+				}
+			}
+		}
+
+		return undefined;
+	};
+
+	// Serialize inventory items (with counts)
+	var _inventory_serialized = [];
+	for (var i = 0; i < array_length(inventory); i++) {
+		var _inv_item = inventory[i];
+		if (is_struct(_inv_item)) {
+			var _item_key = _get_item_key(_inv_item);
+			if (_item_key != undefined) {
+				array_push(_inventory_serialized, {
+					item_key: _item_key,
+					count: variable_struct_exists(_inv_item, "count") ? _inv_item.count : 1
+				});
+			}
+		}
+	}
+
+	// Serialize equipped items
+	var _equipped_serialized = {
+		right_hand: _get_item_key(equipped.right_hand),
+		left_hand: _get_item_key(equipped.left_hand),
+		head: _get_item_key(equipped.head),
+		torso: _get_item_key(equipped.torso),
+		legs: _get_item_key(equipped.legs)
+	};
+
+	return {
+		object_type: "obj_player",
+		x: x,
+		y: y,
+		hp: hp,
+		hp_total: hp_total,
+		xp: xp,
+		level: level,
+		torch_active: torch_active,
+		torch_time_remaining: torch_time_remaining,
+		inventory: _inventory_serialized,
+		equipped: _equipped_serialized,
+		loadouts: loadouts
+	};
+}
+
+function deserialize(_data) {
+	show_debug_message(">>> PLAYER DESERIALIZE CALLED <<<");
+	show_debug_message("Data received - X: " + string(_data.x) + " Y: " + string(_data.y));
+
+	// Set position FIRST
+	x = _data.x;
+	y = _data.y;
+
+	show_debug_message("Position set - Current X: " + string(x) + " Y: " + string(y));
+
+	// Zero out velocity
+	hspd = 0;
+	vspd = 0;
+
+	// Force idle state
+	state = PlayerState.idle;
+
+	// Restore stats
+	hp = _data.hp;
+	hp_total = _data.hp_total;
+	xp = _data.xp;
+	level = _data.level;
+
+	// Restore torch
+	torch_active = _data.torch_active;
+	torch_time_remaining = _data.torch_time_remaining;
+
+	if (torch_active && torch_time_remaining > 0) {
+		player_start_torch_loop();
+	} else {
+		player_stop_torch_loop();
+	}
+
+	// Restore inventory
+	if (variable_struct_exists(_data, "inventory") && is_array(_data.inventory)) {
+		inventory = [];
+		var _inv_array = _data.inventory;
+		for (var i = 0; i < array_length(_inv_array); i++) {
+			var _inv_entry = _inv_array[i];
+			var _item_key = undefined;
+			var _item_count = 1;
+
+			if (is_struct(_inv_entry)) {
+				if (variable_struct_exists(_inv_entry, "item_key")) {
+					_item_key = _inv_entry.item_key;
+				}
+				if (variable_struct_exists(_inv_entry, "count")) {
+					_item_count = _inv_entry.count;
+				}
+			}
+
+			if (_item_key != undefined && variable_struct_exists(global.item_database, _item_key)) {
+				var _item_def = global.item_database[$ _item_key];
+				inventory_add_item(_item_def, _item_count);
+			}
+		}
+		show_debug_message("Restored " + string(array_length(inventory)) + " inventory items");
+	}
+
+	var _assign_equipped_slot = function(_slot_name, _value) {
+		var _entry = player_build_equipped_entry_from_save(_value);
+		if (_entry != undefined) {
+			equipped[$ _slot_name] = _entry;
+			if (variable_struct_exists(_entry.definition, "stats")) {
+				apply_wielder_effects(_entry.definition.stats);
+			}
+		}
+	};
+
+	// Restore equipped items
+	if (variable_struct_exists(_data, "equipped") && is_struct(_data.equipped)) {
+		var _equipped_data = _data.equipped;
+
+		var _remove_existing_effects = function(_entry) {
+			if (_entry != undefined && is_struct(_entry) && variable_struct_exists(_entry, "definition")) {
+				var _def = _entry.definition;
+				if (is_struct(_def) && variable_struct_exists(_def, "stats")) {
+					remove_wielder_effects(_def.stats);
+				}
+			}
+		};
+
+		_remove_existing_effects(equipped.right_hand);
+		_remove_existing_effects(equipped.left_hand);
+		_remove_existing_effects(equipped.head);
+		_remove_existing_effects(equipped.torso);
+		_remove_existing_effects(equipped.legs);
+
+		equipped.right_hand = undefined;
+		equipped.left_hand = undefined;
+		equipped.head = undefined;
+		equipped.torso = undefined;
+		equipped.legs = undefined;
+
+		if (variable_struct_exists(_equipped_data, "right_hand") && _equipped_data.right_hand != undefined) {
+			_assign_equipped_slot("right_hand", _equipped_data.right_hand);
+		}
+		if (variable_struct_exists(_equipped_data, "left_hand") && _equipped_data.left_hand != undefined) {
+			_assign_equipped_slot("left_hand", _equipped_data.left_hand);
+		}
+		if (variable_struct_exists(_equipped_data, "head") && _equipped_data.head != undefined) {
+			_assign_equipped_slot("head", _equipped_data.head);
+		}
+		if (variable_struct_exists(_equipped_data, "torso") && _equipped_data.torso != undefined) {
+			_assign_equipped_slot("torso", _equipped_data.torso);
+		}
+		if (variable_struct_exists(_equipped_data, "legs") && _equipped_data.legs != undefined) {
+			_assign_equipped_slot("legs", _equipped_data.legs);
+		}
+		show_debug_message("Equipment restored");
+	}
+
+	// Restore loadouts
+	if (variable_struct_exists(_data, "loadouts")) {
+		var _saved_loadouts = _data.loadouts;
+
+		loadouts = {
+			active: "melee",
+			melee: { right_hand: undefined, left_hand: undefined },
+			ranged: { right_hand: undefined, left_hand: undefined }
+		};
+
+		var _hydrate_loadout_slot = function(_value) {
+			return player_build_equipped_entry_from_save(_value);
+		};
+
+		if (is_struct(_saved_loadouts)) {
+			loadouts.active = _saved_loadouts[$ "active"] ?? loadouts.active;
+
+			if (variable_struct_exists(_saved_loadouts, "melee") && is_struct(_saved_loadouts.melee)) {
+				loadouts.melee.right_hand = _hydrate_loadout_slot(_saved_loadouts.melee[$ "right_hand"]);
+				loadouts.melee.left_hand = _hydrate_loadout_slot(_saved_loadouts.melee[$ "left_hand"]);
+			}
+
+			if (variable_struct_exists(_saved_loadouts, "ranged") && is_struct(_saved_loadouts.ranged)) {
+				loadouts.ranged.right_hand = _hydrate_loadout_slot(_saved_loadouts.ranged[$ "right_hand"]);
+				loadouts.ranged.left_hand = _hydrate_loadout_slot(_saved_loadouts.ranged[$ "left_hand"]);
+			}
+		}
+
+		var _active_key = loadouts.active;
+		if (is_string(_active_key) && variable_struct_exists(loadouts, _active_key)) {
+			if (equipped.right_hand != undefined) {
+				loadouts[$ _active_key].right_hand = equipped.right_hand;
+			}
+			if (equipped.left_hand != undefined) {
+				loadouts[$ _active_key].left_hand = equipped.left_hand;
+			}
+		}
+
+	}
+
+	show_debug_message("Player deserialized at (" + string(x) + ", " + string(y) + ")");
+}
+
+// If a save file queued player restore data before this instance existed,
+// apply it now that the player has been created.
+apply_pending_player_restore();

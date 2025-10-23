@@ -3,6 +3,14 @@
 show_debug_message("=== ROOM START EVENT FIRED ===");
 show_debug_message("Room: " + room_get_name(room));
 
+// Check if there's pending load data to restore after save game load
+if (variable_global_exists("pending_load_data") && global.pending_load_data != undefined) {
+    show_debug_message("Room Start: Restoring pending load data from save");
+    restore_save_data(global.pending_load_data);
+    global.pending_load_data = undefined; // Clear pending data
+    return; // Skip the rest of room start logic (companions already restored)
+}
+
 // CRITICAL: Load room state FIRST, before any other logic
 // This destroys room-placed instances and recreates them from save data
 load_room();
