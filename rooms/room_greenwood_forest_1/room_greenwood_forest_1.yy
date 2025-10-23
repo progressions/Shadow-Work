@@ -188,12 +188,12 @@
           4,5,6,-21,-2147483648,19,50,51,52,53,-2147483648,15,16,16,17,16,17,19,-2147483648,1,-2147483648,-2147483648,
           7,8,9,-6,-2147483648,3,4,5,6,-11,-2147483648,8,54,55,56,57,58,-2147483648,-2147483648,20,-3,21,9,22,
           23,-2147483648,4,5,6,4,5,6,-6,-2147483648,3,7,8,9,-25,-2147483648,
-        ],"TileDataFormat":1,},"tilesetId":{"name":"tiles_forest","path":"tilesets/tiles_forest/tiles_forest.yy",},"userdefinedDepth":false,"visible":false,"x":0,"y":0,},
+        ],"TileDataFormat":1,},"tilesetId":{"name":"tiles_forest","path":"tilesets/tiles_forest/tiles_forest.yy",},"userdefinedDepth":false,"visible":true,"x":0,"y":0,},
     {"$GMRTileLayer":"","%Name":"Tiles_Water","depth":300,"effectEnabled":true,"effectType":null,"gridX":32,"gridY":32,"hierarchyFrozen":false,"inheritLayerDepth":false,"inheritLayerSettings":false,"inheritSubLayers":true,"inheritVisibility":true,"layers":[],"name":"Tiles_Water","properties":[],"resourceType":"GMRTileLayer","resourceVersion":"2.0","tiles":{"SerialiseHeight":23,"SerialiseWidth":40,"TileCompressedData":[
           -575,-2147483648,1,8,-3,4,1,12,-34,-2147483648,2,8,2,-3,0,2,3,12,-33,-2147483648,1,6,-5,0,1,11,-33,-2147483648,
           2,14,5,-4,0,1,11,-34,-2147483648,1,6,-4,0,1,11,-34,-2147483648,1,6,-4,0,1,11,-34,-2147483648,1,6,-3,
           0,2,9,15,-34,-2147483648,5,6,0,0,9,15,-35,-2147483648,4,14,13,13,15,-21,-2147483648,
-        ],"TileDataFormat":1,},"tilesetId":{"name":"tiles_water","path":"tilesets/tiles_water/tiles_water.yy",},"userdefinedDepth":false,"visible":false,"x":0,"y":0,},
+        ],"TileDataFormat":1,},"tilesetId":{"name":"tiles_water","path":"tilesets/tiles_water/tiles_water.yy",},"userdefinedDepth":false,"visible":true,"x":0,"y":0,},
     {"$GMRTileLayer":"","%Name":"Tiles_Water_Background","depth":400,"effectEnabled":true,"effectType":null,"gridX":32,"gridY":32,"hierarchyFrozen":false,"inheritLayerDepth":false,"inheritLayerSettings":false,"inheritSubLayers":true,"inheritVisibility":true,"layers":[],"name":"Tiles_Water_Background","properties":[],"resourceType":"GMRTileLayer","resourceVersion":"2.0","tiles":{"SerialiseHeight":23,"SerialiseWidth":40,"TileCompressedData":[
           -469,-2147483648,1,0,-146,-2147483648,-3,1,-36,-2147483648,-5,1,-36,-2147483648,-4,1,-36,-2147483648,
           -4,1,-36,-2147483648,-4,1,-36,-2147483648,-3,1,-37,-2147483648,-2,1,-62,-2147483648,
@@ -212,7 +212,7 @@
           -18,-2147483648,3,6,1,11,-9,-2147483648,3,6,1,11,-4,-2147483648,3,6,1,11,-18,-2147483648,3,6,1,11,-9,
           -2147483648,3,14,13,15,-4,-2147483648,3,6,1,11,-14,-2147483648,1,8,-3,4,3,2,1,11,-16,-2147483648,3,14,
           13,15,-14,-2147483648,1,6,-5,1,1,11,-33,-2147483648,1,14,-5,13,1,15,-67,-2147483648,
-        ],"TileDataFormat":1,},"tilesetId":{"name":"tiles_path","path":"tilesets/tiles_path/tiles_path.yy",},"userdefinedDepth":false,"visible":false,"x":0,"y":0,},
+        ],"TileDataFormat":1,},"tilesetId":{"name":"tiles_path","path":"tilesets/tiles_path/tiles_path.yy",},"userdefinedDepth":false,"visible":true,"x":0,"y":0,},
     {"$GMRTileLayer":"","%Name":"Tiles_Background","depth":600,"effectEnabled":true,"effectType":null,"gridX":32,"gridY":32,"hierarchyFrozen":false,"inheritLayerDepth":false,"inheritLayerSettings":false,"inheritSubLayers":true,"inheritVisibility":true,"layers":[],"name":"Tiles_Background","properties":[],"resourceType":"GMRTileLayer","resourceVersion":"2.0","tiles":{"SerialiseHeight":23,"SerialiseWidth":40,"TileCompressedData":[1,0,-919,-2147483648,],"TileDataFormat":1,},"tilesetId":{"name":"tiles_forest","path":"tilesets/tiles_forest/tiles_forest.yy",},"userdefinedDepth":false,"visible":true,"x":0,"y":0,},
     {"$GMRBackgroundLayer":"","%Name":"Background","animationFPS":30.0,"animationSpeedType":0,"colour":4294967295,"depth":700,"effectEnabled":true,"effectType":null,"gridX":32,"gridY":32,"hierarchyFrozen":false,"hspeed":0.0,"htiled":true,"inheritLayerDepth":false,"inheritLayerSettings":false,"inheritSubLayers":true,"inheritVisibility":true,"layers":[],"name":"Background","properties":[],"resourceType":"GMRBackgroundLayer","resourceVersion":"2.0","spriteId":{"name":"spr_grass","path":"sprites/spr_grass/spr_grass.yy",},"stretch":false,"userdefinedAnimFPS":false,"userdefinedDepth":false,"visible":true,"vspeed":0.0,"vtiled":true,"x":0,"y":0,},
   ],
