@@ -36,8 +36,8 @@ function player_handle_attack_input() {
         play_sfx(snd_player_ready, 1, 5);
     }
 
-    var _attack_pressed = keyboard_check_pressed(ord("J"));
-    var _attack_released = keyboard_check_released(ord("J"));
+    var _attack_pressed = InputPressed(INPUT_VERB.ATTACK);
+    var _attack_released = InputReleased(INPUT_VERB.ATTACK);
 
     // Instant brake on attack button press for precise positioning
     if (_attack_pressed || _attack_released) {

@@ -12,6 +12,8 @@ function __InputConfigVerbs()
         ACTION,
         SPECIAL,
         PAUSE,
+		SHIELD,
+		ATTACK,
     }
     
     enum INPUT_CLUSTER
@@ -32,6 +34,8 @@ function __InputConfigVerbs()
         InputDefineVerb(INPUT_VERB.ACTION,  "action",      vk_enter,            gp_face3);
         InputDefineVerb(INPUT_VERB.SPECIAL, "special",     vk_shift,            gp_face4);
         InputDefineVerb(INPUT_VERB.PAUSE,   "pause",       vk_escape,           gp_start);
+		InputDefineVerb(INPUT_VERB.SHIELD,  "shield",      "O",                 gp_face1);
+		InputDefineVerb(INPUT_VERB.ATTACK,  "attack",      "J",                 gp_face1);
     }
     else //Flip A/B over on Switch
     {
@@ -44,6 +48,8 @@ function __InputConfigVerbs()
         InputDefineVerb(INPUT_VERB.ACTION,  "action",  undefined,   gp_face3);
         InputDefineVerb(INPUT_VERB.SPECIAL, "special", undefined,   gp_face4);
         InputDefineVerb(INPUT_VERB.PAUSE,   "pause",   undefined,   gp_start);
+		InputDefineVerb(INPUT_VERB.SHIELD,  "shield",      "O",                 gp_face4);
+		InputDefineVerb(INPUT_VERB.ATTACK,  "attack",      "J",                 gp_face2);
     }
     
     //Define a cluster of verbs for moving around

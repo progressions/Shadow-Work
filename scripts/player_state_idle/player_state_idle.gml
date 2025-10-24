@@ -22,9 +22,9 @@ function player_state_idle() {
             return; // Dash was triggered, state changed
         }
 
-        // Check for input to transition to walking
-        var _hor = keyboard_check(ord("D")) - keyboard_check(ord("A"));
-        var _ver = keyboard_check(ord("S")) - keyboard_check(ord("W"));
+        // Check for input to transition to walking - use InputX/InputY for analog support
+        var _hor = InputX(INPUT_CLUSTER.NAVIGATION);
+        var _ver = InputY(INPUT_CLUSTER.NAVIGATION);
 
         if (_hor != 0 || _ver != 0) {
             state = PlayerState.walking;

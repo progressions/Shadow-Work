@@ -27,7 +27,7 @@ function player_focus_init(_player) {
         hold_duration_ms: 250,
         last_aim_time: 0,
         last_retreat_time: 0,
-        prev_facing_dir: "down",
+        prev_facing_dir: "",
         restore_facing_pending: false,
         last_exit_time: 0,
         last_update_time: 0,
@@ -85,8 +85,8 @@ function player_focus_update(_player) {
     }
 
     if (_state.active) {
-        var _input_x = keyboard_check(ord("D")) - keyboard_check(ord("A"));
-        var _input_y = keyboard_check(ord("S")) - keyboard_check(ord("W"));
+        var _input_x = InputX(INPUT_CLUSTER.NAVIGATION);
+        var _input_y = InputY(INPUT_CLUSTER.NAVIGATION);
 
         // NOTE: WASD during focus mode only controls movement, NOT aim
         // Aim stays locked to prev_facing_dir (direction when J was pressed)
@@ -275,9 +275,9 @@ function player_focus_consume_for_attack(_player) {
     var _state = _player.focus_state;
     var _was_in_focus = (_state.prev_facing_dir != "");
 
-    // Always use the locked facing direction (prev_facing_dir) from when J was pressed
-    // WASD during focus mode only controls movement, not aim
-    var _aim_label = _state.prev_facing_dir;
+    // If in focus mode, use the locked facing direction (prev_facing_dir) from when J was pressed
+    // If NOT in focus mode, use the current facing_dir
+    var _aim_label = _was_in_focus ? _state.prev_facing_dir : _player.facing_dir;
     var _aim_vector = player_focus_resolve_direction_from_label(_aim_label);
     if (_aim_vector == undefined) _aim_vector = { x: 0, y: 0 };
 
@@ -286,12 +286,6 @@ function player_focus_consume_for_attack(_player) {
     var _use_focus = _was_in_focus || (_retreat_label != "");
     var _retreat_vector = player_focus_resolve_direction_from_label(_retreat_label);
     if (_retreat_vector == undefined) _retreat_vector = { x: 0, y: 0 };
-
-    show_debug_message("=== FOCUS CONSUME DEBUG ===");
-    show_debug_message("Current facing_dir: " + string(_player.facing_dir));
-    show_debug_message("Locked direction (will fire): " + string(_aim_label));
-    show_debug_message("Use focus: " + string(_use_focus));
-    show_debug_message("==========================");
 
     // Clear aim buffer after consumption
     _state.aim_direction = "";

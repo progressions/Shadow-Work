@@ -125,10 +125,17 @@ if (state != PlayerState.dead) {
     if (dash_attack_window > 0) {
         // Check for direction change (cancels dash attack window)
         var _input_dir = "";
-        if (keyboard_check(ord("W"))) _input_dir = "up";
-        else if (keyboard_check(ord("S"))) _input_dir = "down";
-        else if (keyboard_check(ord("A"))) _input_dir = "left";
-        else if (keyboard_check(ord("D"))) _input_dir = "right";
+        var _hor = InputX(INPUT_CLUSTER.NAVIGATION);
+        var _ver = InputY(INPUT_CLUSTER.NAVIGATION);
+
+        // Determine direction from analog input
+        if (abs(_ver) > abs(_hor)) {
+            if (_ver > 0) _input_dir = "down";
+            else if (_ver < 0) _input_dir = "up";
+        } else {
+            if (_hor > 0) _input_dir = "right";
+            else if (_hor < 0) _input_dir = "left";
+        }
 
         if (_input_dir != "" && _input_dir != last_dash_direction) {
             dash_attack_window = 0; // Cancel window on direction change

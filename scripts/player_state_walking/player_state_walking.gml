@@ -24,9 +24,11 @@ function player_state_walking() {
         return; // Dash was triggered, state changed
     }
 
-    // Check for input
-    var _hor = keyboard_check(ord("D")) - keyboard_check(ord("A"));
-    var _ver = keyboard_check(ord("S")) - keyboard_check(ord("W"));
+    // Check for input - use InputX/InputY for proper analog stick support
+    // var _hor = keyboard_check(ord("D")) - keyboard_check(ord("A"));
+    // var _ver = keyboard_check(ord("S")) - keyboard_check(ord("W"));
+	var _hor = InputX(INPUT_CLUSTER.NAVIGATION);
+	var _ver = InputY(INPUT_CLUSTER.NAVIGATION);
 
     // If no input, transition to idle
     if (_hor == 0 && _ver == 0) {
@@ -37,22 +39,25 @@ function player_state_walking() {
 
     var _allow_focus_facing = player_focus_allows_facing_updates(self);
 
-    // Update facing direction and move_dir
-    if (_ver > 0) {
-        move_dir = "down";
-        if (_allow_focus_facing) facing_dir = "down";
-    }
-    else if (_ver < 0) {
-        move_dir = "up";
-        if (_allow_focus_facing) facing_dir = "up";
-    }
-    else if (_hor > 0) {
-        move_dir = "right";
-        if (_allow_focus_facing) facing_dir = "right";
-    }
-    else if (_hor < 0) {
-        move_dir = "left";
-        if (_allow_focus_facing) facing_dir = "left";
+    // Update facing direction and move_dir - use strongest axis for analog input
+    if (abs(_ver) > abs(_hor)) {
+        // Vertical is stronger
+        if (_ver > 0) {
+            move_dir = "down";
+            if (_allow_focus_facing) facing_dir = "down";
+        } else if (_ver < 0) {
+            move_dir = "up";
+            if (_allow_focus_facing) facing_dir = "up";
+        }
+    } else {
+        // Horizontal is stronger (or equal)
+        if (_hor > 0) {
+            move_dir = "right";
+            if (_allow_focus_facing) facing_dir = "right";
+        } else if (_hor < 0) {
+            move_dir = "left";
+            if (_allow_focus_facing) facing_dir = "left";
+        }
     }
 
     // Detect terrain at player position (for footstep sounds)
