@@ -73,24 +73,7 @@ function serialize_companions() {
     var _companions_array = [];
 
     with (obj_companion_parent) {
-        var _companion_data = {
-            companion_id: companion_id,
-            x: x,
-            y: y,
-            is_recruited: is_recruited,
-            state: state,
-            affinity: affinity,
-            quest_flags: quest_flags,
-
-            // Triggers
-            triggers: triggers,
-
-            // Auras
-            auras: auras,
-
-            // Animation state
-            last_dir_index: last_dir_index
-        };
+        var _companion_data = serialize();
 
         array_push(_companions_array, _companion_data);
     }
@@ -394,42 +377,26 @@ function restore_save_data(_save_struct) {
 /// @function deserialize_companions
 /// @description Restore companion data from save
 function deserialize_companions(_companions_array) {
+	show_debug_message("Deserializing companions");
     if (!is_array(_companions_array)) {
         return;
     }
+	show_debug_message("_companions_array " + string(_companions_array));
 
     for (var i = 0; i < array_length(_companions_array); i++) {
         var _companion_data = _companions_array[i];
+		show_debug_message("deserializing " + string(_companion_data));
         if (!is_struct(_companion_data) || !variable_struct_exists(_companion_data, "companion_id")) {
             continue;
         }
 
         var _companion_id = _companion_data.companion_id;
+		show_debug_message("_companion_id " + string(_companion_id));
 
         // Find companion instance by ID
         with (obj_companion_parent) {
             if (companion_id == _companion_id) {
-                // Restore position
-                if (variable_struct_exists(_companion_data, "x")) x = _companion_data.x;
-                if (variable_struct_exists(_companion_data, "y")) y = _companion_data.y;
-
-                // Restore state
-                if (variable_struct_exists(_companion_data, "is_recruited")) is_recruited = _companion_data.is_recruited;
-                if (variable_struct_exists(_companion_data, "state")) state = _companion_data.state;
-                if (variable_struct_exists(_companion_data, "affinity")) affinity = _companion_data.affinity;
-                if (variable_struct_exists(_companion_data, "quest_flags")) quest_flags = _companion_data.quest_flags;
-                if (variable_struct_exists(_companion_data, "last_dir_index")) last_dir_index = _companion_data.last_dir_index;
-
-                // Restore triggers
-                if (variable_struct_exists(_companion_data, "triggers")) {
-                    triggers = _companion_data.triggers;
-                }
-
-                // Restore auras
-                if (variable_struct_exists(_companion_data, "auras")) {
-                    auras = _companion_data.auras;
-                }
-
+                deserialize(_companion_data);
                 show_debug_message("Restored companion: " + _companion_id);
             }
         }
