@@ -555,3 +555,8 @@ function serialize() {
 
     return _struct;
 }
+
+function deserialize(_obj_data) {
+	x = _obj_data[$ "x"];
+	y = _obj_data[$ "y"];
+}

@@ -30,7 +30,77 @@ function can_interact() {
     return item_def != undefined; // Can interact if item has valid definition
 }
 
-// Serialize/deserialize methods removed during save system rebuild
+// Serialize method to save item data
+/// @function serialize()
+/// @description Save item-specific data for persistence
+function serialize() {
+    // Base persistent_parent fields (can't use event_inherited in custom functions)
+    var _struct = {
+        // Identity & Location
+        object_type: object_get_name(object_index),
+        persistent_id: persistent_id,
+        x: x,
+        y: y,
+        room_name: room_get_name(room),
+        sprite_index: sprite_get_name(sprite_index),
+        image_index: image_index,
+        image_xscale: image_xscale,
+        image_yscale: image_yscale,
+    };
+
+    // Add item-specific data
+    if (item_def != undefined) {
+        // Store item_key to look up in database on load
+        if (variable_struct_exists(item_def, "item_key")) {
+            _struct.item_key = item_def.item_key;
+            show_debug_message("Saving item with item_key: " + item_def.item_key);
+        } else if (variable_struct_exists(item_def, "item_id")) {
+            _struct.item_key = item_def.item_id;
+            show_debug_message("Saving item with item_id: " + item_def.item_id);
+        }
+    } else {
+        show_debug_message("WARNING: Saving item with undefined item_def!");
+    }
+
+    _struct.count = count;
+    _struct.base_y = base_y;
+
+    return _struct;
+}
+
+/// @function deserialize(_data)
+/// @description Restore item-specific data from save
+/// @param {struct} _data The saved data struct
+function deserialize(_data) {
+    show_debug_message("  Deserializing item at (" + string(_data.x) + ", " + string(_data.y) + ")");
+
+    // Restore item definition from item_key
+    if (variable_struct_exists(_data, "item_key")) {
+        var _item_key = _data.item_key;
+        show_debug_message("    Item key: " + _item_key);
+
+        if (variable_struct_exists(global.item_database, _item_key)) {
+            item_def = global.item_database[$ _item_key];
+            show_debug_message("    Item def restored: " + item_def.name);
+        } else {
+            show_debug_message("    ERROR: Item key not found in database: " + _item_key);
+        }
+    } else {
+        show_debug_message("    ERROR: No item_key in saved data");
+    }
+
+    // Restore count for stackable items
+    if (variable_struct_exists(_data, "count")) {
+        count = _data.count;
+    }
+
+    // Restore base_y for bobbing animation
+    if (variable_struct_exists(_data, "base_y")) {
+        base_y = _data.base_y;
+    }
+
+    show_debug_message("    can_interact(): " + string(can_interact()));
+}
 
 /// @function on_interact()
 /// @description Called when player presses spacebar to pick up item

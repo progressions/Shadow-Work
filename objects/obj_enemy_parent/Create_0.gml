@@ -18,6 +18,8 @@ target_y = y;
 
 alarm[0] = 60;
 
+party_controller_id = -1;
+
 // Store movement direction for animation
 move_dir_x = 0;
 move_dir_y = 0;
@@ -29,10 +31,10 @@ if (!variable_instance_exists(self, "state")) {
     state = EnemyState.targeting;
 }
 
-if (!variable_instance_exists(self, "wander_center_x")) wander_center_x = xstart;
-if (!variable_instance_exists(self, "wander_center_y")) wander_center_y = ystart;
-if (!variable_instance_exists(self, "wander_radius"))   wander_radius   = 100;
-if (!variable_instance_exists(self, "aggro_release_distance")) aggro_release_distance = -1;
+wander_center_x = xstart;
+wander_center_y = ystart;
+wander_radius   = 100;
+aggro_release_distance = -1;
 facing_dir = "down"; // String direction for ranged attacks (updated from dir_index in Step event)
 
 kb_x = 0;
@@ -162,6 +164,7 @@ collision_damage_cooldown = 30;          // Frames between collision hits (0.5s)
 collision_damage_timer = 0;              // Current cooldown timer
 
 // Trait system v2.0 - Stacking traits
+traits = [];
 tags = []; // Thematic descriptors (fireborne, venomous, etc.) - set by child enemies
 permanent_traits = {}; // From tags (applied at creation)
 temporary_traits = {};  // From buffs/debuffs (applied during combat)
@@ -283,54 +286,121 @@ function serialize() {
         hp_total: hp_total,
         state: state,
 
-        // Movement and targeting
-        target_x: target_x,
-        target_y: target_y,
-        facing_dir: facing_dir,
-        last_dir_index: variable_instance_exists(self, "last_dir_index") ? last_dir_index : 0,
-
-        // Attack cooldowns
-        attack_cooldown: attack_cooldown,
-        ranged_attack_cooldown: ranged_attack_cooldown,
-        can_attack: can_attack,
-        can_ranged_attack: can_ranged_attack,
-        ranged_windup_complete: ranged_windup_complete,
-
-        // Animation state
-        anim_timer: variable_instance_exists(self, "anim_timer") ? anim_timer : 0,
-        prev_start_index: variable_instance_exists(self, "prev_start_index") ? prev_start_index : -1,
-
-        // Knockback state
+        // Knockback
         kb_x: kb_x,
         kb_y: kb_y,
         knockback_timer: knockback_timer,
 
-        // Approach/flanking system
-        approach_chosen: variable_instance_exists(self, "approach_chosen") ? approach_chosen : false,
-        approach_mode: variable_instance_exists(self, "approach_mode") ? approach_mode : "direct",
-        flank_offset_angle: variable_instance_exists(self, "flank_offset_angle") ? flank_offset_angle : 0,
+        // Combat state
+        can_attack: can_attack,
+        attack_cooldown: attack_cooldown,
+        can_ranged_attack: can_ranged_attack,
+        ranged_attack_cooldown: ranged_attack_cooldown,
+        ranged_windup_complete: ranged_windup_complete,
 
-        // Stun/stagger state
-        is_stunned: variable_instance_exists(self, "is_stunned") ? is_stunned : false,
-        is_staggered: variable_instance_exists(self, "is_staggered") ? is_staggered : false,
-        stun_timer: variable_instance_exists(self, "stun_timer") ? stun_timer : 0,
-        stagger_timer: variable_instance_exists(self, "stagger_timer") ? stagger_timer : 0,
+        // Crowd control
+        is_stunned: is_stunned,
+        is_staggered: is_staggered,
+        stun_timer: stun_timer,
+        stagger_timer: stagger_timer,
 
-        // AI behavior settings
+        // Movement and targeting
+        target_x: target_x,
+        target_y: target_y,
+        facing_dir: facing_dir,
+        approach_mode: approach_mode,
+        approach_chosen: approach_chosen,
+        flank_offset_angle: flank_offset_angle,
+
+        // Animation
+        anim_timer: anim_timer,
+        last_dir_index: last_dir_index,
+        prev_start_index: prev_start_index,
+
+        // Aggro and wandering
+        aggro_distance: aggro_distance,
+        aggro_release_distance: aggro_release_distance,
         wander_center_x: wander_center_x,
         wander_center_y: wander_center_y,
         wander_radius: wander_radius,
-        aggro_distance: aggro_distance,
-        aggro_release_distance: aggro_release_distance,
 
-        // Traits (check if variable exists)
-        traits: variable_instance_exists(self, "traits") ? traits : [],
+        // Traits
+        traits: traits,
 
-        // Party controller reference (restored in second pass of load_room)
-        party_controller_id: instance_exists(party_controller) ? party_controller.persistent_id : ""
+        // Party controller
+        party_controller_id: party_controller_id
     };
 
     return _struct;
 }
-  
-  
+
+/* 
+ { object_type : "obj_greenwood_bandit", x : 673.05, y : 438.77, kb_x : 0, kb_y : 0, knockback_timer : 0, approach_mode : "direct", flank_offset_angle : 0, 
+is_stunned : 0, is_staggered : 0, can_attack : 1, attack_cooldown : 0, target_x : 650, target_y : 402, facing_dir : "left", 
+sprite_index : "spr_greenwood_bandit", image_index : 5, hp_total : 3, image_xscale : 1, image_yscale : 1, traits : [  ], 
+persistent_id : "obj_greenwood_bandit_650_402", last_dir_index : 2, aggro_distance : 90, wander_center_x : 650, wander_center_y : 402, 
+wander_radius : 100, anim_timer : 103.95, state : 7, can_ranged_attack : 1, room_name : "room_level_1", approach_chosen : 0, aggro_release_distance : -1, prev_start_index : 4, 
+party_controller_id : "obj_canopy_threat_657_449", hp : 4, ranged_windup_complete : 0, ranged_attack_cooldown : 0, stun_timer : 0, stagger_timer : 0 }
+*/
+
+function deserialize(_obj_data) {
+	// Position
+	x = _obj_data[$ "x"] ?? x;
+	y = _obj_data[$ "y"] ?? y;
+
+	// Knockback
+	kb_x = _obj_data[$ "kb_x"] ?? 0;
+	kb_y = _obj_data[$ "kb_y"] ?? 0;
+	knockback_timer = _obj_data[$ "knockback_timer"] ?? 0;
+
+	// Movement and targeting
+	approach_mode = _obj_data[$ "approach_mode"] ?? "direct";
+	flank_offset_angle = _obj_data[$ "flank_offset_angle"] ?? 0;
+	target_x = _obj_data[$ "target_x"] ?? x;
+	target_y = _obj_data[$ "target_y"] ?? y;
+	facing_dir = _obj_data[$ "facing_dir"] ?? "down";
+	approach_chosen = _obj_data[$ "approach_chosen"] ?? false;
+
+	// Crowd control
+	is_stunned = _obj_data[$ "is_stunned"] ?? false;
+	is_staggered = _obj_data[$ "is_staggered"] ?? false;
+	stun_timer = _obj_data[$ "stun_timer"] ?? 0;
+	stagger_timer = _obj_data[$ "stagger_timer"] ?? 0;
+
+	// Combat state
+	can_attack = _obj_data[$ "can_attack"] ?? true;
+	attack_cooldown = _obj_data[$ "attack_cooldown"] ?? 0;
+	can_ranged_attack = _obj_data[$ "can_ranged_attack"] ?? true;
+	ranged_attack_cooldown = _obj_data[$ "ranged_attack_cooldown"] ?? 0;
+	ranged_windup_complete = _obj_data[$ "ranged_windup_complete"] ?? false;
+
+	// Sprite and animation
+	sprite_index = asset_get_index(_obj_data[$ "sprite_index"] ?? sprite_get_name(sprite_index));
+	image_index = _obj_data[$ "image_index"] ?? 0;
+	image_xscale = _obj_data[$ "image_xscale"] ?? 1;
+	image_yscale = _obj_data[$ "image_yscale"] ?? 1;
+	anim_timer = _obj_data[$ "anim_timer"] ?? 0;
+	last_dir_index = _obj_data[$ "last_dir_index"] ?? 0;
+	prev_start_index = _obj_data[$ "prev_start_index"] ?? 0;
+
+	// Health and state
+	hp_total = _obj_data[$ "hp_total"] ?? hp_total;
+	hp = _obj_data[$ "hp"] ?? hp_total;
+	state = _obj_data[$ "state"] ?? EnemyState.targeting;
+
+	// Traits
+	traits = _obj_data[$ "traits"] ?? [];
+
+	// Persistent ID
+	persistent_id = _obj_data[$ "persistent_id"] ?? persistent_id;
+
+	// Aggro and wandering
+	aggro_distance = _obj_data[$ "aggro_distance"] ?? 90;
+	aggro_release_distance = _obj_data[$ "aggro_release_distance"] ?? -1;
+	wander_center_x = _obj_data[$ "wander_center_x"] ?? x;
+	wander_center_y = _obj_data[$ "wander_center_y"] ?? y;
+	wander_radius = _obj_data[$ "wander_radius"] ?? 100;
+
+	// Party controller
+	party_controller_id = _obj_data[$ "party_controller_id"] ?? -1;
+}

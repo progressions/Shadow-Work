@@ -8,6 +8,9 @@ attack_range = 24;  // Long range for bow attacks (8 tiles)
 hp = 4;
 move_speed = 0.7;
 
+kb_x = 0;
+kb_y = 0;
+
 // Ranged attack configuration
 is_ranged_attacker = false;
 ranged_damage = 2;           // Higher than melee damage
@@ -41,5 +44,5 @@ enemy_anim_overrides = {
     ranged_attack_up: {start: 46, length: 3}
 };
 
- state = EnemyState.wander;
- aggro_distance = 90;
+state = EnemyState.wander;
+aggro_distance = 90;

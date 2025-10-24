@@ -166,6 +166,7 @@ function serialize() {
         // Base persistent_parent fields
         object_type: object_get_name(object_index),
         persistent_id: persistent_id,
+		openable_id: openable_id,
         x: x,
         y: y,
         room_name: room_get_name(room),
@@ -189,6 +190,37 @@ function serialize() {
     };
 
     return _struct;
+}
+
+// { loot_mode : "specific", object_type : "obj_chest", x : 347, loot_items : [ "wooden_bow","torch","torch" ], y : 253, image_xscale : 1, room_name : "room_level_1", image_yscale : 1, persistent_id : "obj_chest_347_253", loot_table : [  ], is_opened : 0, loot_spawned : 0, loot_count : 1, loot_count_min : 1, loot_count_max : 1, sprite_index : "spr_item_chest", use_variable_quantity : 0, image_index : 0 }
+
+function deserialize(_obj_data) {
+	// Position
+	x = _obj_data[$ "x"] ?? x;
+	y = _obj_data[$ "y"] ?? y;
+
+	// Sprite and animation
+	sprite_index = asset_get_index(_obj_data[$ "sprite_index"] ?? sprite_get_name(sprite_index));
+	image_index = _obj_data[$ "image_index"] ?? 0;
+	image_xscale = _obj_data[$ "image_xscale"] ?? 1;
+	image_yscale = _obj_data[$ "image_yscale"] ?? 1;
+
+	// Persistent ID
+	persistent_id = _obj_data[$ "persistent_id"] ?? persistent_id;
+	openable_id = _obj_data[$ "openable_id"] ?? openable_id;
+
+	// State
+	is_opened = _obj_data[$ "is_opened"] ?? false;
+	loot_spawned = _obj_data[$ "loot_spawned"] ?? false;
+
+	// Loot configuration
+	loot_mode = _obj_data[$ "loot_mode"] ?? "specific";
+	loot_items = _obj_data[$ "loot_items"] ?? [];
+	loot_table = _obj_data[$ "loot_table"] ?? [];
+	loot_count = _obj_data[$ "loot_count"] ?? 1;
+	loot_count_min = _obj_data[$ "loot_count_min"] ?? 1;
+	loot_count_max = _obj_data[$ "loot_count_max"] ?? 1;
+	use_variable_quantity = _obj_data[$ "use_variable_quantity"] ?? false;
 }
 
 /// @function can_interact()
