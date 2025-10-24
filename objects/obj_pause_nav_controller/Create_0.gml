@@ -15,8 +15,7 @@ on_button_activated = function(_button_id) {
 			break;
 
 		case 1: // Resume button
-			global.game_paused = false;
-			obj_pause_controller.update_pause();
+			ui_close_all_menus();
 			break;
 
 		case 2: // Settings button

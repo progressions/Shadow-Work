@@ -61,6 +61,9 @@ open_menu = function(_mode = "save") {
     layer_set_visible(my_layer, true);
     layer_set_visible("PauseLayer", false);
 
+    // Mute world sounds (footsteps, combat, etc.)
+    audio_group_set_gain(audiogroup_sfx_world, 0, 0);
+
     // Scan save files and update UI
     scan_save_slots();
     update_ui_display();
@@ -73,14 +76,7 @@ open_menu = function(_mode = "save") {
 /// @description Close all menus and return to gameplay
 close_menu = function() {
     is_active = false;
-
-    // Close all menu layers
-    layer_set_visible(my_layer, false);
-    layer_set_visible("PauseLayer", false);
-    layer_set_visible("SettingsLayer", false);
-
-    // Unpause the game
-    global.game_paused = false;
+    ui_close_all_menus();
 }
 
 /// @function switch_mode(new_mode)
@@ -139,10 +135,7 @@ perform_load = function(_slot) {
 
             // Close all menus and unpause the game
             is_active = false;
-            layer_set_visible(my_layer, false);
-            layer_set_visible("PauseLayer", false);
-            layer_set_visible("SettingsLayer", false);
-            global.game_paused = false;
+            ui_close_all_menus();
         } else {
             show_debug_message("Failed to load from slot " + string(_slot));
         }

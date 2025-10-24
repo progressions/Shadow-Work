@@ -45,13 +45,7 @@ if (is_active && !_was_active) {
 
 // Escape to close all menus and return to gameplay
 if (is_active && keyboard_check_pressed(vk_escape)) {
-	// Close all menu layers
-	layer_set_visible("PauseLayer", false);
-	layer_set_visible("SettingsLayer", false);
-	layer_set_visible("SaveLoadLayer", false);
-
-	// Unpause the game
-	global.game_paused = false;
+	ui_close_all_menus();
 
 	// Exit early to skip normal input processing
 	exit;

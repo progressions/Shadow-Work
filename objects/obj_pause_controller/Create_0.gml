@@ -7,8 +7,7 @@ update_pause = function() {
 		layer_set_visible(pause_layer, true);
 		audio_group_set_gain(audiogroup_sfx_world, 0, 0);
 	} else {
-		layer_set_visible(pause_layer, false);
-		audio_group_set_gain(audiogroup_sfx_world, 1, 0);
+		ui_close_all_menus();
 	}
 }
 

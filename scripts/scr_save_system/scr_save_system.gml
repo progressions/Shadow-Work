@@ -285,14 +285,13 @@ function restore_save_data(_save_struct) {
     show_debug_message("  audiogroup_sfx_ui loaded: " + string(audio_group_is_loaded(audiogroup_sfx_ui)));
     show_debug_message("  audiogroup_sfx_world loaded: " + string(audio_group_is_loaded(audiogroup_sfx_world)));
 
-    // Unload and reload audio groups to reset their state
-    show_debug_message("  Reloading audio groups to reset state...");
-    audio_group_unload(audiogroup_sfx_ui);
-    audio_group_unload(audiogroup_sfx_world);
-    audio_group_load(audiogroup_sfx_ui);
-    audio_group_load(audiogroup_sfx_world);
-
-    show_debug_message("  Audio groups reloaded");
+    // Load audio groups if they aren't already loaded
+    if (!audio_group_is_loaded(audiogroup_sfx_ui)) {
+        audio_group_load(audiogroup_sfx_ui);
+    }
+    if (!audio_group_is_loaded(audiogroup_sfx_world)) {
+        audio_group_load(audiogroup_sfx_world);
+    }
 
     // Debug: Check audio config
     show_debug_message("Audio config in restore_save_data:");

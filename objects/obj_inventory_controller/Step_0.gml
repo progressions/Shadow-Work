@@ -8,21 +8,18 @@ var _play_ui_sfx = function(_sound, _volume = 1) {
 if (keyboard_check_pressed(ord("I"))) {
     is_open = !is_open;
 
-    // Create a global pause variable if it doesn't exist
-    global.game_paused = is_open;
-
     _play_ui_sfx(is_open ? snd_open_inventory : snd_close_inventory);
 
 	if (is_open) {
+        // Open inventory: pause game and mute world sounds
+        global.game_paused = true;
 		audio_group_set_gain(audiogroup_sfx_world, 0, 0);
-	} else {
-		audio_group_set_gain(audiogroup_sfx_world, 1, 0);
-	}
-
-    // Action tracker: inventory opened
-    if (is_open) {
+        // Action tracker: inventory opened
         action_tracker_log("inventory_opened");
-    }
+	} else {
+        // Close inventory: restore game state
+		ui_close_all_menus();
+	}
 }
 
 // Navigation only when inventory is open
@@ -512,7 +509,6 @@ if (is_open) {
     if (keyboard_check_pressed(vk_escape)) {
         show_debug_message("[ESC] Closing inventory");
         is_open = false;
-        global.game_paused = false;
-		audio_group_set_gain(audiogroup_sfx_world, 1, 0);
+		ui_close_all_menus();
     }
 }

@@ -2,6 +2,27 @@
 // UI FUNCTIONS - Drawing helpers and UI utilities
 // ============================================
 
+/// @function ui_close_all_menus()
+/// @description Close all UI menus, restore audio, and unpause the game
+function ui_close_all_menus() {
+    // Close all menu layers
+    if (layer_exists("PauseLayer")) {
+        layer_set_visible("PauseLayer", false);
+    }
+    if (layer_exists("SettingsLayer")) {
+        layer_set_visible("SettingsLayer", false);
+    }
+    if (layer_exists("SaveLoadLayer")) {
+        layer_set_visible("SaveLoadLayer", false);
+    }
+
+    // Restore world sounds
+    audio_group_set_gain(audiogroup_sfx_world, 1, 0);
+
+    // Unpause the game
+    global.game_paused = false;
+}
+
 // Spawn floating text above an entity
 function spawn_floating_text(_x, _y, _text, _color = c_white, _parent_instance = noone) {
     var _floating_text = instance_create_layer(_x, _y, "Instances", obj_floating_text);
