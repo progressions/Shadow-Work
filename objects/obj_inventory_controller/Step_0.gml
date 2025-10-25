@@ -345,9 +345,9 @@ if (is_open) {
         }
     }
 
-    if (keyboard_check_pressed(ord("E"))) {
+    if (InputPressed(INPUT_VERB.INTERACT)) {
         if (_slot_action != InventoryContextAction.equip) {
-            show_debug_message("[E] No equip action available (current context: " + _action_text + ")");
+            show_debug_message("[INTERACT] No equip action available (current context: " + _action_text + ")");
             _play_ui_sfx(snd_denied);
         } else if (_player == noone) {
             show_debug_message("[E] No player instance found");

@@ -7,7 +7,7 @@ function player_state_walking() {
     }
 
     // Check for shield block input
-    if (keyboard_check_pressed(ord("O"))) {
+    if (InputPressed(INPUT_VERB.SHIELD)) {
         // Check if shield is equipped
         if (equipped[$ "left_hand"] != undefined && block_cooldown <= 0) {
             // Enter shielding state

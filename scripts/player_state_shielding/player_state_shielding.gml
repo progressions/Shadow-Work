@@ -3,7 +3,7 @@
 
 function player_state_shielding() {
     // Exit shield if not holding block key
-    if (!keyboard_check(ord("O"))) {
+    if (!InputCheck(INPUT_VERB.SHIELD)) {
         // Release shield, apply cooldown
         block_cooldown = block_cooldown_max;  // Default cooldown
         state = PlayerState.idle;
@@ -22,8 +22,8 @@ function player_state_shielding() {
     facing_dir = shield_facing_dir;
 
     // Allow WASD movement in any direction while maintaining shield facing
-    var _hor = keyboard_check(ord("D")) - keyboard_check(ord("A"));
-    var _ver = keyboard_check(ord("S")) - keyboard_check(ord("W"));
+    var _hor = InputX(INPUT_CLUSTER.NAVIGATION);
+    var _ver = InputY(INPUT_CLUSTER.NAVIGATION);
 
     // Apply movement using velocity system (like walking state)
     if (_hor != 0 || _ver != 0) {

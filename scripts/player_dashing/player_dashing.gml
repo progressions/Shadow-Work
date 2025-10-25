@@ -63,8 +63,8 @@ function player_dashing(){
         
     } else {
         // idle movement
-        _hor = keyboard_check(ord("D")) - keyboard_check(ord("A"));
-        _ver = keyboard_check(ord("S")) - keyboard_check(ord("W"));
+        _hor = InputX(INPUT_CLUSTER.NAVIGATION);
+        _ver = InputY(INPUT_CLUSTER.NAVIGATION);
 		 
         move_dir = "idle";
         if (_hor != 0 or _ver != 0) {

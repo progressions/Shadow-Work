@@ -1,5 +1,5 @@
 function player_handle_dash_input() {
-    // Check for double-tap dash input
+    // Check for double-tap dash input OR dash button
     if (state != PlayerState.dashing && dash_cooldown <= 0) {
         var _focus_active = focus_enabled && variable_struct_exists(self, "focus_state") && focus_state.active;
         var _has_ranged_weapon = false;
@@ -10,8 +10,17 @@ function player_handle_dash_input() {
             }
         }
 
-        // W key double-tap
-        if (keyboard_check_pressed(ord("W"))) {
+        // Dash button (Circle on PS5) - dash in current facing direction
+        if (InputPressed(INPUT_VERB.DASH)) {
+            if (!_focus_active) {
+                start_dash(facing_dir);
+                state = PlayerState.dashing;
+                return true;
+            }
+        }
+
+        // UP double-tap
+        if (InputPressed(INPUT_VERB.UP)) {
             if (current_time - last_key_time_w < double_tap_time) {
                 if (_focus_active) {
                     if (_has_ranged_weapon && player_focus_is_retreat_direction(facing_dir, "up")) {
@@ -35,8 +44,8 @@ function player_handle_dash_input() {
             last_key_time_w = current_time;
         }
 
-        // A key double-tap
-        if (keyboard_check_pressed(ord("A"))) {
+        // LEFT double-tap
+        if (InputPressed(INPUT_VERB.LEFT)) {
             if (current_time - last_key_time_a < double_tap_time) {
                 if (_focus_active) {
                     if (_has_ranged_weapon && player_focus_is_retreat_direction(facing_dir, "left")) {
@@ -60,8 +69,8 @@ function player_handle_dash_input() {
             last_key_time_a = current_time;
         }
 
-        // S key double-tap
-        if (keyboard_check_pressed(ord("S"))) {
+        // DOWN double-tap
+        if (InputPressed(INPUT_VERB.DOWN)) {
             if (current_time - last_key_time_s < double_tap_time) {
                 if (_focus_active) {
                     if (_has_ranged_weapon && player_focus_is_retreat_direction(facing_dir, "down")) {
@@ -85,8 +94,8 @@ function player_handle_dash_input() {
             last_key_time_s = current_time;
         }
 
-        // D key double-tap
-        if (keyboard_check_pressed(ord("D"))) {
+        // RIGHT double-tap
+        if (InputPressed(INPUT_VERB.RIGHT)) {
             if (current_time - last_key_time_d < double_tap_time) {
                 if (_focus_active) {
                     if (_has_ranged_weapon && player_focus_is_retreat_direction(facing_dir, "right")) {

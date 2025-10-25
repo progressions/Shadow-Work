@@ -100,8 +100,8 @@ if (global.vn_chatterbox != undefined) {
 			show_debug_message("Selected choice: " + string(selected_choice));
 		}
 
-		// Use Enter to select choices (Space might be consumed elsewhere)
-		if (keyboard_check_pressed(vk_enter) || keyboard_check_pressed(ord("E"))) {
+		// Use Enter/Interact to select choices
+		if (keyboard_check_pressed(vk_enter) || InputPressed(INPUT_VERB.INTERACT)) {
 			show_debug_message("Selecting choice: " + string(selected_choice));
 			play_sfx(snd_vn_option_select, 1);
 			current_raw_content = "";
@@ -111,7 +111,7 @@ if (global.vn_chatterbox != undefined) {
 		}
 	} else {
 		// No choices - advance dialogue
-		if (keyboard_check_pressed(vk_enter) || keyboard_check_pressed(ord("E"))) {
+		if (keyboard_check_pressed(vk_enter) || InputPressed(INPUT_VERB.INTERACT)) {
 			var _typist_ready = true;
 
 			if (dialogue_typist != undefined && dialogue_typist.get_state() < 1) {
