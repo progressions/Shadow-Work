@@ -828,7 +828,6 @@
     {"id":{"name":"scr_stun_stagger_system","path":"scripts/scr_stun_stagger_system/scr_stun_stagger_system.yy",},},
     {"id":{"name":"scr_tag_database","path":"scripts/scr_tag_database/scr_tag_database.yy",},},
     {"id":{"name":"scr_terrain_effects","path":"scripts/scr_terrain_effects/scr_terrain_effects.yy",},},
-    {"id":{"name":"scr_testing_utilities","path":"scripts/scr_testing_utilities/scr_testing_utilities.yy",},},
     {"id":{"name":"scr_trait_database","path":"scripts/scr_trait_database/scr_trait_database.yy",},},
     {"id":{"name":"scr_trait_system","path":"scripts/scr_trait_system/scr_trait_system.yy",},},
     {"id":{"name":"scr_transitions","path":"scripts/scr_transitions/scr_transitions.yy",},},
