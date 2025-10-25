@@ -18,6 +18,7 @@ function __InputConfigVerbs()
 		INTERACT,
 		UI_CANCEL,  // Context-aware: Companion menu in gameplay, Close menus in UI (Circle)
 		INVENTORY,  // For opening inventory (I + Triangle)
+		SWAP_LOADOUT,  // Swap between melee and ranged loadouts (Q + L1)
     }
     
     enum INPUT_CLUSTER
@@ -44,6 +45,7 @@ function __InputConfigVerbs()
 		InputDefineVerb(INPUT_VERB.INTERACT, "interact",   [vk_space, vk_enter, "E"], gp_face1);
 		InputDefineVerb(INPUT_VERB.UI_CANCEL, "ui_cancel", undefined,           gp_face2);
 		InputDefineVerb(INPUT_VERB.INVENTORY, "inventory", "I",                 gp_face4);
+		InputDefineVerb(INPUT_VERB.SWAP_LOADOUT, "swap_loadout", "Q",          gp_shoulderl);
     }
     else //Flip A/B over on Switch
     {
@@ -62,6 +64,7 @@ function __InputConfigVerbs()
 		InputDefineVerb(INPUT_VERB.INTERACT, "interact",   [vk_space, vk_enter, "E"], gp_face2); // Switch A/B flipped
 		InputDefineVerb(INPUT_VERB.UI_CANCEL, "ui_cancel", undefined,           gp_face1); // Switch A/B flipped
 		InputDefineVerb(INPUT_VERB.INVENTORY, "inventory", "I",                 gp_face4);
+		InputDefineVerb(INPUT_VERB.SWAP_LOADOUT, "swap_loadout", "Q",          gp_shoulderl);
     }
     
     //Define a cluster of verbs for moving around

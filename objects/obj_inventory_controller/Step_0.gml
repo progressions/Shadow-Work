@@ -197,9 +197,9 @@ if (is_open) {
             break;
     }
 
-    if (keyboard_check_pressed(ord("Q"))) {
+    if (InputPressed(INPUT_VERB.SWAP_LOADOUT)) {
         if (_player == noone) {
-            show_debug_message("[Q] No player instance found");
+            show_debug_message("[SWAP_LOADOUT] No player instance found");
             _play_ui_sfx(snd_denied);
         } else {
             var _swap_method = method(_player, swap_active_loadout);
@@ -207,10 +207,10 @@ if (is_open) {
             if (_swap_success) {
                 var _active_key = method(_player, loadouts_get_active_key);
                 var _active_name = (_active_key != undefined) ? _active_key() : "unknown";
-                show_debug_message("[Q] Active loadout set to " + string(_active_name));
+                show_debug_message("[SWAP_LOADOUT] Active loadout set to " + string(_active_name));
                 _play_ui_sfx(snd_change_loadout);
             } else {
-                show_debug_message("[Q] Failed to swap loadout");
+                show_debug_message("[SWAP_LOADOUT] Failed to swap loadout");
                 _play_ui_sfx(snd_denied);
             }
         }

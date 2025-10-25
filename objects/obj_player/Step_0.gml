@@ -150,13 +150,13 @@ if (state != PlayerState.dead) {
         }
     }
 
-    if (keyboard_check_pressed(ord("Q"))) {
+    if (InputPressed(INPUT_VERB.SWAP_LOADOUT)) {
         var _swap_method = method(self, swap_active_loadout);
         if (_swap_method != undefined && _swap_method()) {
             var _active_key_fn = method(self, loadouts_get_active_key);
             if (_active_key_fn != undefined) {
                 var _active_key = _active_key_fn();
-                show_debug_message("[Q] Swapped active loadout to " + string(_active_key));
+                show_debug_message("[SWAP_LOADOUT] Swapped active loadout to " + string(_active_key));
             }
         }
         // Action tracker: loadout swapped
