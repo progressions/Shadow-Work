@@ -41,13 +41,6 @@ if (global.camera_pan_state.active) {
 	}
 }
 
-// M key to toggle audio - works even when paused
-if (keyboard_check_pressed(ord("M"))) {
-	global.audio_config.sfx_enabled = !global.audio_config.sfx_enabled;
-	global.audio_config.music_enabled = !global.audio_config.music_enabled;
-}
-
-
 // Update camera pan state (increment timer, detect completion)
 // IMPORTANT: This must run even when paused so VN intros work correctly
 

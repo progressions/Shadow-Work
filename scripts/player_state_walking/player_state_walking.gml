@@ -25,8 +25,6 @@ function player_state_walking() {
     }
 
     // Check for input - use InputX/InputY for proper analog stick support
-    // var _hor = keyboard_check(ord("D")) - keyboard_check(ord("A"));
-    // var _ver = keyboard_check(ord("S")) - keyboard_check(ord("W"));
 	var _hor = InputX(INPUT_CLUSTER.NAVIGATION);
 	var _ver = InputY(INPUT_CLUSTER.NAVIGATION);
 

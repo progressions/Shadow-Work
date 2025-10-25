@@ -3,32 +3,32 @@ function player_dashing(){
     // CHECK FOR DOUBLE-TAP DASH (simplified)
     // ============================================
     if (state != PlayerState.dashing && dash_cooldown <= 0) {
-        // W key double-tap
-        if (keyboard_check_pressed(ord("W"))) {
+        // Up button double-tap
+        if (InputPressed(INPUT_VERB.UP)) {
             if (current_time - last_key_time_w < double_tap_time) {
                 start_dash("up");
             }
             last_key_time_w = current_time;
         }
-        
-        // A key double-tap
-        if (keyboard_check_pressed(ord("A"))) {
+
+        // Left button double-tap
+        if (InputPressed(INPUT_VERB.LEFT)) {
             if (current_time - last_key_time_a < double_tap_time) {
                 start_dash("left");
             }
             last_key_time_a = current_time;
         }
-        
-        // S key double-tap
-        if (keyboard_check_pressed(ord("S"))) {
+
+        // Down button double-tap
+        if (InputPressed(INPUT_VERB.DOWN)) {
             if (current_time - last_key_time_s < double_tap_time) {
                 start_dash("down");
             }
             last_key_time_s = current_time;
         }
-        
-        // D key double-tap
-        if (keyboard_check_pressed(ord("D"))) {
+
+        // Right button double-tap
+        if (InputPressed(INPUT_VERB.RIGHT)) {
             if (current_time - last_key_time_d < double_tap_time) {
                 start_dash("right");
             }

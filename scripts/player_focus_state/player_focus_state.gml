@@ -67,10 +67,9 @@ function player_focus_update(_player) {
     }
 
     var _state = _player.focus_state;
-    var _focus_key = ord("J");
     var _now = current_time;
 
-    if (!_state.active && keyboard_check_pressed(_focus_key)) {
+    if (!_state.active && InputPressed(INPUT_VERB.SHIELD)) {
         _state.active = true;
         _state.buffer_ready = false;
         _state.prev_facing_dir = _player.facing_dir;
@@ -98,7 +97,7 @@ function player_focus_update(_player) {
 
         _player.facing_dir = _state.prev_facing_dir;
 
-        if (keyboard_check_released(_focus_key)) {
+        if (InputReleased(INPUT_VERB.SHIELD)) {
             _state.active = false;
             _state.last_exit_time = _now;
             _state.restore_facing_pending = true;

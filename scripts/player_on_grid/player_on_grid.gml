@@ -9,23 +9,23 @@ function player_on_grid(){
     // Stop all footstep sounds when on grid
     stop_all_footstep_sounds();
 
-    // Grid-based movement - only on key press
-    if (keyboard_check_pressed(ord("W"))) {
+    // Grid-based movement - only on button press
+    if (InputPressed(INPUT_VERB.UP)) {
         obj_grid_controller.move_up();
         facing_dir = "up";
         move_dir = "up";
     }
-    else if (keyboard_check_pressed(ord("S"))) {
+    else if (InputPressed(INPUT_VERB.DOWN)) {
         obj_grid_controller.move_down();
         facing_dir = "down";
         move_dir = "down";
     }
-    else if (keyboard_check_pressed(ord("A"))) {
+    else if (InputPressed(INPUT_VERB.LEFT)) {
         obj_grid_controller.move_left();
         facing_dir = "left";
         move_dir = "left";
     }
-    else if (keyboard_check_pressed(ord("D"))) {
+    else if (InputPressed(INPUT_VERB.RIGHT)) {
         obj_grid_controller.move_right();
         facing_dir = "right";
         move_dir = "right";
