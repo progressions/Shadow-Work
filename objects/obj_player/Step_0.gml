@@ -160,9 +160,8 @@ if (state != PlayerState.dead) {
         action_tracker_log("loadout_swapped");
     }
 
-    // Open companion talk menu with Circle button (context-aware)
-    // Circle works in gameplay, cancels in menus (handled by menu controllers)
-    if (InputPressed(INPUT_VERB.UI_CANCEL) && global.state == GameState.gameplay && global.input_debounce_frames == 0) {
+    // Open companion talk menu with C key or Circle button
+    if (InputPressed(INPUT_VERB.COMPANION_MENU) && global.state == GameState.gameplay && global.input_debounce_frames == 0) {
         var companions = get_active_companions();
         if (array_length(companions) > 0) {
             open_companion_talk_menu();

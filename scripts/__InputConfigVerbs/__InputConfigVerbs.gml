@@ -16,7 +16,8 @@ function __InputConfigVerbs()
 		ATTACK,
 		DASH,
 		INTERACT,
-		UI_CANCEL,  // Context-aware: Companion menu in gameplay, Close menus in UI (Circle)
+		UI_CANCEL,  // Context-aware: Close menus in UI (Circle)
+		COMPANION_MENU,  // Open companion talk menu (C + Circle)
 		INVENTORY,  // For opening inventory (I + Triangle)
 		SWAP_LOADOUT,  // Swap between melee and ranged loadouts (Q + L1)
 		DROP,  // Drop items from inventory (Square button)
@@ -45,6 +46,7 @@ function __InputConfigVerbs()
 		InputDefineVerb(INPUT_VERB.DASH,    "dash",        vk_shift,            undefined);
 		InputDefineVerb(INPUT_VERB.INTERACT, "interact",   ["E", vk_space, vk_enter], gp_face1);
 		InputDefineVerb(INPUT_VERB.UI_CANCEL, "ui_cancel", undefined,           gp_face2);
+		InputDefineVerb(INPUT_VERB.COMPANION_MENU, "companion_menu", "C",       gp_face2);
 		InputDefineVerb(INPUT_VERB.INVENTORY, "inventory", "I",                 gp_face4);
 		InputDefineVerb(INPUT_VERB.SWAP_LOADOUT, "swap_loadout", "Q",          gp_shoulderl);
 		InputDefineVerb(INPUT_VERB.DROP, "drop", undefined,                     gp_face3);
@@ -65,6 +67,7 @@ function __InputConfigVerbs()
 		InputDefineVerb(INPUT_VERB.DASH,    "dash",        vk_shift,            undefined); // Gamepad dash via double-tap only
 		InputDefineVerb(INPUT_VERB.INTERACT, "interact",   ["E", vk_space, vk_enter], gp_face2); // Switch A/B flipped
 		InputDefineVerb(INPUT_VERB.UI_CANCEL, "ui_cancel", undefined,           gp_face1); // Switch A/B flipped
+		InputDefineVerb(INPUT_VERB.COMPANION_MENU, "companion_menu", "C",       gp_face1); // Switch A/B flipped
 		InputDefineVerb(INPUT_VERB.INVENTORY, "inventory", "I",                 gp_face4);
 		InputDefineVerb(INPUT_VERB.SWAP_LOADOUT, "swap_loadout", "Q",          gp_shoulderl);
 		InputDefineVerb(INPUT_VERB.DROP, "drop", undefined,                     gp_face3);
