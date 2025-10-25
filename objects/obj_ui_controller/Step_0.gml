@@ -14,10 +14,10 @@ if (selected_index >= 0 && selected_index < array_length(button_list)) {
 }
 
 if (_is_slider) {
-	// Slider is selected: A/D adjust value (with hold support), W/S navigate
+	// Slider is selected: LEFT/RIGHT adjust value (with hold support), UP/DOWN navigate
 
-	// Decrease slider value (A key)
-	if (keyboard_check(ord("A"))) {
+	// Decrease slider value (LEFT)
+	if (InputCheck(INPUT_VERB.LEFT)) {
 		if (slider_input_delay <= 0) {
 			_current_button.adjust_value(-1);
 			// Use initial delay for first repeat, then faster repeat rate
@@ -27,8 +27,8 @@ if (_is_slider) {
 			slider_input_delay--;
 		}
 	}
-	// Increase slider value (D key)
-	else if (keyboard_check(ord("D"))) {
+	// Increase slider value (RIGHT)
+	else if (InputCheck(INPUT_VERB.RIGHT)) {
 		if (slider_input_delay <= 0) {
 			_current_button.adjust_value(1);
 			// Use initial delay for first repeat, then faster repeat rate
@@ -45,24 +45,24 @@ if (_is_slider) {
 	}
 
 	// Navigate away from slider
-	if (keyboard_check_pressed(ord("W"))) {
+	if (InputPressed(INPUT_VERB.UP)) {
 		navigate_previous();
 		slider_input_delay = 0;
 		slider_first_input = false;
 	}
 
-	if (keyboard_check_pressed(ord("S"))) {
+	if (InputPressed(INPUT_VERB.DOWN)) {
 		navigate_next();
 		slider_input_delay = 0;
 		slider_first_input = false;
 	}
 } else {
-	// Normal button/checkbox: W/A = previous, S/D = next
-	if (keyboard_check_pressed(ord("W")) || keyboard_check_pressed(ord("A"))) {
+	// Normal button/checkbox: UP/LEFT = previous, DOWN/RIGHT = next
+	if (InputPressed(INPUT_VERB.UP) || InputPressed(INPUT_VERB.LEFT)) {
 		navigate_previous();
 	}
 
-	if (keyboard_check_pressed(ord("S")) || keyboard_check_pressed(ord("D"))) {
+	if (InputPressed(INPUT_VERB.DOWN) || InputPressed(INPUT_VERB.RIGHT)) {
 		navigate_next();
 	}
 }

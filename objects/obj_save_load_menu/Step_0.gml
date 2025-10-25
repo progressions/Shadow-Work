@@ -10,32 +10,32 @@ if (input_cooldown > 0) {
     exit;
 }
 
-// W/S to navigate slots
-if (keyboard_check_pressed(ord("W")) || keyboard_check_pressed(vk_up)) {
+// UP/DOWN to navigate slots (keyboard + gamepad)
+if (InputPressed(INPUT_VERB.UP)) {
     selected_slot--;
     if (selected_slot < 1) {
         selected_slot = 5; // Wrap to last slot
     }
 }
 
-if (keyboard_check_pressed(ord("S")) || keyboard_check_pressed(vk_down)) {
+if (InputPressed(INPUT_VERB.DOWN)) {
     selected_slot++;
     if (selected_slot > 5) {
         selected_slot = 1; // Wrap to first slot
     }
 }
 
-// A/D to switch between Save and Load tabs
-if (keyboard_check_pressed(ord("A")) || keyboard_check_pressed(vk_left)) {
+// LEFT/RIGHT to switch between Save and Load tabs (keyboard + gamepad)
+if (InputPressed(INPUT_VERB.LEFT)) {
     switch_mode("load");
 }
 
-if (keyboard_check_pressed(ord("D")) || keyboard_check_pressed(vk_right)) {
+if (InputPressed(INPUT_VERB.RIGHT)) {
     switch_mode("save");
 }
 
-// Enter to execute action on selected slot
-if (keyboard_check_pressed(vk_enter) || keyboard_check_pressed(vk_space)) {
+// Interact to execute action on selected slot (keyboard + gamepad)
+if (keyboard_check_pressed(vk_enter) || InputPressed(INPUT_VERB.INTERACT)) {
     if (current_mode == "save") {
         perform_save(selected_slot);
     } else {

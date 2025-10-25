@@ -31,17 +31,17 @@ if (is_open) {
     var _move_horizontal = 0;
     var _move_vertical = 0;
 
-    // WASD navigation
-    if (keyboard_check_pressed(ord("W")) || keyboard_check_pressed(vk_up)) {
+    // Directional navigation (keyboard + gamepad)
+    if (InputPressed(INPUT_VERB.UP)) {
         _move_vertical = -1;
     }
-    if (keyboard_check_pressed(ord("S")) || keyboard_check_pressed(vk_down)) {
+    if (InputPressed(INPUT_VERB.DOWN)) {
         _move_vertical = 1;
     }
-    if (keyboard_check_pressed(ord("A")) || keyboard_check_pressed(vk_left)) {
+    if (InputPressed(INPUT_VERB.LEFT)) {
         _move_horizontal = -1;
     }
-    if (keyboard_check_pressed(ord("D")) || keyboard_check_pressed(vk_right)) {
+    if (InputPressed(INPUT_VERB.RIGHT)) {
         _move_horizontal = 1;
     }
 

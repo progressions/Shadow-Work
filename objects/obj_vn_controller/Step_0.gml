@@ -84,16 +84,16 @@ if (global.vn_chatterbox != undefined) {
 		}
 
 		// Choices available - navigate and select
-		// Up = decrease index (move up the list)
-		if (keyboard_check_pressed(vk_up) || keyboard_check_pressed(ord("W"))) {
+		// Up or Left = decrease index (move to previous choice)
+		if (InputPressed(INPUT_VERB.UP) || InputPressed(INPUT_VERB.LEFT)) {
 			selected_choice--;
 			if (selected_choice < 0) selected_choice = _option_count - 1;
 			play_sfx(snd_vn_option_change, 1);
 			show_debug_message("Selected choice: " + string(selected_choice));
 		}
 
-		// Down = increase index (move down the list)
-		if (keyboard_check_pressed(vk_down) || keyboard_check_pressed(ord("S"))) {
+		// Down or Right = increase index (move to next choice)
+		if (InputPressed(INPUT_VERB.DOWN) || InputPressed(INPUT_VERB.RIGHT)) {
 			selected_choice++;
 			if (selected_choice >= _option_count) selected_choice = 0;
 			play_sfx(snd_vn_option_change, 1);
