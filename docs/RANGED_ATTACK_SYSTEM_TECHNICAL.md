@@ -11,36 +11,53 @@ This document provides a comprehensive technical breakdown of the ranged attack 
 The ranged attack system consists of several interconnected components:
 
 1. **Attack Input Handler** - Detects input and determines attack type
-2. **Windup System** - Animation and ammo consumption phase
-3. **Ammo Management** - Validates and consumes ammunition
-4. **Projectile Spawner** - Creates and configures arrow instances
-5. **Range Profile System** - Distance-based damage scaling
-6. **Collision System** - Detects hits and applies damage
-7. **Wind Deflection** - Companion aura projectile bending
-8. **Enemy Ranged Attacks** - AI-driven ranged combat
+2. **Charge-and-Release System** - Hold attack button to charge, release to fire
+3. **Movement While Charging** - Full 8-directional movement during charge
+4. **Ammo Management** - Validates and consumes ammunition on release
+5. **Projectile Spawner** - Creates and configures arrow instances
+6. **Range Profile System** - Distance-based damage scaling
+7. **Collision System** - Detects hits and applies damage
+8. **Wind Deflection** - Companion aura projectile bending
+9. **Enemy Ranged Attacks** - AI-driven ranged combat
 
 ---
 
 ## 1. Attack Input Detection
 
 **Primary Function:** `player_handle_attack_input()`
-**Location:** `/scripts/player_attacking/player_attacking.gml:18-131`
-**Called From:** `obj_player/Step_0.gml:85`
+**Location:** `/scripts/player_attacking/player_attacking.gml`
+**Called From:** `obj_player/Step_0.gml`
 
-This function runs every frame and handles all player attack logic.
+This function runs every frame and handles all player attack logic including the charge-and-release system.
 
-### Attack Initiation
+### Attack Initiation - Charge and Release
 
+**Press Detection:**
 ```gml
-if (keyboard_check_pressed(ord("J")) && can_attack) {
-    // Attack logic begins
+var _attack_pressed = InputPressed(INPUT_VERB.ATTACK);
+var _attack_released = InputReleased(INPUT_VERB.ATTACK);
+
+// Start charge on button press
+if (_attack_pressed && can_attack) {
+    player_execute_attack();
+}
+
+// Fire on button release
+if (_attack_released && ranged_charge_active) {
+    player_release_ranged_charge();
 }
 ```
 
+**Charge System:**
+- **Press attack button** → Starts charging (enters `ranged_charge_active` state)
+- **Hold attack button** → Maintains charge, allows full movement
+- **Release attack button** → Fires projectile and consumes ammo
+
 **Cooldown Management:**
-- `attack_cooldown` decrements each frame (lines 19-25)
+- `attack_cooldown` decrements each frame
 - When `attack_cooldown` reaches 0, `can_attack` is set to `true`
-- After each attack, cooldown is reset based on weapon's `attack_speed` stat
+- Cooldown is applied **on release**, not on press
+- Cooldown duration based on weapon's `attack_speed` stat
 
 ---
 
@@ -386,23 +403,36 @@ attack_cooldown = max(15, round(60 / _attack_speed));
 
 ---
 
-## Complete Attack Flow Sequence
+## Complete Attack Flow Sequence (Charge-and-Release)
 
-1. **Frame N:** Player presses "J" key
+1. **Frame N:** Player presses attack button (J key)
 2. **Check:** `can_attack == true` and `attack_cooldown == 0`
 3. **Weapon Check:** Is `equipped.right_hand.definition.stats.requires_ammo` defined?
 4. **Ammo Check:** Does inventory contain arrows with `count > 0`?
-5. **State Change:** `state = PlayerState.attacking` (triggers attack animation)
-6. **Position:** Calculate spawn offset based on `facing_dir`
-7. **Spawn:** `instance_create_layer()` creates `obj_arrow`
-8. **Configure:** Set `creator`, `damage`, `direction`, `image_angle`
-9. **Consume:** Remove 1 arrow from inventory
-10. **Sound:** Play `snd_bow_attack`
-11. **Cooldown:** Set `attack_cooldown` based on weapon speed
-12. **Frame N+1 onward:** Arrow moves at `speed = 6` in its `direction`
-13. **Each Frame:** Arrow checks for wall/enemy/bounds collisions
-14. **On Hit:** Apply `damage` to enemy, spawn damage number, award XP, destroy arrow
-15. **Cooldown Ends:** Player can attack again when `attack_cooldown` reaches 0
+5. **Charge Start:**
+   - `state = PlayerState.attacking`
+   - `ranged_charge_active = true`
+   - `ranged_windup_direction = facing_dir` (locks firing direction)
+   - Play `snd_ranged_windup` sound
+   - **NO ammo consumed yet**
+6. **Frame N+1 to Release:** Player holds attack button
+   - **Movement enabled** - Full 8-directional movement
+   - Walk/idle animations play based on movement
+   - `ranged_charge_time` increments each frame
+   - Footstep sounds play when moving
+7. **Release:** Player releases attack button
+   - **Validate ammo** - Check if still have arrows
+   - **Consume ammo** - Remove 1 arrow from inventory
+   - **Spawn arrow** - `instance_create_layer()` creates `obj_arrow`
+   - **Configure arrow** - Set `creator`, `damage`, `direction`, `image_angle`
+   - **Fire direction** - Uses `ranged_windup_direction` (locked from step 5)
+   - Play `snd_bow_attack` sound
+   - Set `attack_cooldown` based on weapon speed
+   - Return to previous state (idle/walking)
+8. **Frame Release+1 onward:** Arrow moves at `speed = 2` px/frame in its `direction`
+9. **Each Frame:** Arrow checks for wall/enemy/bounds collisions
+10. **On Hit:** Apply `damage * range_multiplier` to enemy, spawn damage number, award XP, destroy arrow
+11. **Cooldown Ends:** Player can attack again when `attack_cooldown` reaches 0
 
 ---
 
@@ -491,7 +521,7 @@ These limitations are by design for the current MVP implementation.
 
 - **Arrow Recovery:** Chance to retrieve arrows from dead enemies
 - **Elemental Arrows:** Fire/ice/poison arrow types
-- **Charging System:** Hold attack button to increase damage/range
+- **Charge Damage Scaling:** Increase damage/range based on charge time
 - **Trajectory Arcs:** Parabolic flight paths with gravity
 - **Critical Hits:** Random damage multipliers based on accuracy stat
 
@@ -507,105 +537,137 @@ These limitations are by design for the current MVP implementation.
 
 ---
 
-## 9. Windup System
+## 9. Charge-and-Release System
 
 ### Overview
 
-The ranged attack system uses a two-phase approach: windup phase (ammo consumption and animation) followed by projectile spawn on animation completion.
+The ranged attack system uses a charge-and-release mechanic: hold the attack button to charge, release to fire. This allows for tactical positioning and movement while preparing to fire.
 
-**Location:** `/scripts/player_attacking/player_attacking.gml` (lines 268-300)
+**Location:** `/scripts/player_attacking/player_attacking.gml`
 
-### Windup Phase
+### Charge Phase (Button Held)
 
 ```gml
-// Check if weapon requires ammo
-if (equipped.right_hand.definition.stats[$ "requires_ammo"] != undefined) {
-    var ammo_type = equipped.right_hand.definition.stats.requires_ammo;
+function player_fire_ranged_projectile_local(_direction) {
+    if (!has_ammo("arrows")) {
+        return false;
+    }
 
-    // Check ammo availability
-    if (has_ammo(ammo_type)) {
-        // Enter attacking state
-        state = PlayerState.attacking;
-        ranged_windup_active = true;
+    // Track state before attacking so we can return to it
+    state_before_attack = state;
+    // Enter charging phase - projectile spawns when button is RELEASED
+    state = PlayerState.attacking;
+    ranged_charge_active = true;          // Mark that we're charging a ranged attack
+    ranged_charge_time = 0;               // Reset charge timer
+    ranged_windup_active = true;          // Keep this for animation system compatibility
+    ranged_windup_complete = false;       // Reset windup flag
+    ranged_windup_direction = facing_dir; // Store direction for arrow spawn
 
-        // CONSUME AMMO IMMEDIATELY (prevents waste if interrupted)
-        consume_ammo(ammo_type, 1);
+    // DON'T consume ammo yet - wait for button release
 
-        // Store windup direction for spawn
-        ranged_windup_direction = facing_dir;
-        ranged_windup_complete = false;
+    // Play windup sound (attack sound plays when arrow spawns on release)
+    play_sfx(snd_ranged_windup, 1, false);
 
-        // Play windup sound
-        play_sfx(snd_ranged_windup, 0.8);
+    return true;
+}
+```
+
+**Key Design Features:**
+- **Ammo validation on press** - Prevents starting charge without ammo
+- **Ammo consumption on release** - Ammo only consumed when arrow actually fires
+- **Direction locking** - Arrow fires in direction player was facing when charge started
+- **Charge time tracking** - `ranged_charge_time` increments each frame (for future damage scaling)
+
+### Movement While Charging
+
+**Location:** `player_state_attacking()` in `/scripts/player_attacking/player_attacking.gml`
+
+While `ranged_charge_active` is true, the player has **full movement capabilities**:
+
+```gml
+// Allow movement during ranged charge
+if (ranged_charge_active) {
+    // Get movement input - use InputX/InputY for proper analog stick support
+    var _hor = InputX(INPUT_CLUSTER.NAVIGATION);
+    var _ver = InputY(INPUT_CLUSTER.NAVIGATION);
+
+    // Update move_dir based on input
+    if (_hor == 0 && _ver == 0) {
+        move_dir = "idle";
+        // Apply friction to decelerate
+        velocity_x *= friction_factor;
+        velocity_y *= friction_factor;
+    } else {
+        // Normal movement with velocity-based physics
+        velocity_x += _hor * acceleration * final_move_speed;
+        velocity_y += _ver * acceleration * final_move_speed;
     }
 }
 ```
 
-**Key Design:** Ammo consumed at windup start (not spawn) prevents exploits/waste
+**Movement Features:**
+- **8-directional movement** - Full analog stick or WASD support
+- **Velocity-based physics** - Acceleration and friction for smooth feel
+- **Collision detection** - Can't move through walls while charging
+- **Footstep sounds** - Terrain-appropriate audio while moving
+- **Speed modifiers** - Respects terrain and status effect speed changes
+- **Idle animation** - Uses idle animation when standing still while charged
+- **Walk animation** - Uses walk animation when moving while charged
 
-### Arrow Spawn Phase
+### Release Phase (Button Released)
 
-**Function:** `player_spawn_ranged_projectile_after_windup()`
-**Location:** Lines 193-266 in `player_attacking.gml`
-**Called:** When ranged attack animation completes
+**Function:** `player_release_ranged_charge()`
+**Location:** `/scripts/player_attacking/player_attacking.gml`
+**Called:** When attack button is released while `ranged_charge_active` is true
 
 ```gml
-// Get range profile from weapon or default
-var range_profile_id = RangeProfile.generic_arrow;
-if (equipped.right_hand.definition.stats[$ "range_profile"] != undefined) {
-    range_profile_id = equipped.right_hand.definition.stats.range_profile;
+function player_release_ranged_charge() {
+    if (!ranged_charge_active) {
+        return false;
+    }
+
+    // Check if we still have ammo
+    if (!has_ammo("arrows")) {
+        // Cancel the charge if ammo ran out during charge
+        ranged_charge_active = false;
+        state = state_before_attack;
+        return false;
+    }
+
+    // Consume ammo NOW (at release)
+    consume_ammo("arrows", 1);
+
+    // Spawn the arrow
+    spawn_player_arrow(ranged_windup_direction);
+
+    // Set attack cooldown
+    attack_cooldown = max(15, round(60 / _attack_speed));
+    can_attack = false;
+
+    // Reset all charge flags
+    ranged_charge_active = false;
+    ranged_charge_time = 0;
+
+    // Return to previous state
+    state = state_before_attack;
+
+    return true;
 }
-
-// Calculate spawn position with direction-based offsets
-var _arrow_x = x;
-var _arrow_y = y;
-
-switch (ranged_windup_direction) {
-    case "right":
-        _arrow_x += 16;
-        _arrow_y += 8;
-        break;
-    case "up":
-        _arrow_x += 16;
-        _arrow_y -= 16;
-        break;
-    case "left":
-        _arrow_x -= 16;
-        _arrow_y -= 20;
-        break;
-    case "down":
-        _arrow_x -= 16;
-        _arrow_y += 8;
-        break;
-}
-
-// Create arrow
-var _arrow = instance_create_layer(_arrow_x, _arrow_y, "Instances", obj_arrow);
-
-// Configure arrow
-_arrow.creator = self;
-_arrow.damage = get_total_damage();
-_arrow.range_profile_id = range_profile_id;
-_arrow.spawn_x = _arrow_x;
-_arrow.spawn_y = _arrow_y;
-
-// Set direction
-var dir_angle = direction_string_to_angle(ranged_windup_direction);
-_arrow.direction = dir_angle;
-_arrow.image_angle = dir_angle;
-
-// Set speed (default 2 px/frame)
-_arrow.speed = 2;
-
-// Play launch sound
-play_sfx(snd_bow_attack, 1.0);
 ```
 
-**Windup Variables:**
+**Release Features:**
+- **Ammo consumption** - Arrow consumed only when fired, not when charge starts
+- **Direction locked** - Fires in `ranged_windup_direction` (set when charge started)
+- **Cooldown application** - Attack cooldown starts on release, not on press
+- **State restoration** - Returns to state before charging (idle/walking)
+- **Charge time recorded** - `ranged_charge_time` available for future damage scaling
+
+**Charge System Variables:**
 ```gml
-ranged_windup_active = false;
-ranged_windup_complete = false;
-ranged_windup_direction = "";
+ranged_charge_active = false;     // Tracks if we're holding a charge (waiting for button release)
+ranged_charge_time = 0;           // How long we've been charging (in frames)
+ranged_charge_hold_frame = 0.8;   // Which frame (0.0-1.0) to hold at during charge (unused in current implementation)
+ranged_windup_direction = "";     // Direction arrow will fire when released
 ```
 
 ---
@@ -1046,36 +1108,48 @@ instance_destroy();
 
 ## 14. Complete Attack Flow Sequences
 
-### Player Ranged Attack Flow
+### Player Ranged Attack Flow (Charge-and-Release)
 
-1. **Frame N:** Player presses "J" with bow equipped
+1. **Frame N:** Player presses attack button with bow equipped
 2. **Weapon Check:** Is `requires_ammo` defined? Yes
 3. **Ammo Check:** Does inventory have arrows? Yes
-4. **Windup Start:**
+4. **Charge Start:**
    - Set `state = PlayerState.attacking`
+   - Set `ranged_charge_active = true`
    - Set `ranged_windup_active = true`
-   - **Consume 1 arrow immediately**
-   - Store `ranged_windup_direction`
+   - Store `ranged_windup_direction = facing_dir` (locks firing direction)
+   - **NO ammo consumed yet**
    - Play `snd_ranged_windup`
-5. **Animation:** Ranged attack animation plays
-6. **Windup Complete:** Animation finishes
-   - Call `player_spawn_ranged_projectile_after_windup()`
+5. **Charge Hold:** Player holds button
+   - **Movement enabled** - Full 8-directional movement with velocity physics
+   - Walk animation plays when moving
+   - Idle animation plays when standing still
+   - `ranged_charge_time` increments each frame
+   - Footstep sounds play based on terrain when moving
+   - Player can move freely while maintaining charge
+6. **Release:** Player releases attack button
+   - Validate ammo still available
+   - **Consume 1 arrow NOW** (at release)
+   - Call `spawn_player_arrow(ranged_windup_direction)`
 7. **Arrow Spawn:**
-   - Calculate spawn position with offsets
+   - Calculate spawn position with direction-based offsets
    - Create `obj_arrow` instance
    - Set `damage = get_total_damage()`
    - Set range profile from weapon
-   - Set direction and speed (2 px/frame)
+   - Set direction to `ranged_windup_direction` (locked at charge start)
+   - Set speed (2 px/frame)
    - Play `snd_bow_attack`
+   - Set `attack_cooldown` based on weapon `attack_speed`
+   - Return to previous state (idle/walking)
 8. **Frame N+1 onward:**
-   - Arrow moves in direction
+   - Arrow moves in locked direction
    - Update `distance_travelled`
    - Calculate `current_damage_multiplier` from range profile
 9. **Collision:**
    - **Enemy:** Apply `damage * multiplier`, subtract enemy ranged DR
    - **Wall:** Destroy arrow
    - **Bounds:** Destroy arrow
-10. **Cooldown:** Based on weapon `attack_speed`
+10. **Cooldown:** Player can attack again when `attack_cooldown` reaches 0
 
 ### Enemy Ranged Attack Flow
 

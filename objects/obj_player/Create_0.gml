@@ -224,6 +224,11 @@ ranged_windup_complete = false;   // Tracks if first animation cycle finished (p
 ranged_windup_active = false;     // Tracks if currently winding up a ranged attack
 ranged_windup_direction = "down"; // Stores direction for arrow spawn after windup
 
+// Ranged charge system (hold to charge, release to fire)
+ranged_charge_active = false;     // Tracks if we're holding a charge (waiting for button release)
+ranged_charge_time = 0;           // How long we've been charging (in frames)
+ranged_charge_hold_frame = 0.8;   // Which frame (0.0-1.0) to hold at during charge (80% through animation)
+
 // Knockback system
 kb_x = 0;
 kb_y = 0;

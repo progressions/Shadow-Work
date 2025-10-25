@@ -64,6 +64,7 @@ function open_container() {
 
 /// @function spawn_specific_loot()
 /// @description Spawn specific items from loot_items array
+/// Supports both string format ("item_key") and struct format ({item_key: "arrows", count: 10})
 function spawn_specific_loot() {
     if (!is_array(loot_items) || array_length(loot_items) == 0) {
         show_debug_message("No specific items configured for container");
@@ -72,7 +73,22 @@ function spawn_specific_loot() {
 
     // Spawn each item from the loot_items array
     for (var i = 0; i < array_length(loot_items); i++) {
-        var item_key = loot_items[i];
+        var loot_entry = loot_items[i];
+        var item_key = undefined;
+        var item_count = 1;
+
+        // Support both string and struct formats
+        if (is_string(loot_entry)) {
+            // Legacy format: just the item key
+            item_key = loot_entry;
+        } else if (is_struct(loot_entry)) {
+            // New format: {item_key: "arrows", count: 10}
+            item_key = loot_entry[$ "item_key"];
+            item_count = loot_entry[$ "count"] ?? 1;
+        } else {
+            show_debug_message("Invalid loot entry format at index " + string(i));
+            continue;
+        }
 
         // Verify item exists in database
         if (!variable_struct_exists(global.item_database, item_key)) {
@@ -84,8 +100,8 @@ function spawn_specific_loot() {
         var spawn_pos = find_loot_spawn_position(x, y);
 
         if (spawn_pos != noone) {
-            spawn_item(spawn_pos.x, spawn_pos.y, item_key, 1);
-            show_debug_message("Container dropped: " + item_key + " at (" + string(spawn_pos.x) + ", " + string(spawn_pos.y) + ")");
+            spawn_item(spawn_pos.x, spawn_pos.y, item_key, item_count);
+            show_debug_message("Container dropped: " + string(item_count) + "x " + item_key + " at (" + string(spawn_pos.x) + ", " + string(spawn_pos.y) + ")");
         }
     }
 

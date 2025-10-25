@@ -5,14 +5,110 @@ function player_attacking(){
 }
 
 function player_state_attacking() {
-    // Stop all footstep sounds when attacking
-    stop_all_footstep_sounds();
-
-    // In attack state - wait for animation to complete
-    // The animation system will reset state to idle when attack animation finishes
-
-    // Handle knockback
+    // Handle knockback first
     player_handle_knockback();
+
+    // Allow movement during ranged charge
+    if (ranged_charge_active) {
+        // Get movement input - use InputX/InputY for proper analog stick support
+        var _hor = InputX(INPUT_CLUSTER.NAVIGATION);
+        var _ver = InputY(INPUT_CLUSTER.NAVIGATION);
+
+        // Update move_dir based on input
+        if (_hor == 0 && _ver == 0) {
+            move_dir = "idle";
+            // Stop all footstep sounds when idle
+            stop_all_footstep_sounds();
+
+            // Apply friction to decelerate
+            velocity_x *= friction_factor;
+            velocity_y *= friction_factor;
+
+            // Stop completely if velocity is very small
+            if (abs(velocity_x) < 0.01) velocity_x = 0;
+            if (abs(velocity_y) < 0.01) velocity_y = 0;
+        } else {
+            // Update facing direction based on movement (but don't change attack direction)
+            // Use strongest axis for analog input
+            if (abs(_ver) > abs(_hor)) {
+                if (_ver > 0) {
+                    move_dir = "down";
+                } else if (_ver < 0) {
+                    move_dir = "up";
+                }
+            } else {
+                if (_hor > 0) {
+                    move_dir = "right";
+                } else if (_hor < 0) {
+                    move_dir = "left";
+                }
+            }
+
+            // Detect terrain for footstep sounds
+            var _terrain = get_terrain_at_position(x, y);
+
+            // Apply speed modifiers
+            var speed_modifier = get_status_effect_modifier("speed");
+            var final_move_speed = move_speed * terrain_speed_modifier * speed_modifier;
+
+            // Normalize diagonal input
+            var _input_magnitude = sqrt(_hor * _hor + _ver * _ver);
+            if (_input_magnitude > 0) {
+                _hor /= _input_magnitude;
+                _ver /= _input_magnitude;
+            }
+
+            // Acceleration-based movement
+            velocity_x += _hor * acceleration * final_move_speed;
+            velocity_y += _ver * acceleration * final_move_speed;
+
+            // Cap velocity at max_velocity
+            var _velocity_magnitude = sqrt(velocity_x * velocity_x + velocity_y * velocity_y);
+            if (_velocity_magnitude > max_velocity * final_move_speed) {
+                var _scale = (max_velocity * final_move_speed) / _velocity_magnitude;
+                velocity_x *= _scale;
+                velocity_y *= _scale;
+            }
+
+            // Play footstep sounds
+            var _footstep_sound = global.terrain_footstep_sounds[$ _terrain] ?? snd_footsteps_grass;
+            play_sfx(_footstep_sound, 0.3, 4, true);
+
+            // Stop all other terrain footstep sounds
+            var _terrain_names = variable_struct_get_names(global.terrain_footstep_sounds);
+            for (var i = 0; i < array_length(_terrain_names); i++) {
+                var _other_sound = global.terrain_footstep_sounds[$ _terrain_names[i]];
+                if (_other_sound != _footstep_sound) {
+                    stop_looped_sfx(_other_sound);
+                }
+            }
+        }
+
+        // Apply velocity to position with collision
+        if (velocity_x != 0 || velocity_y != 0) {
+            var _collided = move_and_collide(velocity_x, velocity_y, tilemap);
+            if (array_length(_collided) > 0) {
+                // On collision, reduce velocity
+                for (var i = 0; i < array_length(_collided); i++) {
+                    var _collision = _collided[i];
+                    var _has_struct = is_struct(_collision);
+                    var _has_nx = _has_struct && variable_struct_exists(_collision, "nx");
+                    var _has_ny = _has_struct && variable_struct_exists(_collision, "ny");
+
+                    if (_has_nx && abs(_collision.nx) > 0.5) velocity_x *= 0.3;
+                    if (_has_ny && abs(_collision.ny) > 0.5) velocity_y *= 0.3;
+
+                    if (!_has_struct || (!_has_nx && !_has_ny)) {
+                        velocity_x *= 0.3;
+                        velocity_y *= 0.3;
+                    }
+                }
+            }
+        }
+    } else {
+        // Normal attack (melee) - stop all movement
+        stop_all_footstep_sounds();
+    }
 }
 
 function player_handle_attack_input() {
@@ -37,6 +133,7 @@ function player_handle_attack_input() {
     }
 
     var _attack_pressed = InputPressed(INPUT_VERB.ATTACK);
+    var _attack_released = InputReleased(INPUT_VERB.ATTACK);
 
     // Instant brake on attack button press for precise positioning
     if (_attack_pressed) {
@@ -44,6 +141,13 @@ function player_handle_attack_input() {
         velocity_y = 0;
     }
 
+    // Handle ranged charge release
+    if (_attack_released && ranged_charge_active) {
+        player_release_ranged_charge();
+        return;
+    }
+
+    // Start attack on button press
     if (_attack_pressed && can_attack) {
         player_execute_attack();
     }
@@ -210,23 +314,76 @@ function player_fire_ranged_projectile_local(_direction) {
 
     // Track state before attacking so we can return to it
     state_before_attack = state;
-    // Enter windup phase - projectile spawns AFTER animation completes
+    // Enter charging phase - projectile spawns when button is RELEASED
     state = PlayerState.attacking;
-    ranged_windup_active = true;          // Mark that we're winding up a ranged attack
+    ranged_charge_active = true;          // Mark that we're charging a ranged attack
+    ranged_charge_time = 0;               // Reset charge timer
+    ranged_windup_active = true;          // Keep this for animation system compatibility
     ranged_windup_complete = false;       // Reset windup flag
     ranged_windup_direction = facing_dir; // Store direction for arrow spawn
 
-    // Consume ammo now (before windup, so interrupt doesn't waste ammo)
-    consume_ammo("arrows", 1);
+    // DON'T consume ammo yet - wait for button release
 
-    // Play windup sound (attack sound plays when arrow spawns)
+    // Play windup sound (attack sound plays when arrow spawns on release)
     play_sfx(snd_ranged_windup, 1, false);
 
     if (variable_global_exists("debug_mode") && global.debug_damage_reduction) {
-        show_debug_message("Player starting ranged attack windup (arrow will spawn after animation completes)");
+        show_debug_message("Player starting ranged charge (hold to charge, release to fire)");
     }
 
     facing_dir = _original_facing;
+
+    return true;
+}
+
+/// @function player_release_ranged_charge()
+/// @description Fires the charged ranged attack when button is released
+function player_release_ranged_charge() {
+    if (!ranged_charge_active) {
+        return false;
+    }
+
+    // Check if we still have ammo
+    if (!has_ammo("arrows")) {
+        show_debug_message("No arrows available at release!");
+        // Cancel the charge
+        ranged_charge_active = false;
+        ranged_windup_active = false;
+        ranged_windup_complete = false;
+        state = state_before_attack;
+        state_before_attack = PlayerState.idle;
+        return false;
+    }
+
+    // Consume ammo NOW (at release)
+    consume_ammo("arrows", 1);
+
+    // Spawn the arrow
+    spawn_player_arrow(ranged_windup_direction);
+
+    // Get attack speed for cooldown calculation
+    var _attack_speed = 1.0;
+    if (equipped.right_hand != undefined && equipped.right_hand.definition.type == ItemType.weapon) {
+        _attack_speed = equipped.right_hand.definition.stats.attack_speed;
+    }
+
+    // Set attack cooldown
+    attack_cooldown = max(15, round(60 / _attack_speed));
+    can_attack = false;
+
+    // Reset all charge flags
+    ranged_charge_active = false;
+    ranged_charge_time = 0;
+    ranged_windup_active = false;
+    ranged_windup_complete = false;
+
+    // Return to previous state
+    state = state_before_attack;
+    state_before_attack = PlayerState.idle;
+
+    if (variable_global_exists("debug_mode") && global.debug_damage_reduction) {
+        show_debug_message("Ranged charge released! Arrow fired after " + string(ranged_charge_time) + " frames of charging");
+    }
 
     return true;
 }

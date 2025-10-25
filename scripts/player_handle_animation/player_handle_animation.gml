@@ -5,7 +5,17 @@ function player_handle_animation() {
     // State-based animation selection
     switch (state) {
         case PlayerState.attacking:
-            anim_key = "attack_" + facing_dir;
+            // During ranged charge, use walk/idle animations if moving
+            if (ranged_charge_active) {
+                if (move_dir == "idle") {
+                    anim_key = "idle_" + facing_dir;
+                } else {
+                    anim_key = "walk_" + move_dir;
+                }
+            } else {
+                // Normal melee attack
+                anim_key = "attack_" + facing_dir;
+            }
             break;
 
         case PlayerState.dashing:
@@ -60,30 +70,50 @@ function player_handle_animation() {
     // State-specific animation advancement
     switch (state) {
         case PlayerState.attacking:
-            // Attack animations play once and don't loop
-            var _attack_speed_mult = 1.5; // Slightly faster for attack animations
-
-            // Apply ranged windup speed modifier during windup phase
-            if (ranged_windup_active && !ranged_windup_complete) {
-                _attack_speed_mult = _attack_speed_mult * ranged_windup_speed; // Slow down during windup
-            }
-
-            anim_frame += anim_speed_walk * _attack_speed_mult;
-
-            // Handle ranged attack windup completion
-            if (ranged_windup_active && !ranged_windup_complete && anim_frame >= current_anim_length) {
-                // Windup animation cycle complete - spawn arrow
-                ranged_windup_complete = true;
-                spawn_player_arrow(ranged_windup_direction);
-                anim_frame = 0; // Reset for any remaining animation
-                ranged_windup_active = false; // Clear windup flag
-
-                if (variable_global_exists("debug_mode") && global.debug_damage_reduction) {
-                    show_debug_message("PLAYER WINDUP COMPLETE - Arrow spawned after " + string(current_anim_length) + " frames");
+            // Handle ranged charge state
+            if (ranged_charge_active) {
+                // If moving during charge, play walk/idle animation normally
+                if (move_dir != "idle") {
+                    // Normal walking animation
+                    anim_frame += anim_speed_walk;
+                    if (anim_frame >= current_anim_length) {
+                        anim_frame = anim_frame % current_anim_length;
+                    }
+                    // Increment charge timer
+                    ranged_charge_time++;
+                } else {
+                    // Standing still during charge - use idle animation (synced with global timer)
+                    anim_frame = global.idle_bob_timer % current_anim_length;
+                    // Increment charge timer
+                    ranged_charge_time++;
                 }
             }
+            // Apply ranged windup speed modifier during windup phase (non-charge mode)
+            else if (ranged_windup_active && !ranged_windup_complete) {
+                var _attack_speed_mult = 1.5 * ranged_windup_speed; // Slow down during windup
+                anim_frame += anim_speed_walk * _attack_speed_mult;
 
-            if (anim_frame >= current_anim_length) {
+                // Handle ranged attack windup completion (old system, for non-charge attacks)
+                if (anim_frame >= current_anim_length) {
+                    // Windup animation cycle complete - spawn arrow
+                    ranged_windup_complete = true;
+                    spawn_player_arrow(ranged_windup_direction);
+                    anim_frame = 0; // Reset for any remaining animation
+                    ranged_windup_active = false; // Clear windup flag
+
+                    if (variable_global_exists("debug_mode") && global.debug_damage_reduction) {
+                        show_debug_message("PLAYER WINDUP COMPLETE - Arrow spawned after " + string(current_anim_length) + " frames");
+                    }
+                }
+            }
+            else {
+                // Normal attack (melee)
+                var _attack_speed_mult = 1.5; // Slightly faster for attack animations
+                anim_frame += anim_speed_walk * _attack_speed_mult;
+            }
+
+            // Check if animation finished (don't return to idle if we're still charging)
+            if (!ranged_charge_active && anim_frame >= current_anim_length) {
                 // Attack animation finished - return to previous state
                 state = state_before_attack;
                 state_before_attack = PlayerState.idle;
