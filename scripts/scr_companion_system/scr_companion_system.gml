@@ -1133,6 +1133,9 @@ function companion_take_torch_function() {
         if (variable_global_exists("ChatterboxVariableSet")) {
             ChatterboxVariableSet("vn_torch_transfer_success", true);
         }
+
+        // Log action for onboarding quest tracking
+        action_tracker_log("torch_given");
     }
 }
 
