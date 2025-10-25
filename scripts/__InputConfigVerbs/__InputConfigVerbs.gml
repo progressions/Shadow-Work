@@ -16,7 +16,7 @@ function __InputConfigVerbs()
 		ATTACK,
 		DASH,
 		INTERACT,
-		UI_CANCEL,  // For closing menus/UI (Circle)
+		UI_CANCEL,  // Context-aware: Companion menu in gameplay, Close menus in UI (Circle)
 		INVENTORY,  // For opening inventory (I + Triangle)
     }
     
@@ -38,7 +38,7 @@ function __InputConfigVerbs()
         InputDefineVerb(INPUT_VERB.ACTION,  "action",      vk_enter,            gp_start);
         InputDefineVerb(INPUT_VERB.SPECIAL, "special",     vk_shift,            gp_select);
         InputDefineVerb(INPUT_VERB.PAUSE,   "pause",       vk_escape,           gp_start);
-		InputDefineVerb(INPUT_VERB.SHIELD,  "shield",      "O",                 undefined);
+		InputDefineVerb(INPUT_VERB.SHIELD,  "shield",      "O",                 gp_shoulderr);
 		InputDefineVerb(INPUT_VERB.ATTACK,  "attack",      "J",                 gp_face3);
 		InputDefineVerb(INPUT_VERB.DASH,    "dash",        vk_shift,            undefined);
 		InputDefineVerb(INPUT_VERB.INTERACT, "interact",   "E",                 gp_face1);
@@ -56,7 +56,7 @@ function __InputConfigVerbs()
         InputDefineVerb(INPUT_VERB.ACTION,  "action",  undefined,   gp_start);
         InputDefineVerb(INPUT_VERB.SPECIAL, "special", undefined,   gp_select);
         InputDefineVerb(INPUT_VERB.PAUSE,   "pause",   undefined,   gp_start);
-		InputDefineVerb(INPUT_VERB.SHIELD,  "shield",      "O",                 undefined);
+		InputDefineVerb(INPUT_VERB.SHIELD,  "shield",      "O",                 gp_shoulderr);
 		InputDefineVerb(INPUT_VERB.ATTACK,  "attack",      "J",                 gp_face3);
 		InputDefineVerb(INPUT_VERB.DASH,    "dash",        vk_shift,            undefined); // Gamepad dash via double-tap only
 		InputDefineVerb(INPUT_VERB.INTERACT, "interact",   "E",                 gp_face2); // Switch A/B flipped

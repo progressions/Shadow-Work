@@ -10,8 +10,9 @@ if (InputPressed(INPUT_VERB.PAUSE)) {
 	}
 }
 
-// UI_CANCEL verb (ESC + Circle) - always close all menus
-if (InputPressed(INPUT_VERB.UI_CANCEL)) {
-	// Always close all menus and return to gameplay
+// UI_CANCEL verb (Circle) - close menus when paused
+// Only handle Circle when actually in a menu (let player handle gameplay Circle)
+if (InputPressed(INPUT_VERB.UI_CANCEL) && global.game_paused) {
+	// Close all menus and return to gameplay
 	ui_close_all_menus();
 }

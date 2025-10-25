@@ -152,12 +152,17 @@ if (freeze_active) {
     return;
 }
 
-if (global.game_paused) return;
-
-// Decrement input debounce timer
+// Decrement input debounce timer (runs even when paused so menus can clear it)
 if (global.input_debounce_frames > 0) {
 	global.input_debounce_frames--;
 }
+
+// Safety check: ensure state matches pause state
+if (!global.game_paused && global.state == GameState.menu) {
+	global.state = GameState.gameplay;
+}
+
+if (global.game_paused) return;
 
 global.idle_bob_timer += 0.05;
 if (global.idle_bob_timer >= 2) {

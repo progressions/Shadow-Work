@@ -75,6 +75,7 @@ function start_vn_dialogue(_companion_instance, _yarn_file, _start_node) {
 	global.vn_active = true;
 	global.game_paused = true;
 	global.state = GameState.menu;
+	global.vn_just_opened = true; // Prevent input processing on opening frame
 	global.vn_companion = _companion_instance;
 	global.vn_yarn_file = _yarn_file;
 	vn_reset_typist_state();
@@ -279,6 +280,7 @@ function start_vn_intro(_instance, _yarn_file, _start_node, _character_name = ""
 	global.vn_active = true;
 	global.game_paused = true;
 	global.state = GameState.menu;
+	global.vn_just_opened = true; // Prevent input processing on opening frame
 	global.vn_intro_instance = _instance;
 	global.vn_yarn_file = _yarn_file;
 	vn_reset_typist_state();

@@ -1,6 +1,12 @@
 // Only process VN input when active
 if (!global.vn_active) exit;
 
+// Skip input processing on the frame VN opens (prevents same-frame close)
+if (variable_global_exists("vn_just_opened") && global.vn_just_opened) {
+	global.vn_just_opened = false;
+	exit;
+}
+
 // Determine if this is a companion dialogue or generic intro
 var _is_intro = (global.vn_intro_instance != undefined);
 
@@ -20,7 +26,7 @@ if (is_struct(dialogue_typist) && variable_global_exists("audio_config")) {
 	}
 }
 
-// Cancel key closes all menus/VN and returns to gameplay (ESC or Circle on gamepad)
+// Cancel key closes all menus/VN and returns to gameplay (Circle on gamepad)
 if (InputPressed(INPUT_VERB.UI_CANCEL)) {
 	if (_is_intro) {
 		stop_vn_intro();

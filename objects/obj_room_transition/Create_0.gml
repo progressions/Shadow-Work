@@ -8,4 +8,7 @@ target_y = -1;           // Where player spawns in new room (-1 = keep current y
 triggered = false;       // Prevent multiple collision triggers
 
 // Visual indicator (optional - you can disable sprite in room editor)
-image_alpha = 0.3;  // Semi-transparent so you can see it while editing
+image_alpha = 1;  // Semi-transparent so you can see it while editing
+
+image_speed = 0;
+image_index = 1;

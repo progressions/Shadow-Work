@@ -1110,6 +1110,7 @@
     {"id":{"name":"spr_pointer","path":"sprites/spr_pointer/spr_pointer.yy",},},
     {"id":{"name":"spr_poison_cloud","path":"sprites/spr_poison_cloud/spr_poison_cloud.yy",},},
     {"id":{"name":"spr_poison_pool","path":"sprites/spr_poison_pool/spr_poison_pool.yy",},},
+    {"id":{"name":"spr_portal","path":"sprites/spr_portal/spr_portal.yy",},},
     {"id":{"name":"spr_quest_marker","path":"sprites/spr_quest_marker/spr_quest_marker.yy",},},
     {"id":{"name":"spr_quest_pointer","path":"sprites/spr_quest_pointer/spr_quest_pointer.yy",},},
     {"id":{"name":"spr_rising_pillar","path":"sprites/spr_rising_pillar/spr_rising_pillar.yy",},},
