@@ -23,7 +23,7 @@
   ],
   "name":"spr_keyboard_enter",
   "nineSlice":null,
-  "origin":0,
+  "origin":6,
   "parent":{
     "name":"keyboard",
     "path":"folders/Sprites/ui/input/keyboard.yy",
@@ -76,7 +76,7 @@
     "visibleRange":null,
     "volume":1.0,
     "xorigin":0,
-    "yorigin":0,
+    "yorigin":16,
   },
   "swatchColours":null,
   "swfPrecision":0.5,
