@@ -126,7 +126,7 @@ function drop_selected_item(_inventory_index, _amount = undefined) {
 
     var _drop_count = (_amount == undefined) ? _entry.count : max(1, min(_amount, _entry.count));
 
-    var _spawn_offset = 64;
+    var _spawn_offset = 32;
     var _drop_x = x;
     var _drop_y = y;
 
