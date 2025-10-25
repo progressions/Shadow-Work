@@ -66,7 +66,7 @@ InputIconDefineGamepad(INPUT_GAMEPAD_TYPE_PS5, -gp_axisrv, "thumbstick r up"   )
 InputIconDefineGamepad(INPUT_GAMEPAD_TYPE_PS5,  gp_axisrv, "thumbstick r down" );
 InputIconDefineGamepad(INPUT_GAMEPAD_TYPE_PS5,  gp_stickr, "R3"                );
 
-InputIconDefineGamepad(INPUT_GAMEPAD_TYPE_PS5, gp_touchpadbutton, "touchpad");
+InputIconDefineGamepad(INPUT_GAMEPAD_TYPE_PS5, gp_touchpadbutton, input_icon_sprite(spr_playstation_touchpad, 0)); // Touchpad sprite
 
 //Not available on the PlayStation 5 console itself but available on other platforms
 InputIconDefineGamepad(INPUT_GAMEPAD_TYPE_PS5, gp_extra1, "mic");
@@ -139,4 +139,4 @@ InputIconDefineGamepad(INPUT_GAMEPAD_TYPE_PS4, -gp_axisrv, "thumbstick r up"   )
 InputIconDefineGamepad(INPUT_GAMEPAD_TYPE_PS4,  gp_axisrv, "thumbstick r down" );
 InputIconDefineGamepad(INPUT_GAMEPAD_TYPE_PS4,  gp_stickr, "R3"                );
 
-InputIconDefineGamepad(INPUT_GAMEPAD_TYPE_PS4, gp_touchpadbutton, "touchpad");
+InputIconDefineGamepad(INPUT_GAMEPAD_TYPE_PS4, gp_touchpadbutton, input_icon_sprite(spr_playstation_touchpad, 0)); // Touchpad sprite

@@ -110,8 +110,8 @@ InputIconDefineKeyboard(vk_pause,       "pause break");
 
 InputIconDefineKeyboard(vk_escape,    "escape");
 InputIconDefineKeyboard(vk_backspace, "backspace");
-InputIconDefineKeyboard(vk_space,     "space");
-InputIconDefineKeyboard(vk_enter,     "enter");
+InputIconDefineKeyboard(vk_space,     input_icon_sprite(spr_keyboard_space, 0)); // Space bar sprite
+InputIconDefineKeyboard(vk_enter,     input_icon_sprite(spr_keyboard_enter, 0)); // Enter key sprite
 
 InputIconDefineKeyboard(vk_up,    "arrow up");
 InputIconDefineKeyboard(vk_down,  "arrow down");
