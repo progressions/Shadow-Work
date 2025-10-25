@@ -5,7 +5,8 @@ onboarding_initialize_for_room([
     // Quest 1: Find and pick up a torch
     {
         quest_id: "onboarding_find_torch",
-        display_text: "It's dark! Press SPACE/E to open a chest and pick up the torch!",
+        display_text: "It's dark! {VERB} to open a chest and pick up the torch!",
+        display_verb: INPUT_VERB.INTERACT,  // Show icon for interact
         check_completion: function() {
             return action_tracker_has("item_pickup_torch");
         },
@@ -51,7 +52,8 @@ onboarding_initialize_for_room([
     // Quest 6: Perform a dash attack
     {
         quest_id: "onboarding_dash_attack",
-        display_text: "Double-tap a direction, then press J for a dash attack.",
+        display_text: "Double-tap a direction, then {VERB} for a dash attack.",
+        display_verb: INPUT_VERB.ATTACK,  // Show icon for attack
         check_completion: function() {
             return action_tracker_has("dash_attack");
         },
@@ -62,7 +64,8 @@ onboarding_initialize_for_room([
     // Quest 7: Open inventory
     {
         quest_id: "onboarding_open_inventory",
-        display_text: "Press I to open your inventory.",
+        display_text: "{VERB} to open your inventory.",
+        display_verb: INPUT_VERB.INVENTORY,  // Show icon for inventory
         check_completion: function() {
             return action_tracker_has("inventory_opened");
         },
@@ -73,7 +76,8 @@ onboarding_initialize_for_room([
     // Quest 8: Swap weapon loadouts
     {
         quest_id: "onboarding_swap_loadout",
-        display_text: "Press Q to swap your weapon loadout.",
+        display_text: "{VERB} to swap your weapon loadout.",
+        display_verb: INPUT_VERB.SWAP_LOADOUT,  // Show icon for this verb
         check_completion: function() {
             return action_tracker_has("loadout_swapped");
         },

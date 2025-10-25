@@ -130,6 +130,106 @@ function ui_draw_top_text(_text, _y, _alpha, _color = c_white, _scale = 0.45) {
     draw_set_alpha(1);
 }
 
+/// @function ui_draw_top_text_with_verb
+/// @description Draw centered text with input verb icon at the top of the GUI layer
+/// @param {string} _text Text to render with {VERB} placeholder for icon
+/// @param {Enum.INPUT_VERB} _verb Input verb to display icon for
+/// @param {real} _y GUI-space Y position
+/// @param {real} _alpha Alpha multiplier (0-1)
+/// @param {real} _color Optional colour (default white)
+/// @param {real} _scale Optional Scribble scale (default 0.45)
+function ui_draw_top_text_with_verb(_text, _verb, _y, _alpha, _color = c_white, _scale = 0.45) {
+    var _message = string(_text);
+    if (_message == "") return;
+
+    var _draw_alpha = clamp(_alpha, 0, 1);
+    if (_draw_alpha <= 0) return;
+
+    var _gui_width = display_get_gui_width();
+    var _icon = InputIconGet(_verb);
+    var _icon_scale = 2.0; // Scale for sprite icons (larger for top-of-screen visibility)
+
+    // Split text at {VERB} placeholder
+    var _verb_pos = string_pos("{VERB}", _message);
+    var _text_before = "";
+    var _text_after = "";
+
+    if (_verb_pos > 0) {
+        _text_before = string_copy(_message, 1, _verb_pos - 1);
+        _text_after = string_delete(_message, 1, _verb_pos + 5); // 5 = length of "{VERB}"
+    } else {
+        // No {VERB} found, fallback to icon at start
+        _text_after = _message;
+    }
+
+    // Calculate widths for centering using Scribble's measurement
+    var _icon_width = 16;
+    var _spacing_before = (_text_before != "") ? 0 : 0; // Space between text and icon
+    var _spacing_after = (_text_after != "") ? 16 : 0; // Space between icon and text
+
+    // Measure text widths using Scribble
+    var _before_width = 0;
+    var _after_width = 0;
+
+    if (_text_before != "") {
+        var _temp_before = scribble(_text_before).starting_format("fnt_quest", _color).scale(_scale);
+        _before_width = _temp_before.get_width();
+    }
+
+    if (_text_after != "") {
+        var _temp_after = scribble(_text_after).starting_format("fnt_quest", _color).scale(_scale);
+        _after_width = _temp_after.get_width();
+    }
+
+    if (is_struct(_icon) && sprite_exists(_icon.sprite)) {
+        _icon_width = sprite_get_width(_icon.sprite) * _icon_scale;
+    } else if (is_string(_icon)) {
+        // For text fallback, measure the actual text
+        var _temp_icon = scribble("Press [[" + _icon + "]").starting_format("fnt_quest", _color).scale(_scale);
+        _icon_width = _temp_icon.get_width();
+    }
+
+    var _total_width = _before_width + _spacing_before + _icon_width + _spacing_after + _after_width;
+    var _start_x = (_gui_width * 0.5) - (_total_width * 0.5);
+
+    draw_set_alpha(_draw_alpha);
+
+    // Draw text before icon
+    if (_text_before != "") {
+        scribble(_text_before)
+            .starting_format("fnt_quest", _color)
+            .align(fa_left, fa_top)
+            .scale(_scale)
+            .draw(_start_x, _y);
+    }
+
+    var _icon_x = _start_x + _before_width + _spacing_before;
+
+    // Draw icon (sprite or text fallback)
+    if (is_struct(_icon) && sprite_exists(_icon.sprite)) {
+        // Draw sprite icon centered vertically with text (offset 22px lower)
+        draw_sprite_ext(_icon.sprite, _icon.frame, _icon_x + (_icon_width * 0.5), _y + 32, _icon_scale, _icon_scale, 0, c_white, _draw_alpha);
+    } else if (is_string(_icon)) {
+        // Draw text fallback with "Press [key]"
+        scribble("Press [[" + _icon + "]")
+            .starting_format("fnt_quest", _color)
+            .align(fa_left, fa_top)
+            .scale(_scale)
+            .draw(_icon_x, _y);
+    }
+
+    // Draw text after icon
+    if (_text_after != "") {
+        scribble(_text_after)
+            .starting_format("fnt_quest", _color)
+            .align(fa_left, fa_top)
+            .scale(_scale)
+            .draw(_icon_x + _icon_width + _spacing_after, _y);
+    }
+
+    draw_set_alpha(1);
+}
+
 function ui_draw_bar(_x, _y, _w, _h, _value, _value_max, _fill_color, _back_color, _border_color) {
     var _max_value = max(1, _value_max);
     var _pct = clamp(_value / _max_value, 0, 1);

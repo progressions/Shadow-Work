@@ -215,6 +215,13 @@ if (is_struct(_hud_message)) {
 // Draw onboarding quest text using Scribble
 // Debug: Check quest status
 if (global.onboarding_quests.current_quest != undefined) {
+	var _quest = global.onboarding_quests.current_quest;
 	var _quest_text = onboarding_get_current_quest_text();
-	ui_draw_top_text(_quest_text, 60, onboarding_quest_alpha, c_white, 0.4);
+
+	// Check if quest has a verb to display as an icon
+	if (variable_struct_exists(_quest, "display_verb")) {
+		ui_draw_top_text_with_verb(_quest_text, _quest.display_verb, 60, onboarding_quest_alpha, c_white, 0.4);
+	} else {
+		ui_draw_top_text(_quest_text, 60, onboarding_quest_alpha, c_white, 0.4);
+	}
 }

@@ -55,15 +55,15 @@ InputIconDefineKeyboard("E", input_icon_sprite(spr_keyboard, 28)); // E key spri
 InputIconDefineKeyboard("F", "F");
 InputIconDefineKeyboard("G", "G");
 InputIconDefineKeyboard("H", "H");
-InputIconDefineKeyboard("I", "I");
-InputIconDefineKeyboard("J", "J");
+InputIconDefineKeyboard("I", input_icon_sprite(spr_keyboard, 33)); // I key sprite for INVENTORY
+InputIconDefineKeyboard("J", input_icon_sprite(spr_keyboard, 45)); // J key sprite for ATTACK
 InputIconDefineKeyboard("K", "K");
 InputIconDefineKeyboard("L", "L");
 InputIconDefineKeyboard("M", "M");
 InputIconDefineKeyboard("N", "N");
 InputIconDefineKeyboard("O", "O");
 InputIconDefineKeyboard("P", "P");
-InputIconDefineKeyboard("Q", "Q");
+InputIconDefineKeyboard("Q", input_icon_sprite(spr_keyboard, 26)); // Q key sprite for SWAP_LOADOUT
 InputIconDefineKeyboard("R", "R");
 InputIconDefineKeyboard("S", "S");
 InputIconDefineKeyboard("T", "T");
