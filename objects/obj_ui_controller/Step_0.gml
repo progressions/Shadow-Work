@@ -67,7 +67,7 @@ if (_is_slider) {
 	}
 }
 
-// Activate selected button (Enter or Interact) - works for all button types
-if (keyboard_check_pressed(vk_enter) || InputPressed(INPUT_VERB.INTERACT)) {
+// Activate selected button (Interact) - works for all button types
+if (InputPressed(INPUT_VERB.INTERACT)) {
 	activate_selected_button();
 }

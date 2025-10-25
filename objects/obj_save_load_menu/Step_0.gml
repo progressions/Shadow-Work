@@ -34,8 +34,8 @@ if (InputPressed(INPUT_VERB.RIGHT)) {
     switch_mode("save");
 }
 
-// Interact to execute action on selected slot (keyboard + gamepad)
-if (keyboard_check_pressed(vk_enter) || InputPressed(INPUT_VERB.INTERACT)) {
+// Interact to execute action on selected slot
+if (InputPressed(INPUT_VERB.INTERACT)) {
     if (current_mode == "save") {
         perform_save(selected_slot);
     } else {
