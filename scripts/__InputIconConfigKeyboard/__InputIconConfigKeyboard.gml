@@ -51,7 +51,7 @@ InputIconDefineKeyboard("A", "A");
 InputIconDefineKeyboard("B", "B");
 InputIconDefineKeyboard("C", "C");
 InputIconDefineKeyboard("D", "D");
-InputIconDefineKeyboard("E", "E");
+InputIconDefineKeyboard("E", input_icon_sprite(spr_keyboard, 28)); // E key sprite for INTERACT
 InputIconDefineKeyboard("F", "F");
 InputIconDefineKeyboard("G", "G");
 InputIconDefineKeyboard("H", "H");

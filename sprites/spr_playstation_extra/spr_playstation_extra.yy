@@ -30,7 +30,7 @@
   ],
   "name":"spr_playstation_extra",
   "nineSlice":null,
-  "origin":0,
+  "origin":6,
   "parent":{
     "name":"playstation",
     "path":"folders/Sprites/ui/input/playstation.yy",
@@ -104,7 +104,7 @@
     "visibleRange":null,
     "volume":1.0,
     "xorigin":0,
-    "yorigin":0,
+    "yorigin":16,
   },
   "swatchColours":null,
   "swfPrecision":0.5,

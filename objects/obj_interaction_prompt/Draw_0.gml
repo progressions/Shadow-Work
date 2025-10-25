@@ -10,6 +10,7 @@ var _prev_font = draw_get_font();
 if (use_verb && verb != -1) {
     var _icon = InputIconGet(verb);
     var _draw_y = y - 6;
+    var _icon_scale = 0.5; // Scale for sprite icons
 
     // Calculate total width for centering
     var _icon_width = 16;
@@ -17,7 +18,7 @@ if (use_verb && verb != -1) {
     var _text_width = string_width(action_text) * text_scale;
 
     if (is_struct(_icon) && sprite_exists(_icon.sprite)) {
-        _icon_width = sprite_get_width(_icon.sprite);
+        _icon_width = sprite_get_width(_icon.sprite) * _icon_scale;
     } else if (is_string(_icon)) {
         _icon_width = string_width(_icon) * text_scale;
     }
@@ -27,8 +28,8 @@ if (use_verb && verb != -1) {
 
     // Draw icon (sprite or text)
     if (is_struct(_icon) && sprite_exists(_icon.sprite)) {
-        // Draw sprite icon
-        draw_sprite(_icon.sprite, _icon.frame, _start_x + (_icon_width / 2), _draw_y);
+        // Draw sprite icon with scaling
+        draw_sprite_ext(_icon.sprite, _icon.frame, _start_x + (_icon_width / 2), _draw_y, _icon_scale, _icon_scale, 0, c_white, 1);
     } else if (is_string(_icon)) {
         // Draw text icon with brackets
         var _icon_text = "[[" + _icon + "]";

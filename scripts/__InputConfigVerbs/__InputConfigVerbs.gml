@@ -43,7 +43,7 @@ function __InputConfigVerbs()
 		InputDefineVerb(INPUT_VERB.SHIELD,  "shield",      "O",                 gp_shoulderr);
 		InputDefineVerb(INPUT_VERB.ATTACK,  "attack",      "J",                 gp_face3);
 		InputDefineVerb(INPUT_VERB.DASH,    "dash",        vk_shift,            undefined);
-		InputDefineVerb(INPUT_VERB.INTERACT, "interact",   [vk_space, vk_enter, "E"], gp_face1);
+		InputDefineVerb(INPUT_VERB.INTERACT, "interact",   ["E", vk_space, vk_enter], gp_face1);
 		InputDefineVerb(INPUT_VERB.UI_CANCEL, "ui_cancel", undefined,           gp_face2);
 		InputDefineVerb(INPUT_VERB.INVENTORY, "inventory", "I",                 gp_face4);
 		InputDefineVerb(INPUT_VERB.SWAP_LOADOUT, "swap_loadout", "Q",          gp_shoulderl);
@@ -63,7 +63,7 @@ function __InputConfigVerbs()
 		InputDefineVerb(INPUT_VERB.SHIELD,  "shield",      "O",                 gp_shoulderr);
 		InputDefineVerb(INPUT_VERB.ATTACK,  "attack",      "J",                 gp_face3);
 		InputDefineVerb(INPUT_VERB.DASH,    "dash",        vk_shift,            undefined); // Gamepad dash via double-tap only
-		InputDefineVerb(INPUT_VERB.INTERACT, "interact",   [vk_space, vk_enter, "E"], gp_face2); // Switch A/B flipped
+		InputDefineVerb(INPUT_VERB.INTERACT, "interact",   ["E", vk_space, vk_enter], gp_face2); // Switch A/B flipped
 		InputDefineVerb(INPUT_VERB.UI_CANCEL, "ui_cancel", undefined,           gp_face1); // Switch A/B flipped
 		InputDefineVerb(INPUT_VERB.INVENTORY, "inventory", "I",                 gp_face4);
 		InputDefineVerb(INPUT_VERB.SWAP_LOADOUT, "swap_loadout", "Q",          gp_shoulderl);
