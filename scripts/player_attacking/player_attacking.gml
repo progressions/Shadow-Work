@@ -226,8 +226,9 @@ function player_execute_attack() {
 /// @function spawn_player_arrow()
 /// @description Spawns arrow projectile from player after windup completes
 /// @param {string} _direction - Direction to fire ("up", "down", "left", "right")
+/// @param {real} _charge_multiplier - Damage multiplier from charge time (0.5 to 1.0)
 /// @returns {bool} True if arrow spawned successfully
-function spawn_player_arrow(_direction) {
+function spawn_player_arrow(_direction, _charge_multiplier = 1.0) {
     if (equipped.right_hand == undefined || equipped.right_hand.definition == undefined) {
         show_debug_message("No ranged weapon equipped");
         return false;
@@ -272,6 +273,7 @@ function spawn_player_arrow(_direction) {
     var _arrow = instance_create_layer(_arrow_x, _arrow_y, "Instances", obj_arrow);
     _arrow.creator = self;
     _arrow.damage = get_total_damage();
+    _arrow.charge_multiplier = _charge_multiplier; // Store charge multiplier
     _arrow.range_profile_id = _range_profile_id;
     _arrow.range_profile = projectile_get_range_profile(_range_profile_id);
     _arrow.range_profile_id_cached = _range_profile_id;
@@ -292,7 +294,7 @@ function spawn_player_arrow(_direction) {
     play_sfx(snd_bow_attack, 1, false);
 
     if (variable_global_exists("debug_mode") && global.debug_damage_reduction) {
-        show_debug_message("Player arrow spawned after windup complete");
+        show_debug_message("Player arrow spawned - charge multiplier: " + string(_charge_multiplier));
     }
 
     return true;
@@ -355,20 +357,25 @@ function player_release_ranged_charge() {
         return false;
     }
 
-    // Consume ammo NOW (at release)
-    consume_ammo("arrows", 1);
-
-    // Spawn the arrow
-    spawn_player_arrow(ranged_windup_direction);
-
     // Get attack speed for cooldown calculation
     var _attack_speed = 1.0;
     if (equipped.right_hand != undefined && equipped.right_hand.definition.type == ItemType.weapon) {
         _attack_speed = equipped.right_hand.definition.stats.attack_speed;
     }
 
+    // Calculate charge multiplier based on charge time vs weapon cooldown
+    var _weapon_cooldown = max(15, round(60 / _attack_speed));
+    var _charge_ratio = ranged_charge_time / _weapon_cooldown;
+    var _charge_multiplier = lerp(0.5, 1.0, min(1.0, _charge_ratio));
+
+    // Consume ammo NOW (at release)
+    consume_ammo("arrows", 1);
+
+    // Spawn the arrow with charge multiplier
+    spawn_player_arrow(ranged_windup_direction, _charge_multiplier);
+
     // Set attack cooldown
-    attack_cooldown = max(15, round(60 / _attack_speed));
+    attack_cooldown = _weapon_cooldown;
     can_attack = false;
 
     // Reset all charge flags
@@ -382,7 +389,7 @@ function player_release_ranged_charge() {
     state_before_attack = PlayerState.idle;
 
     if (variable_global_exists("debug_mode") && global.debug_damage_reduction) {
-        show_debug_message("Ranged charge released! Arrow fired after " + string(ranged_charge_time) + " frames of charging");
+        show_debug_message("Ranged charge released! Charge time: " + string(ranged_charge_time) + " frames, Cooldown: " + string(_weapon_cooldown) + " frames, Multiplier: " + string(_charge_multiplier));
     }
 
     return true;

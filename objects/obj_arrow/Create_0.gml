@@ -35,10 +35,14 @@ spawn_x = x;
 spawn_y = y;
 weapon_range_stat = 0;
 
+// Charge multiplier (set by spawning code, 0.5 to 1.0 based on charge time)
+charge_multiplier = 1.0;
+
 // Debug/communication variables (used to pass data during collision)
 __proj_damage_type = DamageType.physical;
 __proj_scaled_damage = 0;
 __proj_damage_multiplier = 1.0;
+__proj_charge_multiplier = 1.0;
 __proj_travel_distance = 0;
 __proj_debug_final_damage = undefined;
 __proj_debug_target_name = undefined;

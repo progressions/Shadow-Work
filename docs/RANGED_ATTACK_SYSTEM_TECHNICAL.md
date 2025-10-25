@@ -430,8 +430,15 @@ attack_cooldown = max(15, round(60 / _attack_speed));
    - Set `attack_cooldown` based on weapon speed
    - Return to previous state (idle/walking)
 8. **Frame Release+1 onward:** Arrow moves at `speed = 2` px/frame in its `direction`
-9. **Each Frame:** Arrow checks for wall/enemy/bounds collisions
-10. **On Hit:** Apply `damage * range_multiplier` to enemy, spawn damage number, award XP, destroy arrow
+9. **Each Frame:**
+   - Arrow checks for wall/enemy/bounds collisions
+   - Updates `current_damage_multiplier` from range profile based on `distance_travelled`
+10. **On Hit:**
+   - Calculate `final_damage = base_damage * range_multiplier * charge_multiplier`
+   - Subtract enemy's ranged DR
+   - Spawn damage number
+   - Award XP if enemy dies
+   - Destroy arrow
 11. **Cooldown Ends:** Player can attack again when `attack_cooldown` reaches 0
 
 ---
@@ -521,7 +528,7 @@ These limitations are by design for the current MVP implementation.
 
 - **Arrow Recovery:** Chance to retrieve arrows from dead enemies
 - **Elemental Arrows:** Fire/ice/poison arrow types
-- **Charge Damage Scaling:** Increase damage/range based on charge time
+- **Charge Range Scaling:** Increase arrow speed/range based on charge time
 - **Trajectory Arcs:** Parabolic flight paths with gravity
 - **Critical Hits:** Random damage multipliers based on accuracy stat
 
@@ -576,7 +583,7 @@ function player_fire_ranged_projectile_local(_direction) {
 - **Ammo validation on press** - Prevents starting charge without ammo
 - **Ammo consumption on release** - Ammo only consumed when arrow actually fires
 - **Direction locking** - Arrow fires in direction player was facing when charge started
-- **Charge time tracking** - `ranged_charge_time` increments each frame (for future damage scaling)
+- **Charge time tracking** - `ranged_charge_time` increments each frame for damage scaling
 
 ### Movement While Charging
 
@@ -658,9 +665,9 @@ function player_release_ranged_charge() {
 **Release Features:**
 - **Ammo consumption** - Arrow consumed only when fired, not when charge starts
 - **Direction locked** - Fires in `ranged_windup_direction` (set when charge started)
+- **Charge damage scaling** - Damage multiplier calculated from charge time vs weapon cooldown
 - **Cooldown application** - Attack cooldown starts on release, not on press
 - **State restoration** - Returns to state before charging (idle/walking)
-- **Charge time recorded** - `ranged_charge_time` available for future damage scaling
 
 **Charge System Variables:**
 ```gml
@@ -669,6 +676,55 @@ ranged_charge_time = 0;           // How long we've been charging (in frames)
 ranged_charge_hold_frame = 0.8;   // Which frame (0.0-1.0) to hold at during charge (unused in current implementation)
 ranged_windup_direction = "";     // Direction arrow will fire when released
 ```
+
+### Charge Damage Multiplier
+
+**Overview:**
+The charge damage multiplier scales arrow damage based on how long the player holds the attack button relative to the weapon's cooldown time.
+
+**Calculation:**
+```gml
+// Get weapon's attack cooldown
+var _weapon_cooldown = max(15, round(60 / _attack_speed));
+
+// Calculate charge ratio (0.0 to 1.0+, capped at 1.0)
+var _charge_ratio = ranged_charge_time / _weapon_cooldown;
+
+// Interpolate from 0.5x to 1.0x damage
+var _charge_multiplier = lerp(0.5, 1.0, min(1.0, _charge_ratio));
+```
+
+**Scaling:**
+- **Instant release (0 frames)**: 0.5x damage multiplier
+- **Half cooldown**: 0.75x damage multiplier
+- **Full cooldown**: 1.0x damage multiplier (full charge)
+- **Beyond cooldown**: Still 1.0x (capped at maximum)
+
+**Example with Wooden Bow (attack_speed: 1.2):**
+- Weapon cooldown = `60 / 1.2 = 50 frames` (~0.83 seconds at 60 fps)
+- Frame 0: 0.50x multiplier (instant tap)
+- Frame 13: 0.63x multiplier (quarter charge)
+- Frame 25: 0.75x multiplier (half charge)
+- Frame 38: 0.88x multiplier (three-quarter charge)
+- Frame 50+: 1.00x multiplier (full charge)
+
+**Combined with Range Profile:**
+The charge multiplier combines multiplicatively with the range profile multiplier:
+```gml
+final_damage = base_damage * range_multiplier * charge_multiplier
+```
+
+**Example Damage Calculation:**
+- Base damage: 10
+- Range multiplier: 0.8x (at 180px distance with generic_arrow profile)
+- Charge multiplier: 0.75x (half charge, 25 frames held)
+- Final damage: `10 * 0.8 * 0.75 = 6.0`
+
+**Design Intent:**
+- Rewards patient, tactical charging
+- Punishes panic-tapping the attack button
+- Cooldown scaling ensures faster weapons require less absolute charge time
+- Full charge takes same relative time regardless of weapon speed
 
 ---
 
@@ -1129,12 +1185,14 @@ instance_destroy();
    - Player can move freely while maintaining charge
 6. **Release:** Player releases attack button
    - Validate ammo still available
+   - **Calculate charge multiplier** - `lerp(0.5, 1.0, charge_time / weapon_cooldown)`
    - **Consume 1 arrow NOW** (at release)
-   - Call `spawn_player_arrow(ranged_windup_direction)`
+   - Call `spawn_player_arrow(ranged_windup_direction, charge_multiplier)`
 7. **Arrow Spawn:**
    - Calculate spawn position with direction-based offsets
    - Create `obj_arrow` instance
    - Set `damage = get_total_damage()`
+   - Set `charge_multiplier` (0.5 to 1.0 based on charge time)
    - Set range profile from weapon
    - Set direction to `ranged_windup_direction` (locked at charge start)
    - Set speed (2 px/frame)
