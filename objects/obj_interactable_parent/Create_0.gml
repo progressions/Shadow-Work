@@ -7,9 +7,12 @@ event_inherited();
 // Interaction properties
 interaction_radius = 32;           // Distance within which player can interact
 interaction_priority = 50;         // Priority for selection (higher = more important)
-interaction_key = "Space";         // Key name for display
+interaction_verb = INPUT_VERB.INTERACT;  // Input verb for adaptive icon display
 interaction_action = "Interact";   // Action text for display
 interaction_prompt = noone;        // Reference to active prompt instance
+
+// Legacy support (deprecated - use interaction_verb instead)
+interaction_key = "Space";         // Deprecated: Use interaction_verb for gamepad/keyboard adaptive display
 
 // Base methods - override these in child objects
 

@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"input_icon_sprite",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"input_icon_sprite",
+  "parent":{
+    "name":"Scripts",
+    "path":"folders/Scripts.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

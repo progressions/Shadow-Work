@@ -812,6 +812,7 @@
     {"id":{"name":"scr_enums","path":"scripts/scr_enums/scr_enums.yy",},},
     {"id":{"name":"scr_formation_database","path":"scripts/scr_formation_database/scr_formation_database.yy",},},
     {"id":{"name":"scr_hazard_projectile_spawn","path":"scripts/scr_hazard_projectile_spawn/scr_hazard_projectile_spawn.yy",},},
+    {"id":{"name":"scr_interaction_prompts","path":"scripts/scr_interaction_prompts/scr_interaction_prompts.yy",},},
     {"id":{"name":"scr_inventory_system","path":"scripts/scr_inventory_system/scr_inventory_system.yy",},},
     {"id":{"name":"scr_item_database","path":"scripts/scr_item_database/scr_item_database.yy",},},
     {"id":{"name":"scr_lighting","path":"scripts/scr_lighting/scr_lighting.yy",},},

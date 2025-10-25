@@ -14,7 +14,7 @@ if (floor(global.idle_bob_timer) % 2 == 0) {
 
 // Handle interaction prompt display - only show if this is the active interactive
 if (global.active_interactive == id) {
-    show_interaction_prompt(interaction_radius, 0, -24, interaction_key, interaction_action);
+    show_interaction_prompt_verb(interaction_radius, 0, -24, interaction_verb, interaction_action);
 
     // Handle INTERACT button press - verify player is still in range and can interact
     if (InputPressed(INPUT_VERB.INTERACT) && instance_exists(obj_player)) {
