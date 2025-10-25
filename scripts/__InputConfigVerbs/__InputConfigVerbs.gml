@@ -37,9 +37,9 @@ function __InputConfigVerbs()
         InputDefineVerb(INPUT_VERB.SPECIAL, "special",     vk_shift,            gp_select);
         InputDefineVerb(INPUT_VERB.PAUSE,   "pause",       vk_escape,           gp_start);
 		InputDefineVerb(INPUT_VERB.SHIELD,  "shield",      "O",                 gp_face4);
-		InputDefineVerb(INPUT_VERB.ATTACK,  "attack",      "J",                 gp_face1);
+		InputDefineVerb(INPUT_VERB.ATTACK,  "attack",      "J",                 gp_face3);
 		InputDefineVerb(INPUT_VERB.DASH,    "dash",        vk_shift,            gp_face2);
-		InputDefineVerb(INPUT_VERB.INTERACT, "interact",   "E",                 gp_face3);
+		InputDefineVerb(INPUT_VERB.INTERACT, "interact",   "E",                 gp_face1);
     }
     else //Flip A/B over on Switch
     {
@@ -53,9 +53,9 @@ function __InputConfigVerbs()
         InputDefineVerb(INPUT_VERB.SPECIAL, "special", undefined,   gp_select);
         InputDefineVerb(INPUT_VERB.PAUSE,   "pause",   undefined,   gp_start);
 		InputDefineVerb(INPUT_VERB.SHIELD,  "shield",      "O",                 gp_face4);
-		InputDefineVerb(INPUT_VERB.ATTACK,  "attack",      "J",                 gp_face2); // Switch A/B flipped
+		InputDefineVerb(INPUT_VERB.ATTACK,  "attack",      "J",                 gp_face3);
 		InputDefineVerb(INPUT_VERB.DASH,    "dash",        vk_shift,            gp_face1); // Switch A/B flipped
-		InputDefineVerb(INPUT_VERB.INTERACT, "interact",   "E",                 gp_face3);
+		InputDefineVerb(INPUT_VERB.INTERACT, "interact",   "E",                 gp_face2); // Switch A/B flipped
     }
     
     //Define a cluster of verbs for moving around
