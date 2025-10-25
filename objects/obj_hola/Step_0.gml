@@ -26,8 +26,8 @@ if (instance_exists(obj_player)) {
 		ChatterboxLoadFromFile("hola.yarn");
 	}
 
-	// Player is close and presses space - open VN dialogue (only if not recruited)
-	if (_dist_to_player < 48 && keyboard_check_pressed(vk_space) && !is_recruited) {
+	// Player is close and presses interact - open VN dialogue (only if not recruited)
+	if (_dist_to_player < 48 && InputPressed(INPUT_VERB.INTERACT) && !is_recruited) {
 		show_debug_message("Starting Hola VN dialogue!");
 		start_vn_dialogue(id, "hola.yarn", "Start");
 	}

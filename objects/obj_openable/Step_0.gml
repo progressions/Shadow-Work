@@ -14,8 +14,8 @@ if (global.game_paused) {
 if (!is_opened && global.active_interactive == id) {
     show_interaction_prompt(interaction_radius, 0, -24, interaction_key, interaction_action);
 
-    // Handle SPACE key press - verify player is still in range and can interact
-    if (keyboard_check_pressed(vk_space) && instance_exists(obj_player)) {
+    // Handle INTERACT button press - verify player is still in range and can interact
+    if (InputPressed(INPUT_VERB.INTERACT) && instance_exists(obj_player)) {
         var _dist = point_distance(x, y, obj_player.x, obj_player.y);
         if (_dist <= interaction_radius && can_interact()) {
             on_interact();
