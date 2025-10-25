@@ -15,10 +15,16 @@ if (!global.audio_config.sfx_enabled && array_length(sounds_to_play) > 0) {
 for (var i = 0; i < array_length(sounds_to_play); i++) {
 
 	var sound_data = sounds_to_play[i];
-	
+
 	if (sound_data.loop == false) {
 		var _sound_instance = audio_play_sound(sound_data.sound, sound_data.priority, sound_data.loop);
 		audio_sound_gain(_sound_instance, sound_data.volume * _final_volume, 0);
+
+		// Apply random pitch variation
+		if (pitch_variation_enabled) {
+			var _pitch = random_range(pitch_variation_min, pitch_variation_max);
+			audio_sound_pitch(_sound_instance, _pitch);
+		}
 
 		array_delete(sounds_to_play, i, 1);
 		i--;
@@ -37,6 +43,13 @@ for (var i = 0; i < array_length(sounds_to_play); i++) {
 		// If not found, start playing and add to sounds_playing
 		if (!_found) {
 			var _sound_instance = audio_play_sound(sound_data.sound, sound_data.priority, true);
+
+			// Apply random pitch variation to looped sounds
+			if (pitch_variation_enabled) {
+				var _pitch = random_range(pitch_variation_min, pitch_variation_max);
+				audio_sound_pitch(_sound_instance, _pitch);
+			}
+
 			array_push(sounds_playing, {
 				sound: sound_data.sound,
 				instance: _sound_instance,

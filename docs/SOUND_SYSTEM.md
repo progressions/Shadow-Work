@@ -7,8 +7,9 @@ This document provides comprehensive technical documentation for the sound syste
 ## Table of Contents
 
 1. [Sound Variant Randomization](#sound-variant-randomization)
-2. [Enemy Sound Configuration](#enemy-sound-configuration)
-3. [Sound Functions](#sound-functions)
+2. [Pitch Variation](#pitch-variation)
+3. [Enemy Sound Configuration](#enemy-sound-configuration)
+4. [Sound Functions](#sound-functions)
 
 ---
 
@@ -138,6 +139,89 @@ global.debug_sound_variants = true;  // Enable debug mode
 // Playing variant: snd_sword_hit_1
 // Playing variant: snd_footstep_5
 ```
+
+---
+
+## Pitch Variation
+
+The sound system automatically applies subtle random pitch variation to all sound effects, adding organic variety and preventing mechanical repetition.
+
+**Location:** `/objects/obj_sfx_controller/Create_0.gml` and `/objects/obj_sfx_controller/Step_2.gml`
+
+### Configuration
+
+Pitch variation is controlled by three parameters in `obj_sfx_controller`:
+
+```gml
+// Pitch variation settings
+pitch_variation_enabled = true;  // Enable/disable pitch variation
+pitch_variation_min = 0.95;      // Minimum pitch multiplier (5% lower)
+pitch_variation_max = 1.05;      // Maximum pitch multiplier (5% higher)
+```
+
+**Default Settings:**
+- **Enabled:** `true` (active by default)
+- **Range:** 0.95 to 1.05 (±5% pitch variation)
+- **Distribution:** Uniform random within range
+
+### How It Works
+
+When a sound effect is played, the system applies a random pitch shift:
+
+```gml
+// Apply random pitch variation
+if (pitch_variation_enabled) {
+    var _pitch = random_range(pitch_variation_min, pitch_variation_max);
+    audio_sound_pitch(_sound_instance, _pitch);
+}
+```
+
+**Applied to:**
+- ✅ All non-looped sound effects (footsteps, attacks, hits, etc.)
+- ✅ All looped sound effects when first started
+- ❌ Music (pitch variation only affects SFX)
+
+### Examples
+
+**Sword Hit Sound:**
+- Play 1: Pitch 0.98 (slightly lower)
+- Play 2: Pitch 1.03 (slightly higher)
+- Play 3: Pitch 0.96 (lower)
+- Play 4: Pitch 1.01 (slightly higher)
+
+**Effect:** Each sword hit sounds unique while maintaining recognizability.
+
+### Customization
+
+**Increase Variation (more noticeable):**
+```gml
+pitch_variation_min = 0.90;  // 10% lower
+pitch_variation_max = 1.10;  // 10% higher
+```
+
+**Reduce Variation (more subtle):**
+```gml
+pitch_variation_min = 0.97;  // 3% lower
+pitch_variation_max = 1.03;  // 3% higher
+```
+
+**Disable Pitch Variation:**
+```gml
+pitch_variation_enabled = false;
+```
+
+### Design Intent
+
+- **Organic feel:** Prevents mechanical, repetitive sound
+- **Subtle variety:** ±5% is noticeable but not jarring
+- **Per-instance randomization:** Same sound varies each play
+- **Combines with variants:** Works alongside sound variant system for maximum variety
+
+### Performance Notes
+
+- **No performance impact:** `audio_sound_pitch()` is a native GameMaker function
+- **Applied once per sound:** Pitch is set when sound starts playing
+- **Cached randomization:** Uses GameMaker's built-in random number generator
 
 ---
 
