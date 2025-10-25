@@ -10,6 +10,36 @@ gpu_set_tex_filter(true);
 var _gui_width = display_get_gui_width();
 var _gui_height = display_get_gui_height();
 
+// Recalculate UI positions based on current GUI dimensions
+// Portrait configuration (left side, tall)
+var _portrait_width = 400;
+var _portrait_height = _gui_height - 40;
+var _portrait_x = 20;
+var _portrait_y = 20;
+
+// Dialogue box (right side)
+var _dialogue_box_x = _portrait_x + _portrait_width + 20;
+var _dialogue_box_width = _gui_width - _dialogue_box_x - 20;
+var _dialogue_box_height = 200;
+var _dialogue_box_y = _gui_height - _dialogue_box_height - 20;
+
+// Name tag above dialogue box
+var _name_tag_height = 40;
+var _name_tag_y = _dialogue_box_y - _name_tag_height - 10;
+var _name_tag_x = _dialogue_box_x;
+
+// Text positioning
+var _text_x = _dialogue_box_x + 20;
+var _text_y = _dialogue_box_y + 20;
+var _text_width = _dialogue_box_width - 40;
+
+// Choice configuration (fill space between top and name tag)
+var _choice_height = 50;
+var _choice_padding = 10;
+var _choice_width = _dialogue_box_width;
+var _choice_x = _dialogue_box_x;
+var _choice_start_y = _name_tag_y - 10; // Start just above name tag
+
 // Draw semi-transparent background overlay
 draw_set_alpha(0.6);
 draw_set_color(c_black);
@@ -18,11 +48,11 @@ draw_set_alpha(1);
 
 // Draw dialogue box background
 draw_set_color(c_dkgray);
-draw_rectangle(dialogue_box_x, dialogue_box_y, dialogue_box_x + dialogue_box_width, dialogue_box_y + dialogue_box_height, false);
+draw_rectangle(_dialogue_box_x, _dialogue_box_y, _dialogue_box_x + _dialogue_box_width, _dialogue_box_y + _dialogue_box_height, false);
 
 // Draw dialogue box border
 draw_set_color(c_ltgray);
-draw_rectangle(dialogue_box_x, dialogue_box_y, dialogue_box_x + dialogue_box_width, dialogue_box_y + dialogue_box_height, true);
+draw_rectangle(_dialogue_box_x, _dialogue_box_y, _dialogue_box_x + _dialogue_box_width, _dialogue_box_y + _dialogue_box_height, true);
 
 // Draw portrait on left side - bottom aligned with dialogue box
 // Priority: video > companion portrait > intro portrait
@@ -30,8 +60,8 @@ var _portrait_sprite = noone;
 var _has_video = (vn_video != -1);
 
 // Calculate bottom alignment position (match dialogue box bottom)
-var _bottom_y = dialogue_box_y + dialogue_box_height;
-var _available_width = portrait_width;
+var _bottom_y = _dialogue_box_y + _dialogue_box_height;
+var _available_width = _portrait_width;
 
 // Check for video first
 if (_has_video) {
@@ -54,7 +84,7 @@ if (_has_video) {
 			var _scaled_height = _surf_height * _scale;
 
 			// Position: centered horizontally, bottom-aligned
-			var _draw_x = portrait_x;
+			var _draw_x = _portrait_x;
 			var _draw_y = _bottom_y - _scaled_height;
 
 			// Draw video surface
@@ -86,7 +116,7 @@ else {
 		var _scaled_height = _sprite_height * _scale;
 
 		// Position: left edge aligned, bottom-aligned
-		var _draw_x = portrait_x;
+		var _draw_x = _portrait_x;
 		var _draw_y = _bottom_y - _scaled_height;
 
 		// Draw portrait sprite
@@ -106,18 +136,18 @@ if (current_speaker != "") {
 	var _name_width = string_width(current_speaker) + 60;
 
 	draw_set_color(c_dkgray);
-	draw_rectangle(name_tag_x, name_tag_y, name_tag_x + _name_width, name_tag_y + name_tag_height, false);
+	draw_rectangle(_name_tag_x, _name_tag_y, _name_tag_x + _name_width, _name_tag_y + _name_tag_height, false);
 
 	draw_set_color(c_white);
-	draw_rectangle(name_tag_x, name_tag_y, name_tag_x + _name_width, name_tag_y + name_tag_height, true);
+	draw_rectangle(_name_tag_x, _name_tag_y, _name_tag_x + _name_width, _name_tag_y + _name_tag_height, true);
 
 	draw_set_color(c_white);
 	draw_set_halign(fa_center);
 	draw_set_valign(fa_middle);
 
 	// Draw name centered in name box
-	var _name_center_x = name_tag_x + _name_width / 2;
-	var _name_center_y = name_tag_y + name_tag_height / 2;
+	var _name_center_x = _name_tag_x + _name_width / 2;
+	var _name_center_y = _name_tag_y + _name_tag_height / 2;
 
 	scribble(current_speaker)
 		.starting_format("fnt_vn", c_white)
@@ -129,12 +159,12 @@ if (current_speaker != "") {
 // Draw dialogue text with Scribble + typist animation
 var _dialogue_element = scribble(current_text, dialogue_text_cache_key)
 	.starting_format("fnt_vn", c_white)
-	.wrap(text_width)
+	.wrap(_text_width)
 	.align(fa_left, fa_top)
 	.line_spacing("120%")
 	.scale(0.5)
 	.pre_update_typist(dialogue_typist)
-	.draw(text_x, text_y, dialogue_typist);
+	.draw(_text_x, _text_y, dialogue_typist);
 
 // Reset draw state for subsequent elements
 draw_set_color(c_white);
@@ -147,14 +177,14 @@ if (global.vn_chatterbox != undefined) {
 	var _option_count = ChatterboxGetOptionCount(global.vn_chatterbox);
 
 	if (_option_count > 0) {
-		var _choice_y = choice_start_y;
+		var _choice_y = _choice_start_y;
 
 		// Draw choices in reverse order so first option appears at top
 		for (var i = _option_count - 1; i >= 0; i--) {
 			var _option_text = ChatterboxGetOption(global.vn_chatterbox, i);
 
 			// Calculate choice position (stack upward)
-			_choice_y -= (choice_height + choice_padding);
+			_choice_y -= (_choice_height + _choice_padding);
 
 			// Highlight selected choice
 			if (i == selected_choice) {
@@ -163,30 +193,30 @@ if (global.vn_chatterbox != undefined) {
 				draw_set_color(c_dkgray);
 			}
 
-			draw_rectangle(choice_x, _choice_y, choice_x + choice_width, _choice_y + choice_height, false);
+			draw_rectangle(_choice_x, _choice_y, _choice_x + _choice_width, _choice_y + _choice_height, false);
 
 			// Draw choice border
 			draw_set_color(c_white);
-			draw_rectangle(choice_x, _choice_y, choice_x + choice_width, _choice_y + choice_height, true);
+			draw_rectangle(_choice_x, _choice_y, _choice_x + _choice_width, _choice_y + _choice_height, true);
 
 			var _text_color;
 			// Draw choice text (black if highlighted, white if not)
 			if (i == selected_choice) {
-				
+
 				_text_color = c_black;
 			} else {
-				
+
 				_text_color = c_white;
 			}
 			draw_set_halign(fa_left);
 			draw_set_valign(fa_middle);
 			draw_set_font(fnt_vn);
-			
+
 			scribble(_option_text)
 				.starting_format("fnt_vn", _text_color)
 				.align(fa_left, fa_middle)
 				.scale(0.5)
-				.draw(choice_x + 20, _choice_y + choice_height / 2);
+				.draw(_choice_x + 20, _choice_y + _choice_height / 2);
 		}
 	} else {
 		// Show "continue" indicator
@@ -195,12 +225,12 @@ if (global.vn_chatterbox != undefined) {
 			draw_set_halign(fa_right);
 			draw_set_valign(fa_bottom);
 			draw_set_font(fnt_vn);
-			
+
 			scribble("[[ENTER/E]]")
 				.starting_format("fnt_vn", c_white)
 				.align(fa_right, fa_bottom)
 				.scale(0.5)
-				.draw(dialogue_box_x + dialogue_box_width - 20, dialogue_box_y + dialogue_box_height - 10);
+				.draw(_dialogue_box_x + _dialogue_box_width - 20, _dialogue_box_y + _dialogue_box_height - 10);
 		}
 	}
 }
