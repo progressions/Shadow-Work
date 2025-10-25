@@ -6,6 +6,47 @@
 //            //
 ////////////////
 
+// ====================================================================================
+// SPRITE-BASED ICONS - Uncomment and adjust frame numbers to use spr_keyboard
+// ====================================================================================
+// To find frame numbers:
+//   1. Open spr_keyboard in GameMaker IDE
+//   2. Click through frames and note which key is in which frame number
+//   3. Fill in the frame numbers below
+//
+// Example with placeholder frame numbers (ADJUST TO MATCH YOUR SPRITE):
+//
+// // Letter keys (adjust frame numbers to match your sprite layout)
+// InputIconDefineKeyboard("A", input_icon_sprite(spr_keyboard, 0));
+// InputIconDefineKeyboard("B", input_icon_sprite(spr_keyboard, 1));
+// InputIconDefineKeyboard("C", input_icon_sprite(spr_keyboard, 2));
+// InputIconDefineKeyboard("D", input_icon_sprite(spr_keyboard, 3));
+// InputIconDefineKeyboard("E", input_icon_sprite(spr_keyboard, 4));
+// InputIconDefineKeyboard("F", input_icon_sprite(spr_keyboard, 5));
+// // ... continue for all 26 letters
+//
+// // Number keys
+// InputIconDefineKeyboard("0", input_icon_sprite(spr_keyboard, 26));
+// InputIconDefineKeyboard("1", input_icon_sprite(spr_keyboard, 27));
+// // ... continue for all numbers
+//
+// // Special keys
+// InputIconDefineKeyboard(vk_space,     input_icon_sprite(spr_keyboard, 45));
+// InputIconDefineKeyboard(vk_enter,     input_icon_sprite(spr_keyboard, 50));
+// InputIconDefineKeyboard(vk_shift,     input_icon_sprite(spr_keyboard, 60));
+// InputIconDefineKeyboard(vk_escape,    input_icon_sprite(spr_keyboard, 70));
+// InputIconDefineKeyboard(vk_backspace, input_icon_sprite(spr_keyboard, 71));
+// InputIconDefineKeyboard(vk_tab,       input_icon_sprite(spr_keyboard, 72));
+// // ... continue for all special keys
+//
+// // Arrow keys
+// InputIconDefineKeyboard(vk_up,    input_icon_sprite(spr_keyboard, 75));
+// InputIconDefineKeyboard(vk_down,  input_icon_sprite(spr_keyboard, 76));
+// InputIconDefineKeyboard(vk_left,  input_icon_sprite(spr_keyboard, 77));
+// InputIconDefineKeyboard(vk_right, input_icon_sprite(spr_keyboard, 78));
+// ====================================================================================
+
+// STRING-BASED ICONS (default) - Remove or comment out when using sprite-based icons above
 InputIconDefineKeyboard("A", "A");
 InputIconDefineKeyboard("B", "B");
 InputIconDefineKeyboard("C", "C");
