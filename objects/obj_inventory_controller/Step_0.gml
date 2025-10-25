@@ -346,45 +346,119 @@ if (is_open) {
         }
     }
 
+    // INTERACT button - context-sensitive action (equip/use in inventory, unequip in loadout/paper_doll)
     if (InputPressed(INPUT_VERB.INTERACT)) {
-        if (_slot_action != InventoryContextAction.equip) {
-            show_debug_message("[INTERACT] No equip action available (current context: " + _action_text + ")");
-            _play_ui_sfx(snd_denied);
-        } else if (_player == noone) {
-            show_debug_message("[E] No player instance found");
-            _play_ui_sfx(snd_denied);
-        } else {
-            var _selected_item = (selected_slot < array_length(_player.inventory)) ? _player.inventory[selected_slot] : undefined;
-            var _equip_success = inventory_perform_equip_on_player(_player, selected_slot);
-            if (_equip_success) {
-                var _equip_sound = snd_open_menu;
-                if (_selected_item != undefined) {
-                    switch (_selected_item.definition.type) {
-                        case ItemType.armor:
-                            _equip_sound = snd_open_menu;
-                            break;
-                        case ItemType.weapon:
-                            _equip_sound = snd_open_menu;
-                            break;
-                        case ItemType.tool:
-                            _equip_sound = snd_open_menu;
-                            break;
+        if (current_tab == InventoryTab.paper_doll) {
+            // Paper doll tab: Unequip armor
+            if (_player == noone) {
+                _play_ui_sfx(snd_denied);
+            } else {
+                var _unequip_method = method(_player, unequip_item);
+                if (_unequip_method != undefined && _unequip_method(paper_doll_selected)) {
+                    show_debug_message("[INTERACT] Unequipped " + paper_doll_selected);
+                    _play_ui_sfx(snd_open_menu);
+                } else {
+                    show_debug_message("[INTERACT] Failed to unequip " + paper_doll_selected + " (slot empty or inventory full)");
+                    _play_ui_sfx(snd_denied);
+                }
+            }
+        } else if (current_tab == InventoryTab.loadout) {
+            // Loadout tab: Unequip weapon/shield from selected loadout hand
+            if (_player == noone) {
+                _play_ui_sfx(snd_denied);
+            } else {
+                var _loadout = _player.loadouts[$ loadout_selected_loadout];
+                var _hand_slot = loadout_selected_hand + "_hand";
+                var _equipped_item = _loadout[$ _hand_slot];
+
+                if (_equipped_item == undefined) {
+                    show_debug_message("[INTERACT] No item equipped in " + loadout_selected_loadout + " " + loadout_selected_hand + " hand");
+                    _play_ui_sfx(snd_denied);
+                } else {
+                    // Unequip from loadout back to inventory
+                    var _add_method = method(_player, inventory_add_item);
+                    var _can_add = (_add_method != undefined) && _add_method(_equipped_item.definition, _equipped_item.count);
+                    if (_can_add) {
+                        // Remove wielder effects if this is the active loadout
+                        if (loadout_selected_loadout == _player.loadouts.active) {
+                            if (variable_struct_exists(_equipped_item.definition, "stats")) {
+                                var _remove_method = method(_player, remove_wielder_effects);
+                                if (_remove_method != undefined) {
+                                    _remove_method(_equipped_item.definition.stats);
+                                }
+                            }
+                            // Also clear from equipped struct if this is the active loadout
+                            _player.equipped[$ _hand_slot] = undefined;
+                        }
+
+                        _loadout[$ _hand_slot] = undefined;
+                        show_debug_message("[INTERACT] Unequipped from " + loadout_selected_loadout + " " + loadout_selected_hand + " hand");
+                        _play_ui_sfx(snd_open_menu);
+                    } else {
+                        show_debug_message("[INTERACT] Inventory full, cannot unequip");
+                        _play_ui_sfx(snd_denied);
                     }
                 }
-                _play_ui_sfx(_equip_sound);
-            } else {
-                _play_ui_sfx(snd_denied);
             }
-            _slot_action = inventory_get_slot_action(_player, selected_slot);
-            _action_text = "none";
-            switch (_slot_action) {
-                case InventoryContextAction.equip:
-                    _action_text = "equip";
-                    break;
+        } else {
+            // Inventory tab: Equip or use items
+            if (_slot_action == InventoryContextAction.none) {
+                show_debug_message("[INTERACT] No context action for slot: " + string(_row) + ", " + string(_col) + " (index: " + string(selected_slot) + ")");
+                _play_ui_sfx(snd_denied);
+            } else if (_player == noone) {
+                show_debug_message("[INTERACT] No player instance found");
+                _play_ui_sfx(snd_denied);
+            } else {
+                var _selected_item = undefined;
+                if (_slot_action == InventoryContextAction.equip && selected_slot < array_length(_player.inventory)) {
+                    _selected_item = _player.inventory[selected_slot];
+                }
 
-                case InventoryContextAction.use:
-                    _action_text = "use";
-                    break;
+                var _success = false;
+                switch (_slot_action) {
+                    case InventoryContextAction.equip:
+                        _success = inventory_perform_equip_on_player(_player, selected_slot);
+                        break;
+
+                    case InventoryContextAction.use:
+                        _success = inventory_perform_use_on_player(_player, selected_slot);
+                        break;
+                }
+
+                if (_success) {
+                    if (_slot_action == InventoryContextAction.equip) {
+                        var _equip_sound = snd_open_menu;
+                        if (_selected_item != undefined) {
+                            switch (_selected_item.definition.type) {
+                                case ItemType.armor:
+                                    _equip_sound = snd_open_menu;
+                                    break;
+                                case ItemType.weapon:
+                                    _equip_sound = snd_open_menu;
+                                    break;
+                                case ItemType.tool:
+                                    _equip_sound = snd_open_menu;
+                                    break;
+                            }
+                        }
+                        _play_ui_sfx(_equip_sound);
+                    } else {
+                        _play_ui_sfx(snd_using_potion);
+                    }
+                } else {
+                    _play_ui_sfx(snd_denied);
+                }
+                _slot_action = inventory_get_slot_action(_player, selected_slot);
+                _action_text = "none";
+                switch (_slot_action) {
+                    case InventoryContextAction.equip:
+                        _action_text = "equip";
+                        break;
+
+                    case InventoryContextAction.use:
+                        _action_text = "use";
+                        break;
+                }
             }
         }
     }

@@ -10,7 +10,7 @@
   "compression":0,
   "compressionQuality":4,
   "conversionMode":0,
-  "duration":0.75,
+  "duration":0.6171882,
   "exportDir":"",
   "name":"snd_pickup_denied",
   "parent":{
