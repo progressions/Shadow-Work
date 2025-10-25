@@ -5,7 +5,7 @@ var _play_ui_sfx = function(_sound, _volume = 1) {
 
 };
 
-if (keyboard_check_pressed(ord("I"))) {
+if (InputPressed(INPUT_VERB.INVENTORY)) {
     is_open = !is_open;
 
     _play_ui_sfx(is_open ? snd_open_inventory : snd_close_inventory);
@@ -13,6 +13,7 @@ if (keyboard_check_pressed(ord("I"))) {
 	if (is_open) {
         // Open inventory: pause game and mute world sounds
         global.game_paused = true;
+        global.state = GameState.menu;
 		audio_group_set_gain(audiogroup_sfx_world, 0, 0);
         // Action tracker: inventory opened
         action_tracker_log("inventory_opened");

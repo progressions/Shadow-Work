@@ -10,8 +10,9 @@ function player_handle_dash_input() {
             }
         }
 
-        // Dash button (Circle on PS5) - dash in current facing direction
-        if (InputPressed(INPUT_VERB.DASH)) {
+        // Dash button (Shift on keyboard only - gamepad uses double-tap directional)
+        // Only process when in gameplay state
+        if (InputPressed(INPUT_VERB.DASH) && global.state == GameState.gameplay) {
             if (!_focus_active) {
                 start_dash(facing_dir);
                 state = PlayerState.dashing;

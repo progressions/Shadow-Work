@@ -21,6 +21,12 @@ function ui_close_all_menus() {
 
     // Unpause the game
     global.game_paused = false;
+
+    // Return to gameplay state
+    global.state = GameState.gameplay;
+
+    // Set input debounce to prevent menu-closing button from triggering gameplay actions
+    global.input_debounce_frames = 2;
 }
 
 // Spawn floating text above an entity

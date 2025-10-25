@@ -2,6 +2,11 @@
 // ENUMS - Game-wide enumeration definitions
 // ============================================
 
+enum GameState {
+	gameplay,   // Normal gameplay - player can move, attack, etc.
+	menu        // Any menu is open - inventory, pause, VN, etc.
+}
+
 enum PlayerState {
 	idle,
 	walking,

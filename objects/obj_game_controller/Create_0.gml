@@ -7,6 +7,12 @@ global.save_data = {
 // Flag to prevent party controllers from spawning during load
 global.loading_from_save = false;
 
+// Game state tracking (gameplay vs menu)
+global.state = GameState.gameplay;
+
+// Input debounce - prevents gameplay input for 1 frame after closing menus
+global.input_debounce_frames = 0;
+
 // Initialize audio configuration
 global.audio_config = {
     music_enabled: true,

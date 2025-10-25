@@ -16,7 +16,8 @@ function __InputConfigVerbs()
 		ATTACK,
 		DASH,
 		INTERACT,
-		UI_CANCEL,  // For closing menus/UI (ESC + Circle)
+		UI_CANCEL,  // For closing menus/UI (Circle)
+		INVENTORY,  // For opening inventory (I + Triangle)
     }
     
     enum INPUT_CLUSTER
@@ -37,11 +38,12 @@ function __InputConfigVerbs()
         InputDefineVerb(INPUT_VERB.ACTION,  "action",      vk_enter,            gp_start);
         InputDefineVerb(INPUT_VERB.SPECIAL, "special",     vk_shift,            gp_select);
         InputDefineVerb(INPUT_VERB.PAUSE,   "pause",       vk_escape,           gp_start);
-		InputDefineVerb(INPUT_VERB.SHIELD,  "shield",      "O",                 gp_face4);
+		InputDefineVerb(INPUT_VERB.SHIELD,  "shield",      "O",                 undefined);
 		InputDefineVerb(INPUT_VERB.ATTACK,  "attack",      "J",                 gp_face3);
-		InputDefineVerb(INPUT_VERB.DASH,    "dash",        vk_shift,            gp_face2);
+		InputDefineVerb(INPUT_VERB.DASH,    "dash",        vk_shift,            undefined);
 		InputDefineVerb(INPUT_VERB.INTERACT, "interact",   "E",                 gp_face1);
-		InputDefineVerb(INPUT_VERB.UI_CANCEL, "ui_cancel", vk_escape,           gp_face2);
+		InputDefineVerb(INPUT_VERB.UI_CANCEL, "ui_cancel", undefined,           gp_face2);
+		InputDefineVerb(INPUT_VERB.INVENTORY, "inventory", "I",                 gp_face4);
     }
     else //Flip A/B over on Switch
     {
@@ -54,11 +56,12 @@ function __InputConfigVerbs()
         InputDefineVerb(INPUT_VERB.ACTION,  "action",  undefined,   gp_start);
         InputDefineVerb(INPUT_VERB.SPECIAL, "special", undefined,   gp_select);
         InputDefineVerb(INPUT_VERB.PAUSE,   "pause",   undefined,   gp_start);
-		InputDefineVerb(INPUT_VERB.SHIELD,  "shield",      "O",                 gp_face4);
+		InputDefineVerb(INPUT_VERB.SHIELD,  "shield",      "O",                 undefined);
 		InputDefineVerb(INPUT_VERB.ATTACK,  "attack",      "J",                 gp_face3);
-		InputDefineVerb(INPUT_VERB.DASH,    "dash",        vk_shift,            gp_face1); // Switch A/B flipped
+		InputDefineVerb(INPUT_VERB.DASH,    "dash",        vk_shift,            undefined); // Gamepad dash via double-tap only
 		InputDefineVerb(INPUT_VERB.INTERACT, "interact",   "E",                 gp_face2); // Switch A/B flipped
-		InputDefineVerb(INPUT_VERB.UI_CANCEL, "ui_cancel", vk_escape,           gp_face1); // Switch A/B flipped
+		InputDefineVerb(INPUT_VERB.UI_CANCEL, "ui_cancel", undefined,           gp_face1); // Switch A/B flipped
+		InputDefineVerb(INPUT_VERB.INVENTORY, "inventory", "I",                 gp_face4);
     }
     
     //Define a cluster of verbs for moving around

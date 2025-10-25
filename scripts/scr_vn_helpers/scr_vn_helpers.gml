@@ -74,6 +74,7 @@ function start_vn_dialogue(_companion_instance, _yarn_file, _start_node) {
 	// Set global VN state
 	global.vn_active = true;
 	global.game_paused = true;
+	global.state = GameState.menu;
 	global.vn_companion = _companion_instance;
 	global.vn_yarn_file = _yarn_file;
 	vn_reset_typist_state();
@@ -277,6 +278,7 @@ function start_vn_intro(_instance, _yarn_file, _start_node, _character_name = ""
 	// Set global VN state (no music change for generic intros)
 	global.vn_active = true;
 	global.game_paused = true;
+	global.state = GameState.menu;
 	global.vn_intro_instance = _instance;
 	global.vn_yarn_file = _yarn_file;
 	vn_reset_typist_state();

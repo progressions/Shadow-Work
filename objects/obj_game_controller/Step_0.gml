@@ -154,6 +154,11 @@ if (freeze_active) {
 
 if (global.game_paused) return;
 
+// Decrement input debounce timer
+if (global.input_debounce_frames > 0) {
+	global.input_debounce_frames--;
+}
+
 global.idle_bob_timer += 0.05;
 if (global.idle_bob_timer >= 2) {
     global.idle_bob_timer -= 2;
