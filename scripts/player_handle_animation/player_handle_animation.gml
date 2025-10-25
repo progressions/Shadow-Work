@@ -12,14 +12,20 @@ function player_handle_animation() {
             anim_key = "dash_" + facing_dir;
             break;
 
-        case PlayerState.shielding:
-            anim_key = "shielding_" + facing_dir;
+        case PlayerState.focus:
+            // In focus mode with shield equipped - use shielding animation
+            if (equipped[$ "left_hand"] != undefined) {
+                anim_key = "shielding_" + facing_dir;
+            } else if (move_dir == "idle") {
+                anim_key = "idle_" + facing_dir;
+            } else {
+                anim_key = "walk_" + facing_dir;
+            }
             break;
 
         case PlayerState.idle:
         case PlayerState.walking:
         default:
-            // Use move_dir to determine idle vs walk
             if (move_dir == "idle") {
                 anim_key = "idle_" + facing_dir;
             } else {
@@ -42,7 +48,7 @@ function player_handle_animation() {
         current_anim_length = anim_info.length;
 
         // Reset animation frame on state changes
-        if (state == PlayerState.attacking || state == PlayerState.shielding || move_dir != "idle") {
+        if (state == PlayerState.attacking || move_dir != "idle") {
             anim_frame = 0;
         } else {
             anim_frame = global.idle_bob_timer % current_anim_length;
@@ -78,42 +84,18 @@ function player_handle_animation() {
             }
 
             if (anim_frame >= current_anim_length) {
-                // Attack animation finished, return to idle state
-                state = PlayerState.idle;
+                // Attack animation finished - return to previous state
+                state = state_before_attack;
+                state_before_attack = PlayerState.idle;
                 anim_frame = 0;
                 ranged_windup_active = false; // Ensure flags are reset
                 ranged_windup_complete = false;
             }
             break;
 
-        case PlayerState.shielding:
-            // Shield animations play once then hold on final frame
-            anim_frame += 0.2;  // Faster than idle - shield raise is quick
-
-            // Check if animation complete
-            if (anim_frame >= current_anim_length) {
-                shield_raise_complete = true;
-                anim_frame = current_anim_length - 0.01;  // Hold on final frame
-            }
-
-            // Manage perfect block window
-            if (shield_raise_complete) {
-                if (perfect_block_window <= 0) {
-                    perfect_block_window = perfect_block_window_duration;
-                } else {
-                    perfect_block_window--;
-                }
-            }
-
-            // Optional: Add sprite flash when perfect block window opens
-            if (perfect_block_window == perfect_block_window_duration) {
-                image_blend = c_yellow;
-                alarm[0] = 6;  // Flash for 6 frames
-            }
-            break;
-
         case PlayerState.idle:
         case PlayerState.walking:
+        case PlayerState.focus:
             if (move_dir == "idle") {
                 // For idle, sync with global timer but keep it in the idle animation range
                 anim_frame = global.idle_bob_timer % current_anim_length;

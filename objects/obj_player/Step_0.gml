@@ -51,9 +51,6 @@ if (instance_exists(obj_grid_controller)) {
     GRID_Y_OFFSET = obj_grid_controller.GRID_Y_OFFSET;
 }
 
-// Update focus input state before processing movement/attacks
-player_focus_update(self);
-
 // Update combat timer for companion evading behavior
 combat_timer += delta_time / 1000000; // Convert microseconds to seconds
 
@@ -80,8 +77,8 @@ switch (state) {
         player_state_attacking();
         break;
 
-    case PlayerState.shielding:
-        player_state_shielding();
+    case PlayerState.focus:
+        player_state_focus();
         break;
 
     case PlayerState.on_grid:
@@ -172,18 +169,6 @@ if (state != PlayerState.dead) {
         }
     }
 
-    // Process pending focus retreat dash (melee focus sequence)
-    var _focus_retreat = player_focus_peek_pending_retreat(self);
-    if (_focus_retreat != undefined) {
-        if (state != PlayerState.attacking && state != PlayerState.dashing && dash_cooldown <= 0) {
-            var _retreat_info = player_focus_consume_pending_retreat(self);
-            if (_retreat_info != undefined) {
-                start_dash(_retreat_info.direction, true);
-                state = PlayerState.dashing;
-            }
-        }
-    }
-
     #endregion Attack System
 
     // Apply companion regeneration auras
@@ -191,10 +176,7 @@ if (state != PlayerState.dead) {
 
     // Evaluate and activate companion triggers
     evaluate_companion_triggers(self);
-
-    #region Torch Lighting
+    
     player_update_torch_state();
-    #endregion Torch Lighting
-
-    #endregion Companion System
+    
 }

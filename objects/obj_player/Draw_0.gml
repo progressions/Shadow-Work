@@ -4,8 +4,9 @@
 
 // Helper functions first
 function get_shield_position(_facing) {
-    // Move shield forward when actively shielding
-    var _offset = (state == PlayerState.shielding) ? 6 : 0;
+    // Move shield forward when in focus mode with shield equipped
+    var _is_blocking = (state == PlayerState.focus && equipped[$ "left_hand"] != undefined);
+    var _offset = _is_blocking ? 6 : 0;
 
     switch(_facing) {
         case "down":  return {x: _offset, y: 0, angle: 0};
@@ -64,9 +65,9 @@ function draw_torch_simple(_item, _facing, _player_x, _player_y) {
     var _tx = _player_x + _pos.x;
     var _ty = _player_y + _pos.y;
 
-
-    // Add bobbing (but not during shielding or dashing)
-    if (state != PlayerState.shielding && state != PlayerState.dashing) {
+    // Add bobbing (but not during focus/blocking or dashing)
+    var _is_blocking = (state == PlayerState.focus && equipped[$ "left_hand"] != undefined);
+    if (!_is_blocking && state != PlayerState.dashing) {
         if (move_dir == "idle") {
             if (floor(global.idle_bob_timer) % 2 == 1) {
                 _ty += 1;
@@ -76,7 +77,7 @@ function draw_torch_simple(_item, _facing, _player_x, _player_y) {
             _ty += _bob;
         }
     }
-    
+
 	var _torch_frame = 0;
 	if (!global.game_paused) {
     // Animate the torch flame (cycle through 8 frames)
@@ -95,8 +96,9 @@ function draw_shield_simple(_item, _facing, _player_x, _player_y) {
     var _sx = _player_x + _pos.x;
     var _sy = _player_y + _pos.y;
 
-    // Add bobbing (but not during shielding or dashing)
-    if (state != PlayerState.shielding && state != PlayerState.dashing) {
+    // Add bobbing (but not during focus/blocking or dashing)
+    var _is_blocking = (state == PlayerState.focus && equipped[$ "left_hand"] != undefined);
+    if (!_is_blocking && state != PlayerState.dashing) {
         if (move_dir == "idle") {
             if (floor(global.idle_bob_timer) % 2 == 1) {
                 _sy += 1;
@@ -106,7 +108,7 @@ function draw_shield_simple(_item, _facing, _player_x, _player_y) {
             _sy += _bob;
         }
     }
-    
+
     draw_sprite_ext(_shield_sprite, 0, _sx, _sy, 1, 1, _pos.angle, image_blend, 1);
 }
 
@@ -127,8 +129,9 @@ function draw_weapon_simple(_item, _facing, _player_x, _player_y) {
     var _wx = _player_x + _pos.x;
     var _wy = _player_y + _pos.y;
 
-    // Add bobbing (but not during shielding or dashing)
-    if (state != PlayerState.shielding && state != PlayerState.dashing) {
+    // Add bobbing (but not during focus/blocking or dashing)
+    var _is_blocking = (state == PlayerState.focus && equipped[$ "left_hand"] != undefined);
+    if (!_is_blocking && state != PlayerState.dashing) {
         if (move_dir == "idle") {
             if (floor(global.idle_bob_timer) % 2 == 1) {
                 _wy += 1;

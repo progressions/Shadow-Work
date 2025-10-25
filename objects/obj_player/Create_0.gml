@@ -84,11 +84,6 @@ loadouts = {
 inventory = [];
 max_inventory_size = 16;
 
-// Focus combat system configuration
-focus_hold_duration_ms = 275; // tweakable duration for aim/retreat buffers
-player_focus_init(self);
-focus_state.hold_duration_ms = focus_hold_duration_ms;
-
 // Quest system
 active_quests = {};
 
@@ -195,6 +190,7 @@ current_anim = "idle_down";
 current_anim_start = 0;
 current_anim_length = 2;
 state = PlayerState.idle;
+state_before_attack = PlayerState.idle; // Track state before attacking to return to it
 
 // Animation control
 anim_frame = 0;  // Track current frame within animation

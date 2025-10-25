@@ -1,9 +1,9 @@
 {
   "$GMScript":"v1",
-  "%Name":"player_focus_state",
+  "%Name":"player_state_focus",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"player_focus_state",
+  "name":"player_state_focus",
   "parent":{
     "name":"player",
     "path":"folders/Scripts/player.yy",

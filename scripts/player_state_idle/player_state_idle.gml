@@ -2,24 +2,17 @@ function player_state_idle() {
     // Stop all footstep sounds when entering idle
     stop_all_footstep_sounds();
 
-    // Check for shield block input
-    if (InputPressed(INPUT_VERB.SHIELD)) {
-        // Check if shield is equipped
-        if (equipped[$ "left_hand"] != undefined && block_cooldown <= 0) {
-            // Enter shielding state
-            state = PlayerState.shielding;
-            shield_facing_dir = facing_dir;  // Lock to current facing direction
-            shield_raise_complete = false;
-            play_sfx(snd_shield_raise, 0.8);
-            return;
-        }
-    }
-
     // If staggered, can't move - skip movement input
     if (!is_staggered) {
         // Check for dash input first
         if (player_handle_dash_input()) {
             return; // Dash was triggered, state changed
+        }
+
+        // Check for R1 press to enter focus mode
+        if (InputPressed(INPUT_VERB.SHIELD)) {
+            state = PlayerState.focus;
+            return;
         }
 
         // Check for input to transition to walking - use InputX/InputY for analog support

@@ -1,5 +1,5 @@
-function player_state_walking() {
-    // If staggered, can't continue walking - return to idle
+function player_state_focus() {
+    // If staggered, exit focus mode - return to idle
     if (is_staggered) {
         state = PlayerState.idle;
         move_dir = "idle";
@@ -11,9 +11,18 @@ function player_state_walking() {
         return; // Dash was triggered, state changed
     }
 
-    // Check for R1 press to enter focus mode
-    if (InputPressed(INPUT_VERB.SHIELD)) {
-        state = PlayerState.focus;
+    // Check if R1 is no longer held - exit focus mode
+    if (!InputCheck(INPUT_VERB.SHIELD)) {
+        // Return to idle or walking depending on movement
+        var _hor = InputX(INPUT_CLUSTER.NAVIGATION);
+        var _ver = InputY(INPUT_CLUSTER.NAVIGATION);
+
+        if (_hor == 0 && _ver == 0) {
+            state = PlayerState.idle;
+            move_dir = "idle";
+        } else {
+            state = PlayerState.walking;
+        }
         return;
     }
 
@@ -21,42 +30,49 @@ function player_state_walking() {
 	var _hor = InputX(INPUT_CLUSTER.NAVIGATION);
 	var _ver = InputY(INPUT_CLUSTER.NAVIGATION);
 
-    // If no input, transition to idle
+    // If no input, move_dir becomes idle (but stay in focus state)
     if (_hor == 0 && _ver == 0) {
-        state = PlayerState.idle;
         move_dir = "idle";
-        return;
-    }
 
-    // Update facing direction and move_dir - use strongest axis for analog input
-    if (abs(_ver) > abs(_hor)) {
-        // Vertical is stronger
-        if (_ver > 0) {
-            move_dir = "down";
-            facing_dir = "down";
-        } else if (_ver < 0) {
-            move_dir = "up";
-            facing_dir = "up";
-        }
+        // Apply friction to decelerate when no input
+        velocity_x *= friction_factor;
+        velocity_y *= friction_factor;
+
+        // Stop completely if velocity is very small (prevents eternal drifting)
+        if (abs(velocity_x) < 0.01) velocity_x = 0;
+        if (abs(velocity_y) < 0.01) velocity_y = 0;
     } else {
-        // Horizontal is stronger (or equal)
-        if (_hor > 0) {
-            move_dir = "right";
-            facing_dir = "right";
-        } else if (_hor < 0) {
-            move_dir = "left";
-            facing_dir = "left";
+        // Update move_dir based on input (but NOT facing_dir - that's locked)
+        if (abs(_ver) > abs(_hor)) {
+            // Vertical is stronger
+            if (_ver > 0) {
+                move_dir = "down";
+            } else if (_ver < 0) {
+                move_dir = "up";
+            }
+        } else {
+            // Horizontal is stronger (or equal)
+            if (_hor > 0) {
+                move_dir = "right";
+            } else if (_hor < 0) {
+                move_dir = "left";
+            }
         }
     }
 
     // Detect terrain at player position (for footstep sounds)
     var _terrain = get_terrain_at_position(x, y);
 
-    // Apply terrain speed modifier (set by apply_terrain_effects in Step event)
-    // and status effect speed modifiers
+    // Apply terrain speed modifier and status effect speed modifiers
     var speed_modifier = get_status_effect_modifier("speed");
 
-    var final_move_speed = move_speed * terrain_speed_modifier * speed_modifier;
+    // Apply shield movement penalty if shield equipped in focus mode
+    var _shield_penalty = 1.0;
+    if (equipped[$ "left_hand"] != undefined) {
+        _shield_penalty = 0.7; // 30% movement speed reduction when blocking with shield
+    }
+
+    var final_move_speed = move_speed * terrain_speed_modifier * speed_modifier * _shield_penalty;
 
     // Normalize diagonal input
     var _input_magnitude = sqrt(_hor * _hor + _ver * _ver);
@@ -102,8 +118,10 @@ function player_state_walking() {
     // Get footstep sound for current terrain
     var _footstep_sound = global.terrain_footstep_sounds[$ _terrain] ?? snd_footsteps_grass;
 
-    // Play appropriate footstep sound
-    play_sfx(_footstep_sound, 0.3, 4, true);
+    // Play appropriate footstep sound (only if moving)
+    if (move_dir != "idle") {
+        play_sfx(_footstep_sound, 0.3, 4, true);
+    }
 
     // Stop all other terrain footstep sounds
     var _terrain_names = variable_struct_get_names(global.terrain_footstep_sounds);
@@ -112,11 +130,6 @@ function player_state_walking() {
         if (_other_sound != _footstep_sound) {
             stop_looped_sfx(_other_sound);
         }
-    }
-
-    // Check for pillar interaction while walking (only in grid puzzle rooms)
-    if (instance_exists(obj_grid_controller)) {
-        player_move_onto_pillar();
     }
 
     // Handle knockback

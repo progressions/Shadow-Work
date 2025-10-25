@@ -37,34 +37,19 @@ function player_handle_attack_input() {
     }
 
     var _attack_pressed = InputPressed(INPUT_VERB.ATTACK);
-    var _attack_released = InputReleased(INPUT_VERB.ATTACK);
 
     // Instant brake on attack button press for precise positioning
-    if (_attack_pressed || _attack_released) {
+    if (_attack_pressed) {
         velocity_x = 0;
         velocity_y = 0;
     }
 
-    if (_attack_released && can_attack) {
-        if (focus_enabled && variable_struct_exists(self, "focus_state") && focus_state.suppress_next_release) {
-            focus_state.suppress_next_release = false;
-            return;
-        }
-        var _focus_info = player_focus_consume_for_attack(self);
-        player_execute_attack(_focus_info);
-    } else if (_attack_pressed && !focus_enabled && can_attack) {
-        var _fallback_vec = player_focus_resolve_direction_from_label(facing_dir) ?? { x: 0, y: 0 };
-        var _fallback_info = {
-            use_focus: false,
-            aim_direction: facing_dir,
-            aim_vector: _fallback_vec,
-            retreat_direction: ""
-        };
-        player_execute_attack(_fallback_info);
+    if (_attack_pressed && can_attack) {
+        player_execute_attack();
     }
 }
 
-function player_execute_attack(_focus_info) {
+function player_execute_attack() {
     var _was_dashing = (state == PlayerState.dashing);
     var _dash_attack_ready = (dash_attack_window > 0 && facing_dir == last_dash_direction);
 
@@ -88,24 +73,6 @@ function player_execute_attack(_focus_info) {
 
     dash_attack_window = 0;
 
-    var _use_focus = false;
-    var _focus_attack_dir = facing_dir;
-    var _focus_retreat_dir = "";
-    var _focus_retreat_vector = { x: 0, y: 0 };
-
-    if (_focus_info != undefined) {
-        _use_focus = _focus_info.use_focus;
-        if (_focus_info.aim_direction != "") {
-            _focus_attack_dir = _focus_info.aim_direction;
-        }
-        _focus_retreat_dir = _focus_info.retreat_direction;
-        if (_focus_info.retreat_vector != undefined) {
-            _focus_retreat_vector = _focus_info.retreat_vector;
-        }
-    }
-
-    var _original_facing = facing_dir;
-
     var _is_ranged = false;
     var _attack_speed = 1.0;
 
@@ -116,32 +83,15 @@ function player_execute_attack(_focus_info) {
         }
     }
 
-    // For ranged attacks, use the focus attack direction directly (don't rely on facing_dir)
-    var _fire_direction = _focus_attack_dir;
-    if (_fire_direction == "") {
-        _fire_direction = facing_dir;
-    }
-
-    if (_is_ranged && _use_focus && _focus_retreat_dir != "") {
-        if (player_focus_execute_ranged_volley(self, _focus_attack_dir, _focus_retreat_dir, _focus_retreat_vector, _is_ranged)) {
-            attack_cooldown = max(15, round(60 / _attack_speed));
-            can_attack = false;
-            return true;
-        }
-    }
-
     if (_is_ranged) {
         var _fire_fn = method(self, player_fire_ranged_projectile_local);
-        if (_fire_fn(_fire_direction)) {
+        if (_fire_fn(facing_dir)) {
             attack_cooldown = max(15, round(60 / _attack_speed));
             can_attack = false;
         }
     } else {
-        // For melee attacks, temporarily set facing_dir to focus direction for attack animation
-        if (_focus_attack_dir != "" && _focus_attack_dir != facing_dir) {
-            facing_dir = _focus_attack_dir;
-        }
-
+        // Track state before attacking so we can return to it
+        state_before_attack = state;
         state = PlayerState.attacking;
 
         var attack = instance_create_layer(x, y, "Instances", obj_attack);
@@ -164,31 +114,9 @@ function player_execute_attack(_focus_info) {
         } else {
             play_sfx(snd_attack_sword, 1, false);
         }
-
-        if (_use_focus) {
-            if (_focus_retreat_dir != "") {
-                player_focus_queue_retreat_dash(self, _focus_retreat_dir);
-            }
-        } else if (_focus_retreat_dir != "") {
-            if (player_focus_execute_ranged_volley(self, _focus_attack_dir, _focus_retreat_dir, _focus_retreat_vector, _is_ranged)) {
-                attack_cooldown = max(15, round(60 / _attack_speed));
-                can_attack = false;
-                return true;
-            }
-        }
     }
-
-    // Don't restore facing direction if we used focus mode - keep the attack direction
-    if (!_use_focus) {
-        facing_dir = _original_facing;
-    }
-
-    if (_use_focus && variable_struct_exists(self, "focus_state")) {
-        focus_state.active = false;
-        focus_state.buffer_ready = false;
-    }
-
-    return true;
+	
+	return true;
 }
 
 /// @function spawn_player_arrow()
@@ -280,6 +208,8 @@ function player_fire_ranged_projectile_local(_direction) {
     var _original_facing = facing_dir;
     if (_direction != "") facing_dir = _direction;
 
+    // Track state before attacking so we can return to it
+    state_before_attack = state;
     // Enter windup phase - projectile spawns AFTER animation completes
     state = PlayerState.attacking;
     ranged_windup_active = true;          // Mark that we're winding up a ranged attack

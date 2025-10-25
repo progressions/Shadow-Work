@@ -11,5 +11,5 @@ y = creator.y + offset_y;
 // Destroy when swing is complete
 if (swing_progress >= 100) {
     instance_destroy(); // CleanUp event will handle ds_list cleanup
-	creator.state = PlayerState.idle;
+	// State is now managed by animation system in player_handle_animation
 }

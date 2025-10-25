@@ -40,10 +40,6 @@ function player_state_dashing() {
         last_dash_direction = facing_dir;
         show_debug_message("Dash attack window started (" + string(dash_attack_window_duration) + "s) - direction: " + last_dash_direction);
 
-        if (focus_enabled && variable_struct_exists(self, "focus_state")) {
-            player_focus_fire_ranged_followup(self);
-        }
-
         player_dash_end();
         return;
     }
