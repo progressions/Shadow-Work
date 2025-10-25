@@ -85,9 +85,6 @@ if (variable_global_exists("pending_player_spawn") && global.pending_player_spaw
                         }
                         companion_stop_torch_loop();
                         companion_start_torch_loop();
-                        if (audio_emitter_exists(torch_sound_emitter)) {
-                            audio_emitter_position(torch_sound_emitter, x, y, 0);
-                        }
                         set_torch_carrier(companion_id);
                     } else if (carrying_torch) {
                         companion_stop_torch_loop();
@@ -129,9 +126,6 @@ if (variable_global_exists("pending_player_spawn") && global.pending_player_spaw
                         }
                         companion_stop_torch_loop();
                         companion_start_torch_loop();
-                        if (audio_emitter_exists(torch_sound_emitter)) {
-                            audio_emitter_position(torch_sound_emitter, x, y, 0);
-                        }
                         set_torch_carrier(companion_id);
                     }
                 }
@@ -153,9 +147,6 @@ if (variable_global_exists("pending_player_spawn") && global.pending_player_spaw
                     torch_time_remaining = clamp(player_time, 0, torch_duration);
                     if (torch_active) {
                         player_start_torch_loop();
-                        if (audio_emitter_exists(torch_sound_emitter)) {
-                            audio_emitter_position(torch_sound_emitter, x, y, 0);
-                        }
                         set_torch_carrier("player");
                     } else {
                         player_stop_torch_loop();

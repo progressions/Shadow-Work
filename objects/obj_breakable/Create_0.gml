@@ -104,3 +104,13 @@ function serialize() {
 
     return _struct;
 }
+
+function deserialize(_obj_data) {
+	persistent_id = _obj_data[$ "persistent_id"];
+	x = _obj_data[$ "x"];
+	y = _obj_data[$ "y"];
+	hp = _obj_data[$ "hp"];
+	total_hp = _obj_data[$ "total_hp"];
+	state = _obj_data[$ "state"];
+	is_destroyed = _obj_data[$ "is_destroyed"];
+}

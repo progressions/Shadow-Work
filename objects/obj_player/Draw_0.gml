@@ -8,8 +8,8 @@ function get_shield_position(_facing) {
     var _offset = (state == PlayerState.shielding) ? 6 : 0;
 
     switch(_facing) {
-        case "down":  return {x: 0, y: _offset, angle: 0};
-        case "up":    return {x: 0, y: -_offset, angle: 0};
+        case "down":  return {x: _offset, y: 0, angle: 0};
+        case "up":    return {x: _offset, y: 0, angle: 0};
         case "left":  return {x: 10 - _offset, y: 0, angle: 0};
         case "right": return {x: _offset, y: 0, angle: 0};
     }
