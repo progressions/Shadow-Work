@@ -43,7 +43,7 @@ if (keyboard_check_pressed(vk_enter) || InputPressed(INPUT_VERB.INTERACT)) {
     }
 }
 
-// Escape to close menu
-if (keyboard_check_pressed(vk_escape)) {
-    close_menu();
+// Cancel to close all menus and return to gameplay (ESC or Circle on gamepad)
+if (InputPressed(INPUT_VERB.UI_CANCEL)) {
+    ui_close_all_menus();
 }

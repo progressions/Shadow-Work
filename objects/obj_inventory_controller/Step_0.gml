@@ -506,8 +506,8 @@ if (is_open) {
         }
     }
 
-    if (keyboard_check_pressed(vk_escape)) {
-        show_debug_message("[ESC] Closing inventory");
+    if (InputPressed(INPUT_VERB.UI_CANCEL)) {
+        show_debug_message("[UI_CANCEL] Closing inventory");
         is_open = false;
 		ui_close_all_menus();
     }

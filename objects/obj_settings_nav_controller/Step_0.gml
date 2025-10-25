@@ -65,8 +65,8 @@ if (is_active && !_was_active) {
 	exit;
 }
 
-// Escape to close all menus and return to gameplay
-if (is_active && keyboard_check_pressed(vk_escape)) {
+// Cancel to close all menus and return to gameplay (ESC or Circle on gamepad)
+if (is_active && InputPressed(INPUT_VERB.UI_CANCEL)) {
 	// Close all menu layers
 	layer_set_visible("SettingsLayer", false);
 	layer_set_visible("PauseLayer", false);

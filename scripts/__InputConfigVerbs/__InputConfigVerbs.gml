@@ -16,6 +16,7 @@ function __InputConfigVerbs()
 		ATTACK,
 		DASH,
 		INTERACT,
+		UI_CANCEL,  // For closing menus/UI (ESC + Circle)
     }
     
     enum INPUT_CLUSTER
@@ -40,6 +41,7 @@ function __InputConfigVerbs()
 		InputDefineVerb(INPUT_VERB.ATTACK,  "attack",      "J",                 gp_face3);
 		InputDefineVerb(INPUT_VERB.DASH,    "dash",        vk_shift,            gp_face2);
 		InputDefineVerb(INPUT_VERB.INTERACT, "interact",   "E",                 gp_face1);
+		InputDefineVerb(INPUT_VERB.UI_CANCEL, "ui_cancel", vk_escape,           gp_face2);
     }
     else //Flip A/B over on Switch
     {
@@ -56,6 +58,7 @@ function __InputConfigVerbs()
 		InputDefineVerb(INPUT_VERB.ATTACK,  "attack",      "J",                 gp_face3);
 		InputDefineVerb(INPUT_VERB.DASH,    "dash",        vk_shift,            gp_face1); // Switch A/B flipped
 		InputDefineVerb(INPUT_VERB.INTERACT, "interact",   "E",                 gp_face2); // Switch A/B flipped
+		InputDefineVerb(INPUT_VERB.UI_CANCEL, "ui_cancel", vk_escape,           gp_face1); // Switch A/B flipped
     }
     
     //Define a cluster of verbs for moving around

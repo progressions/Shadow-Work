@@ -20,13 +20,14 @@ if (is_struct(dialogue_typist) && variable_global_exists("audio_config")) {
 	}
 }
 
-// ESC key cancels VN dialogue at any point
-if (keyboard_check_pressed(vk_escape)) {
+// Cancel key closes all menus/VN and returns to gameplay (ESC or Circle on gamepad)
+if (InputPressed(INPUT_VERB.UI_CANCEL)) {
 	if (_is_intro) {
 		stop_vn_intro();
 	} else {
 		stop_vn_dialogue();
 	}
+	ui_close_all_menus();
 	exit;
 }
 
