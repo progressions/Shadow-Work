@@ -48,6 +48,9 @@ if (!already_inside) {
                     // Apply damage
                     hp -= _final_damage;
 
+                    // Vibrate gamepad on hit
+                    InputVibrateConstant(0.5, 0, 200);
+
                     // Visual feedback
                     image_blend = c_red;
                     alarm[0] = 10;

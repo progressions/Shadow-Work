@@ -47,6 +47,9 @@ if (other.hp > 0 && other.state != PlayerState.dead) {
     // Apply damage to player
     other.hp -= _final_damage;
 
+    // Vibrate gamepad on hit
+    InputVibrateConstant(0.5, 0, 200);
+
     // Spawn damage number
     if (script_exists(spawn_damage_number)) {
         spawn_damage_number(other.x, other.y - 16, _final_damage, damage_type, other);

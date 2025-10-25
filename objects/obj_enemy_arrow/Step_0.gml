@@ -116,6 +116,9 @@ if (_hit_player != noone) {
                 companion_on_player_damaged(id, _impact_damage, _impact_type);
                 combat_timer = 0; // Reset combat timer for companion evading
 
+                // Vibrate gamepad on hit
+                InputVibrateConstant(0.5, 0, 200);
+
                 // Apply visual feedback (stronger for crits)
                 if (_was_crit) {
                     image_blend = c_red;

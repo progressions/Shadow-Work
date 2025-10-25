@@ -57,6 +57,9 @@ if (state == EnemyState.attacking) {
             _player.hp -= final_damage;
             companion_on_player_damaged(_player, final_damage, attack_damage_type);
 
+            // Vibrate gamepad on hit
+            InputVibrateConstant(0.5, 0, 200);
+
             // Interrupt player ranged attack windup if taking damage during windup
             with (_player) {
                 if (ranged_windup_active && !ranged_windup_complete) {

@@ -40,7 +40,7 @@ onboarding_initialize_for_room([
     // Quest 5: Give torch to Canopy
     {
         quest_id: "onboarding_give_torch_to_canopy",
-        display_text: "Press L to give Canopy the torch.",
+        display_text: "Give Canopy the torch.",
         check_completion: function() {
             return action_tracker_has("torch_given");
         },

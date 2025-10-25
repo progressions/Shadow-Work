@@ -82,6 +82,13 @@ if (_after_defense <= 0) {
 other.hp -= final_damage;
 companion_on_player_damaged(other, final_damage, collision_damage_type);
 
+// Vibrate gamepad on hit
+show_debug_message("=== VIBRATION DEBUG ===");
+show_debug_message("Vibration supported: " + string(InputVibrateGetSupported(0)));
+show_debug_message("Player device: " + string(InputPlayerGetDevice(0)));
+show_debug_message("Calling InputVibrateConstant(0.5, 0, 200)");
+InputVibrateConstant(0.5, 0, 200);
+
 // Interrupt player ranged attack windup if taking damage during windup
 with (other) {
     if (ranged_windup_active && !ranged_windup_complete) {

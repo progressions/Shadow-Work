@@ -248,6 +248,17 @@ if (keyboard_check_pressed(ord("9"))) {
     show_debug_message("Added 10 arrows via debug key");
 }
 
+// Debug key for testing vibration
+if (keyboard_check_pressed(ord("8"))) {
+    show_debug_message("=== VIBRATION TEST (Key 8) ===");
+    show_debug_message("Vibration supported: " + string(InputVibrateGetSupported(0)));
+    show_debug_message("Player device: " + string(InputPlayerGetDevice(0)));
+    show_debug_message("Calling InputVibrateConstant(0.8, 0, 500)");
+    InputVibrateConstant(0.8, 0, 500);
+    show_debug_message("Also calling InputVibratePulse(1.0, 0, 3, 300)");
+    InputVibratePulse(1.0, 0, 3, 300);
+}
+
 
 // F9 - Debug: Add test items to inventory
 if (keyboard_check_pressed(vk_f9)) {
