@@ -131,7 +131,7 @@ function on_interact() {
 
         // Save system tracking removed during rebuild
 
-        // Auto-equip logic (simplified from player_handle_pickup)
+        // Auto-equip logic
         with (_player) {
             if (other.item_def.type == ItemType.weapon ||
                 other.item_def.type == ItemType.armor ||
@@ -219,6 +219,7 @@ function on_interact() {
         instance_destroy();
     } else {
         // Inventory full
+        play_sfx(snd_pickup_denied);
         show_debug_message("Inventory full!");
     }
 }

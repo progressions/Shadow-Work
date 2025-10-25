@@ -1,0 +1,26 @@
+{
+  "$GMSound":"v2",
+  "%Name":"snd_pickup_denied",
+  "audioGroupId":{
+    "name":"audiogroup_sfx_world",
+    "path":"audiogroups/audiogroup_sfx_world",
+  },
+  "bitDepth":1,
+  "channelFormat":0,
+  "compression":0,
+  "compressionQuality":4,
+  "conversionMode":0,
+  "duration":0.75,
+  "exportDir":"",
+  "name":"snd_pickup_denied",
+  "parent":{
+    "name":"world",
+    "path":"folders/Sounds/sfx/world.yy",
+  },
+  "preload":false,
+  "resourceType":"GMSound",
+  "resourceVersion":"2.0",
+  "sampleRate":44100,
+  "soundFile":"snd_pickup_denied.wav",
+  "volume":1.0,
+}
