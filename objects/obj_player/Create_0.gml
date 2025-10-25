@@ -59,7 +59,6 @@ invulnerability_timer = 0;               // Current invulnerability counter
 move_dir = "right";
 facing_dir = "down";
 
-// In obj_player CREATE EVENT, add:
 walking_sound = -1;  // Track the sound instance
 
 equipped = {
@@ -395,7 +394,9 @@ function serialize() {
 		torch_time_remaining: torch_time_remaining,
 		inventory: _inventory_serialized,
 		equipped: _equipped_serialized,
-		loadouts: loadouts
+		loadouts: loadouts,
+		facing_dir: facing_dir,
+		facing_angle: facing_angle
 	};
 }
 
@@ -421,6 +422,8 @@ function deserialize(_data) {
 	hp_total = _data.hp_total;
 	xp = _data.xp;
 	level = _data.level;
+	facing_dir = _data.facing_dir;
+	facing_angle = _data.facing_angle;
 
 	// Restore torch
 	torch_active = _data.torch_active;

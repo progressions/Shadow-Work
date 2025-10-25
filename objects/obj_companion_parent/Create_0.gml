@@ -181,13 +181,11 @@ torch_looping = false;
 
 
 /// @function can_interact()
-/// @description Override - companion can only be interacted with when not recruited
 function can_interact() {
     return !is_recruited;  // Only interactable when not recruited
 }
 
 /// @function on_interact()
-/// @description Override - start VN dialogue with companion (recruitment only)
 function on_interact() {
     // Trigger VN dialogue system (only for recruitment)
     if (instance_exists(obj_player) && !is_recruited) {
@@ -213,6 +211,7 @@ function serialize() {
         image_index: image_index,
         image_xscale: image_xscale,
         image_yscale: image_yscale,
+		last_dir_index: last_dir_index,
 		
 		companion_name: companion_name,
 		companion_id: companion_id,
@@ -223,6 +222,9 @@ function serialize() {
         quest_flags: quest_flags,
 		triggers: triggers,
 		auras: auras,
+		carrying_torch: carrying_torch,
+		torch_duration: torch_duration;
+		torch_looping: torch_looping;
     };
 
     return _struct;
@@ -231,9 +233,15 @@ function serialize() {
 function deserialize(_obj_data) {
 	x = _obj_data[$ "x"];
 	y = _obj_data[$ "y"];
+	last_dir_index = _obj_data[$ "last_dir_index"];
+	
 	is_recruited = _obj_data[$ "is_recruited"];
 	affinity = _obj_data[$ "affinity"];
 	quest_flags = _obj_data[$ "quest_flags"];
 	triggers = _obj_data[$ "triggers"];
 	auras = _obj_data[$ "auras"];
+	
+	carrying_torch = _obj_data[$ "carrying_torch"];
+	torch_duration = _obj_data[$ "torch_duration"];
+	torch_looping = _obj_data[$ "torch_looping"];
 }
