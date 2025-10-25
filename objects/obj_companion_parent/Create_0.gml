@@ -223,8 +223,8 @@ function serialize() {
 		triggers: triggers,
 		auras: auras,
 		carrying_torch: carrying_torch,
-		torch_duration: torch_duration;
-		torch_looping: torch_looping;
+		torch_duration: torch_duration,
+		torch_looping: torch_looping,
     };
 
     return _struct;
