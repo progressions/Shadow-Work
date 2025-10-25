@@ -1231,7 +1231,9 @@ function companion_handle_torch_burnout() {
     if (_player != noone) {
         with (_player) {
             if (player_supply_companion_torch()) {
-                other.companion_take_torch_from_player(other.torch_duration, undefined);
+                with (other) {
+                    companion_take_torch_from_player(torch_duration, undefined);
+                }
                 return;
             }
         }
