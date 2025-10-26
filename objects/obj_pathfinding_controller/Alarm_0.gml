@@ -6,7 +6,9 @@ mp_grid_clear_all(grid);
 
 // Re-mark collision tilemap ONLY (no buffer)
 var tilemap = layer_tilemap_get_id("Tiles_Col");
-if (tilemap != -1) {
+if (tilemap == -1) {
+    show_debug_message("WARNING: Tiles_Col layer not found in " + room_get_name(room) + " - skipping tilemap rebuild");
+} else {
     for (var i = 0; i < horizontal_cells; i++) {
         for (var j = 0; j < vertical_cells; j++) {
             var tile_data = tilemap_get(tilemap, i, j);

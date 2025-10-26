@@ -14,7 +14,9 @@ grid = mp_grid_create(0, 0, horizontal_cells, vertical_cells, cell_size, cell_si
 
 // Mark collision tilemap as obstacles ONLY (no buffer - let collision handle wall avoidance)
 var tilemap = layer_tilemap_get_id("Tiles_Col");
-if (tilemap != -1) {
+if (tilemap == -1) {
+    show_debug_message("WARNING: Tiles_Col layer not found in " + room_get_name(room) + " during pathfinding grid creation");
+} else {
     for (var i = 0; i < horizontal_cells; i++) {
         for (var j = 0; j < vertical_cells; j++) {
             var tile_data = tilemap_get(tilemap, i, j);
