@@ -36,6 +36,8 @@ var _text_width = _dialogue_box_width - 40;
 // Choice configuration (fill space between top and name tag)
 var _choice_height = 50;
 var _choice_padding = 10;
+var _choice_top_padding = 15; // Padding at top of choices container
+var _choice_highlight_margin = 8; // Left/right margin for highlight rectangle
 var _choice_width = _dialogue_box_width;
 var _choice_x = _dialogue_box_x;
 var _choice_start_y = _name_tag_y - 10; // Start just above name tag
@@ -46,13 +48,8 @@ draw_set_color(c_black);
 draw_rectangle(0, 0, _gui_width, _gui_height, false);
 draw_set_alpha(1);
 
-// Draw dialogue box background
-draw_set_color(c_dkgray);
-draw_rectangle(_dialogue_box_x, _dialogue_box_y, _dialogue_box_x + _dialogue_box_width, _dialogue_box_y + _dialogue_box_height, false);
-
-// Draw dialogue box border
-draw_set_color(c_ltgray);
-draw_rectangle(_dialogue_box_x, _dialogue_box_y, _dialogue_box_x + _dialogue_box_width, _dialogue_box_y + _dialogue_box_height, true);
+// Draw dialogue box with 9-slice sprite
+draw_sprite_stretched(spr_ui_box, 0, _dialogue_box_x, _dialogue_box_y, _dialogue_box_width, _dialogue_box_height);
 
 // Draw portrait on left side - bottom aligned with dialogue box
 // Priority: video > companion portrait > intro portrait
@@ -135,11 +132,8 @@ if (current_speaker != "") {
 
 	var _name_width = string_width(current_speaker) + 60;
 
-	draw_set_color(c_dkgray);
-	draw_rectangle(_name_tag_x, _name_tag_y, _name_tag_x + _name_width, _name_tag_y + _name_tag_height, false);
-
-	draw_set_color(c_white);
-	draw_rectangle(_name_tag_x, _name_tag_y, _name_tag_x + _name_width, _name_tag_y + _name_tag_height, true);
+	// Draw name tag with 9-slice sprite
+	draw_sprite_stretched(spr_ui_box, 0, _name_tag_x, _name_tag_y, _name_width, _name_tag_height);
 
 	draw_set_color(c_white);
 	draw_set_halign(fa_center);
@@ -177,37 +171,36 @@ if (global.vn_chatterbox != undefined) {
 	var _option_count = ChatterboxGetOptionCount(global.vn_chatterbox);
 
 	if (_option_count > 0) {
-		var _choice_y = _choice_start_y;
+		// Calculate total height needed for all choices (including top padding)
+		var _total_choices_height = (_option_count * _choice_height) + ((_option_count - 1) * _choice_padding) + _choice_top_padding;
+		var _choices_container_y = _choice_start_y - _total_choices_height;
+
+		// Draw single container box for all choices
+		draw_sprite_stretched(spr_ui_box, 0, _choice_x, _choices_container_y, _choice_width, _total_choices_height);
 
 		// Draw choices in reverse order so first option appears at top
+		var _choice_y = _choice_start_y;
 		for (var i = _option_count - 1; i >= 0; i--) {
 			var _option_text = ChatterboxGetOption(global.vn_chatterbox, i);
 
-			// Calculate choice position (stack upward)
+			// Calculate choice position (stack upward, accounting for top padding on first item)
 			_choice_y -= (_choice_height + _choice_padding);
 
-			// Highlight selected choice
+			// Draw solid rectangle behind selected choice (with left/right margins)
 			if (i == selected_choice) {
 				draw_set_color(c_ltgray);
-			} else {
-				draw_set_color(c_dkgray);
+				draw_rectangle(
+					_choice_x + _choice_highlight_margin,
+					_choice_y,
+					_choice_x + _choice_width - _choice_highlight_margin,
+					_choice_y + _choice_height,
+					false
+				);
 			}
 
-			draw_rectangle(_choice_x, _choice_y, _choice_x + _choice_width, _choice_y + _choice_height, false);
-
-			// Draw choice border
-			draw_set_color(c_white);
-			draw_rectangle(_choice_x, _choice_y, _choice_x + _choice_width, _choice_y + _choice_height, true);
-
-			var _text_color;
 			// Draw choice text (black if highlighted, white if not)
-			if (i == selected_choice) {
+			var _text_color = (i == selected_choice) ? c_black : c_white;
 
-				_text_color = c_black;
-			} else {
-
-				_text_color = c_white;
-			}
 			draw_set_halign(fa_left);
 			draw_set_valign(fa_middle);
 			draw_set_font(fnt_vn);

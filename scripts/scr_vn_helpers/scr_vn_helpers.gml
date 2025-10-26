@@ -94,6 +94,7 @@ function start_vn_dialogue(_companion_instance, _yarn_file, _start_node) {
 					// Open new video
 					vn_video_path = _companion_instance.vn_video_path;
 					vn_video = video_open(vn_video_path);
+					video_set_volume(0); // Mute video audio
 					video_enable_loop(true);
 					show_debug_message("Opened VN dialogue video: " + vn_video_path);
 				}
@@ -302,6 +303,7 @@ function start_vn_intro(_instance, _yarn_file, _start_node, _character_name = ""
 			// Open new video
 			vn_video_path = _video_path;
 			vn_video = video_open(vn_video_path);
+			video_set_volume(0); // Mute video audio
 			video_enable_loop(true);
 			show_debug_message("Opened VN video: " + vn_video_path);
 		}
