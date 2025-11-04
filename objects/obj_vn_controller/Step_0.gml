@@ -28,32 +28,9 @@ if (is_struct(dialogue_typist) && variable_global_exists("audio_config")) {
 
 // Cancel key closes all menus/VN and returns to gameplay (Circle on gamepad)
 if (InputPressed(INPUT_VERB.UI_CANCEL)) {
-	// Force close VN without navigating to other dialogues
-	play_sfx(snd_vn_close, 1);
-
-	// Restore previous music
-	if (variable_global_exists("vn_previous_song") && global.vn_previous_song != noone) {
-		set_song_ingame(global.vn_previous_song, 0, 0);
-		global.vn_previous_song = noone;
+	if (vn_force_close()) {
+		exit;
 	}
-
-	// Close video if playing
-	if (vn_video != -1) {
-		video_close();
-		vn_video = -1;
-		vn_video_path = "";
-	}
-
-	// Clear all VN state
-	global.vn_active = false;
-	global.vn_companion = undefined;
-	global.vn_chatterbox = undefined;
-	global.vn_yarn_file = "";
-	global.vn_intro_instance = undefined;
-
-	// Close all menus and return to gameplay (sets debounce automatically)
-	ui_close_all_menus();
-	exit;
 }
 
 // Get current dialogue state

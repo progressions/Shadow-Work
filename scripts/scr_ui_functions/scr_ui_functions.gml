@@ -138,7 +138,8 @@ function ui_draw_top_text(_text, _y, _alpha, _color = c_white, _scale = 0.45) {
 /// @param {real} _alpha Alpha multiplier (0-1)
 /// @param {real} _color Optional colour (default white)
 /// @param {real} _scale Optional Scribble scale (default 0.45)
-function ui_draw_top_text_with_verb(_text, _verb, _y, _alpha, _color = c_white, _scale = 0.45) {
+/// @param {real} _alternate Optional alternate binding index (default 0)
+function ui_draw_top_text_with_verb(_text, _verb, _y, _alpha, _color = c_white, _scale = 0.45, _alternate = 0) {
     var _message = string(_text);
     if (_message == "") return;
 
@@ -146,7 +147,7 @@ function ui_draw_top_text_with_verb(_text, _verb, _y, _alpha, _color = c_white, 
     if (_draw_alpha <= 0) return;
 
     var _gui_width = display_get_gui_width();
-    var _icon = InputIconGet(_verb);
+    var _icon = InputIconGet(_verb, _alternate);
     var _icon_scale = 2.0; // Scale for sprite icons (larger for top-of-screen visibility)
 
     // Split text at {VERB} placeholder
@@ -187,6 +188,10 @@ function ui_draw_top_text_with_verb(_text, _verb, _y, _alpha, _color = c_white, 
         // For text fallback, measure the actual text
         var _temp_icon = scribble("Press [[" + _icon + "]").starting_format("fnt_quest", _color).scale(_scale);
         _icon_width = _temp_icon.get_width();
+        if (_text_after != "") {
+            // Rely on existing leading whitespace instead of extra spacing padding
+            _spacing_after = 0;
+        }
     }
 
     var _total_width = _before_width + _spacing_before + _icon_width + _spacing_after + _after_width;

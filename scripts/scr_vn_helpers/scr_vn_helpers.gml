@@ -249,6 +249,46 @@ function stop_vn_dialogue() {
 	}
 }
 
+/// @function vn_force_close()
+/// @description Immediately close the active VN session (dialogue or intro) and return to gameplay.
+/// @return {bool} True if a VN session was active and closed.
+function vn_force_close() {
+	if (!global.vn_active) {
+		return false;
+	}
+
+	// Play close sound
+	play_sfx(snd_vn_close, 1);
+
+	// Restore previous music if one was saved
+	if (variable_global_exists("vn_previous_song") && global.vn_previous_song != noone) {
+		set_song_ingame(global.vn_previous_song, 0, 0);
+		global.vn_previous_song = noone;
+	}
+
+	// Stop any active VN video
+	if (instance_exists(obj_vn_controller)) {
+		with (obj_vn_controller) {
+			if (vn_video != -1) {
+				video_close();
+				vn_video = -1;
+				vn_video_path = "";
+			}
+		}
+	}
+
+	// Clear VN state
+	global.vn_active = false;
+	global.vn_companion = undefined;
+	global.vn_chatterbox = undefined;
+	global.vn_yarn_file = "";
+	global.vn_intro_instance = undefined;
+
+	// Return to gameplay state
+	ui_close_all_menus();
+	return true;
+}
+
 // Open the companion talk menu
 function open_companion_talk_menu() {
 	// Declare and set availability flags for each companion based on recruitment

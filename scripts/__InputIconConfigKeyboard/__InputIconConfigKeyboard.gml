@@ -49,7 +49,7 @@
 // STRING-BASED ICONS (default) - Remove or comment out when using sprite-based icons above
 InputIconDefineKeyboard("A", "A");
 InputIconDefineKeyboard("B", "B");
-InputIconDefineKeyboard("C", "C");
+InputIconDefineKeyboard("C", input_icon_sprite(spr_keyboard, 52)); // C key sprite for companion chat
 InputIconDefineKeyboard("D", "D");
 InputIconDefineKeyboard("E", input_icon_sprite(spr_keyboard, 28)); // E key sprite for INTERACT
 InputIconDefineKeyboard("F", "F");

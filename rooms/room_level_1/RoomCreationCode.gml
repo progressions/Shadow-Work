@@ -29,7 +29,8 @@ onboarding_initialize_for_room([
     // Quest 4: Talk to Canopy
     {
         quest_id: "onboarding_talk_to_canopy",
-        display_text: "Talk to Canopy to recruit her.",
+        display_text: "{VERB} to recruit Canopy to join you.",
+        display_verb: INPUT_VERB.INTERACT,  // Show icon for interact
         check_completion: function() {
             return action_tracker_has("npc_interaction_canopy");
         },
@@ -41,7 +42,8 @@ onboarding_initialize_for_room([
     // Quest 5: Give torch to Canopy
     {
         quest_id: "onboarding_give_torch_to_canopy",
-        display_text: "Give Canopy the torch.",
+        display_text: "{VERB} to talk to Canopy and give her the torch.",
+        display_verb: INPUT_VERB.COMPANION_MENU,  // Show icon for companion chat
         check_completion: function() {
             return action_tracker_has("torch_given");
         },

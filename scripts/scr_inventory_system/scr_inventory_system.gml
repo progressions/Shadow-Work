@@ -2,6 +2,32 @@
 // INVENTORY & EQUIPMENT SYSTEM
 // ============================================
 
+/// @function inventory_force_close()
+/// @description Close the inventory UI if it's currently open.
+/// @return {bool} True if the inventory was open and is now closed.
+function inventory_force_close() {
+	if (!instance_exists(obj_inventory_controller)) {
+		return false;
+	}
+
+	var _controller = instance_find(obj_inventory_controller, 0);
+	if (_controller == noone) {
+		return false;
+	}
+
+	if (!_controller.is_open) {
+		return false;
+	}
+
+	with (_controller) {
+		is_open = false;
+		play_sfx(snd_close_inventory, 1);
+	}
+
+	ui_close_all_menus();
+	return true;
+}
+
 // Add item to inventory with stacking support
 function inventory_add_item(_item_def, _count = 1) {
     // Check if item is stackable and already exists in inventory
