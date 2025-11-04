@@ -1092,6 +1092,8 @@ function companion_take_torch_function() {
         if (variable_global_exists("ChatterboxVariableSet")) {
             ChatterboxVariableSet("vn_torch_transfer_success", true);
         }
+        // Make sure torch_carrier is set correctly even in early return
+        set_torch_carrier(_companion.companion_id);
         return;
     }
 
@@ -1134,6 +1136,9 @@ function companion_take_torch_function() {
             ChatterboxVariableSet("vn_torch_transfer_success", true);
         }
 
+        // Update torch carrier variable for dialogue checks
+        set_torch_carrier(_companion.companion_id);
+
         // Log action for onboarding quest tracking
         action_tracker_log("torch_given");
     }
@@ -1168,6 +1173,9 @@ function companion_stop_carrying_torch_function() {
             if (variable_global_exists("ChatterboxVariableSet")) {
                 ChatterboxVariableSet("vn_torch_transfer_success", true);
             }
+
+            // Update torch carrier variable for dialogue checks
+            set_torch_carrier("player");
         }
     }
 }

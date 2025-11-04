@@ -9,9 +9,6 @@ Canopy: I'm Canopy! Hello.
     -> How are you?
         Canopy: I'm lost in the woods!
         <<jump Option A>>
-    -> Do you like ducks? <<if visited("Option C") == false>>
-        Canopy: Yes I love them
-        <<jump Option C>>
     -> Do you need help?
         Canopy: Yes I do!
         <<jump Option B>>

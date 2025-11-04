@@ -130,12 +130,12 @@
     {"$GMFolder":"","%Name":"particles","folderPath":"folders/Sprites/particles.yy","name":"particles","resourceType":"GMFolder","resourceVersion":"2.0",},
     {"$GMFolder":"","%Name":"ui","folderPath":"folders/Sprites/ui.yy","name":"ui","resourceType":"GMFolder","resourceVersion":"2.0",},
     {"$GMFolder":"","%Name":"input","folderPath":"folders/Sprites/ui/input.yy","name":"input","resourceType":"GMFolder","resourceVersion":"2.0",},
-    {"$GMFolder":"","%Name":"switch","folderPath":"folders/Sprites/ui/input/switch.yy","name":"switch","resourceType":"GMFolder","resourceVersion":"2.0",},
     {"$GMFolder":"","%Name":"keyboard","folderPath":"folders/Sprites/ui/input/keyboard.yy","name":"keyboard","resourceType":"GMFolder","resourceVersion":"2.0",},
     {"$GMFolder":"","%Name":"playstation","folderPath":"folders/Sprites/ui/input/playstation.yy","name":"playstation","resourceType":"GMFolder","resourceVersion":"2.0",},
+    {"$GMFolder":"","%Name":"switch","folderPath":"folders/Sprites/ui/input/switch.yy","name":"switch","resourceType":"GMFolder","resourceVersion":"2.0",},
     {"$GMFolder":"","%Name":"xbox","folderPath":"folders/Sprites/ui/input/xbox.yy","name":"xbox","resourceType":"GMFolder","resourceVersion":"2.0",},
     {"$GMFolder":"","%Name":"round-hud","folderPath":"folders/Sprites/ui/round-hud.yy","name":"round-hud","resourceType":"GMFolder","resourceVersion":"2.0",},
-    {"$GMFolder":"","%Name":"VN assets","folderPath":"folders/Sprites/VN assets.yy","name":"VN assets","resourceType":"GMFolder","resourceVersion":"2.0",},
+    {"$GMFolder":"","%Name":"vn","folderPath":"folders/Sprites/vn.yy","name":"vn","resourceType":"GMFolder","resourceVersion":"2.0",},
     {"$GMFolder":"","%Name":"wielded","folderPath":"folders/Sprites/wielded.yy","name":"wielded","resourceType":"GMFolder","resourceVersion":"2.0",},
     {"$GMFolder":"","%Name":"armors","folderPath":"folders/Sprites/wielded/armors.yy","name":"armors","resourceType":"GMFolder","resourceVersion":"2.0",},
     {"$GMFolder":"","%Name":"Tile Sets","folderPath":"folders/Tile Sets.yy","name":"Tile Sets","resourceType":"GMFolder","resourceVersion":"2.0",},
@@ -171,7 +171,7 @@
   "isEcma":false,
   "LibraryEmitters":[],
   "MetaData":{
-    "IDEVersion":"2024.1400.0.907",
+    "IDEVersion":"2024.14.0.207",
   },
   "name":"Shadow Work",
   "resources":[
