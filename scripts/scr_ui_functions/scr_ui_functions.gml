@@ -25,6 +25,14 @@ function ui_close_all_menus() {
     // Return to gameplay state
     global.state = GameState.gameplay;
 
+    // Ensure enemies resume any paused path movement immediately after unpausing
+    with (obj_enemy_parent) {
+        if (variable_instance_exists(self, "saved_path_speed") && saved_path_speed != 0) {
+            path_speed = saved_path_speed;
+            saved_path_speed = 0;
+        }
+    }
+
     // Set input debounce to prevent menu-closing button from triggering gameplay actions
     global.input_debounce_frames = 2;
 }
