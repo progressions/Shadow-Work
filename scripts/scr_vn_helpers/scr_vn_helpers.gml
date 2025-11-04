@@ -17,11 +17,47 @@ function draw_rectangle_center(_x, _y, _width, _height, _outline, _color, _alpha
 	draw_set_alpha(_old_alpha);
 }
 
-function background_set_index(_index) {
-	var lay_id = layer_get_id("Background");
-	var back_id = layer_background_get_id(lay_id);
+/// @function vn_load_video(_video_id)
+/// @description Load and play a video in the VN portrait area by ID
+/// @param _video_id Video filename without extension (e.g., "canopy_scared" loads "canopy_scared.mp4")
+function vn_load_video(_video_id) {
+	if (!instance_exists(obj_vn_controller)) {
+		show_debug_message("vn_load_video: obj_vn_controller not found");
+		return false;
+	}
 
-	layer_background_index(back_id, _index);
+	// Convert video ID to filename (add .mp4 extension)
+	var _video_path = string(_video_id) + ".mp4";
+
+	with (obj_vn_controller) {
+		// Close existing video if playing
+		if (vn_video != -1) {
+			video_close();
+			vn_video = -1;
+		}
+
+		// Open new video
+		vn_video_path = _video_path;
+		vn_video = video_open(vn_video_path);
+
+		if (vn_video == -1) {
+			show_debug_message("vn_load_video: Failed to open video '" + _video_path + "'");
+			return false;
+		}
+
+		video_set_volume(0); // Mute video audio
+		video_enable_loop(true);
+		show_debug_message("vn_load_video: Loaded video '" + _video_path + "'");
+	}
+
+	return true;
+}
+
+/// @function background_set_index(_video_id)
+/// @description Loads and plays a video by ID (used by <<bg()>> in Yarn files)
+/// @param _video_id Video filename without extension (e.g., "canopy_scared" loads "canopy_scared.mp4")
+function background_set_index(_video_id) {
+	vn_load_video(_video_id);
 }
 
 function chatterbox_update() {

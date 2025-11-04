@@ -4,7 +4,7 @@ __PrivCrochet_position: 1178,557
 __PrivCrochet_tags: 
 title: Start
 ---
-<<bg(0)>>
+<<bg("Canopy video")>>
 Canopy: I'm Canopy! Hello.
     -> How are you?
         Canopy: I'm lost in the woods!
@@ -38,19 +38,19 @@ Canopy: I'm Canopy! Hello.
 ===
 __PrivCrochet_colorID: 0
 __PrivCrochet_position: 1397,437
-__PrivCrochet_tags: 
+__PrivCrochet_tags:
 title: Option A
 ---
-<<bg(1)>>
-Canopy: I'm lost in the woods
+<<bg("companions/Canopy/Canopy running scared")>>
+Canopy: I'm lost in the woods and I'm scared!
 <<jump Start>>
 ===
 __PrivCrochet_colorID: 0
 __PrivCrochet_position: 1616,436
-__PrivCrochet_tags: 
+__PrivCrochet_tags:
 title: Option B
 ---
-<<bg(2)>>
+<<bg("Canopy video")>>
 Canopy: Can you help me?
 <<jump Start>>
 ===
@@ -59,7 +59,7 @@ __PrivCrochet_position: 1834,435
 __PrivCrochet_tags:
 title: Option C
 ---
-<<bg(1)>>
+<<bg("Canopy video")>>
 Canopy: Ducks are amazing
 <<jump Start>>
 ===
